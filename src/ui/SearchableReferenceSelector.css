@@ -1,0 +1,73 @@
+/*
+Place your custom CSS here
+*/
+.widget-reference-selector {
+    width: 100%;
+    position: relative;
+    /* z-index: 301; */
+}
+
+.widget-reference-selector button{
+    width: inherit;
+}
+
+.widget-reference-selector > button::after{
+    content: "\25BC";
+    margin-left: auto;
+}
+
+.widget-reference-selector .dropdown{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 302;
+    border: 1px solid #D7D7D7;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 0.5em;
+    max-height: 20rem;
+    overflow-y: scroll;
+}
+
+.widget-reference-selector .dropdown .searchBar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.widget-reference-selector .dropdown .searchBar input{
+    flex-grow: 3;
+}
+
+.widget-reference-selector .dropdown .searchBar button{
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    margin-left: 0.5em;
+}
+
+.widget-reference-selector .dropdown hr{
+    margin: 0.5em 0;
+}
+
+.widget-reference-selector .dropdown ul{
+    font-size: 14px;
+    padding-inline-start: 0;
+    margin: 0;
+}
+
+.widget-reference-selector .dropdown ul li{
+    cursor: pointer;
+    list-style: none;
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
+.widget-reference-selector .dropdown ul li:hover{
+    background-color: #D7D7D7;
+}
+.widget-reference-selector .dropdown ul .selected{
+    background-color: #e7e7e7;
+}
