@@ -52,7 +52,6 @@ export default function SearchableReferenceSelector({
     function onSelectHandler(selectedObj?: ObjectItem): void {
         if (selectedObj !== undefined && onSelectAssociation !== undefined) {
             const mxaction = onSelectAssociation.get(selectedObj);
-            console.log("mxaction", mxaction);
             mxaction.execute();
             toggleDropdown();
         } else if (onSelectEmpty !== undefined) {
