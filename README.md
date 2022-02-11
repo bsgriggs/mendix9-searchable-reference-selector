@@ -20,14 +20,14 @@ This is the Mendix 9 version of https://github.com/bsgriggs/mendix-SearchableRef
 2. Configure the "Selectable Objects" as the list object you want to appear in the dropdown
 3. Set the "Attribute to Display" as the attribute on the Selectable Objects you want to display in the dropdown
 4. Select the "Current Value" as the association from the data view to the same attribute as the Attribute to Display
-5. On the Actions tab, set "On Select Assocation" as a Microflow or Nanoflow that takes a parameter from the data view
+5. On the Actions tab, set "On Select Association" as a Microflow or Nanoflow that takes a parameter from the data view
    **AND** a parameter from the Selectable Objects. This Microflow or Nanoflow should set the association using a Change
    Object action.
 
 Optionals:
 
--   If you want the user to have the abilty to select nothing, then configure the "On Select Empty" as a Microflow or
-    Nanoflow that changes the data view's assocation to empty. Decide on a "No Selection Text".
+-   If you want the user to have the ability to select nothing, then configure the "On Select Empty" as a Microflow or
+    Nanoflow that changes the data view's association to empty. Decide on a "No Selection Text".
 -   If you do not want the user to be able to select nothing, then set "Allow Empty Selection" as No.
 
 ## Demo project
