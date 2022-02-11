@@ -11,11 +11,12 @@ export interface SearchableReferenceSelectorContainerProps {
     class: string;
     style?: CSSProperties;
     tabIndex?: number;
-    noneSelectedText?: DynamicValue<string>;
     selectableObjects: ListValue;
     displayAttribute: ListAttributeValue<string>;
     currentValue: EditableValue<string>;
     onSelectAssociation?: ListActionValue;
+    allowEmptySelection: boolean;
+    noneSelectedText?: DynamicValue<string>;
     onSelectEmpty?: ActionValue;
 }
 
@@ -24,10 +25,11 @@ export interface SearchableReferenceSelectorPreviewProps {
     style: string;
     styleObject?: CSSProperties;
     readOnly: boolean;
-    noneSelectedText: string;
     selectableObjects: {} | { type: string } | null;
     displayAttribute: string;
     currentValue: string;
     onSelectAssociation: {} | null;
+    allowEmptySelection: boolean;
+    noneSelectedText: string;
     onSelectEmpty: {} | null;
 }

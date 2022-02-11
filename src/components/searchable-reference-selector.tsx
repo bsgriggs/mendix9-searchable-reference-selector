@@ -12,6 +12,7 @@ export interface SearchableReferenceSelectorProps {
     currentValue: string;
     onSelectAssociation?: ListActionValue;
     noneSelectedText: string;
+    allowEmptySelection: boolean;
     onSelectEmpty?: ActionValue;
 }
 
@@ -23,6 +24,7 @@ export default function SearchableReferenceSelector({
     displayAttribute,
     currentValue,
     onSelectAssociation,
+    allowEmptySelection,
     onSelectEmpty,
     noneSelectedText
 }: SearchableReferenceSelectorProps): ReactElement {
@@ -54,7 +56,7 @@ export default function SearchableReferenceSelector({
             const mxaction = onSelectAssociation.get(selectedObj);
             mxaction.execute();
             toggleDropdown();
-        } else if (onSelectEmpty !== undefined) {
+        } else if (onSelectEmpty !== undefined && allowEmptySelection) {
             onSelectEmpty.execute();
             toggleDropdown();
         } else {
@@ -90,13 +92,15 @@ export default function SearchableReferenceSelector({
                     </div>
                     {selectableObjects.items !== undefined && (
                         <ul>
-                            <li
-                                onClick={() => {
-                                    onSelectHandler(undefined);
-                                }}
-                            >
-                                {noneSelectedText ? noneSelectedText : <div>&nbsp;</div>}
-                            </li>
+                            {allowEmptySelection && (
+                                <li
+                                    onClick={() => {
+                                        onSelectHandler(undefined);
+                                    }}
+                                >
+                                    {noneSelectedText ? noneSelectedText : <div>&nbsp;</div>}
+                                </li>
+                            )}
                             {searchText.trim().length > 0 &&
                                 selectableObjects.items
                                     .filter(obj => {

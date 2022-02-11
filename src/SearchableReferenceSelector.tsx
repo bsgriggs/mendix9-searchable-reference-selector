@@ -23,6 +23,7 @@ export function SearchableReferenceSelector(props: SearchableReferenceSelectorCo
                 displayAttribute={props.displayAttribute}
                 noneSelectedText={emptyText}
                 onSelectAssociation={props.onSelectAssociation}
+                allowEmptySelection={props.allowEmptySelection}
                 onSelectEmpty={props.onSelectEmpty}
             />
         );

@@ -7,43 +7,45 @@
     <description>Mendix reference selector with a search bar and a clear button (Mendix 9)</description>
     <icon/>
     <properties>
-        <propertyGroup caption="General">
-            <propertyGroup caption="Label">
-                <property key="noneSelectedText" type="textTemplate" required="false">
-                    <caption>No Selection Text</caption>
-                    <description>Text shown if the association is empty.</description>
-                </property>
-            </propertyGroup>
-            <propertyGroup caption="Data Source">
-                <property key="selectableObjects" type="datasource" isList="true" required="true">
-                    <caption>Selectable Objects</caption>
-                    <description>The objects that will be selectable in the dropdown</description>
-                </property>
-                <property key="displayAttribute" type="attribute" required="true" dataSource="selectableObjects">
-                    <caption>Attribute to Display</caption>
-                    <description>The attribute that will be displayed in the dropdown</description>
-                    <attributeTypes>
-                        <attributeType name="String" />
-                        <attributeType name="Enum" />
-                    </attributeTypes>
-                </property>
-                <property key="currentValue" type="attribute" required="true">
-                    <caption>Current Value</caption>
-                    <description>The attribute that will display in the widget if there is already a value set by the object</description>
-                    <attributeTypes>
-                        <attributeType name="String" />
-                        <attributeType name="Enum" />
-                    </attributeTypes>
-                </property>
-                <property key="onSelectAssociation" type="action" required="true" dataSource="selectableObjects">
-                    <caption>On Select Association</caption>
-                    <description>This microflow is required. It should be a Microflow or Nanoflow that accepts an object of the Data Source. Have the action set the association with the value selected by the widget.</description>
-                </property>
-                <property key="onSelectEmpty" type="action" required="true">
-                    <caption>On Select Empty</caption>
-                    <description>This microflow is required. It should be a Microflow or Nanoflow that only accepts the data view's object. Have the action set the association as empty,</description>
-                </property>
-            </propertyGroup>
+        <propertyGroup caption="Data Source">
+            <property key="selectableObjects" type="datasource" isList="true" required="true">
+                <caption>Selectable Objects</caption>
+                <description>The objects that will be selectable in the dropdown</description>
+            </property>
+            <property key="displayAttribute" type="attribute" required="true" dataSource="selectableObjects">
+                <caption>Attribute to Display</caption>
+                <description>The attribute that will be displayed in the dropdown</description>
+                <attributeTypes>
+                    <attributeType name="String" />
+                    <attributeType name="Enum" /> 
+                </attributeTypes>
+            </property>
+            <property key="currentValue" type="attribute" required="true">
+                <caption>Current Value</caption>
+                <description>The attribute that will display in the widget if there is already a value set by the object</description>
+                <attributeTypes>
+                    <attributeType name="String" />
+                    <attributeType name="Enum" />
+                </attributeTypes>
+            </property>
+        </propertyGroup>
+        <propertyGroup caption="Actions">
+            <property key="onSelectAssociation" type="action" required="true" dataSource="selectableObjects">
+                <caption>On Select Association</caption>
+                <description>This action is required. It should be a Microflow or Nanoflow that accepts an object of the Data Source. Have the action set the association with the value selected by the widget.</description>
+            </property>
+            <property key="allowEmptySelection" type="boolean" defaultValue="true">
+                <caption>Allow Empty Selection?</caption>
+                <description>When true, the dropdown will have the first option as the No Selection Text.</description>
+            </property>
+            <property key="noneSelectedText" type="textTemplate" required="false">
+                <caption>No Selection Text</caption>
+                <description>Text shown if the association is empty.</description>
+            </property>
+            <property key="onSelectEmpty" type="action" required="true">
+                <caption>On Select Empty</caption>
+                <description>This action is required. It should be a Microflow or Nanoflow that only accepts the data view's object. Have the action set the association as empty.</description>
+            </property>
         </propertyGroup>
     </properties>
 </widget>
