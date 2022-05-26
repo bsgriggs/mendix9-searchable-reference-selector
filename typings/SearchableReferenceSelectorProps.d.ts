@@ -3,33 +3,24 @@
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix UI Content Team
  */
-import { CSSProperties } from "react";
-import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue } from "mendix";
+import { DynamicValue, ListValue, ListAttributeValue, ReferenceValue } from "mendix";
 
 export interface SearchableReferenceSelectorContainerProps {
     name: string;
-    class: string;
-    style?: CSSProperties;
     tabIndex?: number;
-    selectableObjects: ListValue;
-    displayAttribute: ListAttributeValue<string>;
-    currentValue: EditableValue<string>;
-    onSelectAssociation?: ListActionValue;
+    id: string;
     allowEmptySelection: boolean;
     noneSelectedText?: DynamicValue<string>;
-    onSelectEmpty?: ActionValue;
+    selectableObjects: ListValue;
+    association: ReferenceValue;
+    displayAttribute: ListAttributeValue<string>;
 }
 
 export interface SearchableReferenceSelectorPreviewProps {
-    className: string;
-    style: string;
-    styleObject?: CSSProperties;
     readOnly: boolean;
-    selectableObjects: {} | { type: string } | null;
-    displayAttribute: string;
-    currentValue: string;
-    onSelectAssociation: {} | null;
     allowEmptySelection: boolean;
     noneSelectedText: string;
-    onSelectEmpty: {} | null;
+    selectableObjects: {} | { type: string } | null;
+    association: string;
+    displayAttribute: string;
 }

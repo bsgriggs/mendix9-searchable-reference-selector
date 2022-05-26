@@ -23,7 +23,7 @@ import { ReactElement, createElement } from "react";
 //     );
 // }
 export function preview(): ReactElement {
-    return <div></div>;
+    return <input>test</input>;
 }
 
 export function getPreviewCss(): string {
