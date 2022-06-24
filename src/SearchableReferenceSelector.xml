@@ -5,7 +5,8 @@
         xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
     <name>Searchable Reference Selector</name>
     <description>Mendix reference selector with a search bar and a clear button (Mendix 9)</description>
-    <icon/>
+    <helpUrl>https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md</helpUrl>
+    <icon/> 
     <properties>
         <propertyGroup caption="General">
             <systemProperty key="Label"/>

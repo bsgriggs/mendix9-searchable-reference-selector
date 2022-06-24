@@ -2,7 +2,7 @@ import React, { createElement, useState, useEffect, useRef} from "react";
 import { SearchableReferenceSelectorContainerProps } from "../typings/SearchableReferenceSelectorProps";
 import { ObjectItem, ValueStatus } from "mendix";
 import "./ui/SearchableReferenceSelector.css";
-import Option from "./components/option";
+import Option from "./components/Option";
 
 const emptyString = "&nbsp;";
 
