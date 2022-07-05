@@ -5,7 +5,7 @@
             <widgetFile path="SearchableReferenceSelector.xml"/>
         </widgetFiles>
         <files>
-            <file path="avertra/searchablereferenceselector"/>
+            <file path="mendix/searchablereferenceselector"/>
         </files>
     </clientModule>
 </package>

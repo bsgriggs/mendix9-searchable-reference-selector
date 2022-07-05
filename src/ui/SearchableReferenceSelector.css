@@ -1,63 +1,25 @@
 /*
 Place your custom CSS here
 */
-.widget-reference-selector {
+.searchable-reference-selector {
     width: 100%;
     position: relative;
 }
 
-.widget-reference-selector .searchBar{
+.searchable-reference-selector .srs__control, .srss__control{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.widget-reference-selector .searchBar input{
-    width: inherit;
-    padding-right: 30px;
-    background-image: url(   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='15px' height='8px'><polyline id='Line' fill='none' stroke='%23555555' points='0.5 0.5 6 6 11.545361 0.5'></polyline></svg>");
-    background-repeat: no-repeat;
-    background-position: calc(100% - 8px) center;
+    flex: 1;
+    min-width: 50px;
+    height: auto;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    color: #0a1325;
+    border: 1px solid #e7e7e9 !important;
+    border-radius: 4px;
+    background-color: #fff;
+    background-image: none;
+    box-shadow: none;
+    font-size: 14px;
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-}
-
-.widget-reference-selector .searchBar button{
-    background-color: red;
-    color: white;
-    cursor: pointer;
-    margin-left: 0.5em;
-}
-
-.widget-reference-selector .dropdown{
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 302;
-    border: 1px solid #D7D7D7;
-    border-radius: 4px;
-    background-color: #fff;
-    padding: 0.5em;
-    max-height: 20rem;
-    overflow-y: scroll;
-}
-
-.widget-reference-selector .dropdown button{
-    cursor: pointer;
-    list-style: none;
-    padding: 0.5em;
-    border-radius: 4px;
-    border: 0;
-    background-color: transparent;
-    width: 100%;
-    text-align: left;
-}
-
-.widget-reference-selector .dropdown button:hover, .widget-reference-selector .dropdown button:focus{
-    background-color: #D7D7D7;
-}
-.widget-reference-selector .dropdown .selected{
-    background-color: #e7e7e7;
 }
