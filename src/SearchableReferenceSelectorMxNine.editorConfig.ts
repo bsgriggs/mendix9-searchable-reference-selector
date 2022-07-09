@@ -1,4 +1,4 @@
-import { SearchableReferenceSelectorPreviewProps } from "../typings/SearchableReferenceSelectorProps";
+import { SearchableReferenceSelectorMxNinePreviewProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 
 type Properties = PropertyGroup[];
 
@@ -32,7 +32,7 @@ type ObjectProperties = {
 };
 
 export function getProperties(
-    _values: SearchableReferenceSelectorPreviewProps,
+    _values: SearchableReferenceSelectorMxNinePreviewProps,
     defaultProperties: Properties
 ): Properties {
     // Do the values manipulation here to control the visibility of properties in Studio and Studio Pro conditionally.
@@ -44,7 +44,7 @@ export function getProperties(
     return defaultProperties;
 }
 
-export function check(_values: SearchableReferenceSelectorPreviewProps): Problem[] {
+export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): Problem[] {
     const errors: Problem[] = [];
     // Add errors to the above array to throw errors in Studio and Studio Pro.
     /* Example

@@ -1,56 +1,141 @@
-import { createElement } from "react";
-import Select, {SingleValue, ActionMeta} from "react-select";
-import {ObjectItem} from "mendix";
+import React, { createElement, ReactNode, useState, useRef, useEffect } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
+import CancelIcon from "./CancelIcon";
+import DropdownIcon from "./DropdownIcon";
+import OptionsMenu from "./OptionsMenu";
+import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 interface ReferenceSelectorProps {
     name: string;
     tabIndex?: number;
     placeholder?: string;
     noResultsText?: string;
-    currentValue: ObjectItem;
     selectableObjects: ObjectItem[];
-    allowEmptySelection: boolean;
+    currentValue?: ObjectItem;
+    displayAttribute: ListAttributeValue<string>;
+    optionTextType: OptionTextTypeEnum;
+    optionCustomContent?: ListWidgetValue;
+    selectableAttribute?: ListAttributeValue<boolean>;
+    onSelectAssociation: (newObject: ObjectItem | undefined) => void;
+    isClearable: boolean;
     isReadOnly: boolean;
-    isSearchable: boolean;
-    isRightAligned: boolean;
-    minHeight: number;
-    maxHeight: number;
-
-    onSelectHandler: (newValue: SingleValue<ObjectItem>, actionMeta: ActionMeta<ObjectItem>) => void;
-    getLabel: (objectItem: ObjectItem) => string;
-    getValue: (objectItem: ObjectItem) => string;
+    minHeight?: string;
+    maxHeight?: string;
 }
 
-const ReferenceSelector = (props: ReferenceSelectorProps):JSX.Element => {
+const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
+    const [showPopup, setShowPopup] = useState(false);
+    const [searchText, setSearchText] = useState("");
+    const searchInput = useRef<HTMLInputElement>(null);
+
+    const focusSearchInput = () => {
+        if (props.currentValue === undefined && searchInput.current !== null) {
+            searchInput.current.focus();
+        }
+    };
+    useEffect(() => {
+        focusSearchInput();
+    }, []);
+
+    const toggleDropdown = () => {
+        if (props.isReadOnly === false) {
+            setShowPopup(!showPopup);
+        }
+        if (showPopup === false) {
+            // about to be set true, focus the input
+            setTimeout(() => focusSearchInput(), 300);
+        }
+    };
+
+    const onSelectHandler = (selectedObj: ObjectItem | undefined) => {
+        props.onSelectAssociation(selectedObj);
+    };
+
+    const determineCurrentValue = (): ReactNode => {
+        if (props.currentValue !== undefined) {
+            switch (props.optionTextType) {
+                case "text":
+                    return <span className="srs-text">{props.displayAttribute.get(props.currentValue).value}</span>;
+                case "html":
+                    return (
+                        <span
+                            className="srs-text"
+                            dangerouslySetInnerHTML={{
+                                __html: `${props.displayAttribute.get(props.currentValue).value}`
+                            }}
+                        ></span>
+                    );
+                case "custom":
+                    return <span className="srs-text">{props.optionCustomContent?.get(props.currentValue)}</span>;
+            }
+        }
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setSearchText(value);
+        if (value.trim() !== "" && showPopup === false) {
+            toggleDropdown();
+        }
+    };
+
     return (
-        <Select<ObjectItem>
-            name={props.name}
+        <div
+            className={showPopup ? "form-control active" : "form-control"}
             tabIndex={props.tabIndex}
-            value={props.currentValue}
-            isClearable={props.allowEmptySelection}
-            onChange={props.onSelectHandler}
-            options={props.selectableObjects}
-            getOptionLabel={props.getLabel}
-            getOptionValue={props.getValue}
-            placeholder={props.placeholder}
-            isDisabled={props.isReadOnly}
-            isSearchable={props.isSearchable}
-            isRtl={props.isRightAligned}
-            minMenuHeight={
-                props.minHeight > 0
-                    ? props.minHeight
-                    : undefined
-            }
-            maxMenuHeight={
-                props.maxHeight > 0
-                    ? props.maxHeight
-                    : undefined
-            }
-            noOptionsMessage={() => props.noResultsText || undefined}
-            className={"srs"}
-            classNamePrefix={"srs"}
-        />
+            onClick={toggleDropdown}
+        >
+            {props.currentValue === undefined && (
+                <input
+                    className=""
+                    name={props.name}
+                    placeholder={props.placeholder}
+                    type="text"
+                    onChange={handleInputChange}
+                    readOnly={props.isReadOnly}
+                    value={searchText}
+                    ref={searchInput}
+                    onBlur={() => {
+                        setTimeout(() => {
+                            setSearchText("");
+                            setShowPopup(false);
+                        }, 300);
+                    }}
+                ></input>
+            )}
+            {props.currentValue !== undefined && determineCurrentValue()}
+            {props.isClearable && props.isReadOnly === false && (
+                <div
+                    className="srs-icon"
+                    onClick={() => {
+                        onSelectHandler(undefined);
+                        focusSearchInput();
+                    }}
+                >
+                    <CancelIcon />
+                </div>
+            )}
+            <div className="srs-icon">
+                <DropdownIcon />
+            </div>
+            {showPopup && (
+                <OptionsMenu
+                    selectableObjects={props.selectableObjects}
+                    displayAttribute={props.displayAttribute}
+                    onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
+                    closeMenu={() => setShowPopup(false)}
+                    currentValue={props.currentValue}
+                    maxHeight={props.maxHeight}
+                    minHeight={props.minHeight}
+                    searchText={searchText}
+                    selectableAttribute={props.selectableAttribute}
+                    noResultsText={props.noResultsText}
+                    optionTextType={props.optionTextType}
+                    optionCustomContent={props.optionCustomContent}
+                />
+            )}
+        </div>
     );
-}
+};
 
-export default ReferenceSelector
+export default ReferenceSelector;

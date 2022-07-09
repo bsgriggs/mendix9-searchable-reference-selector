@@ -1,0 +1,66 @@
+/*
+Place your custom CSS here
+*/
+.srs {
+    width: 100%;
+    position: relative;
+    z-index: 301;
+}
+
+.srs .form-control {
+    width: inherit;
+    padding: 0;
+    align-items: center;
+    cursor: pointer;
+}
+
+.srs .active.form-control {
+    border-color: #264ae5;
+    outline: 0;
+    background-color: #fff;
+    box-shadow: none;
+}
+
+.srs .srs-icon {
+    padding: 4px;
+    line-height: 0;
+}
+
+.srs input {
+    border: none;
+    padding: 8px;
+    flex-grow: 1;
+    border-radius: 4px;
+}
+
+.srs .srs-text {
+    padding: 8px;
+    flex-grow: 1;
+}
+
+.srs .srs-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 302;
+    border: 1px solid #d7d7d7;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 0.5em;
+    max-height: 20rem;
+    overflow-y: auto;
+}
+
+.srs .srs-option {
+    cursor: pointer;
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
+.srs .srs-option:hover {
+    background-color: #d7d7d7;
+}
+.srs .srs-option.selected {
+    background-color: #e7e7e7;
+}

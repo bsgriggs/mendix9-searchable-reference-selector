@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="mendix.searchablereferenceselector.SearchableReferenceSelector" pluginWidget="true" needsEntityContext="true" offlineCapable="true" supportedPlatform="Web" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
-    <name>Searchable Reference Selector</name>
+<widget id="mendix.searchablereferenceselectormxnine.SearchableReferenceSelectorMxNine" pluginWidget="true" needsEntityContext="true" offlineCapable="true" supportedPlatform="Web" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
+    <name>Searchable Reference Selector Mx9</name>
     <description>Mendix reference selector with a search bar and a clear button (Mendix 9)</description>
     <helpUrl>https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md</helpUrl>
     <icon />
@@ -17,31 +17,32 @@
                 <systemProperty key="Visibility"></systemProperty>
             </propertyGroup>
             <propertyGroup caption="Customization">
-                <property key="searchable" type="boolean" defaultValue="true">
-                    <caption>Searchable?</caption>
-                    <description></description>
-                </property>
-                <property key="alignment" type="enumeration" defaultValue="leftAligned">
-                    <caption>Alignment</caption>
+                <property key="optionTextType" type="enumeration" defaultValue="text">
+                    <caption>Option Text Type</caption>
                     <description></description>
                     <enumerationValues>
-                        <enumerationValue key="leftAligned">Left</enumerationValue>
-                        <enumerationValue key="rightAligned">Right</enumerationValue>
+                        <enumerationValue key="text">Text</enumerationValue>
+                        <enumerationValue key="html">HTML</enumerationValue>
+                        <enumerationValue key="custom">Custom</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="allowEmptySelection" type="boolean" defaultValue="true">
-                    <caption>Allow Empty Selection?</caption>
+                <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
+                    <caption>Option Custom Content</caption>
+                    <description>Used when the Option Text Type is set to Custom</description>
+                </property>
+                <property key="isClearable" type="boolean" defaultValue="true">
+                    <caption>Clearable?</caption>
                     <description>When true, the dropdown will have an 'X' icon to clear the value</description>
                 </property>
-                <property key="minMenuHeight" type="expression" defaultValue="0">
-                    <caption>Min Menu Height (px)</caption>
-                    <description>Minimun number of pixels for the select popup</description>
-                    <returnType type="Integer" />
+                <property key="minMenuHeight" type="expression" defaultValue="empty">
+                    <caption>Min Menu Height</caption>
+                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
+                    <returnType type="String" />
                 </property>
-                <property key="maxMenuHeight" type="expression" defaultValue="0">
-                    <caption>Max Menu Height (px)</caption>
-                    <description>Maximum number of pixels for the select popup</description>
-                    <returnType type="Integer" />
+                <property key="maxMenuHeight" type="expression" defaultValue="empty">
+                    <caption>Max Menu Height</caption>
+                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
+                    <returnType type="String" />
                 </property>
                 <property key="noResultsText" type="expression" defaultValue="empty">
                     <caption>No Results Text</caption>
@@ -75,6 +76,13 @@
                     <attributeTypes>
                         <attributeType name="String" />
                         <attributeType name="Enum" />
+                    </attributeTypes>
+                </property>
+                <property key="selectableAttribute" type="attribute" required="true" dataSource="selectableObjects">
+                    <caption>Selectable Attribute</caption>
+                    <description>The attribute on the datasource that determines if that object can be selected</description>
+                    <attributeTypes>
+                        <attributeType name="Boolean" />
                     </attributeTypes>
                 </property>
             </propertyGroup>
