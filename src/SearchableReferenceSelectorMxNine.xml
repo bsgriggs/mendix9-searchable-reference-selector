@@ -49,6 +49,15 @@
                     <description>Limits the items shown in the dropdown for performance. If less than 1, no limit is set.</description>
                     <returnType type="Integer" />
                 </property>
+                <property key="filterDelay" type="integer" defaultValue="300" required="true">
+                    <caption>Filter Delay</caption>
+                    <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
+                </property>
+                <property key="moreResultsText" type="expression" defaultValue="'Search for more results'">
+                    <caption>More Results Text</caption>
+                    <description>Text shown if the there are more items than the max items being displayed.</description>
+                    <returnType type="String" />
+                </property>
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Data Source">

@@ -18,16 +18,17 @@ interface ReferenceSelectorProps {
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
+    mxFilter: string;
+    setMxFilter:(newFilter: string) => void;
     isClearable: boolean;
     isReadOnly: boolean;
     maxHeight?: string;
+    moreResultsText?: string;
 }
 
 const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
     const [showMenu, setShowMenu] = useState(false);
-    const [searchText, setSearchText] = useState("");
-    const [selectableObjectList, setSelectableObjectList] = useState<ObjectItem[]>([]);
-    const [selectedObjIndex, setSelectedObjIndex] = useState<number>(-1);
+    const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef(null);
 
@@ -44,51 +45,51 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             focusSearchInput();
         } else{
             // clear search text if the menu is closed
-            setSearchText("");
+            props.setMxFilter("");
         }
     }, [showMenu]);
 
-    useEffect(() => {
-        //set selectable obj index
-        console.log("useEffect - set selectable obj index")
-        if (props.currentValue !== undefined) {
-            setSelectedObjIndex(selectableObjectList.findIndex(obj => obj.id === props.currentValue?.id));
-        }
-    }, [props.currentValue]);
+    // useEffect(() => {
+    //     //set selectable obj index
+    //     console.log("useEffect - set selectable obj index")
+    //     if (props.currentValue !== undefined) {
+    //         setFocusedObjIndex(props.selectableObjects.findIndex(obj => obj.id === props.currentValue?.id));
+    //     }
+    // }, [props.currentValue]);
 
-    useEffect(() => {
-        // filter the selectable objects when the search text changes
-        console.log("useEffect - filter")
-        if (searchText !== undefined && searchText.trim().length > 0) {
-            const searchTextTrimmed = searchText.trim();
-            setSelectableObjectList(
-                props.selectableObjects.filter(obj => {
-                    const text = props.displayAttribute.get(obj).value;
-                    return text !== undefined && text.toLowerCase().includes(searchTextTrimmed.toLowerCase());
-                })
-            );
-        } else {
-            setSelectableObjectList(props.selectableObjects);
-        }
-    }, [searchText]);
+    // useEffect(() => {
+    //     // filter the selectable objects when the search text changes
+    //     console.log("useEffect - filter")
+    //     if (searchText !== undefined && searchText.trim().length > 0) {
+    //         const searchTextTrimmed = searchText.trim();
+    //         setSelectableObjectList(
+    //             props.selectableObjects.filter(obj => {
+    //                 const text = props.displayAttribute.get(obj).value;
+    //                 return text !== undefined && text.toLowerCase().includes(searchTextTrimmed.toLowerCase());
+    //             })
+    //         );
+    //     } else {
+    //         setSelectableObjectList(props.selectableObjects);
+    //     }
+    // }, [searchText]);
 
-    const resetSelectedObjIndex = () => {
-        console.log("reset selected obj index")
-        const index = selectableObjectList.findIndex(obj => obj.id === props.currentValue?.id);
-        setSelectedObjIndex(index);
-    };
+    // const resetSelectedObjIndex = () => {
+    //     console.log("reset selected obj index")
+    //     const index = props.selectableObjects.findIndex(obj => obj.id === props.currentValue?.id);
+    //     setFocusedObjIndex(index);
+    // };
 
     useOnClickOutside(srsRef, () => {
         // handle click outside
         console.log("click outside");
         setShowMenu(false);
-        resetSelectedObjIndex();
+        setFocusedObjIndex(-1);
     });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined, closeMenu: boolean) => {
         console.log("onSelect handler", {selectedObj, closeMenu})
         props.onSelectAssociation(selectedObj);
-        setSearchText("");
+        props.setMxFilter("");
         if (closeMenu) {
             setShowMenu(false);
         }
@@ -117,8 +118,8 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         console.log("handle input change", value)
-        setSearchText(value);
-        setSelectedObjIndex(0);
+        props.setMxFilter(value);
+        setFocusedObjIndex(0);
         // make sure the dropdown is open if the user is typing
         if (value.trim() !== "" && showMenu === false) {
             setShowMenu(true);
@@ -135,37 +136,37 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const keyPressed = event.key;
-        console.log("key pressed", keyPressed)
+        console.log("key pressed", keyPressed);
         if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
-            if (selectedObjIndex === -1) {
-                setSelectedObjIndex(0);
-            } else if (selectedObjIndex > 0) {
-                setSelectedObjIndex(selectedObjIndex - 1);
+            if (focusedObjIndex === -1) {
+                setFocusedObjIndex(0);
+            } else if (focusedObjIndex > 0) {
+                setFocusedObjIndex(focusedObjIndex - 1);
             } else {
-                setSelectedObjIndex(selectableObjectList.length);
+                setFocusedObjIndex(props.selectableObjects.length -1);
             }
             setShowMenu(true);
         } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
-            if (selectedObjIndex === -1) {
-                setSelectedObjIndex(0);
-            } else if (selectedObjIndex < selectableObjectList.length) {
-                setSelectedObjIndex(selectedObjIndex + 1);
+            if (focusedObjIndex === -1) {
+                setFocusedObjIndex(0);
+            } else if (focusedObjIndex < props.selectableObjects.length -1) {
+                setFocusedObjIndex(focusedObjIndex + 1);
             } else {
-                setSelectedObjIndex(0);
+                setFocusedObjIndex(0);
             }
             setShowMenu(true);
         } else if (keyPressed === "Enter") {
-            if (selectedObjIndex > -1) {
-                const currentSelectedObj = selectableObjectList[selectedObjIndex];
+            if (focusedObjIndex > -1) {
+                const currentSelectedObj = props.selectableObjects[focusedObjIndex];
                 if (
                     props.selectableAttribute === undefined ||
                     props.selectableAttribute?.get(currentSelectedObj).value
                 ) {
-                    onSelectHandler(selectableObjectList[selectedObjIndex], true);
+                    onSelectHandler(props.selectableObjects[focusedObjIndex], true);
                 }
             }
         } else if (keyPressed === "Escape" || keyPressed === "Tab") {
-            resetSelectedObjIndex();
+            setFocusedObjIndex(-1);
             setShowMenu(false);
         }
     };
@@ -174,13 +175,15 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         console.log("handleClear")
         event.stopPropagation();
         setShowMenu(true);
-        setSearchText("");
-        setSelectedObjIndex(-1);
+        props.setMxFilter("");
+        setFocusedObjIndex(-1);
         if (props.currentValue !== undefined) {
             onSelectHandler(undefined, false);
         }
         setTimeout(() => focusSearchInput(), 300);
     }
+
+    console.log("focused obj index", focusedObjIndex);
 
     return (
         <div
@@ -204,7 +207,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
                     type="text"
                     onChange={handleInputChange}
                     readOnly={props.isReadOnly}
-                    value={searchText}
+                    value={props.mxFilter}
                     ref={searchInput}
                     // onBlur={handleInputBlur}
                 ></input>
@@ -223,7 +226,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             </div>
             {showMenu && (
                 <OptionsMenu
-                    selectableObjects={selectableObjectList}
+                    selectableObjects={props.selectableObjects}
                     displayAttribute={props.displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => {
                         const newObjSelectable =
@@ -232,13 +235,15 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
                                 : true;
                         onSelectHandler(newObject, newObjSelectable);
                     }}
-                    currentValue={selectableObjectList[selectedObjIndex]}
+                    currentValue={props.currentValue}
+                    currentFocus={props.selectableObjects[focusedObjIndex]}
                     maxHeight={props.maxHeight}
-                    searchText={searchText}
+                    searchText={props.mxFilter}
                     selectableAttribute={props.selectableAttribute}
                     noResultsText={props.noResultsText}
                     optionTextType={props.optionTextType}
                     optionCustomContent={props.optionCustomContent}
+                    moreResultsText={props.moreResultsText}
                 />
             )}
         </div>

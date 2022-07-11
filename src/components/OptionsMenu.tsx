@@ -1,12 +1,12 @@
-import React, { createElement, ReactNode, useEffect, useRef } from "react";
+import React, { createElement, ReactNode, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import Option from "./Option";
-
+import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem;
+    currentFocus?: ObjectItem;
     displayAttribute: ListAttributeValue<string>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
@@ -15,15 +15,20 @@ interface OptionsMenuProps {
     maxHeight?: string;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
+    moreResultsText?: string;
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
     const selectedObjRef = useRef<HTMLDivElement>(null);
+    const [focusMode, setFocusMode] = useState<focusModeEnum>(
+        props.currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
+    );
 
     // keep the selected item in view when using arrow keys
     useEffect(() => {
         selectedObjRef.current && selectedObjRef.current.scrollIntoView({ block: "center" });
-    }, [props.currentValue]);
+        setFocusMode(focusModeEnum.arrow);
+    }, [props.currentFocus]);
 
     const onSelectHandler = (selectedObj: ObjectItem) => {
         props.onSelectOption(selectedObj);
@@ -45,29 +50,45 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
     };
 
     return (
-        <div className="srs-dropdown" style={{maxHeight: props.maxHeight ? props.maxHeight : "12.5em"}}>
+        <div
+            className="srs-dropdown"
+            style={{ maxHeight: props.maxHeight ? props.maxHeight : "12.5em" }}
+            onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
+        >
             {props.selectableObjects !== undefined && props.selectableObjects.length > 0 && (
                 <React.Fragment>
                     {props.selectableObjects.map((obj, key) => {
-                        const isSelected = obj === props.currentValue;
+                        const isFocused = obj === props.currentFocus;
                         return (
-                            <Option
-                                key={key}
-                                isSelected={isSelected}
-                                isSelectable={
-                                    props.selectableAttribute ? props.selectableAttribute.get(obj).value === true : true
-                                }
-                                onSelect={() => onSelectHandler(obj)}
-                                children={determineOptionContent(obj)}
-                                ref={isSelected ? selectedObjRef : undefined}
-                            />
+                            <div ref={isFocused ? selectedObjRef : undefined}>
+                                <Option
+                                    key={key}
+                                    isSelected={obj === props.currentValue}
+                                    isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
+                                    isSelectable={
+                                        props.selectableAttribute
+                                            ? props.selectableAttribute.get(obj).value === true
+                                            : true
+                                    }
+                                    onSelect={() => onSelectHandler(obj)}
+                                    children={determineOptionContent(obj)}
+                                    focusMode={focusMode}
+                                />
+                            </div>
                         );
                     })}
+                    {props.moreResultsText && (
+                        <div className="mx-text srs-infooption" role="option">
+                            {props.moreResultsText}
+                        </div>
+                    )}
                 </React.Fragment>
             )}
             {props.selectableObjects === undefined ||
                 (props.selectableObjects.length === 0 && (
-                    <div className="mx-text srs-noresult" role="option">{props.noResultsText ? props.noResultsText : "No results found"}</div>
+                    <div className="mx-text srs-infooption" role="option">
+                        {props.noResultsText ? props.noResultsText : "No results found"}
+                    </div>
                 ))}
         </div>
     );

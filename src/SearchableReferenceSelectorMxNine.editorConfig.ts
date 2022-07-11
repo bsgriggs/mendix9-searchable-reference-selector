@@ -47,6 +47,10 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["optionCustomContent"]);
     }
 
+    if (_values.maxItems === "0") {
+        hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
+    }
+
     return defaultProperties;
 }
 
@@ -67,6 +71,22 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `optionTextType`,
             message: `Option Custom content is required when Option Text Type is 'Custom'.`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
+    if (_values.filterDelay === null || _values.filterDelay < 0){
+        errors.push({
+            property: `filterDelay`,
+            message: `Filter Delay must be greater than or equal to 0`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
+    if(parseInt(_values.maxItems) < 0){
+        errors.push({
+            property: `maxItems`,
+            message: `Max Items must be greater than or equal to 0`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
     }

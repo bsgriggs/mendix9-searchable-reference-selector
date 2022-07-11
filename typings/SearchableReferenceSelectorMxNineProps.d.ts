@@ -20,6 +20,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     maxMenuHeight: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
     maxItems: DynamicValue<Big>;
+    filterDelay: number;
+    moreResultsText: DynamicValue<string>;
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
     displayAttribute: ListAttributeValue<string>;
@@ -36,6 +38,8 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxMenuHeight: string;
     noResultsText: string;
     maxItems: string;
+    filterDelay: number | null;
+    moreResultsText: string;
     selectableObjects: {} | { type: string } | null;
     association: string;
     displayAttribute: string;

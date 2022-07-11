@@ -57,9 +57,9 @@ Place your custom CSS here
     border-radius: 4px;
 }
 
-.srs .srs-noresult{
+.srs .srs-infooption{
     padding: 0.4em;
-    margin: 0.25em;
+    color: #6f6f6f;
 }
 
 .srs .srs-option.disabled{
@@ -67,7 +67,7 @@ Place your custom CSS here
     cursor: default;
 }
 
-.srs .srs-option:hover:not(.disabled){
+.srs .srs-option.focused:not(.disabled){
     background-color: #d7d7d7;
 }
 .srs .srs-option.selected {
