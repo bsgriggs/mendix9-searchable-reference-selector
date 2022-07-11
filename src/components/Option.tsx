@@ -1,4 +1,4 @@
-import { createElement, ReactNode } from "react";
+import { createElement, ReactNode, forwardRef } from "react";
 
 interface OptionProps {
     key: number;
@@ -8,19 +8,18 @@ interface OptionProps {
     children: ReactNode;
 }
 
-const Option = (props: OptionProps): JSX.Element => {
-    return (
-        <div
-            key={props.key}
-            role="option"
-            aria-selected={props.isSelected ? "true" : "false"}
-            tabIndex={props.key}
-            className={props.isSelected ? "srs-option selected" : "srs-option"}
-            onClick={props.onSelect}
-        >
-            {props.children}
-        </div>
-    );
-};
+const Option = forwardRef<HTMLDivElement, OptionProps>((props: OptionProps, ref) => (
+    <div
+        key={props.key}
+        role="option"
+        aria-selected={props.isSelected ? "true" : "false"}
+        tabIndex={props.key}
+        className={props.isSelected ? "srs-option selected" : "srs-option"}
+        onClick={props.onSelect}
+        ref={ref}
+    >
+        {props.children}
+    </div>
+));
 
 export default Option;

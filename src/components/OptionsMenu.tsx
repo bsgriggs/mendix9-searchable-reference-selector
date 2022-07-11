@@ -1,7 +1,7 @@
 import React, { createElement, ReactNode, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option from "./Option";
-import useOnClickOutside from "../custom hooks/useOnClickOutside";
+
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 interface OptionsMenuProps {
@@ -10,7 +10,6 @@ interface OptionsMenuProps {
     displayAttribute: ListAttributeValue<string>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
-    closeMenu: () => void;
     searchText?: string;
     noResultsText?: string;
     minHeight?: string;
@@ -20,10 +19,10 @@ interface OptionsMenuProps {
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
-    // const [hoveredObject, setHoveredObject] = useState<ObjectItem | undefined>(props.currentValue);
-    const ref = useRef(null);
     const [selectableObjectList, setSelectableObjectList] = useState<ObjectItem[]>();
+    const selectedObjRef = useRef<HTMLDivElement>(null);
 
+    // filter the selectable objects when the search text changes
     useEffect(() => {
         if (props.searchText !== undefined && props.searchText.trim().length > 0) {
             const searchText = props.searchText.trim();
@@ -38,14 +37,13 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
         }
     }, [props.searchText]);
 
-    useOnClickOutside(ref, () => {
-        // handle click outside
-        props.closeMenu();
-    });
+    // keep the selected item in view when using arrow keys
+    useEffect(() => {
+        selectedObjRef.current && selectedObjRef.current.scrollIntoView({ block: "center" });
+    }, [props.currentValue]);
 
     const onSelectHandler = (selectedObj: ObjectItem) => {
         props.onSelectOption(selectedObj);
-        props.closeMenu();
     };
 
     const determineOptionContent = (objectItem: ObjectItem): ReactNode => {
@@ -63,8 +61,11 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
         }
     };
 
+    console.log("options menu props", props);
+    console.log("selected obj ref", selectedObjRef);
+
     return (
-        <div className="srs-dropdown" ref={ref}>
+        <div className="srs-dropdown">
             {selectableObjectList !== undefined && selectableObjectList.length > 0 && (
                 <React.Fragment>
                     {selectableObjectList.map((obj, key) => {
@@ -78,6 +79,7 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                 }
                                 onSelect={() => onSelectHandler(obj)}
                                 children={determineOptionContent(obj)}
+                                ref={isSelected ? selectedObjRef : undefined}
                             />
                         );
                     })}
