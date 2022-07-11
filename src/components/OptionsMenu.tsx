@@ -1,4 +1,4 @@
-import React, { createElement, ReactNode, useEffect, useRef, useState } from "react";
+import React, { createElement, ReactNode, useEffect, useRef } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option from "./Option";
 
@@ -12,30 +12,13 @@ interface OptionsMenuProps {
     onSelectOption: (newObject: ObjectItem) => void;
     searchText?: string;
     noResultsText?: string;
-    minHeight?: string;
     maxHeight?: string;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
-    const [selectableObjectList, setSelectableObjectList] = useState<ObjectItem[]>();
     const selectedObjRef = useRef<HTMLDivElement>(null);
-
-    // filter the selectable objects when the search text changes
-    useEffect(() => {
-        if (props.searchText !== undefined && props.searchText.trim().length > 0) {
-            const searchText = props.searchText.trim();
-            setSelectableObjectList(
-                props.selectableObjects.filter(obj => {
-                    const text = props.displayAttribute.get(obj).value;
-                    return text !== undefined && text.toLowerCase().includes(searchText.toLowerCase());
-                })
-            );
-        } else {
-            setSelectableObjectList(props.selectableObjects);
-        }
-    }, [props.searchText]);
 
     // keep the selected item in view when using arrow keys
     useEffect(() => {
@@ -61,14 +44,11 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
         }
     };
 
-    console.log("options menu props", props);
-    console.log("selected obj ref", selectedObjRef);
-
     return (
-        <div className="srs-dropdown">
-            {selectableObjectList !== undefined && selectableObjectList.length > 0 && (
+        <div className="srs-dropdown" style={{maxHeight: props.maxHeight ? props.maxHeight : "12.5em"}}>
+            {props.selectableObjects !== undefined && props.selectableObjects.length > 0 && (
                 <React.Fragment>
-                    {selectableObjectList.map((obj, key) => {
+                    {props.selectableObjects.map((obj, key) => {
                         const isSelected = obj === props.currentValue;
                         return (
                             <Option
@@ -85,9 +65,9 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                     })}
                 </React.Fragment>
             )}
-            {selectableObjectList === undefined ||
-                (selectableObjectList.length === 0 && (
-                    <span>{props.noResultsText ? props.noResultsText : "No results found"}</span>
+            {props.selectableObjects === undefined ||
+                (props.selectableObjects.length === 0 && (
+                    <div className="mx-text srs-noresult" role="option">{props.noResultsText ? props.noResultsText : "No results found"}</div>
                 ))}
         </div>
     );

@@ -47,18 +47,27 @@ Place your custom CSS here
     border: 1px solid #d7d7d7;
     border-radius: 4px;
     background-color: #fff;
-    padding: 0.5em;
-    max-height: 20rem;
     overflow-y: auto;
+    padding: 0.25em;
 }
 
 .srs .srs-option {
     cursor: pointer;
-    padding: 0.5em;
+    padding: 0.4em;
     border-radius: 4px;
 }
 
-.srs .srs-option:hover {
+.srs .srs-noresult{
+    padding: 0.4em;
+    margin: 0.25em;
+}
+
+.srs .srs-option.disabled{
+    color: #6f6f6f;
+    cursor: default;
+}
+
+.srs .srs-option:hover:not(.disabled){
     background-color: #d7d7d7;
 }
 .srs .srs-option.selected {

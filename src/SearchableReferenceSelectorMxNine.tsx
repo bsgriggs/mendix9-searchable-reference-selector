@@ -15,7 +15,6 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
         props.association.status === ValueStatus.Available &&
         props.selectableObjects.status === ValueStatus.Available &&
         props.placeholder.status === ValueStatus.Available &&
-        props.minMenuHeight.status === ValueStatus.Available &&
         props.maxMenuHeight.status === ValueStatus.Available
     ) {
         const [currentObjectItem, setCurrentObjectItem] = useState<ObjectItem | ObjectItem[] | undefined>(
@@ -50,7 +49,6 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         selectableObjects={props.selectableObjects.items || []}
                         placeholder={props.placeholder.value}
                         isReadOnly={props.association.readOnly}
-                        minHeight={props.minMenuHeight.value}
                         maxHeight={props.maxMenuHeight.value}
                         noResultsText={props.noResultsText.value}
                         displayAttribute={props.displayAttribute}

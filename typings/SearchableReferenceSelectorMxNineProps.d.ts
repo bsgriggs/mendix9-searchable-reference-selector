@@ -17,14 +17,13 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     isClearable: boolean;
-    minMenuHeight: DynamicValue<string>;
     maxMenuHeight: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
     maxItems: DynamicValue<Big>;
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListAttributeValue<boolean>;
+    selectableAttribute?: ListAttributeValue<boolean>;
     onChangeAssociation?: ActionValue;
 }
 
@@ -34,7 +33,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     isClearable: boolean;
-    minMenuHeight: string;
     maxMenuHeight: string;
     noResultsText: string;
     maxItems: string;

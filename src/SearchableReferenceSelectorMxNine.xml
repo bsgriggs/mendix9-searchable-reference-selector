@@ -34,11 +34,6 @@
                     <caption>Clearable?</caption>
                     <description>When true, the dropdown will have an 'X' icon to clear the value</description>
                 </property>
-                <property key="minMenuHeight" type="expression" defaultValue="empty">
-                    <caption>Min Menu Height</caption>
-                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
-                    <returnType type="String" />
-                </property>
                 <property key="maxMenuHeight" type="expression" defaultValue="empty">
                     <caption>Max Menu Height</caption>
                     <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
@@ -78,7 +73,7 @@
                         <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
-                <property key="selectableAttribute" type="attribute" required="true" dataSource="selectableObjects">
+                <property key="selectableAttribute" type="attribute" required="false" dataSource="selectableObjects">
                     <caption>Selectable Attribute</caption>
                     <description>The attribute on the datasource that determines if that object can be selected</description>
                     <attributeTypes>

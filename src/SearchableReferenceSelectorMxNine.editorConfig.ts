@@ -1,14 +1,15 @@
 import { SearchableReferenceSelectorMxNinePreviewProps } from "../typings/SearchableReferenceSelectorMxNineProps";
+import { hidePropertiesIn } from "./utils/PageEditorUtils";
 
-type Properties = PropertyGroup[];
+export type Properties = PropertyGroup[];
 
-type PropertyGroup = {
+export type PropertyGroup = {
     caption: string;
     propertyGroups?: PropertyGroup[];
     properties?: Property[];
 };
 
-type Property = {
+export type Property = {
     key: string;
     caption: string;
     description?: string;
@@ -41,6 +42,11 @@ export function getProperties(
         delete defaultProperties.properties.myOtherProperty;
     }
     */
+
+    if (_values.optionTextType !== "custom"){
+        hidePropertiesIn(defaultProperties, _values, ["optionCustomContent"]);
+    }
+
     return defaultProperties;
 }
 
@@ -56,5 +62,14 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
     */
+
+    if (_values.optionTextType === "custom" && _values.optionCustomContent.widgetCount === 0) {
+        errors.push({
+            property: `optionTextType`,
+            message: `Option Custom content is required when Option Text Type is 'Custom'.`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
     return errors;
 }

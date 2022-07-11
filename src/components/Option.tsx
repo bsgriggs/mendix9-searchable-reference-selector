@@ -8,18 +8,33 @@ interface OptionProps {
     children: ReactNode;
 }
 
-const Option = forwardRef<HTMLDivElement, OptionProps>((props: OptionProps, ref) => (
+
+
+const Option = forwardRef<HTMLDivElement, OptionProps>((props: OptionProps, ref) => {
+    const determineClassName = ():string => {
+        let className = "srs-option";
+        if (props.isSelected) {
+            className = className + " selected";
+        }
+        if (props.isSelectable === false) {
+            className = className + " disabled";
+        }
+        return className;    
+    }
+
+    return(
     <div
         key={props.key}
         role="option"
         aria-selected={props.isSelected ? "true" : "false"}
+        aria-disabled={props.isSelectable === false}
         tabIndex={props.key}
-        className={props.isSelected ? "srs-option selected" : "srs-option"}
-        onClick={props.onSelect}
+        className={determineClassName()}
+        onClick={() => props.isSelectable ? props.onSelect() : undefined}
         ref={ref}
     >
         {props.children}
     </div>
-));
+)});
 
 export default Option;
