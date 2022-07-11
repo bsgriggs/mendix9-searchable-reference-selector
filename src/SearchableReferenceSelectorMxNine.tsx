@@ -20,7 +20,6 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            console.log(setMxFilter);
             if (props.displayAttribute.filterable) {
                 const filterCondition = contains(attribute(props.displayAttribute.id), literal(mxFilter));
                 props.selectableObjects.setFilter(filterCondition);
@@ -75,6 +74,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         mxFilter={mxFilter}
                         setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
                         moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value: undefined}
+                        optionsStyle={props.optionsStyle}
                     />
                 )}
                 {props.association.type === "ReferenceSet" && <span>Reference Set</span>}

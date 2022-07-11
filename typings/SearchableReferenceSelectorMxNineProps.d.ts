@@ -9,12 +9,15 @@ import { Big } from "big.js";
 
 export type OptionTextTypeEnum = "text" | "html" | "custom";
 
+export type OptionsStyleEnum = "cell" | "checkbox";
+
 export interface SearchableReferenceSelectorMxNineContainerProps {
     name: string;
     tabIndex?: number;
     id: string;
     placeholder: DynamicValue<string>;
     optionTextType: OptionTextTypeEnum;
+    optionsStyle: OptionsStyleEnum;
     optionCustomContent?: ListWidgetValue;
     isClearable: boolean;
     maxMenuHeight: DynamicValue<string>;
@@ -33,6 +36,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
     placeholder: string;
     optionTextType: OptionTextTypeEnum;
+    optionsStyle: OptionsStyleEnum;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     isClearable: boolean;
     maxMenuHeight: string;

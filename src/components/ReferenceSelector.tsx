@@ -3,7 +3,7 @@ import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import CancelIcon from "./CancelIcon";
 import DropdownIcon from "./DropdownIcon";
 import OptionsMenu from "./OptionsMenu";
-import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 
 interface ReferenceSelectorProps {
@@ -24,6 +24,7 @@ interface ReferenceSelectorProps {
     isReadOnly: boolean;
     maxHeight?: string;
     moreResultsText?: string;
+    optionsStyle: OptionsStyleEnum;
 }
 
 const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
@@ -40,7 +41,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
 
     useEffect(() => {
         //Auto focus the input if the popup is open
-        console.log("useEffect - auto focus");
         if (showMenu) {
             focusSearchInput();
         } else{
@@ -81,13 +81,11 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
 
     useOnClickOutside(srsRef, () => {
         // handle click outside
-        console.log("click outside");
         setShowMenu(false);
         setFocusedObjIndex(-1);
     });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined, closeMenu: boolean) => {
-        console.log("onSelect handler", {selectedObj, closeMenu})
         props.onSelectAssociation(selectedObj);
         props.setMxFilter("");
         if (closeMenu) {
@@ -117,7 +115,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        console.log("handle input change", value)
         props.setMxFilter(value);
         setFocusedObjIndex(0);
         // make sure the dropdown is open if the user is typing
@@ -136,7 +133,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const keyPressed = event.key;
-        console.log("key pressed", keyPressed);
         if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
             if (focusedObjIndex === -1) {
                 setFocusedObjIndex(0);
@@ -172,7 +168,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
     };
 
     const handleClear = (event: React.MouseEvent<HTMLDivElement>) => {
-        console.log("handleClear")
         event.stopPropagation();
         setShowMenu(true);
         props.setMxFilter("");
@@ -183,8 +178,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         setTimeout(() => focusSearchInput(), 300);
     }
 
-    console.log("focused obj index", focusedObjIndex);
-
     return (
         <div
             className={showMenu ? "form-control active" : "form-control"}
@@ -192,7 +185,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             onClick={() => {
                 setShowMenu(!showMenu);
                 if (showMenu === false) {
-                    console.log("onClick - show menu")
                     setTimeout(() => focusSearchInput(), 300);
                 }
             }}
@@ -244,6 +236,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
                     optionTextType={props.optionTextType}
                     optionCustomContent={props.optionCustomContent}
                     moreResultsText={props.moreResultsText}
+                    optionsStyle={props.optionsStyle}
                 />
             )}
         </div>

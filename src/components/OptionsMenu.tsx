@@ -1,7 +1,7 @@
 import React, { createElement, ReactNode, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option, { focusModeEnum } from "./Option";
-import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import { OptionTextTypeEnum, OptionsStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
@@ -16,6 +16,7 @@ interface OptionsMenuProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     moreResultsText?: string;
+    optionsStyle: OptionsStyleEnum;
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
@@ -58,12 +59,13 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
             {props.selectableObjects !== undefined && props.selectableObjects.length > 0 && (
                 <React.Fragment>
                     {props.selectableObjects.map((obj, key) => {
-                        const isFocused = obj === props.currentFocus;
+                        const isFocused = obj.id === props.currentFocus?.id;
+                        const isSelected = obj.id ===props.currentValue?.id;
                         return (
                             <div ref={isFocused ? selectedObjRef : undefined}>
                                 <Option
                                     key={key}
-                                    isSelected={obj === props.currentValue}
+                                    isSelected={isSelected}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
                                     isSelectable={
                                         props.selectableAttribute
@@ -73,6 +75,7 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                     onSelect={() => onSelectHandler(obj)}
                                     children={determineOptionContent(obj)}
                                     focusMode={focusMode}
+                                    optionsStyle={props.optionsStyle}
                                 />
                             </div>
                         );

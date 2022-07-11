@@ -26,6 +26,14 @@
                         <enumerationValue key="custom">Custom</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="optionsStyle" type="enumeration" defaultValue="cell">
+                    <caption>Option Style</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="cell">Cell</enumerationValue>
+                        <enumerationValue key="checkbox">Checkbox</enumerationValue>
+                    </enumerationValues>
+                </property>
                 <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
                     <caption>Option Custom Content</caption>
                     <description>Used when the Option Text Type is set to Custom</description>
@@ -46,7 +54,7 @@
                 </property>
                 <property key="maxItems" type="expression" defaultValue="0">
                     <caption>Max Items</caption>
-                    <description>Limits the items shown in the dropdown for performance. If less than 1, no limit is set.</description>
+                    <description>Limits the items shown in the dropdown. If 0, no limit is set.</description>
                     <returnType type="Integer" />
                 </property>
                 <property key="filterDelay" type="integer" defaultValue="300" required="true">

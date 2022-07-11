@@ -4,7 +4,6 @@ Place your custom CSS here
 .srs {
     width: 100%;
     position: relative;
-    z-index: 301;
 }
 
 .srs .form-control {
@@ -53,18 +52,18 @@ Place your custom CSS here
 
 .srs .srs-option {
     cursor: pointer;
-    padding: 0.4em;
+    padding: 0.5em;
     border-radius: 4px;
 }
 
 .srs .srs-infooption{
-    padding: 0.4em;
+    padding: 0.5em;
     color: #6f6f6f;
 }
 
 .srs .srs-option.disabled{
     color: #6f6f6f;
-    cursor: default;
+    cursor: not-allowed;
 }
 
 .srs .srs-option.focused:not(.disabled){
@@ -72,4 +71,8 @@ Place your custom CSS here
 }
 .srs .srs-option.selected {
     background-color: #e7e7e7;
+}
+
+.srs .srs-option input[type=checkbox]{
+    margin-right: 0.5em !important;
 }
