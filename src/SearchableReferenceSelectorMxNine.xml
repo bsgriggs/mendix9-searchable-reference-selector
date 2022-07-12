@@ -17,8 +17,6 @@
                 <systemProperty key="Visibility"></systemProperty>
             </propertyGroup>
             <propertyGroup caption="Customization">
-
-
                 <property key="isClearable" type="boolean" defaultValue="true">
                     <caption>Clearable?</caption>
                     <description>When true, the dropdown will have an 'X' icon to clear the value</description>
