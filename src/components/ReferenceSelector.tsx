@@ -5,6 +5,7 @@ import DropdownIcon from "./DropdownIcon";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
+import Big from "big.js";
 
 interface ReferenceSelectorProps {
     name: string;
@@ -13,7 +14,7 @@ interface ReferenceSelectorProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -56,7 +57,11 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
     });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined, closeMenu: boolean): void => {
-        props.onSelectAssociation(selectedObj);
+        if (props.currentValue?.id === selectedObj?.id && props.isClearable) {
+            props.onSelectAssociation(undefined);
+        } else {
+            props.onSelectAssociation(selectedObj);
+        }
         props.setMxFilter("");
         if (closeMenu) {
             setShowMenu(false);

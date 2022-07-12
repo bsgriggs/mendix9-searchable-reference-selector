@@ -2,6 +2,7 @@ import React, { createElement, ReactNode } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import CancelIcon from "./CancelIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import Big from "big.js";
 
 interface BadgeProps {
     content: ObjectItem;
@@ -10,7 +11,7 @@ interface BadgeProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>
 }
 
 const Badge = (props: BadgeProps) => {

@@ -2,12 +2,13 @@ import React, { createElement, ReactNode, useEffect, useRef, useState } from "re
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import Big from "big.js";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
     searchText?: string;

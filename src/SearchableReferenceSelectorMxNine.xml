@@ -102,6 +102,9 @@
                     <attributeTypes>
                         <attributeType name="String" />
                         <attributeType name="Enum" />
+                        <attributeType name="Integer" />
+                        <attributeType name="Decimal" />
+                        <attributeType name="Long" />
                     </attributeTypes>
                 </property>
                 <property key="selectableAttribute" type="attribute" required="false" dataSource="selectableObjects">

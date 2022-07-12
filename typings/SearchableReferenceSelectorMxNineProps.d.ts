@@ -31,7 +31,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     moreResultsText: DynamicValue<string>;
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onChangeAssociation?: ActionValue;
 }

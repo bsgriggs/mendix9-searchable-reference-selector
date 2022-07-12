@@ -11,6 +11,7 @@ import {
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import Badge from "./Badge";
 import Comma from "./Comma";
+import Big from "big.js";
 
 interface ReferenceSetSelectorProps {
     name: string;
@@ -19,7 +20,7 @@ interface ReferenceSetSelectorProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValues: ObjectItem[];
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -67,8 +68,10 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         if (selectedObj !== undefined) {
             if (props.currentValues !== []) {
                 if (props.currentValues.find(obj => obj.id === selectedObj.id)) {
-                    // obj already selected , deselect
-                    onRemoveHandler(selectedObj);
+                    if (props.isClearable) {
+                        // obj already selected , deselect
+                        onRemoveHandler(selectedObj);
+                    }
                 } else {
                     // list already exists, add to list
                     props.onSelectAssociation([...props.currentValues, selectedObj]);

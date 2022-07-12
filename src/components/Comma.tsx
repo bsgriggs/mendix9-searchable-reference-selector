@@ -1,6 +1,7 @@
 import { createElement, ReactNode } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import Big from "big.js";
 
 interface CommaProps {
     content: ObjectItem;
@@ -9,7 +10,7 @@ interface CommaProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string | Big>
 }
 
 const Comma = (props: CommaProps): JSX.Element => {
