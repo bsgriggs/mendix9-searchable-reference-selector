@@ -58,10 +58,12 @@ Place your custom CSS here
 
 .srs .srs-comma {
     margin-left: 4px;
+    font-size: small;
 }
 
 .srs .srs-extra {
     margin-left: 4px;
+    font-size: small;
 }
 
 .srs .srs-dropdown {
