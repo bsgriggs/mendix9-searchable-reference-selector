@@ -11,10 +11,18 @@ interface LoadingSelectorProps {
 
 const LoadingSelector = (props: LoadingSelectorProps): JSX.Element => {
     return (
-        <div className="d-flex">
-            <input name={props.name} tabIndex={props.tabIndex} placeholder={props.placeholder}></input>
-            {props.isClearable && <CancelIcon />}
-            <DropdownIcon />
+        <div className="srs">
+            <div className={"form-control"} tabIndex={props.tabIndex || 0}>
+                <input className="" name={props.name} placeholder={props.placeholder} type="text"></input>
+                {props.isClearable && (
+                    <div className="srs-icon">
+                        <CancelIcon />
+                    </div>
+                )}
+                <div className="srs-icon">
+                    <DropdownIcon />
+                </div>
+            </div>
         </div>
     );
 };
