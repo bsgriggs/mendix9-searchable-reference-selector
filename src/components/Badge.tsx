@@ -11,7 +11,7 @@ interface BadgeProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string | Big>
+    displayAttribute: ListAttributeValue<string | Big>;
 }
 
 const Badge = (props: BadgeProps) => {

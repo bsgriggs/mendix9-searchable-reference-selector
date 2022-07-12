@@ -20,7 +20,7 @@ interface ReferenceSetSelectorProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValues: ObjectItem[];
-    displayAttribute: ListAttributeValue<string | Big>
+    displayAttribute: ListAttributeValue<string | Big>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;

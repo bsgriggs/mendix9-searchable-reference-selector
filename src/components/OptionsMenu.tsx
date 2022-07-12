@@ -8,7 +8,7 @@ interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
-    displayAttribute: ListAttributeValue<string | Big>
+    displayAttribute: ListAttributeValue<string | Big>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
     searchText?: string;

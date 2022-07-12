@@ -10,7 +10,7 @@ interface CommaProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string | Big>
+    displayAttribute: ListAttributeValue<string | Big>;
 }
 
 const Comma = (props: CommaProps): JSX.Element => {
