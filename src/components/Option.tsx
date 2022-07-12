@@ -2,12 +2,12 @@ import { createElement, ReactNode } from "react";
 import useHover from "src/custom hooks/useHover";
 import { OptionsStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 export enum focusModeEnum {
-    hover= "hover",
-    arrow ="arrow"
+    hover = "hover",
+    arrow = "arrow"
 }
 
 interface OptionProps {
-    key: number;
+    index: number;
     isSelected: boolean;
     isFocused: boolean;
     isSelectable: boolean;
@@ -17,17 +17,23 @@ interface OptionProps {
     children: ReactNode;
 }
 
-const Option = (props: OptionProps) => {
+const Option = (props: React.PropsWithChildren<OptionProps>) => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
     const determineClassName = (): string => {
         let className = "srs-option";
-        if (props.optionsStyle === "cell" ? props.isSelected: false) {
+        if (props.optionsStyle === "cell" ? props.isSelected : false) {
             className = className + " selected";
         }
         if (props.isSelectable === false) {
             className = className + " disabled";
         }
-        if (props.focusMode === focusModeEnum.arrow ? props.isFocused : props.optionsStyle === "cell" ? isHovered: false) {
+        if (
+            props.focusMode === focusModeEnum.arrow
+                ? props.isFocused
+                : props.optionsStyle === "cell"
+                ? isHovered
+                : false
+        ) {
             className = className + " focused";
         }
         return className;
@@ -35,21 +41,22 @@ const Option = (props: OptionProps) => {
 
     return (
         <div
-            key={props.key}
             role="option"
             aria-selected={props.isSelected ? "true" : "false"}
             aria-disabled={props.isSelectable === false}
-            tabIndex={props.key}
+            tabIndex={props.index}
             className={determineClassName()}
             onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                 event.stopPropagation();
-                props.isSelectable ? props.onSelect() : undefined;
+                if (props.isSelectable) {
+                    props.onSelect();
+                }
             }}
             ref={hoverRef}
         >
-            {props.optionsStyle === "checkbox" && 
+            {props.optionsStyle === "checkbox" && (
                 <input type={"checkbox"} checked={props.isSelected} disabled={!props.isSelectable}></input>
-            }
+            )}
             {props.children}
         </div>
     );

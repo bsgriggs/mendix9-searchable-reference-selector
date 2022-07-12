@@ -41,14 +41,14 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef(null);
 
-    const focusSearchInput = () => {
+    const focusSearchInput = (): void => {
         if (props.currentValues === undefined && searchInput.current !== null) {
             searchInput.current.focus();
         }
     };
 
     useEffect(() => {
-        //Auto focus the input if the popup is open
+        // Auto focus the input if the popup is open
         if (showMenu) {
             focusSearchInput();
         } else {
@@ -63,7 +63,7 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         setFocusedObjIndex(-1);
     });
 
-    const onSelectHandler = (selectedObj: ObjectItem | undefined) => {
+    const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
             if (props.currentValues !== []) {
                 if (props.currentValues.find(obj => obj.id === selectedObj.id)) {
@@ -84,12 +84,12 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         props.setMxFilter("");
     };
 
-    const onRemoveHandler = (removeObj: ObjectItem) => {
+    const onRemoveHandler = (removeObj: ObjectItem): void => {
         props.onSelectAssociation(props.currentValues.filter(obj => obj.id !== removeObj.id));
         props.setMxFilter("");
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         props.setMxFilter(value);
         setFocusedObjIndex(0);
@@ -99,7 +99,7 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         }
     };
 
-    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         // function to control navigation of the list via arrow keys etc
         const keyPressed = event.key;
         if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
@@ -136,7 +136,7 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         }
     };
 
-    const handleClear = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleClear = (event: React.MouseEvent<HTMLDivElement>): void => {
         event.stopPropagation();
         setShowMenu(true);
         props.setMxFilter("");
@@ -162,8 +162,9 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         >
             {props.referenceSetStyle === "badges" && (
                 <React.Fragment>
-                    {props.currentValues.slice(0, props.maxReferenceDisplay).map((currentValue: ObjectItem) => (
+                    {props.currentValues.slice(0, props.maxReferenceDisplay).map((currentValue: ObjectItem, key) => (
                         <Badge
+                            key={key}
                             content={currentValue}
                             isClearable={props.isClearable}
                             isReadOnly={props.isReadOnly}
@@ -182,7 +183,7 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
             {props.referenceSetStyle === "commas" && (
                 <React.Fragment>
                     {props.currentValues.slice(0, props.maxReferenceDisplay).map((currentValue: ObjectItem, index) => (
-                        <React.Fragment>
+                        <React.Fragment key={index}>
                             <Comma
                                 content={currentValue}
                                 isClearable={props.isClearable}
@@ -191,7 +192,7 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
                                 onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                 displayAttribute={props.displayAttribute}
                             />
-                            {index < props.currentValues.length -1 && index !== props.maxReferenceDisplay -1 && (
+                            {index < props.currentValues.length - 1 && index !== props.maxReferenceDisplay - 1 && (
                                 <span>,</span>
                             )}
                         </React.Fragment>

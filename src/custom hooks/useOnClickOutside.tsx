@@ -5,7 +5,7 @@ export default function useOnClickOutside<T extends HTMLElement = HTMLElement>(
     handler: (event: MouseEvent) => void
 ): void {
     useEffect(() => {
-        const listener = (event: MouseEvent) => {
+        const listener = (event: MouseEvent): void => {
             const el = ref?.current;
 
             // Do nothing if clicking ref's element or descendent elements

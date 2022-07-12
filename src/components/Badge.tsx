@@ -37,10 +37,13 @@ const Badge = (props: BadgeProps) => {
         <div className="srs-badge">
             {displayContent()}
             {props.isClearable && props.isReadOnly === false && (
-                <div className="srs-icon" onClick={(event: React.MouseEvent<HTMLDivElement>)=>{
-                    event.stopPropagation();
-                    props.onRemoveAssociation();
-                }}>
+                <div
+                    className="srs-icon"
+                    onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                        event.stopPropagation();
+                        props.onRemoveAssociation();
+                    }}
+                >
                     <CancelIcon />
                 </div>
             )}

@@ -9,7 +9,7 @@ interface OptionsMenuProps {
     currentFocus?: ObjectItem;
     displayAttribute: ListAttributeValue<string>;
     selectableAttribute?: ListAttributeValue<boolean>;
-    onSelectOption: ( newObject: ObjectItem) => void;
+    onSelectOption: (newObject: ObjectItem) => void;
     searchText?: string;
     noResultsText?: string;
     maxHeight?: string;
@@ -27,11 +27,13 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
 
     // keep the selected item in view when using arrow keys
     useEffect(() => {
-        selectedObjRef.current && selectedObjRef.current.scrollIntoView({ block: "center" });
+        if (selectedObjRef.current) {
+            selectedObjRef.current.scrollIntoView({ block: "center" });
+        }
         setFocusMode(focusModeEnum.arrow);
     }, [props.currentFocus]);
 
-    const onSelectHandler = (selectedObj: ObjectItem) => {
+    const onSelectHandler = (selectedObj: ObjectItem): void => {
         props.onSelectOption(selectedObj);
     };
 
@@ -66,9 +68,9 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                 : obj.id === props.currentValue.id
                             : false;
                         return (
-                            <div ref={isFocused ? selectedObjRef : undefined}>
+                            <div key={key} ref={isFocused ? selectedObjRef : undefined}>
                                 <Option
-                                    key={key}
+                                    index={key}
                                     isSelected={isSelected}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
                                     isSelectable={
@@ -77,10 +79,11 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                             : true
                                     }
                                     onSelect={() => onSelectHandler(obj)}
-                                    children={determineOptionContent(obj)}
                                     focusMode={focusMode}
                                     optionsStyle={props.optionsStyle}
-                                />
+                                >
+                                    {determineOptionContent(obj)}
+                                </Option>
                             </div>
                         );
                     })}

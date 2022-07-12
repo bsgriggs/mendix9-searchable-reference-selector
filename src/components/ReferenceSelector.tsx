@@ -19,7 +19,7 @@ interface ReferenceSelectorProps {
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
     mxFilter: string;
-    setMxFilter:(newFilter: string) => void;
+    setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
     isReadOnly: boolean;
     maxHeight?: string;
@@ -33,17 +33,17 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef(null);
 
-    const focusSearchInput = () => {
+    const focusSearchInput = (): void => {
         if (props.currentValue === undefined && searchInput.current !== null) {
             searchInput.current.focus();
         }
     };
 
     useEffect(() => {
-        //Auto focus the input if the popup is open
+        // Auto focus the input if the popup is open
         if (showMenu) {
             focusSearchInput();
-        } else{
+        } else {
             // clear search text if the menu is closed
             props.setMxFilter("");
         }
@@ -55,7 +55,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         setFocusedObjIndex(-1);
     });
 
-    const onSelectHandler = (selectedObj: ObjectItem | undefined, closeMenu: boolean) => {
+    const onSelectHandler = (selectedObj: ObjectItem | undefined, closeMenu: boolean): void => {
         props.onSelectAssociation(selectedObj);
         props.setMxFilter("");
         if (closeMenu) {
@@ -83,7 +83,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         }
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         props.setMxFilter(value);
         setFocusedObjIndex(0);
@@ -93,7 +93,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         }
     };
 
-    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         const keyPressed = event.key;
         if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
             if (focusedObjIndex === -1) {
@@ -101,13 +101,13 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             } else if (focusedObjIndex > 0) {
                 setFocusedObjIndex(focusedObjIndex - 1);
             } else {
-                setFocusedObjIndex(props.selectableObjects.length -1);
+                setFocusedObjIndex(props.selectableObjects.length - 1);
             }
             setShowMenu(true);
         } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
             if (focusedObjIndex === -1) {
                 setFocusedObjIndex(0);
-            } else if (focusedObjIndex < props.selectableObjects.length -1) {
+            } else if (focusedObjIndex < props.selectableObjects.length - 1) {
                 setFocusedObjIndex(focusedObjIndex + 1);
             } else {
                 setFocusedObjIndex(0);
@@ -129,7 +129,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         }
     };
 
-    const handleClear = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleClear = (event: React.MouseEvent<HTMLDivElement>): void => {
         event.stopPropagation();
         setShowMenu(true);
         props.setMxFilter("");
@@ -138,7 +138,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             onSelectHandler(undefined, false);
         }
         setTimeout(() => focusSearchInput(), 300);
-    }
+    };
 
     return (
         <div
@@ -172,10 +172,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
             )}
             {props.currentValue !== undefined && displayCurrentValue()}
             {props.isClearable && props.isReadOnly === false && (
-                <div
-                    className="srs-icon"
-                    onClick={handleClear}
-                >
+                <div className="srs-icon" onClick={handleClear}>
                     <CancelIcon />
                 </div>
             )}

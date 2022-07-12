@@ -73,11 +73,11 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         optionCustomContent={props.optionCustomContent}
                         mxFilter={mxFilter}
                         setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value: undefined}
+                        moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value : undefined}
                         optionsStyle={props.optionsStyle}
                     />
                 )}
-                {props.association.type === "ReferenceSet" && 
+                {props.association.type === "ReferenceSet" && (
                     <ReferenceSetSelector
                         name={props.name}
                         tabIndex={props.tabIndex}
@@ -97,12 +97,12 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         optionCustomContent={props.optionCustomContent}
                         mxFilter={mxFilter}
                         setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value: undefined}
+                        moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value : undefined}
                         optionsStyle={props.optionsStyle}
                         referenceSetStyle={props.referenceSetStyle}
                         maxReferenceDisplay={props.maxReferenceDisplay}
                     />
-                }
+                )}
                 {props.association.validation && <Alert>{props.association.validation}</Alert>}
             </div>
         );

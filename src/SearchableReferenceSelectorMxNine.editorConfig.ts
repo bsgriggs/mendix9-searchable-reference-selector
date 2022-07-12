@@ -83,7 +83,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (parseInt(_values.maxItems) < 0) {
+    if (parseInt(_values.maxItems, 10) < 0) {
         errors.push({
             property: `maxItems`,
             message: `Max Items must be greater than or equal to 0`,
@@ -91,7 +91,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (parseInt(_values.maxItems) < 1) {
+    if (parseInt(_values.maxItems, 10) < 1) {
         errors.push({
             property: `maxBadges`,
             message: `Max Badges must be greater than or equal to 1`,

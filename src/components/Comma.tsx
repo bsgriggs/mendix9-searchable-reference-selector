@@ -12,7 +12,7 @@ interface CommaProps {
     displayAttribute: ListAttributeValue<string>;
 }
 
-const Comma = (props: CommaProps) => {
+const Comma = (props: CommaProps): JSX.Element => {
     const displayContent = (): ReactNode => {
         if (props.content !== undefined) {
             switch (props.optionTextType) {
@@ -32,11 +32,7 @@ const Comma = (props: CommaProps) => {
         }
     };
 
-    return (
-        <div className="srs-comma">
-            {displayContent()}
-        </div>
-    );
+    return <div className="srs-comma">{displayContent()}</div>;
 };
 
 export default Comma;
