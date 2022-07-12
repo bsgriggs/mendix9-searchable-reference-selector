@@ -5,11 +5,11 @@ import { OptionTextTypeEnum, OptionsStyleEnum } from "typings/SearchableReferenc
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
-    currentValue?: ObjectItem;
+    currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
     displayAttribute: ListAttributeValue<string>;
     selectableAttribute?: ListAttributeValue<boolean>;
-    onSelectOption: (newObject: ObjectItem) => void;
+    onSelectOption: ( newObject: ObjectItem) => void;
     searchText?: string;
     noResultsText?: string;
     maxHeight?: string;
@@ -60,7 +60,11 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                 <React.Fragment>
                     {props.selectableObjects.map((obj, key) => {
                         const isFocused = obj.id === props.currentFocus?.id;
-                        const isSelected = obj.id ===props.currentValue?.id;
+                        const isSelected = props.currentValue
+                            ? Array.isArray(props.currentValue)
+                                ? props.currentValue.findIndex(v => obj.id === v.id) > -1
+                                : obj.id === props.currentValue.id
+                            : false;
                         return (
                             <div ref={isFocused ? selectedObjRef : undefined}>
                                 <Option

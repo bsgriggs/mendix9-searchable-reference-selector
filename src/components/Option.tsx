@@ -41,7 +41,10 @@ const Option = (props: OptionProps) => {
             aria-disabled={props.isSelectable === false}
             tabIndex={props.key}
             className={determineClassName()}
-            onClick={() => (props.isSelectable ? props.onSelect() : undefined)}
+            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                event.stopPropagation();
+                props.isSelectable ? props.onSelect() : undefined;
+            }}
             ref={hoverRef}
         >
             {props.optionsStyle === "checkbox" && 

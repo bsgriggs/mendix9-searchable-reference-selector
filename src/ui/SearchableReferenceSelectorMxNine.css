@@ -30,11 +30,38 @@ Place your custom CSS here
     padding: 8px;
     flex-grow: 1;
     border-radius: 4px;
+    width: 10px;
 }
 
 .srs .srs-text {
     padding: 8px;
     flex-grow: 1;
+}
+
+.srs .srs-badge {
+    background-color: #e7e7e7;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+}
+
+.srs .srs-badge .srs-icon{
+    padding: 2px;
+    transform: scale(75%, 75%);
+}
+
+.srs .srs-badge span{
+    padding-left: 4px;
+    font-size: smaller;
+}
+
+.srs .srs-comma {
+    margin-left: 4px;
+}
+
+.srs .srs-extra {
+    margin-left: 4px;
 }
 
 .srs .srs-dropdown {

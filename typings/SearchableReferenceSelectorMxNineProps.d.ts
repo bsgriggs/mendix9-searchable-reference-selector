@@ -11,19 +11,23 @@ export type OptionTextTypeEnum = "text" | "html" | "custom";
 
 export type OptionsStyleEnum = "cell" | "checkbox";
 
+export type ReferenceSetStyleEnum = "badges" | "commas";
+
 export interface SearchableReferenceSelectorMxNineContainerProps {
     name: string;
     tabIndex?: number;
     id: string;
     placeholder: DynamicValue<string>;
+    isClearable: boolean;
+    maxItems: DynamicValue<Big>;
+    filterDelay: number;
     optionTextType: OptionTextTypeEnum;
     optionsStyle: OptionsStyleEnum;
     optionCustomContent?: ListWidgetValue;
-    isClearable: boolean;
+    referenceSetStyle: ReferenceSetStyleEnum;
+    maxReferenceDisplay: number;
     maxMenuHeight: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
-    maxItems: DynamicValue<Big>;
-    filterDelay: number;
     moreResultsText: DynamicValue<string>;
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
@@ -35,14 +39,16 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
 export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
     placeholder: string;
+    isClearable: boolean;
+    maxItems: string;
+    filterDelay: number | null;
     optionTextType: OptionTextTypeEnum;
     optionsStyle: OptionsStyleEnum;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
-    isClearable: boolean;
+    referenceSetStyle: ReferenceSetStyleEnum;
+    maxReferenceDisplay: number | null;
     maxMenuHeight: string;
     noResultsText: string;
-    maxItems: string;
-    filterDelay: number | null;
     moreResultsText: string;
     selectableObjects: {} | { type: string } | null;
     association: string;

@@ -17,40 +17,11 @@
                 <systemProperty key="Visibility"></systemProperty>
             </propertyGroup>
             <propertyGroup caption="Customization">
-                <property key="optionTextType" type="enumeration" defaultValue="text">
-                    <caption>Option Text Type</caption>
-                    <description></description>
-                    <enumerationValues>
-                        <enumerationValue key="text">Text</enumerationValue>
-                        <enumerationValue key="html">HTML</enumerationValue>
-                        <enumerationValue key="custom">Custom</enumerationValue>
-                    </enumerationValues>
-                </property>
-                <property key="optionsStyle" type="enumeration" defaultValue="cell">
-                    <caption>Option Style</caption>
-                    <description></description>
-                    <enumerationValues>
-                        <enumerationValue key="cell">Cell</enumerationValue>
-                        <enumerationValue key="checkbox">Checkbox</enumerationValue>
-                    </enumerationValues>
-                </property>
-                <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
-                    <caption>Option Custom Content</caption>
-                    <description>Used when the Option Text Type is set to Custom</description>
-                </property>
+
+
                 <property key="isClearable" type="boolean" defaultValue="true">
                     <caption>Clearable?</caption>
                     <description>When true, the dropdown will have an 'X' icon to clear the value</description>
-                </property>
-                <property key="maxMenuHeight" type="expression" defaultValue="empty">
-                    <caption>Max Menu Height</caption>
-                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
-                    <returnType type="String" />
-                </property>
-                <property key="noResultsText" type="expression" defaultValue="empty">
-                    <caption>No Results Text</caption>
-                    <description>Message shown if no results were found</description>
-                    <returnType type="String" />
                 </property>
                 <property key="maxItems" type="expression" defaultValue="0">
                     <caption>Max Items</caption>
@@ -61,12 +32,57 @@
                     <caption>Filter Delay</caption>
                     <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
                 </property>
-                <property key="moreResultsText" type="expression" defaultValue="'Search for more results'">
-                    <caption>More Results Text</caption>
-                    <description>Text shown if the there are more items than the max items being displayed.</description>
-                    <returnType type="String" />
-                </property>
             </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Style">
+            <property key="optionTextType" type="enumeration" defaultValue="text">
+                <caption>Option Text Type</caption>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="text">Text</enumerationValue>
+                    <enumerationValue key="html">HTML</enumerationValue>
+                    <enumerationValue key="custom">Custom</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="optionsStyle" type="enumeration" defaultValue="cell">
+                <caption>Option Style</caption>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="cell">Cell</enumerationValue>
+                    <enumerationValue key="checkbox">Checkbox</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
+                <caption>Option Custom Content</caption>
+                <description>Used when the Option Text Type is set to Custom</description>
+            </property>
+            <property key="referenceSetStyle" type="enumeration" defaultValue="badges">
+                <caption>Reference Set Style</caption>
+                <description>If the association is a reference set, how should the selected items be displayed?</description>
+                <enumerationValues>
+                    <enumerationValue key="badges">Badges</enumerationValue>
+                    <enumerationValue key="commas">Comma Seperated</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="maxReferenceDisplay" type="integer" defaultValue="3">
+                <caption>Max Reference Display</caption>
+                <description>If the association is a reference set, how many many items should be displayed?</description>
+            </property>
+            <property key="maxMenuHeight" type="expression" defaultValue="empty">
+                <caption>Max Menu Height</caption>
+                <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
+                <returnType type="String" />
+            </property>
+            <property key="noResultsText" type="expression" defaultValue="empty">
+                <caption>No Results Text</caption>
+                <description>Message shown if no results were found</description>
+                <returnType type="String" />
+            </property>
+            <property key="moreResultsText" type="expression" defaultValue="'Search for more results'">
+                <caption>More Results Text</caption>
+                <description>Text shown if the there are more items than the max items being displayed.</description>
+                <returnType type="String" />
+            </property>
         </propertyGroup>
         <propertyGroup caption="Data Source">
             <propertyGroup caption="General">

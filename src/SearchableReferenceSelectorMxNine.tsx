@@ -5,7 +5,7 @@ import { attribute, literal, contains } from "mendix/filters/builders";
 import "./ui/SearchableReferenceSelectorMxNine.css";
 import { Alert } from "./components/Alert";
 import ReferenceSelector from "./components/ReferenceSelector";
-// import ReferenceSetSelector from "./components/ReferenceSetSelector";
+import ReferenceSetSelector from "./components/ReferenceSetSelector";
 import LoadingSelector from "./components/LoadingSelector";
 
 const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineContainerProps): JSX.Element => {
@@ -77,7 +77,32 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         optionsStyle={props.optionsStyle}
                     />
                 )}
-                {props.association.type === "ReferenceSet" && <span>Reference Set</span>}
+                {props.association.type === "ReferenceSet" && 
+                    <ReferenceSetSelector
+                        name={props.name}
+                        tabIndex={props.tabIndex}
+                        currentValues={props.association.value as ObjectItem[]}
+                        isClearable={props.isClearable}
+                        onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
+                            onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
+                        }
+                        selectableObjects={props.selectableObjects.items || []}
+                        placeholder={props.placeholder.value}
+                        isReadOnly={props.association.readOnly}
+                        maxHeight={props.maxMenuHeight.value}
+                        noResultsText={props.noResultsText.value}
+                        displayAttribute={props.displayAttribute}
+                        optionTextType={props.optionTextType}
+                        selectableAttribute={props.selectableAttribute}
+                        optionCustomContent={props.optionCustomContent}
+                        mxFilter={mxFilter}
+                        setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
+                        moreResultsText={props.selectableObjects.hasMoreItems ? props.moreResultsText.value: undefined}
+                        optionsStyle={props.optionsStyle}
+                        referenceSetStyle={props.referenceSetStyle}
+                        maxReferenceDisplay={props.maxReferenceDisplay}
+                    />
+                }
                 {props.association.validation && <Alert>{props.association.validation}</Alert>}
             </div>
         );

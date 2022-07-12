@@ -49,36 +49,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         }
     }, [showMenu]);
 
-    // useEffect(() => {
-    //     //set selectable obj index
-    //     console.log("useEffect - set selectable obj index")
-    //     if (props.currentValue !== undefined) {
-    //         setFocusedObjIndex(props.selectableObjects.findIndex(obj => obj.id === props.currentValue?.id));
-    //     }
-    // }, [props.currentValue]);
-
-    // useEffect(() => {
-    //     // filter the selectable objects when the search text changes
-    //     console.log("useEffect - filter")
-    //     if (searchText !== undefined && searchText.trim().length > 0) {
-    //         const searchTextTrimmed = searchText.trim();
-    //         setSelectableObjectList(
-    //             props.selectableObjects.filter(obj => {
-    //                 const text = props.displayAttribute.get(obj).value;
-    //                 return text !== undefined && text.toLowerCase().includes(searchTextTrimmed.toLowerCase());
-    //             })
-    //         );
-    //     } else {
-    //         setSelectableObjectList(props.selectableObjects);
-    //     }
-    // }, [searchText]);
-
-    // const resetSelectedObjIndex = () => {
-    //     console.log("reset selected obj index")
-    //     const index = props.selectableObjects.findIndex(obj => obj.id === props.currentValue?.id);
-    //     setFocusedObjIndex(index);
-    // };
-
     useOnClickOutside(srsRef, () => {
         // handle click outside
         setShowMenu(false);
@@ -123,14 +93,6 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         }
     };
 
-    // const handleInputBlur = () => {
-    //     console.log("handle input blur")
-    //     setTimeout(() => {
-    //         setSearchText("");
-    //         setShowMenu(false);
-    //     }, 300);
-    // };
-
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         const keyPressed = event.key;
         if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
@@ -172,7 +134,7 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
         setShowMenu(true);
         props.setMxFilter("");
         setFocusedObjIndex(-1);
-        if (props.currentValue !== undefined) {
+        if (props.mxFilter.trim() === "") {
             onSelectHandler(undefined, false);
         }
         setTimeout(() => focusSearchInput(), 300);
@@ -201,7 +163,11 @@ const ReferenceSelector = (props: ReferenceSelectorProps): JSX.Element => {
                     readOnly={props.isReadOnly}
                     value={props.mxFilter}
                     ref={searchInput}
-                    // onBlur={handleInputBlur}
+                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+                        if (showMenu) {
+                            event.stopPropagation();
+                        }
+                    }}
                 ></input>
             )}
             {props.currentValue !== undefined && displayCurrentValue()}
