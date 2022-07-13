@@ -1,7 +1,7 @@
 {
     "name": "searchablereferenceselectormxnine",
     "widgetName": "SearchableReferenceSelectorMxNine",
-    "version": "1.0.0",
+    "version": "1.1.2",
     "description": "Mendix reference selector with a search bar and a clear button (Mendix 9)",
     "copyright": "© Mendix Technology BV 2022. All rights reserved.",
     "author": "Benjamin Griggs",
@@ -29,8 +29,5 @@
         "@types/big.js": "^6.0.2",
         "@types/react": "~17.0.1",
         "@types/react-dom": "~17.0.1"
-    },
-    "dependencies": {
-        "classnames": "^2.2.6"
     }
 }

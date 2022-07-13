@@ -41,11 +41,13 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
     const determineOptionContent = (objectItem: ObjectItem): ReactNode => {
         switch (props.optionTextType) {
             case "text":
-                return <span>{props.displayAttribute.get(objectItem).value}</span>;
+                return <span>{props.displayAttribute.get(objectItem).value?.toString()}</span>;
             case "html":
                 return (
                     <span
-                        dangerouslySetInnerHTML={{ __html: `${props.displayAttribute.get(objectItem).value}` }}
+                        dangerouslySetInnerHTML={{
+                            __html: `${props.displayAttribute.get(objectItem).value?.toString()}`
+                        }}
                     ></span>
                 );
             case "custom":

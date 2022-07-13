@@ -18,12 +18,12 @@ const Comma = (props: CommaProps): JSX.Element => {
         if (props.content !== undefined) {
             switch (props.optionTextType) {
                 case "text":
-                    return <span>{props.displayAttribute.get(props.content).value}</span>;
+                    return <span>{props.displayAttribute.get(props.content).value?.toString()}</span>;
                 case "html":
                     return (
                         <span
                             dangerouslySetInnerHTML={{
-                                __html: `${props.displayAttribute.get(props.content).value}`
+                                __html: `${props.displayAttribute.get(props.content).value?.toString()}`
                             }}
                         ></span>
                     );

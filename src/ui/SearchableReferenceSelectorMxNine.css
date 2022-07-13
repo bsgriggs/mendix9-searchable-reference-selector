@@ -38,6 +38,11 @@ Place your custom CSS here
     flex-grow: 1;
 }
 
+.srs .srs-text p {
+    line-height: 1;
+    margin: 0;
+}
+
 .srs .srs-badge {
     background-color: #e7e7e7;
     border-radius: 4px;
@@ -83,6 +88,21 @@ Place your custom CSS here
     cursor: pointer;
     padding: 0.5em;
     border-radius: 4px;
+    display:flex;
+}
+
+/* styling for html mode w/ checkboxes */
+.srs .srs-option input{
+    max-width: 16px;
+}
+.srs .srs-option p{
+    width: fit-content;
+    line-height: 1;
+    margin: 0;
+}
+.srs .srs-badge p {
+    line-height: 1;
+    margin: 0;
 }
 
 .srs .srs-infooption {
