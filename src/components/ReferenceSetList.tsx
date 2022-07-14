@@ -121,7 +121,11 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
         event.stopPropagation();
         props.setMxFilter("");
         setFocusedObjIndex(-1);
-        props.onSelectAssociation(props.selectableObjects);
+        props.onSelectAssociation(
+            props.selectableObjects.filter(obj =>
+                props.selectableAttribute ? props.selectableAttribute.get(obj).value === true : true
+            )
+        );
     };
 
     return (
@@ -168,6 +172,7 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
                     moreResultsText={props.moreResultsText}
                     optionsStyle={props.optionsStyle}
                     selectStyle={"list"}
+                    isReadyOnly={props.isReadOnly}
                 />
                 <div className="srs-icon-row">
                     {props.showSelectAll && props.isReadOnly === false && (

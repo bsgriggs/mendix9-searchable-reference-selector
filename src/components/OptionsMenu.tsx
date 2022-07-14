@@ -27,6 +27,7 @@ interface OptionsMenuProps {
     optionsStyle: OptionsStyleEnum;
     selectStyle: SelectStyleEnum;
     position?: position;
+    isReadyOnly: boolean;
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
@@ -99,7 +100,9 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                     isSelected={isSelected}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
                                     isSelectable={
-                                        props.selectableAttribute
+                                        props.isReadyOnly
+                                            ? false
+                                            : props.selectableAttribute
                                             ? props.selectableAttribute.get(obj).value === true
                                             : true
                                     }

@@ -238,6 +238,7 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
                     optionsStyle={props.optionsStyle}
                     selectStyle={"dropdown"}
                     position={position}
+                    isReadyOnly={props.isReadOnly}
                 />
             )}
         </div>

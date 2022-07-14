@@ -143,6 +143,7 @@ const ReferenceList = (props: ReferenceListProps): JSX.Element => {
                     moreResultsText={props.moreResultsText}
                     optionsStyle={props.optionsStyle}
                     selectStyle={"list"}
+                    isReadyOnly={props.isReadOnly}
                 />
                 {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
                     <CancelIcon onClick={handleClear} title={"Clear"} />

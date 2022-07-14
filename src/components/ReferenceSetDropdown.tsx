@@ -181,7 +181,11 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
         event.stopPropagation();
         props.setMxFilter("");
         setFocusedObjIndex(-1);
-        props.onSelectAssociation(props.selectableObjects);
+        props.onSelectAssociation(
+            props.selectableObjects.filter(obj =>
+                props.selectableAttribute ? props.selectableAttribute.get(obj).value === true : true
+            )
+        );
     };
 
     return (
@@ -338,6 +342,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                     optionsStyle={props.optionsStyle}
                     selectStyle={"dropdown"}
                     position={position}
+                    isReadyOnly={props.isReadOnly}
                 />
             )}
         </div>
