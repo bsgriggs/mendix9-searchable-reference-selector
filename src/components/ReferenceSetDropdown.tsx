@@ -13,6 +13,7 @@ import Badge from "./Badge";
 import Comma from "./Comma";
 import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
+import { position } from "./OptionsMenu";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -43,7 +44,31 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
-    const srsRef = useRef(null);
+    const srsRef = useRef<HTMLDivElement>(null);
+    const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
+    const [position, setPosition] = useState<position>({ x: 0, y: 0, w: 0, h: 0 });
+
+    const updatePosition = () => {
+        if (srsRef.current !== null) {
+            setPosition({
+                x: srsRef.current.getBoundingClientRect().left,
+                y: srsRef.current.getBoundingClientRect().top,
+                w: srsRef.current.getBoundingClientRect().width,
+                h: srsRef.current.getBoundingClientRect().height
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (srsRef.current !== null) {
+            let observer = new ResizeObserver(updatePosition);
+            observer.observe(srsRef.current);
+            setResizeObserver(observer);
+        }
+        return () => {
+            resizeObserver?.disconnect();
+        };
+    }, []);
 
     const focusSearchInput = (): void => {
         if (props.currentValues === undefined && searchInput.current !== null) {
@@ -166,6 +191,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
             tabIndex={props.tabIndex || 0}
             onClick={() => {
                 setShowMenu(!showMenu);
+                updatePosition();
                 if (showMenu === false) {
                     setTimeout(() => focusSearchInput(), 300);
                 }
@@ -284,9 +310,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                 ></input>
             )}
 
-            {props.isSearchable === false && (
-                <span className="srs-text">{props.placeholder}</span>
-            )}
+            {props.isSearchable === false && <span className="srs-text">{props.placeholder}</span>}
 
             <div className="srs-icon-row">
                 {props.showSelectAll && props.isReadOnly === false && (
@@ -314,6 +338,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                     moreResultsText={props.moreResultsText}
                     optionsStyle={props.optionsStyle}
                     selectStyle={"dropdown"}
+                    position={position}
                 />
             )}
         </div>

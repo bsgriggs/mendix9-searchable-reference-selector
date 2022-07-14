@@ -4,6 +4,13 @@ import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
 
+export interface position {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+}
+
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem | ObjectItem[];
@@ -19,6 +26,7 @@ interface OptionsMenuProps {
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
     selectStyle: SelectStyleEnum;
+    position?: position;
 }
 
 const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
@@ -57,8 +65,13 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
     };
 
     const OptionsMenuStyle = (): React.CSSProperties => {
-        if (props.selectStyle === "dropdown") {
-            return { maxHeight: props.maxHeight ? props.maxHeight : "12.5em" };
+        if (props.selectStyle === "dropdown" && props.position !== undefined) {
+            return {
+                maxHeight: props.maxHeight ? props.maxHeight : "12.5em",
+                top: props.position.h + props.position.y,
+                width: props.position.w,
+                left: props.position.x
+            };
         } else {
             return {};
         }

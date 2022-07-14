@@ -3,7 +3,6 @@ Place your custom CSS here
 */
 .srs {
     width: 100%;
-    position: relative;
 }
 
 .srs .form-control {
@@ -89,10 +88,7 @@ Place your custom CSS here
 }
 
 .srs .srs-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    position: fixed;
     z-index: 302;
     border: 1px solid #d7d7d7;
     border-radius: 4px;
