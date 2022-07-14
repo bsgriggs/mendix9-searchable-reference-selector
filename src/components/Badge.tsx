@@ -1,6 +1,6 @@
 import React, { createElement, ReactNode } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import CancelIcon from "./CancelIcon";
+import CancelIcon from "./icons/CancelIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
 
@@ -38,15 +38,13 @@ const Badge = (props: BadgeProps) => {
         <div className="srs-badge">
             {displayContent()}
             {props.isClearable && props.isReadOnly === false && (
-                <div
-                    className="srs-icon"
+                <CancelIcon
                     onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                         event.stopPropagation();
                         props.onRemoveAssociation();
                     }}
-                >
-                    <CancelIcon />
-                </div>
+                    title="Remove"
+                />
             )}
         </div>
     );

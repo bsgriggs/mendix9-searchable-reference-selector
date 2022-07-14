@@ -1,7 +1,7 @@
 import React, { createElement, useState, useRef, useEffect } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import CancelIcon from "./CancelIcon";
-import DropdownIcon from "./DropdownIcon";
+import CancelIcon from "./icons/CancelIcon";
+import DropdownIcon from "./icons/DropdownIcon";
 import OptionsMenu from "./OptionsMenu";
 import {
     OptionsStyleEnum,
@@ -12,8 +12,9 @@ import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import Badge from "./Badge";
 import Comma from "./Comma";
 import Big from "big.js";
+import SelectAllIcon from "./icons/SelectAllIcon";
 
-interface ReferenceSetSelectorProps {
+interface ReferenceSetDropdownProps {
     name: string;
     tabIndex?: number;
     placeholder?: string;
@@ -28,7 +29,9 @@ interface ReferenceSetSelectorProps {
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
+    isSearchable: boolean;
     isReadOnly: boolean;
+    showSelectAll: boolean;
     maxHeight?: string;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
@@ -36,7 +39,7 @@ interface ReferenceSetSelectorProps {
     maxReferenceDisplay: number;
 }
 
-const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => {
+const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
@@ -66,9 +69,9 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
-            if (props.currentValues !== []) {
+            if (props.currentValues.length > 0) {
                 if (props.currentValues.find(obj => obj.id === selectedObj.id)) {
-                    if (props.isClearable) {
+                    if (props.isClearable || props.currentValues.length > 1) {
                         // obj already selected , deselect
                         onRemoveHandler(selectedObj);
                     }
@@ -150,6 +153,13 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         setTimeout(() => focusSearchInput(), 300);
     };
 
+    const handleSelectAll = (event: React.MouseEvent<HTMLSpanElement>): void => {
+        event.stopPropagation();
+        props.setMxFilter("");
+        setFocusedObjIndex(-1);
+        props.onSelectAssociation(props.selectableObjects);
+    };
+
     return (
         <div
             className={showMenu ? "form-control active" : "form-control"}
@@ -165,18 +175,39 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
         >
             {props.referenceSetStyle === "badges" && (
                 <React.Fragment>
-                    {props.currentValues.slice(0, props.maxReferenceDisplay).map((currentValue: ObjectItem, key) => (
-                        <Badge
-                            key={key}
-                            content={currentValue}
-                            isClearable={props.isClearable}
-                            isReadOnly={props.isReadOnly}
-                            optionTextType={props.optionTextType}
-                            onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                            displayAttribute={props.displayAttribute}
-                        />
-                    ))}
-                    {props.currentValues.length > props.maxReferenceDisplay && (
+                    {props.maxReferenceDisplay > 0 && (
+                        <React.Fragment>
+                            {props.currentValues
+                                .slice(0, props.maxReferenceDisplay)
+                                .map((currentValue: ObjectItem, key) => (
+                                    <Badge
+                                        key={key}
+                                        content={currentValue}
+                                        isClearable={props.isClearable || props.currentValues.length > 1}
+                                        isReadOnly={props.isReadOnly}
+                                        optionTextType={props.optionTextType}
+                                        onRemoveAssociation={() => onRemoveHandler(currentValue)}
+                                        displayAttribute={props.displayAttribute}
+                                    />
+                                ))}
+                        </React.Fragment>
+                    )}
+                    {props.maxReferenceDisplay <= 0 && (
+                        <React.Fragment>
+                            {props.currentValues.map((currentValue: ObjectItem, key) => (
+                                <Badge
+                                    key={key}
+                                    content={currentValue}
+                                    isClearable={props.isClearable || props.currentValues.length > 1}
+                                    isReadOnly={props.isReadOnly}
+                                    optionTextType={props.optionTextType}
+                                    onRemoveAssociation={() => onRemoveHandler(currentValue)}
+                                    displayAttribute={props.displayAttribute}
+                                />
+                            ))}
+                        </React.Fragment>
+                    )}
+                    {props.currentValues.length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (
                         <span className="srs-extra">
                             {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
                         </span>
@@ -185,22 +216,46 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
             )}
             {props.referenceSetStyle === "commas" && (
                 <React.Fragment>
-                    {props.currentValues.slice(0, props.maxReferenceDisplay).map((currentValue: ObjectItem, index) => (
-                        <React.Fragment key={index}>
-                            <Comma
-                                content={currentValue}
-                                isClearable={props.isClearable}
-                                isReadOnly={props.isReadOnly}
-                                optionTextType={props.optionTextType}
-                                onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                                displayAttribute={props.displayAttribute}
-                            />
-                            {index < props.currentValues.length - 1 && index !== props.maxReferenceDisplay - 1 && (
-                                <span>,</span>
-                            )}
+                    {props.maxReferenceDisplay > 0 && (
+                        <React.Fragment>
+                            {props.currentValues
+                                .slice(0, props.maxReferenceDisplay)
+                                .map((currentValue: ObjectItem, index) => (
+                                    <React.Fragment key={index}>
+                                        <Comma
+                                            content={currentValue}
+                                            isClearable={props.isClearable}
+                                            isReadOnly={props.isReadOnly}
+                                            optionTextType={props.optionTextType}
+                                            onRemoveAssociation={() => onRemoveHandler(currentValue)}
+                                            displayAttribute={props.displayAttribute}
+                                        />
+                                        {index < props.currentValues.length - 1 &&
+                                            index !== props.maxReferenceDisplay - 1 && <span>,</span>}
+                                    </React.Fragment>
+                                ))}
                         </React.Fragment>
-                    ))}
-                    {props.currentValues.length > props.maxReferenceDisplay && (
+                    )}
+                    {props.maxReferenceDisplay <= 0 && (
+                        <React.Fragment>
+                            {props.currentValues.map((currentValue: ObjectItem, index) => (
+                                <React.Fragment key={index}>
+                                    <Comma
+                                        content={currentValue}
+                                        isClearable={props.isClearable}
+                                        isReadOnly={props.isReadOnly}
+                                        optionTextType={props.optionTextType}
+                                        onRemoveAssociation={() => onRemoveHandler(currentValue)}
+                                        displayAttribute={props.displayAttribute}
+                                    />
+                                    {index < props.currentValues.length - 1 &&
+                                        index !== props.maxReferenceDisplay - 1 && <span>,</span>}
+                                </React.Fragment>
+                            ))}
+                        </React.Fragment>
+                    )}
+
+                    {props.currentValues.length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (
                         <span className="srs-extra">
                             {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
                         </span>
@@ -208,29 +263,33 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
                 </React.Fragment>
             )}
 
-            <input
-                name={props.name}
-                placeholder={props.currentValues.length === 0 ? props.placeholder : ""}
-                type="text"
-                onChange={handleInputChange}
-                readOnly={props.isReadOnly}
-                value={props.mxFilter}
-                ref={searchInput}
-                onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-                    if (showMenu) {
-                        event.stopPropagation();
-                    }
-                }}
-            ></input>
-
-            {props.isClearable && props.isReadOnly === false && (
-                <div className="srs-icon" onClick={handleClear}>
-                    <CancelIcon />
-                </div>
+            {props.isSearchable && (
+                <input
+                    name={props.name}
+                    placeholder={props.currentValues.length === 0 ? props.placeholder : ""}
+                    type="text"
+                    onChange={handleInputChange}
+                    readOnly={props.isReadOnly}
+                    value={props.mxFilter}
+                    ref={searchInput}
+                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+                        if (showMenu) {
+                            event.stopPropagation();
+                        }
+                    }}
+                ></input>
             )}
-            <div className="srs-icon">
-                <DropdownIcon />
-            </div>
+
+            {props.isSearchable === false && (
+                <span className="srs-text">{props.currentValues.length === 0 ? props.placeholder : ""}</span>
+            )}
+
+            {props.showSelectAll && props.isReadOnly === false && (
+                <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+            )}
+
+            {props.isClearable && props.isReadOnly === false && <CancelIcon onClick={handleClear} title={"Clear"} />}
+            <DropdownIcon />
             {showMenu && (
                 <OptionsMenu
                     selectableObjects={props.selectableObjects}
@@ -246,10 +305,11 @@ const ReferenceSetSelector = (props: ReferenceSetSelectorProps): JSX.Element => 
                     optionCustomContent={props.optionCustomContent}
                     moreResultsText={props.moreResultsText}
                     optionsStyle={props.optionsStyle}
+                    selectStyle={"dropdown"}
                 />
             )}
         </div>
     );
 };
 
-export default ReferenceSetSelector;
+export default ReferenceSetDropdown;

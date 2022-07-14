@@ -47,8 +47,20 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["optionCustomContent"]);
     }
 
-    if (_values.maxItems === "0") {
+    if (parseInt(_values.maxItems) > 0) {
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
+    }
+
+    if (_values.selectStyle === "list") {
+        hidePropertiesIn(defaultProperties, _values, ["maxMenuHeight", "maxReferenceDisplay", "referenceSetStyle"]);
+    }
+
+    if (_values.isSearchable === false) {
+        hidePropertiesIn(defaultProperties, _values, ["maxItems", "filterDelay", "moreResultsText"]);
+    }
+
+    if (_values.isSearchable === false && _values.selectStyle === "list") {
+        hidePropertiesIn(defaultProperties, _values, ["placeholder"]);
     }
 
     return defaultProperties;
@@ -83,7 +95,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (parseInt(_values.maxItems, 10) < 0) {
+    if (parseInt(_values.maxItems) < 0) {
         errors.push({
             property: `maxItems`,
             message: `Max Items must be greater than or equal to 0`,
@@ -91,7 +103,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (parseInt(_values.maxItems, 10) < 1) {
+    if (parseInt(_values.maxItems) < 1) {
         errors.push({
             property: `maxBadges`,
             message: `Max Badges must be greater than or equal to 1`,

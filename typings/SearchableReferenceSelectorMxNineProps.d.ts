@@ -4,16 +4,10 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import {
-    ActionValue,
-    DynamicValue,
-    ListValue,
-    ListAttributeValue,
-    ListWidgetValue,
-    ReferenceValue,
-    ReferenceSetValue
-} from "mendix";
+import { ActionValue, DynamicValue, ListValue, ListAttributeValue, ListWidgetValue, ReferenceValue, ReferenceSetValue } from "mendix";
 import { Big } from "big.js";
+
+export type SelectStyleEnum = "dropdown" | "list";
 
 export type OptionTextTypeEnum = "text" | "html" | "custom";
 
@@ -26,9 +20,13 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     tabIndex?: number;
     id: string;
     placeholder: DynamicValue<string>;
+    isSearchable: boolean;
     isClearable: boolean;
+    showSelectAll: boolean;
     maxItems: DynamicValue<Big>;
+    moreResultsText: DynamicValue<string>;
     filterDelay: number;
+    selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyle: OptionsStyleEnum;
     optionCustomContent?: ListWidgetValue;
@@ -36,7 +34,6 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     maxReferenceDisplay: number;
     maxMenuHeight: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
-    moreResultsText: DynamicValue<string>;
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
     displayAttribute: ListAttributeValue<string | Big>;
@@ -47,9 +44,13 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
 export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
     placeholder: string;
+    isSearchable: boolean;
     isClearable: boolean;
+    showSelectAll: boolean;
     maxItems: string;
+    moreResultsText: string;
     filterDelay: number | null;
+    selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyle: OptionsStyleEnum;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
@@ -57,7 +58,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxReferenceDisplay: number | null;
     maxMenuHeight: string;
     noResultsText: string;
-    moreResultsText: string;
     selectableObjects: {} | { type: string } | null;
     association: string;
     displayAttribute: string;

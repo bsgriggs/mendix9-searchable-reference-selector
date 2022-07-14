@@ -8,7 +8,7 @@
         <propertyGroup caption="General">
             <propertyGroup caption="General">
                 <systemProperty key="Label" />
-                <property key="placeholder" type="expression" defaultValue="empty">
+                <property key="placeholder" type="expression" defaultValue="'Search ...'">
                     <caption>Placeholder</caption>
                     <description></description>
                     <returnType type="String" />
@@ -17,14 +17,27 @@
                 <systemProperty key="Visibility"></systemProperty>
             </propertyGroup>
             <propertyGroup caption="Customization">
+                <property key="isSearchable" type="boolean" defaultValue="true">
+                    <caption>Searchable?</caption>
+                    <description>When true, the user will be able to search with a textbox</description>
+                </property>
                 <property key="isClearable" type="boolean" defaultValue="true">
                     <caption>Clearable?</caption>
-                    <description>When true, the dropdown will have an 'X' icon to clear the value</description>
+                    <description>When true, the search textbox will have an 'X' icon to clear the value</description>
+                </property>
+                <property key="showSelectAll" type="boolean" defaultValue="true">
+                    <caption>Show Select All?</caption>
+                    <description>When true, the search textbox will have an checkbox icon to select all values (Reference Set ONLY)</description>
                 </property>
                 <property key="maxItems" type="expression" defaultValue="0">
                     <caption>Max Items</caption>
-                    <description>Limits the items shown in the dropdown. If 0, no limit is set.</description>
+                    <description>Limits the items shown. If 0, no limit is set.</description>
                     <returnType type="Integer" />
+                </property>
+                <property key="moreResultsText" type="expression" defaultValue="'Search for more results'">
+                    <caption>More Results Text</caption>
+                    <description>Text shown if the there are more items than the max items being displayed.</description>
+                    <returnType type="String" />
                 </property>
                 <property key="filterDelay" type="integer" defaultValue="300" required="true">
                     <caption>Filter Delay</caption>
@@ -33,6 +46,14 @@
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Style">
+            <property key="selectStyle" type="enumeration" defaultValue="dropdown">
+                <caption>Select Style</caption>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="dropdown">Dropdown</enumerationValue>
+                    <enumerationValue key="list">List on Page</enumerationValue>
+                </enumerationValues>
+            </property>
             <property key="optionTextType" type="enumeration" defaultValue="text">
                 <caption>Option Text Type</caption>
                 <description></description>
@@ -76,17 +97,12 @@
                 <description>Message shown if no results were found</description>
                 <returnType type="String" />
             </property>
-            <property key="moreResultsText" type="expression" defaultValue="'Search for more results'">
-                <caption>More Results Text</caption>
-                <description>Text shown if the there are more items than the max items being displayed.</description>
-                <returnType type="String" />
-            </property>
         </propertyGroup>
         <propertyGroup caption="Data Source">
             <propertyGroup caption="General">
                 <property key="selectableObjects" type="datasource" isList="true" required="true">
                     <caption>Selectable Objects</caption>
-                    <description>The objects that will be selectable in the dropdown</description>
+                    <description>The objects that will be displayed</description>
                 </property>
                 <property key="association" type="association" selectableObjects="selectableObjects" required="true">
                     <caption>Reference</caption>
@@ -98,7 +114,7 @@
                 </property>
                 <property key="displayAttribute" type="attribute" required="true" dataSource="selectableObjects">
                     <caption>Attribute to Display</caption>
-                    <description>The attribute that will be displayed in the dropdown</description>
+                    <description>The attribute that will be displayed for each selectable object</description>
                     <attributeTypes>
                         <attributeType name="String" />
                         <attributeType name="Enum" />

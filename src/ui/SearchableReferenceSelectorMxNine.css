@@ -11,6 +11,9 @@ Place your custom CSS here
     padding: 0;
     align-items: center;
     cursor: pointer;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 0 8px;
 }
 
 .srs .active.form-control {
@@ -20,21 +23,24 @@ Place your custom CSS here
     box-shadow: none;
 }
 
-.srs .srs-icon {
-    padding: 4px;
-    line-height: 0;
-}
-
 .srs input {
     border: none;
-    padding: 8px;
+    padding: 8px 0;
     flex-grow: 1;
     border-radius: 4px;
-    width: 10px;
+    width: 30%;
+}
+
+.srs .glyphicon {
+    padding: 4px;
+}
+
+.srs .srs-selectable-list.form-control {
+    display: inline-block;
 }
 
 .srs .srs-text {
-    padding: 8px;
+    padding: 8px 0;
     flex-grow: 1;
 }
 
@@ -48,11 +54,11 @@ Place your custom CSS here
     border-radius: 4px;
     display: flex;
     align-items: center;
-    margin-left: 4px;
+    padding: 2px;
 }
 
 .srs .srs-badge .srs-icon {
-    padding: 2px;
+    padding: 0;
     transform: scale(75%, 75%);
 }
 
@@ -61,13 +67,9 @@ Place your custom CSS here
     font-size: smaller;
 }
 
-.srs .srs-comma {
-    margin-left: 4px;
-    font-size: small;
-}
-
-.srs .srs-extra {
-    margin-left: 4px;
+.srs .srs-comma,
+.srs-extra {
+    padding: 2px;
     font-size: small;
 }
 
@@ -88,14 +90,14 @@ Place your custom CSS here
     cursor: pointer;
     padding: 0.5em;
     border-radius: 4px;
-    display:flex;
+    display: flex;
 }
 
 /* styling for html mode w/ checkboxes */
-.srs .srs-option input{
+.srs .srs-option input {
     max-width: 16px;
 }
-.srs .srs-option p{
+.srs .srs-option p {
     width: fit-content;
     line-height: 1;
     margin: 0;
