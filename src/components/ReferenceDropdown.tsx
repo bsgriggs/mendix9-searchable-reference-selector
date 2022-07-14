@@ -2,11 +2,10 @@ import React, { createElement, ReactNode, useState, useRef, useEffect } from "re
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import CancelIcon from "./icons/CancelIcon";
 import DropdownIcon from "./icons/DropdownIcon";
-import OptionsMenu from "./OptionsMenu";
+import OptionsMenu, { position } from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import Big from "big.js";
-import { position } from "./OptionsMenu";
 
 interface ReferenceDropdownProps {
     name: string;
@@ -51,7 +50,7 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
 
     useEffect(() => {
         if (srsRef.current !== null) {
-            let observer = new ResizeObserver(updatePosition);
+            const observer = new ResizeObserver(updatePosition);
             observer.observe(srsRef.current);
             setResizeObserver(observer);
         }

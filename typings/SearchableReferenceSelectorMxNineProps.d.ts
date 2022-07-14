@@ -4,7 +4,15 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import { ActionValue, DynamicValue, ListValue, ListAttributeValue, ListWidgetValue, ReferenceValue, ReferenceSetValue } from "mendix";
+import {
+    ActionValue,
+    DynamicValue,
+    ListValue,
+    ListAttributeValue,
+    ListWidgetValue,
+    ReferenceValue,
+    ReferenceSetValue
+} from "mendix";
 import { Big } from "big.js";
 
 export type SelectStyleEnum = "dropdown" | "list";

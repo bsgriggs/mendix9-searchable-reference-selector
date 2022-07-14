@@ -2,7 +2,7 @@ import React, { createElement, useState, useRef, useEffect } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import CancelIcon from "./icons/CancelIcon";
 import DropdownIcon from "./icons/DropdownIcon";
-import OptionsMenu from "./OptionsMenu";
+import OptionsMenu, { position } from "./OptionsMenu";
 import {
     OptionsStyleEnum,
     OptionTextTypeEnum,
@@ -13,7 +13,6 @@ import Badge from "./Badge";
 import Comma from "./Comma";
 import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
-import { position } from "./OptionsMenu";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -61,7 +60,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
 
     useEffect(() => {
         if (srsRef.current !== null) {
-            let observer = new ResizeObserver(updatePosition);
+            const observer = new ResizeObserver(updatePosition);
             observer.observe(srsRef.current);
             setResizeObserver(observer);
         }
