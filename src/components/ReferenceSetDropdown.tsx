@@ -173,8 +173,8 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
             onKeyDown={handleInputKeyDown}
             ref={srsRef}
         >
-            {props.referenceSetStyle === "badges" && (
-                <React.Fragment>
+            {props.referenceSetStyle === "badges" && props.currentValues.length > 0 && (
+                <div className="srs-badge-row">
                     {props.maxReferenceDisplay > 0 && (
                         <React.Fragment>
                             {props.currentValues
@@ -212,10 +212,10 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                             {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
                         </span>
                     )}
-                </React.Fragment>
+                </div>
             )}
-            {props.referenceSetStyle === "commas" && (
-                <React.Fragment>
+            {props.referenceSetStyle === "commas" && props.currentValues.length > 0 && (
+                <div className="srs-badge-row">
                     {props.maxReferenceDisplay > 0 && (
                         <React.Fragment>
                             {props.currentValues
@@ -229,9 +229,11 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                             optionTextType={props.optionTextType}
                                             onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                             displayAttribute={props.displayAttribute}
+                                            showComma={
+                                                index < props.currentValues.length - 1 &&
+                                                index !== props.maxReferenceDisplay - 1
+                                            }
                                         />
-                                        {index < props.currentValues.length - 1 &&
-                                            index !== props.maxReferenceDisplay - 1 && <span>,</span>}
                                     </React.Fragment>
                                 ))}
                         </React.Fragment>
@@ -247,9 +249,11 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                         optionTextType={props.optionTextType}
                                         onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                         displayAttribute={props.displayAttribute}
+                                        showComma={
+                                            index < props.currentValues.length - 1 &&
+                                            index !== props.maxReferenceDisplay - 1
+                                        }
                                     />
-                                    {index < props.currentValues.length - 1 &&
-                                        index !== props.maxReferenceDisplay - 1 && <span>,</span>}
                                 </React.Fragment>
                             ))}
                         </React.Fragment>
@@ -260,13 +264,13 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                             {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
                         </span>
                     )}
-                </React.Fragment>
+                </div>
             )}
 
             {props.isSearchable && (
                 <input
                     name={props.name}
-                    placeholder={props.currentValues.length === 0 ? props.placeholder : ""}
+                    placeholder={props.placeholder}
                     type="text"
                     onChange={handleInputChange}
                     readOnly={props.isReadOnly}
@@ -281,15 +285,19 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
             )}
 
             {props.isSearchable === false && (
-                <span className="srs-text">{props.currentValues.length === 0 ? props.placeholder : ""}</span>
+                <span className="srs-text">{props.placeholder}</span>
             )}
 
-            {props.showSelectAll && props.isReadOnly === false && (
-                <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
-            )}
+            <div className="srs-icon-row">
+                {props.showSelectAll && props.isReadOnly === false && (
+                    <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                )}
 
-            {props.isClearable && props.isReadOnly === false && <CancelIcon onClick={handleClear} title={"Clear"} />}
-            <DropdownIcon />
+                {props.isClearable && props.isReadOnly === false && (
+                    <CancelIcon onClick={handleClear} title={"Clear"} />
+                )}
+                <DropdownIcon />
+            </div>
             {showMenu && (
                 <OptionsMenu
                     selectableObjects={props.selectableObjects}

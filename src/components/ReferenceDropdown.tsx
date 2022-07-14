@@ -184,8 +184,12 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
                 <span className="srs-text">{props.placeholder}</span>
             )}
             {props.currentValue !== undefined && displayCurrentValue()}
-            {props.isClearable && props.isReadOnly === false && <CancelIcon onClick={handleClear} title={"Clear"} />}
-            <DropdownIcon />
+            <div className="srs-icon-row">
+                {props.isClearable && props.isReadOnly === false && (
+                    <CancelIcon onClick={handleClear} title={"Clear"} />
+                )}
+                <DropdownIcon />
+            </div>
             {showMenu && (
                 <OptionsMenu
                     selectableObjects={props.selectableObjects}

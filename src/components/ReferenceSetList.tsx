@@ -142,9 +142,14 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
                         value={props.mxFilter}
                         ref={searchInput}
                     ></input>
-                    {props.isClearable && props.isReadOnly === false && (
-                        <CancelIcon onClick={handleClear} title={"Clear"} />
-                    )}{" "}
+                    <div className="srs-icon-row">
+                        {props.showSelectAll && props.isReadOnly === false && (
+                            <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                        )}
+                        {props.isClearable && props.isReadOnly === false && (
+                            <CancelIcon onClick={handleClear} title={"Clear"} />
+                        )}
+                    </div>
                 </div>
             )}
 
@@ -164,13 +169,14 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
                     optionsStyle={props.optionsStyle}
                     selectStyle={"list"}
                 />
-
-                {props.showSelectAll && props.isReadOnly === false && (
-                    <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
-                )}
-                {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
-                    <CancelIcon onClick={handleClear} title={"Clear"} />
-                )}
+                <div className="srs-icon-row">
+                    {props.showSelectAll && props.isReadOnly === false && (
+                        <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                    )}
+                    {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
+                        <CancelIcon onClick={handleClear} title={"Clear"} />
+                    )}
+                </div>
             </div>
         </React.Fragment>
     );

@@ -11,6 +11,7 @@ interface CommaProps {
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
     displayAttribute: ListAttributeValue<string | Big>;
+    showComma: boolean;
 }
 
 const Comma = (props: CommaProps): JSX.Element => {
@@ -33,7 +34,12 @@ const Comma = (props: CommaProps): JSX.Element => {
         }
     };
 
-    return <div className="srs-comma">{displayContent()}</div>;
+    return (
+        <div className="srs-comma">
+            {displayContent()}
+            {props.showComma && <span>,</span>}
+        </div>
+    );
 };
 
 export default Comma;
