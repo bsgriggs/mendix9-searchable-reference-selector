@@ -17,7 +17,7 @@ interface OptionProps {
     children: ReactNode;
 }
 
-const Option = (props: React.PropsWithChildren<OptionProps>) => {
+const Option = (props: React.PropsWithChildren<OptionProps>): JSX.Element => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
     const determineClassName = (): string => {
         let className = "srs-option";

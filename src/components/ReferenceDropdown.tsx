@@ -39,7 +39,7 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
     const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
     const [position, setPosition] = useState<position>({ x: 0, y: 0, w: 0, h: 0 });
 
-    const updatePosition = () => {
+    const updatePosition = (): void => {
         if (srsRef.current !== null) {
             setPosition({
                 x: srsRef.current.getBoundingClientRect().left,

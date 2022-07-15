@@ -15,7 +15,7 @@ interface BadgeProps {
     clearIcon?: DynamicValue<WebIcon>;
 }
 
-const Badge = (props: BadgeProps) => {
+const Badge = (props: BadgeProps): JSX.Element => {
     const displayContent = (): ReactNode => {
         if (props.content !== undefined) {
             switch (props.optionTextType) {
