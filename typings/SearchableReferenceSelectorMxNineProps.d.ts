@@ -11,7 +11,7 @@ export type SelectStyleEnum = "dropdown" | "list";
 
 export type OptionTextTypeEnum = "text" | "html" | "custom";
 
-export type OptionsStyleEnum = "cell" | "checkbox";
+export type OptionsStyleEnum = "cell" | "checkbox" | "radio";
 
 export type ReferenceSetStyleEnum = "badges" | "commas";
 

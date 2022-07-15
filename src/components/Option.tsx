@@ -57,6 +57,9 @@ const Option = (props: React.PropsWithChildren<OptionProps>) => {
             {props.optionsStyle === "checkbox" && (
                 <input type={"checkbox"} checked={props.isSelected} disabled={!props.isSelectable}></input>
             )}
+            {props.optionsStyle === "radio" && (
+                <input type={"radio"} checked={props.isSelected} disabled={!props.isSelectable}/>
+            )}
             {props.children}
         </div>
     );

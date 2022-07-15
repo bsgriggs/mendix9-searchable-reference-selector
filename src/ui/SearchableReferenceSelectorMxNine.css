@@ -135,6 +135,6 @@ Place your custom CSS here
     background-color: #e7e7e7;
 }
 
-.srs .srs-option input[type="checkbox"] {
+.srs .srs-option input[type="checkbox"], input[type="radio"] {
     margin-right: 0.5em !important;
 }

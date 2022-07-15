@@ -69,6 +69,7 @@
                 <enumerationValues>
                     <enumerationValue key="cell">Cell</enumerationValue>
                     <enumerationValue key="checkbox">Checkbox</enumerationValue>
+                    <enumerationValue key="radio">Radio Buttons</enumerationValue>
                 </enumerationValues>
             </property>
             <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
