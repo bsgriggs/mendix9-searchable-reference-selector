@@ -3,7 +3,7 @@ import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon 
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
-import ClearIcon from "./icons/DropdownIcon";
+import ClearIcon from "./icons/ClearIcon";
 
 interface ReferenceListProps {
     name: string;

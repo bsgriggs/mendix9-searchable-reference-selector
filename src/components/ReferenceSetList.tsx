@@ -4,7 +4,7 @@ import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
-import ClearIcon from "./icons/DropdownIcon";
+import ClearIcon from "./icons/ClearIcon";
 
 interface ReferenceSetListProps {
     name: string;

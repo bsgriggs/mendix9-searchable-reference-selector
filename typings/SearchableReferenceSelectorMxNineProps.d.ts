@@ -4,7 +4,16 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import { ActionValue, DynamicValue, ListValue, ListAttributeValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
+import {
+    ActionValue,
+    DynamicValue,
+    ListValue,
+    ListAttributeValue,
+    ListWidgetValue,
+    ReferenceValue,
+    ReferenceSetValue,
+    WebIcon
+} from "mendix";
 import { Big } from "big.js";
 
 export type SelectStyleEnum = "dropdown" | "list";
@@ -61,9 +70,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxReferenceDisplay: number | null;
     maxMenuHeight: string;
     noResultsText: string;
-    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    clearIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
     selectableObjects: {} | { type: string } | null;
     association: string;
     displayAttribute: string;
