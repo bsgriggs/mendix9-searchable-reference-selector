@@ -21,16 +21,16 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
     }, [props.association.value]);
 
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (props.displayAttribute.filterable) {
-                const filterCondition = contains(attribute(props.displayAttribute.id), literal(mxFilter));
-                props.selectableObjects.setFilter(filterCondition);
-            } else {
-                console.log("Attribute is not filterable");
-            }
-        }, props.filterDelay);
+        if (props.isSearchable) {
+            const delayDebounceFn = setTimeout(() => {
+                if (props.displayAttribute.filterable) {
+                    const filterCondition = contains(attribute(props.displayAttribute.id), literal(mxFilter));
+                    props.selectableObjects.setFilter(filterCondition);
+                }
+            }, props.filterDelay);
 
-        return () => clearTimeout(delayDebounceFn);
+            return () => clearTimeout(delayDebounceFn);
+        }
     }, [mxFilter]);
 
     if (

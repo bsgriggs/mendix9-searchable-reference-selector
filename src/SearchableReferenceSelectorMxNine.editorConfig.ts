@@ -45,6 +45,8 @@ export function getProperties(
 
     if (_values.optionTextType !== "custom") {
         hidePropertiesIn(defaultProperties, _values, ["optionCustomContent"]);
+    } else if (_values.isSearchable === false) {
+        hidePropertiesIn(defaultProperties, _values, ["displayAttribute"]);
     }
 
     if (parseInt(_values.maxItems) > 0) {

@@ -1,4 +1,4 @@
-import React, { createElement, ReactNode, useState, useRef, useEffect } from "react";
+import React, { createElement, useState, useRef, useEffect } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
@@ -6,6 +6,7 @@ import OptionsMenu, { position } from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import Big from "big.js";
+import displayContent from "src/utils/displayContent";
 
 interface ReferenceDropdownProps {
     name: string;
@@ -14,7 +15,7 @@ interface ReferenceDropdownProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string | Big>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -92,30 +93,6 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
         props.setMxFilter("");
         if (closeMenu) {
             setShowMenu(false);
-        }
-    };
-
-    const displayCurrentValue = (): ReactNode => {
-        if (props.currentValue !== undefined) {
-            switch (props.optionTextType) {
-                case "text":
-                    return (
-                        <span className="srs-text">
-                            {props.displayAttribute.get(props.currentValue).value?.toString()}
-                        </span>
-                    );
-                case "html":
-                    return (
-                        <span
-                            className="srs-text"
-                            dangerouslySetInnerHTML={{
-                                __html: `${props.displayAttribute.get(props.currentValue).value?.toString()}`
-                            }}
-                        ></span>
-                    );
-                case "custom":
-                    return <span className="srs-text">{props.optionCustomContent?.get(props.currentValue)}</span>;
-            }
         }
     };
 
@@ -210,7 +187,14 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
             {props.currentValue === undefined && props.isSearchable === false && (
                 <span className="srs-text">{props.placeholder}</span>
             )}
-            {props.currentValue !== undefined && displayCurrentValue()}
+            {props.currentValue !== undefined &&
+                displayContent(
+                    props.currentValue,
+                    props.optionTextType,
+                    props.displayAttribute,
+                    props.optionCustomContent,
+                    "srs-text"
+                )}
             <div className="srs-icon-row">
                 {props.isClearable && props.isReadOnly === false && (
                     <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />

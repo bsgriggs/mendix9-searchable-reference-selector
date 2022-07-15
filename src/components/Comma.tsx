@@ -1,7 +1,8 @@
-import { createElement, ReactNode } from "react";
+import { createElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
+import displayContent from "src/utils/displayContent";
 
 interface CommaProps {
     content: ObjectItem;
@@ -10,33 +11,14 @@ interface CommaProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string | Big>;
     showComma: boolean;
 }
 
 const Comma = (props: CommaProps): JSX.Element => {
-    const displayContent = (): ReactNode => {
-        if (props.content !== undefined) {
-            switch (props.optionTextType) {
-                case "text":
-                    return <span>{props.displayAttribute.get(props.content).value?.toString()}</span>;
-                case "html":
-                    return (
-                        <span
-                            dangerouslySetInnerHTML={{
-                                __html: `${props.displayAttribute.get(props.content).value?.toString()}`
-                            }}
-                        ></span>
-                    );
-                case "custom":
-                    return <span>{props.optionCustomContent?.get(props.content)}</span>;
-            }
-        }
-    };
-
     return (
         <div className="srs-comma">
-            {displayContent()}
+            {displayContent(props.content, props.optionTextType, props.displayAttribute, props.optionCustomContent)}
             {props.showComma && <span>,</span>}
         </div>
     );

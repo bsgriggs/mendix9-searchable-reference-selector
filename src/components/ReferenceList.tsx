@@ -12,7 +12,7 @@ interface ReferenceListProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string | Big>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;

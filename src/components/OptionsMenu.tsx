@@ -1,8 +1,9 @@
-import React, { createElement, ReactNode, useEffect, useRef, useState } from "react";
+import React, { createElement, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
+import displayContent from "src/utils/displayContent";
 
 export interface position {
     x: number;
@@ -15,7 +16,7 @@ interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string | Big>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
     searchText?: string;
@@ -46,23 +47,6 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
 
     const onSelectHandler = (selectedObj: ObjectItem): void => {
         props.onSelectOption(selectedObj);
-    };
-
-    const determineOptionContent = (objectItem: ObjectItem): ReactNode => {
-        switch (props.optionTextType) {
-            case "text":
-                return <span>{props.displayAttribute.get(objectItem).value?.toString()}</span>;
-            case "html":
-                return (
-                    <span
-                        dangerouslySetInnerHTML={{
-                            __html: `${props.displayAttribute.get(objectItem).value?.toString()}`
-                        }}
-                    ></span>
-                );
-            case "custom":
-                return <span className="srs-text">{props.optionCustomContent?.get(objectItem)}</span>;
-        }
     };
 
     const OptionsMenuStyle = (): React.CSSProperties => {
@@ -112,7 +96,12 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
                                     focusMode={focusMode}
                                     optionsStyle={props.optionsStyle}
                                 >
-                                    {determineOptionContent(obj)}
+                                    {displayContent(
+                                        obj,
+                                        props.optionTextType,
+                                        props.displayAttribute,
+                                        props.optionCustomContent
+                                    )}
                                 </Option>
                             </div>
                         );

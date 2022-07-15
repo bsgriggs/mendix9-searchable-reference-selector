@@ -1,8 +1,9 @@
-import React, { createElement, ReactNode } from "react";
+import React, { createElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
+import displayContent from "src/utils/displayContent";
 
 interface BadgeProps {
     content: ObjectItem;
@@ -11,33 +12,14 @@ interface BadgeProps {
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     onRemoveAssociation: () => void;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string | Big>;
     clearIcon?: DynamicValue<WebIcon>;
 }
 
 const Badge = (props: BadgeProps): JSX.Element => {
-    const displayContent = (): ReactNode => {
-        if (props.content !== undefined) {
-            switch (props.optionTextType) {
-                case "text":
-                    return <span>{props.displayAttribute.get(props.content).value?.toString()}</span>;
-                case "html":
-                    return (
-                        <span
-                            dangerouslySetInnerHTML={{
-                                __html: `${props.displayAttribute.get(props.content).value?.toString()}`
-                            }}
-                        ></span>
-                    );
-                case "custom":
-                    return <span>{props.optionCustomContent?.get(props.content)}</span>;
-            }
-        }
-    };
-
     return (
         <div className="srs-badge">
-            {displayContent()}
+            {displayContent(props.content, props.optionTextType, props.displayAttribute, props.optionCustomContent)}
             {props.isClearable && props.isReadOnly === false && (
                 <ClearIcon
                     onClick={(event: React.MouseEvent<HTMLDivElement>) => {
