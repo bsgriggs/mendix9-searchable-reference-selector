@@ -61,6 +61,8 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         tabIndex={props.tabIndex}
                         currentValue={props.association.value as ObjectItem}
                         isClearable={props.isClearable}
+                        clearIcon={props.clearIcon}
+                        dropdownIcon={props.dropdownIcon}
                         onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
@@ -86,6 +88,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         tabIndex={props.tabIndex}
                         currentValue={props.association.value as ObjectItem}
                         isClearable={props.isClearable}
+                        clearIcon={props.clearIcon}
                         onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
@@ -110,6 +113,8 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         tabIndex={props.tabIndex}
                         currentValues={props.association.value as ObjectItem[]}
                         isClearable={props.isClearable}
+                        clearIcon={props.clearIcon}
+                        dropdownIcon={props.dropdownIcon}
                         onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
@@ -130,6 +135,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         referenceSetStyle={props.referenceSetStyle}
                         maxReferenceDisplay={props.maxReferenceDisplay}
                         showSelectAll={props.showSelectAll}
+                        selectAllIcon={props.selectAllIcon}
                     />
                 )}
                 {props.association.type === "ReferenceSet" && props.selectStyle === "list" && (
@@ -138,6 +144,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         tabIndex={props.tabIndex}
                         currentValues={props.association.value as ObjectItem[]}
                         isClearable={props.isClearable}
+                        clearIcon={props.clearIcon}
                         onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
@@ -155,6 +162,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         optionsStyle={props.optionsStyle}
                         isSearchable={props.isSearchable}
                         showSelectAll={props.showSelectAll}
+                        selectAllIcon={props.selectAllIcon}
                     />
                 )}
                 {props.association.validation && <Alert>{props.association.validation}</Alert>}
@@ -167,6 +175,8 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                 tabIndex={props.tabIndex}
                 placeholder={props.placeholder.value}
                 isClearable={props.isClearable}
+                clearIcon={props.clearIcon}
+                dropdownIcon={props.dropdownIcon}
             />
         );
     }

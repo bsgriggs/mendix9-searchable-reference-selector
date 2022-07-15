@@ -1,6 +1,5 @@
 import React, { createElement, useState, useRef, useEffect } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import CancelIcon from "./icons/CancelIcon";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import DropdownIcon from "./icons/DropdownIcon";
 import OptionsMenu, { position } from "./OptionsMenu";
 import {
@@ -13,6 +12,7 @@ import Badge from "./Badge";
 import Comma from "./Comma";
 import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
+import ClearIcon from "./icons/ClearIcon";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -29,9 +29,12 @@ interface ReferenceSetDropdownProps {
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
+    clearIcon?: DynamicValue<WebIcon>;
     isSearchable: boolean;
     isReadOnly: boolean;
     showSelectAll: boolean;
+    selectAllIcon?: DynamicValue<WebIcon>;
+    dropdownIcon?: DynamicValue<WebIcon>;
     maxHeight?: string;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
@@ -217,6 +220,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                         optionTextType={props.optionTextType}
                                         onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                         displayAttribute={props.displayAttribute}
+                                        clearIcon={props.clearIcon}
                                     />
                                 ))}
                         </React.Fragment>
@@ -232,6 +236,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                     optionTextType={props.optionTextType}
                                     onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                     displayAttribute={props.displayAttribute}
+                                    clearIcon={props.clearIcon}
                                 />
                             ))}
                         </React.Fragment>
@@ -317,13 +322,17 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
 
             <div className="srs-icon-row">
                 {props.showSelectAll && props.isReadOnly === false && (
-                    <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                    <SelectAllIcon
+                        onClick={handleSelectAll}
+                        title={"Select All"}
+                        mxIconOverride={props.selectAllIcon}
+                    />
                 )}
 
                 {props.isClearable && props.isReadOnly === false && (
-                    <CancelIcon onClick={handleClear} title={"Clear"} />
+                    <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
                 )}
-                <DropdownIcon />
+                <DropdownIcon mxIconOverride={props.dropdownIcon} />
             </div>
             {showMenu && (
                 <OptionsMenu

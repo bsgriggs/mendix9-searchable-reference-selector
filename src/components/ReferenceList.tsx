@@ -1,9 +1,9 @@
 import React, { createElement, useState, useRef } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import CancelIcon from "./icons/CancelIcon";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
+import ClearIcon from "./icons/DropdownIcon";
 
 interface ReferenceListProps {
     name: string;
@@ -20,6 +20,7 @@ interface ReferenceListProps {
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
+    clearIcon?: DynamicValue<WebIcon>;
     isSearchable: boolean;
     isReadOnly: boolean;
     moreResultsText?: string;
@@ -116,7 +117,7 @@ const ReferenceList = (props: ReferenceListProps): JSX.Element => {
                     ></input>
 
                     {props.isClearable && props.isReadOnly === false && (
-                        <CancelIcon onClick={handleClear} title={"Clear"} />
+                        <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
                     )}
                 </div>
             )}
@@ -146,7 +147,7 @@ const ReferenceList = (props: ReferenceListProps): JSX.Element => {
                     isReadyOnly={props.isReadOnly}
                 />
                 {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
-                    <CancelIcon onClick={handleClear} title={"Clear"} />
+                    <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
                 )}
             </div>
         </React.Fragment>

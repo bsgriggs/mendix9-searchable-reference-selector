@@ -67,9 +67,11 @@ const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
 
     const OptionsMenuStyle = (): React.CSSProperties => {
         if (props.selectStyle === "dropdown" && props.position !== undefined) {
+            const contentCloseToBottom = props.position.y > window.innerHeight * 0.7;
             return {
-                maxHeight: props.maxHeight ? props.maxHeight : "12.5em",
-                top: props.position.h + props.position.y,
+                maxHeight: props.maxHeight ? props.maxHeight : "15em",
+                top: contentCloseToBottom ? "unset" : props.position.h + props.position.y,
+                bottom: contentCloseToBottom ? window.innerHeight - props.position.y : "unset",
                 width: props.position.w,
                 left: props.position.x
             };

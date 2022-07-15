@@ -1,10 +1,10 @@
 import React, { createElement, useState, useRef } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import CancelIcon from "./icons/CancelIcon";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
+import ClearIcon from "./icons/DropdownIcon";
 
 interface ReferenceSetListProps {
     name: string;
@@ -21,9 +21,11 @@ interface ReferenceSetListProps {
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
+    clearIcon?: DynamicValue<WebIcon>;
     isSearchable: boolean;
     isReadOnly: boolean;
     showSelectAll: boolean;
+    selectAllIcon?: DynamicValue<WebIcon>;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
 }
@@ -148,10 +150,14 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
                     ></input>
                     <div className="srs-icon-row">
                         {props.showSelectAll && props.isReadOnly === false && (
-                            <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                            <SelectAllIcon
+                                onClick={handleSelectAll}
+                                title={"Select All"}
+                                mxIconOverride={props.selectAllIcon}
+                            />
                         )}
                         {props.isClearable && props.isReadOnly === false && (
-                            <CancelIcon onClick={handleClear} title={"Clear"} />
+                            <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
                         )}
                     </div>
                 </div>
@@ -175,11 +181,15 @@ const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
                     isReadyOnly={props.isReadOnly}
                 />
                 <div className="srs-icon-row">
-                    {props.showSelectAll && props.isReadOnly === false && (
-                        <SelectAllIcon onClick={handleSelectAll} title={"Select All"} />
+                    {props.isSearchable === false && props.showSelectAll && props.isReadOnly === false && (
+                        <SelectAllIcon
+                            onClick={handleSelectAll}
+                            title={"Select All"}
+                            mxIconOverride={props.selectAllIcon}
+                        />
                     )}
                     {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
-                        <CancelIcon onClick={handleClear} title={"Clear"} />
+                        <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
                     )}
                 </div>
             </div>

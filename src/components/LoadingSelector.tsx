@@ -1,5 +1,6 @@
 import { createElement } from "react";
-import CancelIcon from "./icons/CancelIcon";
+import { DynamicValue, WebIcon } from "mendix";
+import CancelIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
 
 interface LoadingSelectorProps {
@@ -7,6 +8,8 @@ interface LoadingSelectorProps {
     placeholder?: string;
     tabIndex?: number;
     isClearable: boolean;
+    clearIcon?: DynamicValue<WebIcon>;
+    dropdownIcon?: DynamicValue<WebIcon>;
 }
 
 const LoadingSelector = (props: LoadingSelectorProps): JSX.Element => {
@@ -14,8 +17,8 @@ const LoadingSelector = (props: LoadingSelectorProps): JSX.Element => {
         <div className="srs">
             <div className={"form-control"} tabIndex={props.tabIndex || 0}>
                 <input className="" name={props.name} placeholder={props.placeholder} type="text"></input>
-                {props.isClearable && <CancelIcon />}
-                <DropdownIcon />
+                {props.isClearable && <CancelIcon mxIconOverride={props.clearIcon} />}
+                <DropdownIcon mxIconOverride={props.dropdownIcon} />
             </div>
         </div>
     );

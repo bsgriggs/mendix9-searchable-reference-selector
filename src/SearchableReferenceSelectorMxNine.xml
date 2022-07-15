@@ -23,11 +23,11 @@
                 </property>
                 <property key="isClearable" type="boolean" defaultValue="true">
                     <caption>Clearable?</caption>
-                    <description>When true, the search textbox will have an 'X' icon to clear the value</description>
+                    <description>When true, the search textbox will have either an 'X' icon or the Clear Icon</description>
                 </property>
                 <property key="showSelectAll" type="boolean" defaultValue="true">
                     <caption>Show Select All?</caption>
-                    <description>When true, the search textbox will have an checkbox icon to select all values (Reference Set ONLY)</description>
+                    <description>(Reference Set ONLY) When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
                 </property>
                 <property key="maxItems" type="expression" defaultValue="0">
                     <caption>Max Items</caption>
@@ -78,25 +78,37 @@
             </property>
             <property key="referenceSetStyle" type="enumeration" defaultValue="badges">
                 <caption>Reference Set Style</caption>
-                <description>If the association is a reference set, how should the selected items be displayed?</description>
+                <description>(Reference Set ONLY) How the selected items are displayed</description>
                 <enumerationValues>
                     <enumerationValue key="badges">Badges</enumerationValue>
                     <enumerationValue key="commas">Comma Seperated</enumerationValue>
                 </enumerationValues>
             </property>
-            <property key="maxReferenceDisplay" type="integer" defaultValue="3">
+            <property key="maxReferenceDisplay" type="integer" defaultValue="0">
                 <caption>Max Reference Display</caption>
-                <description>If the association is a reference set, how many many items should be displayed?</description>
+                <description>(Reference Set ONLY) How many many badges / items are displayed (0 = no limit)</description>
             </property>
             <property key="maxMenuHeight" type="expression" defaultValue="empty">
                 <caption>Max Menu Height</caption>
-                <description>CSS Height (i.e. 200px, 20em ... ) for the select menu</description>
+                <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
                 <returnType type="String" />
             </property>
             <property key="noResultsText" type="expression" defaultValue="empty">
                 <caption>No Results Text</caption>
                 <description>Message shown if no results were found</description>
                 <returnType type="String" />
+            </property>
+            <property key="clearIcon" type="icon" required="false">
+                <caption>Clear Icon</caption>
+                <description></description>
+            </property>
+            <property key="dropdownIcon" type="icon" required="false">
+                <caption>Dropdown Icon</caption>
+                <description></description>
+            </property>
+            <property key="selectAllIcon" type="icon" required="false">
+                <caption>Select All Icon Icon</caption>
+                <description>(Reference Set ONLY)</description>
             </property>
         </propertyGroup>
         <propertyGroup caption="Data Source">

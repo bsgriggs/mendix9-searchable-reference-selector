@@ -52,7 +52,20 @@ export function getProperties(
     }
 
     if (_values.selectStyle === "list") {
-        hidePropertiesIn(defaultProperties, _values, ["maxMenuHeight", "maxReferenceDisplay", "referenceSetStyle"]);
+        hidePropertiesIn(defaultProperties, _values, [
+            "maxMenuHeight",
+            "maxReferenceDisplay",
+            "referenceSetStyle",
+            "dropdownIcon"
+        ]);
+    }
+
+    if (_values.isClearable === false) {
+        hidePropertiesIn(defaultProperties, _values, ["clearIcon"]);
+    }
+
+    if (_values.showSelectAll === false) {
+        hidePropertiesIn(defaultProperties, _values, ["selectAllIcon"]);
     }
 
     if (_values.isSearchable === false) {
