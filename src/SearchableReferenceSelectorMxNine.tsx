@@ -13,24 +13,48 @@ import ReferenceSetList from "./components/ReferenceSetList";
 const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineContainerProps): JSX.Element => {
     const [mxFilter, setMxFilter] = useState<string>("");
     const [currentObjectItem, setCurrentObjectItem] = useState<ObjectItem | ObjectItem[] | undefined>();
+    const [selectableObjects, setSelectableObjectList] = useState<ObjectItem[]>([]);
+
     if (Number(props.maxItems.value) > 1) {
         props.selectableObjects.setLimit(Number(props.maxItems.value));
     }
+
     useEffect(() => {
         setCurrentObjectItem(props.association.value as ObjectItem);
     }, [props.association.value]);
 
     useEffect(() => {
-        if (props.isSearchable) {
-            const delayDebounceFn = setTimeout(() => {
+        setSelectableObjectList(props.selectableObjects.items || []);
+    }, [props.selectableObjects]);
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (props.isSearchable) {
+                console.log("isFilterable", props.displayAttribute.filterable);
                 if (props.displayAttribute.filterable) {
+                    // data source supports xpath filtering
                     const filterCondition = contains(attribute(props.displayAttribute.id), literal(mxFilter));
                     props.selectableObjects.setFilter(filterCondition);
+                } else {
+                    // data source does not support xpath filter - filter on client
+                    if (mxFilter !== undefined && mxFilter.trim().length > 0 && props.selectableObjects.items) {
+                        const searchTextTrimmed = mxFilter.trim();
+                        setSelectableObjectList(
+                            props.selectableObjects.items.filter(obj => {
+                                const text = props.displayAttribute.get(obj).value as string;
+                                return (
+                                    text !== undefined && text.toLowerCase().includes(searchTextTrimmed.toLowerCase())
+                                );
+                            })
+                        );
+                    } else {
+                        setSelectableObjectList(props.selectableObjects.items || []);
+                    }
                 }
-            }, props.filterDelay);
+            }
+        }, props.filterDelay);
 
-            return () => clearTimeout(delayDebounceFn);
-        }
+        return () => clearTimeout(delayDebounceFn);
     }, [mxFilter]);
 
     if (
@@ -66,7 +90,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
-                        selectableObjects={props.selectableObjects.items || []}
+                        selectableObjects={selectableObjects}
                         placeholder={props.placeholder.value}
                         isReadOnly={props.association.readOnly}
                         isSearchable={props.isSearchable}
@@ -92,7 +116,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
-                        selectableObjects={props.selectableObjects.items || []}
+                        selectableObjects={selectableObjects}
                         placeholder={props.placeholder.value}
                         isReadOnly={props.association.readOnly}
                         noResultsText={props.noResultsText.value}
@@ -118,7 +142,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
-                        selectableObjects={props.selectableObjects.items || []}
+                        selectableObjects={selectableObjects}
                         placeholder={props.placeholder.value}
                         isReadOnly={props.association.readOnly}
                         isSearchable={props.isSearchable}
@@ -148,7 +172,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
                             onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
                         }
-                        selectableObjects={props.selectableObjects.items || []}
+                        selectableObjects={selectableObjects}
                         placeholder={props.placeholder.value}
                         isReadOnly={props.association.readOnly}
                         noResultsText={props.noResultsText.value}

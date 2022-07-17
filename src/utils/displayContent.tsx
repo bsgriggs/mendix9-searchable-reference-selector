@@ -14,12 +14,14 @@ export default function displayContent(
         if (optionTextType === "text") {
             return <span className={className}>{displayAttribute.get(displayObj).value?.toString()}</span>;
         } else if (optionTextType === "html") {
-            <span
-                className={className}
-                dangerouslySetInnerHTML={{
-                    __html: `${displayAttribute.get(displayObj).value?.toString()}`
-                }}
-            ></span>;
+            return (
+                <span
+                    className={className}
+                    dangerouslySetInnerHTML={{
+                        __html: `${displayAttribute.get(displayObj).value?.toString()}`
+                    }}
+                ></span>
+            );
         }
     }
     if (optionTextType === "custom" && optionCustomContent !== undefined) {
