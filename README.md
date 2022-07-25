@@ -8,7 +8,7 @@ https://marketplace.mendix.com/link/component/116917
 
 | Dropdown Reference | Dropdown Reference Set | List On Page Reference | List On Page Reference Set |
 | ------------- | ------------- | ------------- | ------------- |
-| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/dropdownRef.png)   | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/listRef.png)   | ![DropdownRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/dropdownRefSet.png)   | ![ListRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/listRefSet.png)   |  
+| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/dropdownRef.png)   | ![DropdownRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/listRefSet.png)   | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/listRef.png)   | ![ListRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/dropdownRefSet.png)   |  
 
 *Note: checkboxes, radio buttons, or background color settings are independent. All can be used at any time*
 
