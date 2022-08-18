@@ -45,7 +45,7 @@ Place your custom CSS here
     gap: 4px;
 }
 
-.srs .glyphicon, img{
+.srs .glyphicon, .srs img{
     padding: 8px 4px;
     color: #6f6f6f;
 }
@@ -72,7 +72,7 @@ Place your custom CSS here
     padding: 2px;
 }
 
-.srs .srs-badge .glyphicon, img{
+.srs .srs-badge .glyphicon, .srs .srs-badge img{
     padding: 4px;
 }
 
