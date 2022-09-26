@@ -1,5 +1,5 @@
 import React, { createElement, useState, useRef, useEffect } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
 import DropdownIcon from "./icons/DropdownIcon";
 import OptionsMenu, { position } from "./OptionsMenu";
 import {
@@ -40,6 +40,7 @@ interface ReferenceSetDropdownProps {
     optionsStyle: OptionsStyleEnum;
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
+    onBadgeClick?: ListActionValue;
 }
 
 const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => {
@@ -221,6 +222,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                         onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                         displayAttribute={props.displayAttribute}
                                         clearIcon={props.clearIcon}
+                                        onBadgeClick={props.onBadgeClick}
                                     />
                                 ))}
                         </React.Fragment>
@@ -237,6 +239,7 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
                                     onRemoveAssociation={() => onRemoveHandler(currentValue)}
                                     displayAttribute={props.displayAttribute}
                                     clearIcon={props.clearIcon}
+                                    onBadgeClick={props.onBadgeClick}
                                 />
                             ))}
                         </React.Fragment>

@@ -160,6 +160,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
                         maxReferenceDisplay={props.maxReferenceDisplay}
                         showSelectAll={props.showSelectAll}
                         selectAllIcon={props.selectAllIcon}
+                        onBadgeClick={props.onBadgeClick}
                     />
                 )}
                 {props.association.type === "ReferenceSet" && props.selectStyle === "list" && (

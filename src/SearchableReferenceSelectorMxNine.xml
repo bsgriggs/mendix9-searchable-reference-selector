@@ -146,8 +146,12 @@
             </propertyGroup>
             <propertyGroup caption="Actions">
                 <property key="onChangeAssociation" type="action">
-                    <caption>On change</caption>
+                    <caption>On Change</caption>
                     <description></description>
+                </property>
+                <property key="onBadgeClick" type="action" dataSource="selectableObjects">
+                    <caption>On Badge Click</caption>
+                    <description>(Reference Set ONLY) Action performed when the user clicks on a reference set badge</description>
                 </property>
             </propertyGroup>
         </propertyGroup>

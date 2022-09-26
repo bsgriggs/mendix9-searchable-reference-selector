@@ -1,5 +1,5 @@
 import React, { createElement } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
@@ -14,11 +14,22 @@ interface BadgeProps {
     onRemoveAssociation: () => void;
     displayAttribute?: ListAttributeValue<string | Big>;
     clearIcon?: DynamicValue<WebIcon>;
+    onBadgeClick?: ListActionValue;
 }
 
 const Badge = (props: BadgeProps): JSX.Element => {
+    const handleBadgeClick = (event: React.MouseEvent<HTMLSpanElement>): void => {
+        event.stopPropagation();
+        if (props.onBadgeClick !== undefined){
+            const badgeClickAction = props.onBadgeClick.get(props.content);
+            if (badgeClickAction.canExecute && badgeClickAction.isExecuting === false) {
+                badgeClickAction.execute();
+            }  
+        }
+    }
+
     return (
-        <div className="srs-badge">
+        <div className="srs-badge" onClick={handleBadgeClick}>
             {displayContent(props.content, props.optionTextType, props.displayAttribute, props.optionCustomContent)}
             {props.isClearable && props.isReadOnly === false && (
                 <ClearIcon
