@@ -32,13 +32,16 @@ interface ReferenceDropdownProps {
     optionsStyle: OptionsStyleEnum;
 }
 
+const defaultPosition: position = { x: 0, y: 0, w: 0, h: 0 }
+
 const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef<HTMLDivElement>(null);
     const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
-    const [position, setPosition] = useState<position>({ x: 0, y: 0, w: 0, h: 0 });
+    const [position, setPosition] = useState<position>(defaultPosition);
+    // const debouncedPosition = useDebounce<position>(position, 100);
 
     const updatePosition = (): void => {
         if (srsRef.current !== null) {
@@ -56,6 +59,20 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
             const observer = new ResizeObserver(updatePosition);
             observer.observe(srsRef.current);
             setResizeObserver(observer);
+
+            // Find the nearest scroll container and add a listener to update the position
+            var iteratorEle = srsRef.current.parentElement;
+            while (true){
+                if (iteratorEle !== null){
+                    iteratorEle = iteratorEle.parentElement;
+                    if (iteratorEle !== null && (iteratorEle?.style.overflowY === 'scroll' || iteratorEle?.style.overflowY === 'auto' || iteratorEle.className === 'mx-scrollcontainer-wrapper')){
+                        iteratorEle.addEventListener("scroll", () => updatePosition());
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
         }
         return () => {
             resizeObserver?.disconnect();

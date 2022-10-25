@@ -67,6 +67,20 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): JSX.Element => 
             const observer = new ResizeObserver(updatePosition);
             observer.observe(srsRef.current);
             setResizeObserver(observer);
+
+            // Find the nearest scroll container and add a listener to update the position
+            var iteratorEle = srsRef.current.parentElement;
+            while (true){
+                if (iteratorEle !== null){
+                    iteratorEle = iteratorEle.parentElement;
+                    if (iteratorEle !== null && (iteratorEle?.style.overflowY === 'scroll' || iteratorEle?.style.overflowY === 'auto' || iteratorEle.className === 'mx-scrollcontainer-wrapper')){
+                        iteratorEle.addEventListener("scroll", () => updatePosition());
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
         }
         return () => {
             resizeObserver?.disconnect();
