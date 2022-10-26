@@ -1,4 +1,4 @@
-import React, { createElement, useEffect, useRef, useState } from "react";
+import React, { createElement, ReactElement, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
@@ -31,7 +31,7 @@ interface OptionsMenuProps {
     isReadyOnly: boolean;
 }
 
-const OptionsMenu = (props: OptionsMenuProps): JSX.Element => {
+const OptionsMenu = (props: OptionsMenuProps): ReactElement => {
     const selectedObjRef = useRef<HTMLDivElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
         props.currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover

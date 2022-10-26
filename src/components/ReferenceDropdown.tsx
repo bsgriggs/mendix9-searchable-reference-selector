@@ -1,4 +1,4 @@
-import React, { createElement, useState, useRef, useEffect } from "react";
+import React, { createElement, useState, useRef, useEffect, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
@@ -32,16 +32,15 @@ interface ReferenceDropdownProps {
     optionsStyle: OptionsStyleEnum;
 }
 
-const defaultPosition: position = { x: 0, y: 0, w: 0, h: 0 }
+const defaultPosition: position = { x: 0, y: 0, w: 0, h: 0 };
 
-const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
+const ReferenceDropdown = (props: ReferenceDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef<HTMLDivElement>(null);
     const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
     const [position, setPosition] = useState<position>(defaultPosition);
-    // const debouncedPosition = useDebounce<position>(position, 100);
 
     const updatePosition = (): void => {
         if (srsRef.current !== null) {
@@ -61,11 +60,17 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
             setResizeObserver(observer);
 
             // Find the nearest scroll container and add a listener to update the position
-            var iteratorEle = srsRef.current.parentElement;
-            while (true){
-                if (iteratorEle !== null){
+            let iteratorEle = srsRef.current.parentElement;
+            // eslint-disable-next-line no-constant-condition
+            while (true) {
+                if (iteratorEle !== null) {
                     iteratorEle = iteratorEle.parentElement;
-                    if (iteratorEle !== null && (iteratorEle?.style.overflowY === 'scroll' || iteratorEle?.style.overflowY === 'auto' || iteratorEle.className === 'mx-scrollcontainer-wrapper')){
+                    if (
+                        iteratorEle !== null &&
+                        (iteratorEle?.style.overflowY === "scroll" ||
+                            iteratorEle?.style.overflowY === "auto" ||
+                            iteratorEle.className === "mx-scrollcontainer-wrapper")
+                    ) {
                         iteratorEle.addEventListener("scroll", () => updatePosition());
                         break;
                     }
@@ -77,6 +82,7 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
         return () => {
             resizeObserver?.disconnect();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const focusSearchInput = (): void => {
@@ -85,15 +91,15 @@ const ReferenceDropdown = (props: ReferenceDropdownProps): JSX.Element => {
         }
     };
 
-    useEffect(() => {
-        // Auto focus the input if the popup is open
-        if (showMenu) {
-            focusSearchInput();
-        } else {
-            // clear search text if the menu is closed
-            props.setMxFilter("");
-        }
-    }, [showMenu]);
+    // useEffect(() => {
+    //     // Auto focus the input if the popup is open
+    //     if (showMenu) {
+    //         focusSearchInput();
+    //     } else {
+    //         // clear search text if the menu is closed
+    //         props.setMxFilter("");
+    //     }
+    // }, [showMenu]);
 
     useOnClickOutside(srsRef, () => {
         // handle click outside

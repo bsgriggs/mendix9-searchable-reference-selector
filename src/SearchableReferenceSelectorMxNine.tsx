@@ -1,4 +1,4 @@
-import { createElement, useState, useEffect } from "react";
+import { createElement, useState, useEffect, ReactElement } from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus } from "mendix";
 import { attribute, literal, contains } from "mendix/filters/builders";
@@ -10,7 +10,7 @@ import LoadingSelector from "./components/LoadingSelector";
 import ReferenceList from "./components/ReferenceList";
 import ReferenceSetList from "./components/ReferenceSetList";
 
-const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineContainerProps): JSX.Element => {
+const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineContainerProps): ReactElement => {
     const [mxFilter, setMxFilter] = useState<string>("");
     const [currentObjectItem, setCurrentObjectItem] = useState<ObjectItem | ObjectItem[] | undefined>();
     const [selectableObjects, setSelectableObjectList] = useState<ObjectItem[]>([]);
@@ -55,7 +55,7 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
         }, props.filterDelay);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [mxFilter]);
+    }, [mxFilter, props.displayAttribute, props.filterDelay, props.isSearchable, props.selectableObjects]);
 
     if (
         props.association.status === ValueStatus.Available &&

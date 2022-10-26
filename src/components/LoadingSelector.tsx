@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, ReactElement } from "react";
 import { DynamicValue, WebIcon } from "mendix";
 import CancelIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
@@ -12,7 +12,7 @@ interface LoadingSelectorProps {
     dropdownIcon?: DynamicValue<WebIcon>;
 }
 
-const LoadingSelector = (props: LoadingSelectorProps): JSX.Element => {
+const LoadingSelector = (props: LoadingSelectorProps): ReactElement => {
     return (
         <div className="srs">
             <div className={"form-control"} tabIndex={props.tabIndex || 0}>

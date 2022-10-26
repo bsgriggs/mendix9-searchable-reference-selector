@@ -1,4 +1,4 @@
-import React, { createElement, useState, useRef } from "react";
+import React, { createElement, useState, useRef, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
@@ -30,7 +30,7 @@ interface ReferenceSetListProps {
     optionsStyle: OptionsStyleEnum;
 }
 
-const ReferenceSetList = (props: ReferenceSetListProps): JSX.Element => {
+const ReferenceSetList = (props: ReferenceSetListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef(null);

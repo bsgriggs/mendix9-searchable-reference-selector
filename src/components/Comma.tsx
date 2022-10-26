@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import Big from "big.js";
@@ -15,7 +15,7 @@ interface CommaProps {
     showComma: boolean;
 }
 
-const Comma = (props: CommaProps): JSX.Element => {
+const Comma = (props: CommaProps): ReactElement => {
     return (
         <div className="srs-comma">
             {displayContent(props.content, props.optionTextType, props.displayAttribute, props.optionCustomContent)}

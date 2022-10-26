@@ -1,4 +1,4 @@
-import React, { createElement } from "react";
+import React, { createElement, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
@@ -17,16 +17,16 @@ interface BadgeProps {
     onBadgeClick?: ListActionValue;
 }
 
-const Badge = (props: BadgeProps): JSX.Element => {
+const Badge = (props: BadgeProps): ReactElement => {
     const handleBadgeClick = (event: React.MouseEvent<HTMLSpanElement>): void => {
         event.stopPropagation();
-        if (props.onBadgeClick !== undefined){
+        if (props.onBadgeClick !== undefined) {
             const badgeClickAction = props.onBadgeClick.get(props.content);
             if (badgeClickAction.canExecute && badgeClickAction.isExecuting === false) {
                 badgeClickAction.execute();
-            }  
+            }
         }
-    }
+    };
 
     return (
         <div className="srs-badge" onClick={handleBadgeClick}>

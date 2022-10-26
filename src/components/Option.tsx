@@ -1,8 +1,11 @@
-import { createElement, ReactNode } from "react";
+import { createElement, PropsWithChildren, ReactElement, ReactNode, MouseEvent } from "react";
 import useHover from "src/custom hooks/useHover";
 import { OptionsStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+
 export enum focusModeEnum {
+    // eslint-disable-next-line no-unused-vars
     hover = "hover",
+    // eslint-disable-next-line no-unused-vars
     arrow = "arrow"
 }
 
@@ -17,7 +20,7 @@ interface OptionProps {
     children: ReactNode;
 }
 
-const Option = (props: React.PropsWithChildren<OptionProps>): JSX.Element => {
+const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
     const determineClassName = (): string => {
         let className = "srs-option";
@@ -46,7 +49,7 @@ const Option = (props: React.PropsWithChildren<OptionProps>): JSX.Element => {
             aria-disabled={props.isSelectable === false}
             tabIndex={props.index}
             className={determineClassName()}
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+            onClick={(event: MouseEvent<HTMLDivElement>) => {
                 event.stopPropagation();
                 if (props.isSelectable) {
                     props.onSelect();
