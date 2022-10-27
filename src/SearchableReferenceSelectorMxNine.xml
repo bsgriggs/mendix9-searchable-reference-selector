@@ -31,7 +31,7 @@
                     <caption>Show Select All?</caption>
                     <description>(Reference Set ONLY) When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
                 </property>
-                <property key="maxItems" type="expression" defaultValue="0">
+                <property key="maxItems" type="expression" defaultValue="50">
                     <caption>Max Items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>
                     <returnType type="Integer" />
@@ -92,7 +92,7 @@
                 <caption>Max Reference Display</caption>
                 <description>(Reference Set ONLY) How many many badges / items are displayed (0 = no limit)</description>
             </property>
-            <property key="maxMenuHeight" type="expression" defaultValue="empty">
+            <property key="maxMenuHeight" type="expression" defaultValue="'15em'">
                 <caption>Max Menu Height</caption>
                 <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
                 <returnType type="String" />
@@ -125,7 +125,7 @@
                 </property>
                 <property key="association" type="association" selectableObjects="selectableObjects" required="true">
                     <caption>Reference</caption>
-                    <description>Reference</description>
+                    <description>The association to be set when the user clicks an option</description>
                     <associationTypes>
                         <associationType name="Reference" />
                         <associationType name="ReferenceSet" />

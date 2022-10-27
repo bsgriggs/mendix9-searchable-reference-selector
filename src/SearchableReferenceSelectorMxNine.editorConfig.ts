@@ -49,8 +49,12 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["displayAttribute"]);
     }
 
-    if (parseInt(_values.maxItems) > 0) {
+    if (parseInt(_values.maxItems) === 0) {
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
+    }
+
+    if (_values.selectStyle === "list" || _values.referenceSetStyle === "commas") {
+        hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
     }
 
     if (_values.selectStyle === "list") {
