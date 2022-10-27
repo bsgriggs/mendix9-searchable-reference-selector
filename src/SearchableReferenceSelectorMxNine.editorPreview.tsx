@@ -23,7 +23,9 @@ const formatWebIcon = (propsIcon: iconPreview): WebIcon | undefined => {
         // } else if (propsIcon?.type === "image") {
         //     const imgIcon = { type: propsIcon.type, iconUrl: propsIcon.imageUrl };
         //     return imgIcon;
-    } else return undefined;
+    } else {
+        return undefined;
+    }
 };
 
 const displayIcon = (propsIcon: iconPreview, defaultClassName: string): ReactElement => {
@@ -57,19 +59,22 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
             </div>
             <div
                 className={`srs-list`}
-                style={{borderWidth: "1px",
+                style={{
+                    borderWidth: "1px",
                     borderStyle: "solid",
                     borderColor: "#d7d7d7",
                     borderRadius: "4px",
                     backgroundColor: "#fff",
-                    padding: "0.25em"}}
+                    padding: "0.25em"
+                }}
             >
                 <div>
                     <Option
                         index={1}
-                        isSelected={true}
+                        isSelected
                         isFocused={false}
-                        isSelectable={true}
+                        isSelectable
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         onSelect={() => {}}
                         focusMode={focusModeEnum.hover}
                         optionsStyle={props.optionsStyle}
@@ -80,7 +85,8 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                         index={2}
                         isSelected={false}
                         isFocused={false}
-                        isSelectable={true}
+                        isSelectable
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         onSelect={() => {}}
                         focusMode={focusModeEnum.hover}
                         optionsStyle={props.optionsStyle}
@@ -92,6 +98,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                         isSelected={false}
                         isFocused={false}
                         isSelectable={false}
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         onSelect={() => {}}
                         focusMode={focusModeEnum.hover}
                         optionsStyle={"cell"}
