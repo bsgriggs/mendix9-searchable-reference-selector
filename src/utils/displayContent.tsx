@@ -1,4 +1,4 @@
-import { createElement, ReactNode } from "react";
+import { createElement, Fragment, ReactNode } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Big from "big.js";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
@@ -25,7 +25,7 @@ export default function displayContent(
         }
     }
     if (optionTextType === "custom" && optionCustomContent !== undefined) {
-        return <span className={className}>{optionCustomContent?.get(displayObj)}</span>;
+        return <Fragment>{optionCustomContent?.get(displayObj)}</Fragment>;
     } else {
         return <span className={className}>No Content</span>;
     }

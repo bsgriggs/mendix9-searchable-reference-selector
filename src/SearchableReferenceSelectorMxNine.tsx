@@ -30,7 +30,6 @@ const SearchableReferenceSelector = (props: SearchableReferenceSelectorMxNineCon
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (props.isSearchable) {
-                console.log("isFilterable", props.displayAttribute.filterable);
                 if (props.displayAttribute.filterable) {
                     // data source supports xpath filtering
                     const filterCondition = contains(attribute(props.displayAttribute.id), literal(mxFilter));
