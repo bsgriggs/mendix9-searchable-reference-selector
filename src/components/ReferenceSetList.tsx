@@ -14,8 +14,8 @@ interface ReferenceSetListProps {
     tabIndex?: number;
     placeholder?: string;
     noResultsText?: string;
-    selectableObjects: ObjectItem[];
-    currentValues: ObjectItem[];
+    selectableObjects: ObjectItem[] | undefined;
+    currentValues: ObjectItem[] | undefined;
     displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
@@ -31,9 +31,11 @@ interface ReferenceSetListProps {
     selectAllIcon?: DynamicValue<WebIcon>;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
+    // isLoading: boolean;
 }
 
 const ReferenceSetList = ({
+    // isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -62,7 +64,7 @@ const ReferenceSetList = ({
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
-            if (currentValues.length > 0) {
+            if (currentValues !== undefined && currentValues.length > 0) {
                 if (currentValues.find(obj => obj.id === selectedObj.id)) {
                     if (isClearable || currentValues.length > 1) {
                         // obj already selected , deselect
@@ -100,7 +102,7 @@ const ReferenceSetList = ({
                             event,
                             focusedObjIndex,
                             setFocusedObjIndex,
-                            selectableObjects,
+                            selectableObjects || [],
                             onSelectHandler,
                             selectableAttribute
                         )
@@ -125,7 +127,7 @@ const ReferenceSetList = ({
                                         setMxFilter,
                                         setFocusedObjIndex,
                                         onSelectAssociation,
-                                        selectableObjects,
+                                        selectableObjects || [],
                                         selectableAttribute
                                     )
                                 }
@@ -159,7 +161,7 @@ const ReferenceSetList = ({
                     displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
                     currentValue={currentValues}
-                    currentFocus={selectableObjects[focusedObjIndex]}
+                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
                     optionTextType={optionTextType}
@@ -168,6 +170,7 @@ const ReferenceSetList = ({
                     optionsStyle={optionsStyle}
                     selectStyle={"list"}
                     isReadyOnly={isReadOnly}
+                    // isLoading={isLoading}
                 />
                 <div className="srs-icon-row">
                     {isSearchable === false && showSelectAll && isReadOnly === false && (
@@ -178,7 +181,7 @@ const ReferenceSetList = ({
                                     setMxFilter,
                                     setFocusedObjIndex,
                                     onSelectAssociation,
-                                    selectableObjects,
+                                    selectableObjects || [],
                                     selectableAttribute
                                 )
                             }

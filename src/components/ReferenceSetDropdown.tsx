@@ -24,8 +24,8 @@ interface ReferenceSetDropdownProps {
     tabIndex?: number;
     placeholder?: string;
     noResultsText?: string;
-    selectableObjects: ObjectItem[];
-    currentValues: ObjectItem[];
+    selectableObjects: ObjectItem[] | undefined;
+    currentValues: ObjectItem[] | undefined;
     displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
@@ -46,9 +46,11 @@ interface ReferenceSetDropdownProps {
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
     onBadgeClick?: ListActionValue;
+    // isLoading: boolean;
 }
 
 const ReferenceSetDropdown = ({
+    // isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -94,7 +96,7 @@ const ReferenceSetDropdown = ({
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
-            if (currentValues.length > 0) {
+            if (currentValues!== undefined && currentValues.length > 0) {
                 if (currentValues.find(obj => obj.id === selectedObj.id)) {
                     if (isClearable || currentValues.length > 1) {
                         // obj already selected , deselect
@@ -141,7 +143,7 @@ const ReferenceSetDropdown = ({
                     event,
                     focusedObjIndex,
                     setFocusedObjIndex,
-                    selectableObjects,
+                    selectableObjects || [],
                     onSelectHandler,
                     selectableAttribute,
                     setShowMenu
@@ -149,7 +151,7 @@ const ReferenceSetDropdown = ({
             }
             ref={srsRef}
         >
-            {referenceSetStyle === "badges" && currentValues.length > 0 && (
+            {referenceSetStyle === "badges" && currentValues!== undefined && currentValues.length > 0 && (
                 <div className="srs-badge-row">
                     {maxReferenceDisplay > 0 && (
                         <React.Fragment>
@@ -194,7 +196,7 @@ const ReferenceSetDropdown = ({
                     )}
                 </div>
             )}
-            {referenceSetStyle === "commas" && currentValues.length > 0 && (
+            {referenceSetStyle === "commas" && currentValues!== undefined && currentValues.length > 0 && (
                 <div className="srs-badge-row">
                     {maxReferenceDisplay > 0 && (
                         <React.Fragment>
@@ -263,7 +265,7 @@ const ReferenceSetDropdown = ({
                                 setMxFilter,
                                 setFocusedObjIndex,
                                 onSelectAssociation,
-                                selectableObjects,
+                                selectableObjects || [],
                                 selectableAttribute
                             )
                         }
@@ -298,7 +300,7 @@ const ReferenceSetDropdown = ({
                     displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
                     currentValue={currentValues}
-                    currentFocus={selectableObjects[focusedObjIndex]}
+                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
                     maxHeight={maxHeight}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
@@ -309,6 +311,7 @@ const ReferenceSetDropdown = ({
                     selectStyle={"dropdown"}
                     position={position}
                     isReadyOnly={isReadOnly}
+                    // isLoading={isLoading}
                 />
             )}
         </div>

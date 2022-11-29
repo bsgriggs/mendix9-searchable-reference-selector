@@ -1,14 +1,19 @@
 import { createElement, useState, useEffect, ReactElement } from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
-import { ObjectItem, ValueStatus } from "mendix";
+import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains } from "mendix/filters/builders";
 import "./ui/SearchableReferenceSelectorMxNine.css";
 import { Alert } from "./components/Alert";
 import ReferenceDropdown from "./components/ReferenceDropdown";
 import ReferenceSetDropdown from "./components/ReferenceSetDropdown";
-import LoadingSelector from "./components/LoadingSelector";
 import ReferenceList from "./components/ReferenceList";
 import ReferenceSetList from "./components/ReferenceSetList";
+
+const callMxAction = (action?: ActionValue): void => {
+    if (action !== undefined && action.canExecute && action.isExecuting === false) {
+        action.execute();
+    }
+};
 
 const SearchableReferenceSelector = ({
     association,
@@ -40,21 +45,29 @@ const SearchableReferenceSelector = ({
     selectableObjects
 }: SearchableReferenceSelectorMxNineContainerProps): ReactElement => {
     const [mxFilter, setMxFilter] = useState<string>("");
-    const [currentObjectItem, setCurrentObjectItem] = useState<ObjectItem | ObjectItem[] | undefined>();
-    const [options, setOptions] = useState<ObjectItem[]>([]);
+    const [options, setOptions] = useState<ObjectItem[]>();
+    // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    if (Number(maxItems.value) > 1 && displayAttribute.type === "String") {
+    // const isLoading =
+    //     association.status !== ValueStatus.Available ||
+    //     selectableObjects.status !== ValueStatus.Available ||
+    //     placeholder.status !== ValueStatus.Available ||
+    //     maxMenuHeight.status !== ValueStatus.Available;
+
+    //     console.info("rendered", {options, isLoading, ...selectableObjects})
+
+    if (Number(maxItems.value) > 1) {
         selectableObjects.setLimit(Number(maxItems.value));
     }
 
+    //load objects
     useEffect(() => {
-        setCurrentObjectItem(association.value as ObjectItem);
-    }, [association.value]);
-
-    useEffect(() => {
-        setOptions(selectableObjects.items || []);
+        if (selectableObjects.status === ValueStatus.Available) {
+            setOptions(selectableObjects.items || []);
+        }
     }, [selectableObjects]);
 
+    //apply filter
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (isSearchable) {
@@ -79,156 +92,135 @@ const SearchableReferenceSelector = ({
         }, filterDelay);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [mxFilter, displayAttribute, filterDelay, isSearchable, selectableObjects]);
+    }, [mxFilter]);
 
-    if (
-        association.status === ValueStatus.Available &&
-        selectableObjects.status === ValueStatus.Available &&
-        placeholder.status === ValueStatus.Available &&
-        maxMenuHeight.status === ValueStatus.Available
-    ) {
-        const onSelectReferenceHandler = (selectedObj: (ObjectItem & ObjectItem[]) | undefined): void => {
-            // update Mendix object
-            association.setValue(selectedObj);
-            setCurrentObjectItem(selectedObj);
-            // run on change
-            if (
-                currentObjectItem !== selectedObj &&
-                onChangeAssociation !== undefined &&
-                onChangeAssociation.canExecute
-            ) {
-                onChangeAssociation.execute();
-            }
-        };
+    const onSelectReferenceHandler = (selectedObj: (ObjectItem & ObjectItem[]) | undefined): void => {
+        // update Mendix object
+        association.setValue(selectedObj);
+        // run on change
+        callMxAction(onChangeAssociation);
+    };
 
-        return (
-            <div id={id} className="srs">
-                {association.type === "Reference" && selectStyle === "dropdown" && (
-                    <ReferenceDropdown
-                        name={name}
-                        tabIndex={tabIndex}
-                        currentValue={association.value as ObjectItem}
-                        isClearable={isClearable}
-                        clearIcon={clearIcon}
-                        dropdownIcon={dropdownIcon}
-                        onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
-                            onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
-                        }
-                        selectableObjects={options}
-                        placeholder={placeholder.value}
-                        isReadOnly={association.readOnly}
-                        isSearchable={isSearchable}
-                        maxHeight={maxMenuHeight.value}
-                        noResultsText={noResultsText.value}
-                        displayAttribute={displayAttribute}
-                        optionTextType={optionTextType}
-                        selectableAttribute={selectableAttribute}
-                        optionCustomContent={optionCustomContent}
-                        mxFilter={mxFilter}
-                        setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
-                        optionsStyle={optionsStyle}
-                    />
-                )}
-                {association.type === "Reference" && selectStyle === "list" && (
-                    <ReferenceList
-                        name={name}
-                        tabIndex={tabIndex}
-                        currentValue={association.value as ObjectItem}
-                        isClearable={isClearable}
-                        clearIcon={clearIcon}
-                        onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
-                            onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
-                        }
-                        selectableObjects={options}
-                        placeholder={placeholder.value}
-                        isReadOnly={association.readOnly}
-                        noResultsText={noResultsText.value}
-                        displayAttribute={displayAttribute}
-                        optionTextType={optionTextType}
-                        selectableAttribute={selectableAttribute}
-                        optionCustomContent={optionCustomContent}
-                        mxFilter={mxFilter}
-                        setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
-                        optionsStyle={optionsStyle}
-                        isSearchable={isSearchable}
-                    />
-                )}
-                {association.type === "ReferenceSet" && selectStyle === "dropdown" && (
-                    <ReferenceSetDropdown
-                        name={name}
-                        tabIndex={tabIndex}
-                        currentValues={association.value as ObjectItem[]}
-                        isClearable={isClearable}
-                        clearIcon={clearIcon}
-                        dropdownIcon={dropdownIcon}
-                        onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
-                            onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
-                        }
-                        selectableObjects={options}
-                        placeholder={placeholder.value}
-                        isReadOnly={association.readOnly}
-                        isSearchable={isSearchable}
-                        maxHeight={maxMenuHeight.value}
-                        noResultsText={noResultsText.value}
-                        displayAttribute={displayAttribute}
-                        optionTextType={optionTextType}
-                        selectableAttribute={selectableAttribute}
-                        optionCustomContent={optionCustomContent}
-                        mxFilter={mxFilter}
-                        setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
-                        optionsStyle={optionsStyle}
-                        referenceSetStyle={referenceSetStyle}
-                        maxReferenceDisplay={maxReferenceDisplay}
-                        showSelectAll={showSelectAll}
-                        selectAllIcon={selectAllIcon}
-                        onBadgeClick={onBadgeClick}
-                    />
-                )}
-                {association.type === "ReferenceSet" && selectStyle === "list" && (
-                    <ReferenceSetList
-                        name={name}
-                        tabIndex={tabIndex}
-                        currentValues={association.value as ObjectItem[]}
-                        isClearable={isClearable}
-                        clearIcon={clearIcon}
-                        onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
-                            onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
-                        }
-                        selectableObjects={options}
-                        placeholder={placeholder.value}
-                        isReadOnly={association.readOnly}
-                        noResultsText={noResultsText.value}
-                        displayAttribute={displayAttribute}
-                        optionTextType={optionTextType}
-                        selectableAttribute={selectableAttribute}
-                        optionCustomContent={optionCustomContent}
-                        mxFilter={mxFilter}
-                        setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                        moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
-                        optionsStyle={optionsStyle}
-                        isSearchable={isSearchable}
-                        showSelectAll={showSelectAll}
-                        selectAllIcon={selectAllIcon}
-                    />
-                )}
-                {association.validation && <Alert>{association.validation}</Alert>}
-            </div>
-        );
-    } else {
-        return (
-            <LoadingSelector
-                name={name}
-                tabIndex={tabIndex}
-                placeholder={placeholder.value}
-                isClearable={isClearable}
-                clearIcon={clearIcon}
-                dropdownIcon={dropdownIcon}
-            />
-        );
-    }
+    return (
+        <div id={id} className="srs">
+            {association.type === "Reference" && selectStyle === "dropdown" && (
+                <ReferenceDropdown
+                    name={name}
+                    tabIndex={tabIndex}
+                    currentValue={association.value as ObjectItem}
+                    isClearable={isClearable}
+                    clearIcon={clearIcon}
+                    dropdownIcon={dropdownIcon}
+                    onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
+                        onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
+                    }
+                    selectableObjects={options}
+                    placeholder={placeholder.value}
+                    isReadOnly={association.readOnly}
+                    isSearchable={isSearchable}
+                    maxHeight={maxMenuHeight.value}
+                    noResultsText={noResultsText.value}
+                    displayAttribute={displayAttribute}
+                    optionTextType={optionTextType}
+                    selectableAttribute={selectableAttribute}
+                    optionCustomContent={optionCustomContent}
+                    mxFilter={mxFilter}
+                    setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
+                    moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
+                    optionsStyle={optionsStyle}
+                    // isLoading={isLoading}
+                />
+            )}
+            {association.type === "Reference" && selectStyle === "list" && (
+                <ReferenceList
+                    name={name}
+                    tabIndex={tabIndex}
+                    currentValue={association.value as ObjectItem}
+                    isClearable={isClearable}
+                    clearIcon={clearIcon}
+                    onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
+                        onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
+                    }
+                    selectableObjects={options}
+                    placeholder={placeholder.value}
+                    isReadOnly={association.readOnly}
+                    noResultsText={noResultsText.value}
+                    displayAttribute={displayAttribute}
+                    optionTextType={optionTextType}
+                    selectableAttribute={selectableAttribute}
+                    optionCustomContent={optionCustomContent}
+                    mxFilter={mxFilter}
+                    setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
+                    moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
+                    optionsStyle={optionsStyle}
+                    isSearchable={isSearchable}
+                    // isLoading={isLoading}
+                />
+            )}
+            {association.type === "ReferenceSet" && selectStyle === "dropdown" && (
+                <ReferenceSetDropdown
+                    name={name}
+                    tabIndex={tabIndex}
+                    currentValues={association.value as ObjectItem[]}
+                    isClearable={isClearable}
+                    clearIcon={clearIcon}
+                    dropdownIcon={dropdownIcon}
+                    onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
+                        onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
+                    }
+                    selectableObjects={options}
+                    placeholder={placeholder.value}
+                    isReadOnly={association.readOnly}
+                    isSearchable={isSearchable}
+                    maxHeight={maxMenuHeight.value}
+                    noResultsText={noResultsText.value}
+                    displayAttribute={displayAttribute}
+                    optionTextType={optionTextType}
+                    selectableAttribute={selectableAttribute}
+                    optionCustomContent={optionCustomContent}
+                    mxFilter={mxFilter}
+                    setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
+                    moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
+                    optionsStyle={optionsStyle}
+                    referenceSetStyle={referenceSetStyle}
+                    maxReferenceDisplay={maxReferenceDisplay}
+                    showSelectAll={showSelectAll}
+                    selectAllIcon={selectAllIcon}
+                    onBadgeClick={onBadgeClick}
+                    // isLoading={isLoading}
+                />
+            )}
+            {association.type === "ReferenceSet" && selectStyle === "list" && (
+                <ReferenceSetList
+                    name={name}
+                    tabIndex={tabIndex}
+                    currentValues={association.value as ObjectItem[]}
+                    isClearable={isClearable}
+                    clearIcon={clearIcon}
+                    onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
+                        onSelectReferenceHandler(newAssociation as ObjectItem & ObjectItem[])
+                    }
+                    selectableObjects={options}
+                    placeholder={placeholder.value}
+                    isReadOnly={association.readOnly}
+                    noResultsText={noResultsText.value}
+                    displayAttribute={displayAttribute}
+                    optionTextType={optionTextType}
+                    selectableAttribute={selectableAttribute}
+                    optionCustomContent={optionCustomContent}
+                    mxFilter={mxFilter}
+                    setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
+                    moreResultsText={selectableObjects.hasMoreItems ? moreResultsText.value : undefined}
+                    optionsStyle={optionsStyle}
+                    isSearchable={isSearchable}
+                    showSelectAll={showSelectAll}
+                    selectAllIcon={selectAllIcon}
+                    // isLoading={isLoading}
+                />
+            )}
+            {association.validation && <Alert>{association.validation}</Alert>}
+        </div>
+    );
 };
 
 export default SearchableReferenceSelector;

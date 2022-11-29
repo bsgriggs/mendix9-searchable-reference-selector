@@ -4,9 +4,10 @@ import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import displayContent from "src/utils/displayContent";
 import { Position } from "../custom hooks/usePositionUpdate";
+// import Spinner from "./Spinner";
 
 interface OptionsMenuProps {
-    selectableObjects: ObjectItem[];
+    selectableObjects: ObjectItem[] | undefined;
     currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
     displayAttribute?: ListAttributeValue<string>;
@@ -21,6 +22,7 @@ interface OptionsMenuProps {
     selectStyle: SelectStyleEnum;
     position?: Position;
     isReadyOnly: boolean;
+    // isLoading: boolean;
 }
 
 const OptionsMenuStyle = (
@@ -43,6 +45,7 @@ const OptionsMenuStyle = (
 };
 
 const OptionsMenu = ({
+    // isLoading,
     isReadyOnly,
     onSelectOption,
     optionTextType,
@@ -117,11 +120,14 @@ const OptionsMenu = ({
                 </React.Fragment>
             )}
             {selectableObjects === undefined ||
-                (selectableObjects.length === 0 && (
+                (selectableObjects !== undefined && selectableObjects.length === 0 && (
                     <div className="mx-text srs-infooption" role="option">
                         {noResultsText ? noResultsText : "No results found"}
                     </div>
                 ))}
+                {/* {isLoading && (
+                    <Spinner size="2em" color="#264ae5"/>
+                )} */}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import React, { createElement, useState, useRef, ReactElement } from "react";
+import React, { createElement, useState, useRef, ReactElement, Fragment } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
@@ -16,8 +16,8 @@ interface ReferenceDropdownProps {
     tabIndex?: number;
     placeholder?: string;
     noResultsText?: string;
-    selectableObjects: ObjectItem[];
-    currentValue?: ObjectItem;
+    selectableObjects: ObjectItem[] | undefined;
+    currentValue?: ObjectItem | undefined;
     displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
@@ -33,9 +33,11 @@ interface ReferenceDropdownProps {
     maxHeight?: string;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
+    // isLoading: boolean;
 }
 
 const ReferenceDropdown = ({
+    // isLoading,
     isClearable,
     isReadOnly,
     isSearchable,
@@ -112,7 +114,7 @@ const ReferenceDropdown = ({
                     event,
                     focusedObjIndex,
                     setFocusedObjIndex,
-                    selectableObjects,
+                    selectableObjects || [],
                     onSelectHandler,
                     selectableAttribute,
                     setShowMenu
@@ -120,14 +122,18 @@ const ReferenceDropdown = ({
             }
             ref={srsRef}
         >
-            {currentValue === undefined && isReadOnly === false && isSearchable && (
+            {optionTextType === "text" && (
                 <input
                     name={name}
                     placeholder={placeholder}
                     type="text"
                     onChange={handleInputChange}
-                    readOnly={isReadOnly}
-                    value={mxFilter}
+                    readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
+                    value={
+                        currentValue !== undefined && displayAttribute !== undefined
+                            ? displayAttribute.get(currentValue).displayValue
+                            : mxFilter
+                    }
                     ref={searchInput}
                     onClick={(event: React.MouseEvent<HTMLInputElement>) => {
                         if (showMenu) {
@@ -136,9 +142,32 @@ const ReferenceDropdown = ({
                     }}
                 ></input>
             )}
-            {currentValue === undefined && isSearchable === false && <span className="srs-text">{placeholder}</span>}
-            {currentValue !== undefined &&
-                displayContent(currentValue, optionTextType, displayAttribute, optionCustomContent, "srs-text")}
+            {optionTextType !== "text" && (
+                <Fragment>
+                    {currentValue === undefined && isReadOnly === false && isSearchable && (
+                        <input
+                            name={name}
+                            placeholder={placeholder}
+                            type="text"
+                            onChange={handleInputChange}
+                            readOnly={isReadOnly}
+                            value={mxFilter}
+                            ref={searchInput}
+                            onClick={(event: React.MouseEvent<HTMLInputElement>) => {
+                                if (showMenu) {
+                                    event.stopPropagation();
+                                }
+                            }}
+                        ></input>
+                    )}
+                    {currentValue === undefined && isSearchable === false && (
+                        <span className="srs-text">{placeholder}</span>
+                    )}
+                    {currentValue !== undefined &&
+                        displayContent(currentValue, optionTextType, displayAttribute, optionCustomContent, "srs-text")}
+                </Fragment>
+            )}
+
             <div className="srs-icon-row">
                 {isClearable && isReadOnly === false && (
                     <ClearIcon
@@ -172,7 +201,7 @@ const ReferenceDropdown = ({
                         onSelectHandler(newObject, newObjSelectable);
                     }}
                     currentValue={currentValue}
-                    currentFocus={selectableObjects[focusedObjIndex]}
+                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
                     maxHeight={maxHeight}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
@@ -183,6 +212,7 @@ const ReferenceDropdown = ({
                     selectStyle={"dropdown"}
                     position={position}
                     isReadyOnly={isReadOnly}
+                    // isLoading={isLoading}
                 />
             )}
         </div>

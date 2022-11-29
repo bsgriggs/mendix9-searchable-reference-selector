@@ -11,8 +11,8 @@ interface ReferenceListProps {
     tabIndex?: number;
     placeholder?: string;
     noResultsText?: string;
-    selectableObjects: ObjectItem[];
-    currentValue?: ObjectItem;
+    selectableObjects: ObjectItem[] | undefined;
+    currentValue?: ObjectItem | undefined;
     displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
@@ -26,9 +26,11 @@ interface ReferenceListProps {
     isReadOnly: boolean;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
+    // isLoading: boolean;
 }
 
 const ReferenceList = ({
+    // isLoading,
     isClearable,
     isReadOnly,
     isSearchable,
@@ -79,7 +81,7 @@ const ReferenceList = ({
                             event,
                             focusedObjIndex,
                             setFocusedObjIndex,
-                            selectableObjects,
+                            selectableObjects || [],
                             onSelectHandler,
                             selectableAttribute
                         )
@@ -128,7 +130,7 @@ const ReferenceList = ({
                         }
                     }}
                     currentValue={currentValue}
-                    currentFocus={selectableObjects[focusedObjIndex]}
+                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
                     optionTextType={optionTextType}
@@ -137,6 +139,7 @@ const ReferenceList = ({
                     optionsStyle={optionsStyle}
                     selectStyle={"list"}
                     isReadyOnly={isReadOnly}
+                    // isLoading={isLoading}
                 />
                 {isSearchable === false && isClearable && isReadOnly === false && (
                     <ClearIcon
