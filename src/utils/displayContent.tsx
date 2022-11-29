@@ -1,18 +1,17 @@
 import { createElement, Fragment, ReactNode } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import Big from "big.js";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 export default function displayContent(
     displayObj: ObjectItem,
     optionTextType: OptionTextTypeEnum,
-    displayAttribute?: ListAttributeValue<string | Big>,
+    displayAttribute?: ListAttributeValue<string>,
     optionCustomContent?: ListWidgetValue,
     className?: string
 ): ReactNode {
     if (displayAttribute !== undefined) {
         if (optionTextType === "text") {
-            return <span className={className}>{displayAttribute.get(displayObj).value?.toString()}</span>;
+            return <span className={className}>{displayAttribute.get(displayObj).displayValue}</span>;
         } else if (optionTextType === "html") {
             return (
                 <span

@@ -1,27 +1,27 @@
 import { createElement, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import Big from "big.js";
 import displayContent from "src/utils/displayContent";
 
 interface CommaProps {
     content: ObjectItem;
-    isClearable: boolean;
-    isReadOnly: boolean;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
-    onRemoveAssociation: () => void;
-    displayAttribute?: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string>;
     showComma: boolean;
 }
 
-const Comma = (props: CommaProps): ReactElement => {
-    return (
-        <div className="srs-comma">
-            {displayContent(props.content, props.optionTextType, props.displayAttribute, props.optionCustomContent)}
-            {props.showComma && <span>,</span>}
-        </div>
-    );
-};
+const Comma = ({
+    content,
+    optionTextType,
+    showComma,
+    displayAttribute,
+    optionCustomContent
+}: CommaProps): ReactElement => (
+    <div className="srs-comma">
+        {displayContent(content, optionTextType, displayAttribute, optionCustomContent)}
+        {showComma && <span>,</span>}
+    </div>
+);
 
 export default Comma;

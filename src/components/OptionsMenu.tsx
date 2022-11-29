@@ -2,24 +2,16 @@ import React, { createElement, ReactElement, useEffect, useRef, useState } from 
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import Option, { focusModeEnum } from "./Option";
 import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import Big from "big.js";
 import displayContent from "src/utils/displayContent";
-
-export interface position {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-}
+import { Position } from "../custom hooks/usePositionUpdate";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem | ObjectItem[];
     currentFocus?: ObjectItem;
-    displayAttribute?: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string>;
     selectableAttribute?: ListAttributeValue<boolean>;
     onSelectOption: (newObject: ObjectItem) => void;
-    searchText?: string;
     noResultsText?: string;
     maxHeight?: string;
     optionTextType: OptionTextTypeEnum;
@@ -27,14 +19,49 @@ interface OptionsMenuProps {
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
     selectStyle: SelectStyleEnum;
-    position?: position;
+    position?: Position;
     isReadyOnly: boolean;
 }
 
-const OptionsMenu = (props: OptionsMenuProps): ReactElement => {
+const OptionsMenuStyle = (
+    selectStyle: SelectStyleEnum,
+    position: Position | undefined,
+    maxHeight: string | undefined
+): React.CSSProperties => {
+    if (selectStyle === "dropdown" && position !== undefined) {
+        const contentCloseToBottom = position.y > window.innerHeight * 0.7;
+        return {
+            maxHeight: maxHeight ? maxHeight : "15em",
+            top: contentCloseToBottom ? "unset" : position.h + position.y,
+            bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
+            width: position.w,
+            left: position.x
+        };
+    } else {
+        return {};
+    }
+};
+
+const OptionsMenu = ({
+    isReadyOnly,
+    onSelectOption,
+    optionTextType,
+    optionsStyle,
+    selectStyle,
+    selectableObjects,
+    currentFocus,
+    currentValue,
+    displayAttribute,
+    maxHeight,
+    moreResultsText,
+    noResultsText,
+    optionCustomContent,
+    position,
+    selectableAttribute
+}: OptionsMenuProps): ReactElement => {
     const selectedObjRef = useRef<HTMLDivElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
-        props.currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
+        currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
     );
 
     // keep the selected item in view when using arrow keys
@@ -43,41 +70,22 @@ const OptionsMenu = (props: OptionsMenuProps): ReactElement => {
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [props.currentFocus]);
-
-    const onSelectHandler = (selectedObj: ObjectItem): void => {
-        props.onSelectOption(selectedObj);
-    };
-
-    const OptionsMenuStyle = (): React.CSSProperties => {
-        if (props.selectStyle === "dropdown" && props.position !== undefined) {
-            const contentCloseToBottom = props.position.y > window.innerHeight * 0.7;
-            return {
-                maxHeight: props.maxHeight ? props.maxHeight : "15em",
-                top: contentCloseToBottom ? "unset" : props.position.h + props.position.y,
-                bottom: contentCloseToBottom ? window.innerHeight - props.position.y : "unset",
-                width: props.position.w,
-                left: props.position.x
-            };
-        } else {
-            return {};
-        }
-    };
+    }, [currentFocus]);
 
     return (
         <div
-            className={`srs-${props.selectStyle}`}
-            style={OptionsMenuStyle()}
+            className={`srs-${selectStyle}`}
+            style={OptionsMenuStyle(selectStyle, position, maxHeight)}
             onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
         >
-            {props.selectableObjects !== undefined && props.selectableObjects.length > 0 && (
+            {selectableObjects !== undefined && selectableObjects.length > 0 && (
                 <React.Fragment>
-                    {props.selectableObjects.map((obj, key) => {
-                        const isFocused = obj.id === props.currentFocus?.id;
-                        const isSelected = props.currentValue
-                            ? Array.isArray(props.currentValue)
-                                ? props.currentValue.findIndex(v => obj.id === v.id) > -1
-                                : obj.id === props.currentValue.id
+                    {selectableObjects.map((obj, key) => {
+                        const isFocused = obj.id === currentFocus?.id;
+                        const isSelected = currentValue
+                            ? Array.isArray(currentValue)
+                                ? currentValue.findIndex(v => obj.id === v.id) > -1
+                                : obj.id === currentValue.id
                             : false;
                         return (
                             <div key={key} ref={isFocused ? selectedObjRef : undefined}>
@@ -86,37 +94,32 @@ const OptionsMenu = (props: OptionsMenuProps): ReactElement => {
                                     isSelected={isSelected}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
                                     isSelectable={
-                                        props.isReadyOnly
+                                        isReadyOnly
                                             ? false
-                                            : props.selectableAttribute
-                                            ? props.selectableAttribute.get(obj).value === true
+                                            : selectableAttribute
+                                            ? selectableAttribute.get(obj).value === true
                                             : true
                                     }
-                                    onSelect={() => onSelectHandler(obj)}
+                                    onSelect={() => onSelectOption(obj)}
                                     focusMode={focusMode}
-                                    optionsStyle={props.optionsStyle}
+                                    optionsStyle={optionsStyle}
                                 >
-                                    {displayContent(
-                                        obj,
-                                        props.optionTextType,
-                                        props.displayAttribute,
-                                        props.optionCustomContent
-                                    )}
+                                    {displayContent(obj, optionTextType, displayAttribute, optionCustomContent)}
                                 </Option>
                             </div>
                         );
                     })}
-                    {props.moreResultsText && (
+                    {moreResultsText && (
                         <div className="mx-text srs-infooption" role="option">
-                            {props.moreResultsText}
+                            {moreResultsText}
                         </div>
                     )}
                 </React.Fragment>
             )}
-            {props.selectableObjects === undefined ||
-                (props.selectableObjects.length === 0 && (
+            {selectableObjects === undefined ||
+                (selectableObjects.length === 0 && (
                     <div className="mx-text srs-infooption" role="option">
-                        {props.noResultsText ? props.noResultsText : "No results found"}
+                        {noResultsText ? noResultsText : "No results found"}
                     </div>
                 ))}
         </div>

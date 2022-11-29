@@ -1,18 +1,23 @@
-import React, { createElement, useState, useRef, useEffect, ReactElement } from "react";
+import React, { createElement, useState, useRef, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
 import DropdownIcon from "./icons/DropdownIcon";
-import OptionsMenu, { position } from "./OptionsMenu";
+import OptionsMenu from "./OptionsMenu";
 import {
     OptionsStyleEnum,
     OptionTextTypeEnum,
     ReferenceSetStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
+import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
 import Badge from "./Badge";
 import Comma from "./Comma";
-import Big from "big.js";
 import SelectAllIcon from "./icons/SelectAllIcon";
 import ClearIcon from "./icons/ClearIcon";
+import focusSearchInput from "../utils/focusSearchInput";
+import handleKeyNavigation from "src/utils/handleKeyNavigation";
+import handleClear from "src/utils/handleClear";
+import handleSelectAll from "src/utils/handleSelectAll";
+import handleRemoveObj from "src/utils/handleSelectSet";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -21,7 +26,7 @@ interface ReferenceSetDropdownProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValues: ObjectItem[];
-    displayAttribute?: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -43,72 +48,43 @@ interface ReferenceSetDropdownProps {
     onBadgeClick?: ListActionValue;
 }
 
-const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): ReactElement => {
+const ReferenceSetDropdown = ({
+    currentValues,
+    isClearable,
+    isReadOnly,
+    isSearchable,
+    maxReferenceDisplay,
+    mxFilter,
+    name,
+    onSelectAssociation,
+    optionTextType,
+    optionsStyle,
+    referenceSetStyle,
+    selectableObjects,
+    setMxFilter,
+    showSelectAll,
+    clearIcon,
+    displayAttribute,
+    dropdownIcon,
+    maxHeight,
+    moreResultsText,
+    noResultsText,
+    onBadgeClick,
+    optionCustomContent,
+    placeholder,
+    selectAllIcon,
+    selectableAttribute,
+    tabIndex
+}: ReferenceSetDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef<HTMLDivElement>(null);
-    const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
-    const [position, setPosition] = useState<position>({ x: 0, y: 0, w: 0, h: 0 });
+    const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
-    const updatePosition = (): void => {
-        if (srsRef.current !== null) {
-            setPosition({
-                x: srsRef.current.getBoundingClientRect().left,
-                y: srsRef.current.getBoundingClientRect().top,
-                w: srsRef.current.getBoundingClientRect().width,
-                h: srsRef.current.getBoundingClientRect().height
-            });
-        }
-    };
-
-    useEffect(() => {
-        if (srsRef.current !== null) {
-            const observer = new ResizeObserver(updatePosition);
-            observer.observe(srsRef.current);
-            setResizeObserver(observer);
-
-            // Find the nearest scroll container and add a listener to update the position
-            let iteratorEle = srsRef.current.parentElement;
-            // eslint-disable-next-line no-constant-condition
-            while (true) {
-                if (iteratorEle !== null) {
-                    iteratorEle = iteratorEle.parentElement;
-                    if (
-                        iteratorEle !== null &&
-                        (iteratorEle?.style.overflowY === "scroll" ||
-                            iteratorEle?.style.overflowY === "auto" ||
-                            iteratorEle.className === "mx-scrollcontainer-wrapper")
-                    ) {
-                        iteratorEle.addEventListener("scroll", () => updatePosition());
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-        }
-        return () => {
-            resizeObserver?.disconnect();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const focusSearchInput = (): void => {
-        if (props.currentValues === undefined && searchInput.current !== null) {
-            searchInput.current.focus();
-        }
-    };
-
-    // useEffect(() => {
-    //     // Auto focus the input if the popup is open
-    //     if (showMenu) {
-    //         focusSearchInput();
-    //     } else {
-    //         // clear search text if the menu is closed
-    //         props.setMxFilter("");
-    //     }
-    // }, [showMenu]);
+    usePositionUpdate(srsRef, newPosition => {
+        setPosition(newPosition);
+    });
 
     useOnClickOutside(srsRef, () => {
         // handle click outside
@@ -118,35 +94,30 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): ReactElement =>
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
-            if (props.currentValues.length > 0) {
-                if (props.currentValues.find(obj => obj.id === selectedObj.id)) {
-                    if (props.isClearable || props.currentValues.length > 1) {
+            if (currentValues.length > 0) {
+                if (currentValues.find(obj => obj.id === selectedObj.id)) {
+                    if (isClearable || currentValues.length > 1) {
                         // obj already selected , deselect
-                        onRemoveHandler(selectedObj);
+                        handleRemoveObj(selectedObj, setMxFilter, onSelectAssociation, currentValues);
                     }
                 } else {
                     // list already exists, add to list
-                    props.onSelectAssociation([...props.currentValues, selectedObj]);
+                    onSelectAssociation([...currentValues, selectedObj]);
                 }
             } else {
                 // list is empty, start list
-                props.onSelectAssociation([selectedObj]);
+                onSelectAssociation([selectedObj]);
             }
         } else {
             // clear all
-            props.onSelectAssociation(selectedObj);
+            onSelectAssociation(selectedObj);
         }
-        props.setMxFilter("");
-    };
-
-    const onRemoveHandler = (removeObj: ObjectItem): void => {
-        props.onSelectAssociation(props.currentValues.filter(obj => obj.id !== removeObj.id));
-        props.setMxFilter("");
+        setMxFilter("");
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
-        props.setMxFilter(value);
+        setMxFilter(value);
         setFocusedObjIndex(0);
         // make sure the dropdown is open if the user is typing
         if (value.trim() !== "" && showMenu === false) {
@@ -154,162 +125,103 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): ReactElement =>
         }
     };
 
-    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-        // function to control navigation of the list via arrow keys etc
-        const keyPressed = event.key;
-        if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex > 0) {
-                setFocusedObjIndex(focusedObjIndex - 1);
-            } else {
-                setFocusedObjIndex(props.selectableObjects.length - 1);
-            }
-            setShowMenu(true);
-        } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex < props.selectableObjects.length - 1) {
-                setFocusedObjIndex(focusedObjIndex + 1);
-            } else {
-                setFocusedObjIndex(0);
-            }
-            setShowMenu(true);
-        } else if (keyPressed === "Enter") {
-            if (focusedObjIndex > -1) {
-                const currentSelectedObj = props.selectableObjects[focusedObjIndex];
-                if (
-                    props.selectableAttribute === undefined ||
-                    props.selectableAttribute?.get(currentSelectedObj).value
-                ) {
-                    onSelectHandler(props.selectableObjects[focusedObjIndex]);
-                }
-            }
-        } else if (keyPressed === "Escape" || keyPressed === "Tab") {
-            setFocusedObjIndex(-1);
-            setShowMenu(false);
-        }
-    };
-
-    const handleClear = (event: React.MouseEvent<HTMLDivElement>): void => {
-        event.stopPropagation();
-        setShowMenu(true);
-        props.setMxFilter("");
-        setFocusedObjIndex(-1);
-        if (props.mxFilter.trim() === "") {
-            onSelectHandler(undefined);
-        }
-        setTimeout(() => focusSearchInput(), 300);
-    };
-
-    const handleSelectAll = (event: React.MouseEvent<HTMLSpanElement>): void => {
-        event.stopPropagation();
-        props.setMxFilter("");
-        setFocusedObjIndex(-1);
-        props.onSelectAssociation(
-            props.selectableObjects.filter(obj =>
-                props.selectableAttribute ? props.selectableAttribute.get(obj).value === true : true
-            )
-        );
-    };
-
     return (
         <div
             className={showMenu ? "form-control active" : "form-control"}
-            tabIndex={props.tabIndex || 0}
+            tabIndex={tabIndex || 0}
             onClick={() => {
                 setShowMenu(!showMenu);
-                updatePosition();
+                setPosition(mapPosition(srsRef.current));
                 if (showMenu === false) {
-                    setTimeout(() => focusSearchInput(), 300);
+                    focusSearchInput(searchInput, 300);
                 }
             }}
-            onKeyDown={handleInputKeyDown}
+            onKeyDown={event =>
+                handleKeyNavigation(
+                    event,
+                    focusedObjIndex,
+                    setFocusedObjIndex,
+                    selectableObjects,
+                    onSelectHandler,
+                    selectableAttribute,
+                    setShowMenu
+                )
+            }
             ref={srsRef}
         >
-            {props.referenceSetStyle === "badges" && props.currentValues.length > 0 && (
+            {referenceSetStyle === "badges" && currentValues.length > 0 && (
                 <div className="srs-badge-row">
-                    {props.maxReferenceDisplay > 0 && (
+                    {maxReferenceDisplay > 0 && (
                         <React.Fragment>
-                            {props.currentValues
-                                .slice(0, props.maxReferenceDisplay)
-                                .map((currentValue: ObjectItem, key) => (
-                                    <Badge
-                                        key={key}
-                                        content={currentValue}
-                                        isClearable={props.isClearable || props.currentValues.length > 1}
-                                        isReadOnly={props.isReadOnly}
-                                        optionTextType={props.optionTextType}
-                                        onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                                        displayAttribute={props.displayAttribute}
-                                        clearIcon={props.clearIcon}
-                                        onBadgeClick={props.onBadgeClick}
-                                    />
-                                ))}
-                        </React.Fragment>
-                    )}
-                    {props.maxReferenceDisplay <= 0 && (
-                        <React.Fragment>
-                            {props.currentValues.map((currentValue: ObjectItem, key) => (
+                            {currentValues.slice(0, maxReferenceDisplay).map((currentValue: ObjectItem, key) => (
                                 <Badge
                                     key={key}
                                     content={currentValue}
-                                    isClearable={props.isClearable || props.currentValues.length > 1}
-                                    isReadOnly={props.isReadOnly}
-                                    optionTextType={props.optionTextType}
-                                    onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                                    displayAttribute={props.displayAttribute}
-                                    clearIcon={props.clearIcon}
-                                    onBadgeClick={props.onBadgeClick}
+                                    isClearable={isClearable || currentValues.length > 1}
+                                    isReadOnly={isReadOnly}
+                                    optionTextType={optionTextType}
+                                    onRemoveAssociation={() =>
+                                        handleRemoveObj(currentValue, setMxFilter, onSelectAssociation, currentValues)
+                                    }
+                                    displayAttribute={displayAttribute}
+                                    clearIcon={clearIcon}
+                                    onBadgeClick={onBadgeClick}
                                 />
                             ))}
                         </React.Fragment>
                     )}
-                    {props.currentValues.length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (
-                        <span className="srs-extra">
-                            {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
-                        </span>
+                    {maxReferenceDisplay <= 0 && (
+                        <React.Fragment>
+                            {currentValues.map((currentValue: ObjectItem, key) => (
+                                <Badge
+                                    key={key}
+                                    content={currentValue}
+                                    isClearable={isClearable || currentValues.length > 1}
+                                    isReadOnly={isReadOnly}
+                                    optionTextType={optionTextType}
+                                    onRemoveAssociation={() =>
+                                        handleRemoveObj(currentValue, setMxFilter, onSelectAssociation, currentValues)
+                                    }
+                                    displayAttribute={displayAttribute}
+                                    clearIcon={clearIcon}
+                                    onBadgeClick={onBadgeClick}
+                                />
+                            ))}
+                        </React.Fragment>
+                    )}
+                    {currentValues.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
+                        <span className="srs-extra">{`(+ ${currentValues.length - maxReferenceDisplay})`}</span>
                     )}
                 </div>
             )}
-            {props.referenceSetStyle === "commas" && props.currentValues.length > 0 && (
+            {referenceSetStyle === "commas" && currentValues.length > 0 && (
                 <div className="srs-badge-row">
-                    {props.maxReferenceDisplay > 0 && (
+                    {maxReferenceDisplay > 0 && (
                         <React.Fragment>
-                            {props.currentValues
-                                .slice(0, props.maxReferenceDisplay)
-                                .map((currentValue: ObjectItem, index) => (
-                                    <React.Fragment key={index}>
-                                        <Comma
-                                            content={currentValue}
-                                            isClearable={props.isClearable}
-                                            isReadOnly={props.isReadOnly}
-                                            optionTextType={props.optionTextType}
-                                            onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                                            displayAttribute={props.displayAttribute}
-                                            showComma={
-                                                index < props.currentValues.length - 1 &&
-                                                index !== props.maxReferenceDisplay - 1
-                                            }
-                                        />
-                                    </React.Fragment>
-                                ))}
-                        </React.Fragment>
-                    )}
-                    {props.maxReferenceDisplay <= 0 && (
-                        <React.Fragment>
-                            {props.currentValues.map((currentValue: ObjectItem, index) => (
+                            {currentValues.slice(0, maxReferenceDisplay).map((currentValue: ObjectItem, index) => (
                                 <React.Fragment key={index}>
                                     <Comma
                                         content={currentValue}
-                                        isClearable={props.isClearable}
-                                        isReadOnly={props.isReadOnly}
-                                        optionTextType={props.optionTextType}
-                                        onRemoveAssociation={() => onRemoveHandler(currentValue)}
-                                        displayAttribute={props.displayAttribute}
+                                        optionTextType={optionTextType}
+                                        displayAttribute={displayAttribute}
                                         showComma={
-                                            index < props.currentValues.length - 1 &&
-                                            index !== props.maxReferenceDisplay - 1
+                                            index < currentValues.length - 1 && index !== maxReferenceDisplay - 1
+                                        }
+                                    />
+                                </React.Fragment>
+                            ))}
+                        </React.Fragment>
+                    )}
+                    {maxReferenceDisplay <= 0 && (
+                        <React.Fragment>
+                            {currentValues.map((currentValue: ObjectItem, index) => (
+                                <React.Fragment key={index}>
+                                    <Comma
+                                        content={currentValue}
+                                        optionTextType={optionTextType}
+                                        displayAttribute={displayAttribute}
+                                        showComma={
+                                            index < currentValues.length - 1 && index !== maxReferenceDisplay - 1
                                         }
                                     />
                                 </React.Fragment>
@@ -317,22 +229,20 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): ReactElement =>
                         </React.Fragment>
                     )}
 
-                    {props.currentValues.length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (
-                        <span className="srs-extra">
-                            {`(+ ${props.currentValues.length - props.maxReferenceDisplay})`}
-                        </span>
+                    {currentValues.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
+                        <span className="srs-extra">{`(+ ${currentValues.length - maxReferenceDisplay})`}</span>
                     )}
                 </div>
             )}
 
-            {props.isSearchable && (
+            {isSearchable && (
                 <input
-                    name={props.name}
-                    placeholder={props.placeholder}
+                    name={name}
+                    placeholder={placeholder}
                     type="text"
                     onChange={handleInputChange}
-                    readOnly={props.isReadOnly}
-                    value={props.mxFilter}
+                    readOnly={isReadOnly}
+                    value={mxFilter}
                     ref={searchInput}
                     onClick={(event: React.MouseEvent<HTMLInputElement>) => {
                         if (showMenu) {
@@ -342,40 +252,63 @@ const ReferenceSetDropdown = (props: ReferenceSetDropdownProps): ReactElement =>
                 ></input>
             )}
 
-            {props.isSearchable === false && <span className="srs-text">{props.placeholder}</span>}
+            {isSearchable === false && <span className="srs-text">{placeholder}</span>}
 
             <div className="srs-icon-row">
-                {props.showSelectAll && props.isReadOnly === false && (
+                {showSelectAll && isReadOnly === false && (
                     <SelectAllIcon
-                        onClick={handleSelectAll}
+                        onClick={event =>
+                            handleSelectAll(
+                                event,
+                                setMxFilter,
+                                setFocusedObjIndex,
+                                onSelectAssociation,
+                                selectableObjects,
+                                selectableAttribute
+                            )
+                        }
                         title={"Select All"}
-                        mxIconOverride={props.selectAllIcon}
+                        mxIconOverride={selectAllIcon}
                     />
                 )}
 
-                {props.isClearable && props.isReadOnly === false && (
-                    <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
+                {isClearable && isReadOnly === false && (
+                    <ClearIcon
+                        onClick={event => {
+                            setPosition(mapPosition(srsRef.current));
+                            handleClear(
+                                event,
+                                mxFilter,
+                                setMxFilter,
+                                setFocusedObjIndex,
+                                onSelectHandler,
+                                searchInput,
+                                setShowMenu
+                            );
+                        }}
+                        title={"Clear"}
+                        mxIconOverride={clearIcon}
+                    />
                 )}
-                <DropdownIcon mxIconOverride={props.dropdownIcon} />
+                <DropdownIcon mxIconOverride={dropdownIcon} />
             </div>
             {showMenu && (
                 <OptionsMenu
-                    selectableObjects={props.selectableObjects}
-                    displayAttribute={props.displayAttribute}
+                    selectableObjects={selectableObjects}
+                    displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
-                    currentValue={props.currentValues}
-                    currentFocus={props.selectableObjects[focusedObjIndex]}
-                    maxHeight={props.maxHeight}
-                    searchText={props.mxFilter}
-                    selectableAttribute={props.selectableAttribute}
-                    noResultsText={props.noResultsText}
-                    optionTextType={props.optionTextType}
-                    optionCustomContent={props.optionCustomContent}
-                    moreResultsText={props.moreResultsText}
-                    optionsStyle={props.optionsStyle}
+                    currentValue={currentValues}
+                    currentFocus={selectableObjects[focusedObjIndex]}
+                    maxHeight={maxHeight}
+                    selectableAttribute={selectableAttribute}
+                    noResultsText={noResultsText}
+                    optionTextType={optionTextType}
+                    optionCustomContent={optionCustomContent}
+                    moreResultsText={moreResultsText}
+                    optionsStyle={optionsStyle}
                     selectStyle={"dropdown"}
                     position={position}
-                    isReadyOnly={props.isReadOnly}
+                    isReadyOnly={isReadOnly}
                 />
             )}
         </div>

@@ -2,8 +2,9 @@ import React, { createElement, useState, useRef, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import Big from "big.js";
 import ClearIcon from "./icons/ClearIcon";
+import handleKeyNavigation from "src/utils/handleKeyNavigation";
+import handleClear from "src/utils/handleClear";
 
 interface ReferenceListProps {
     name: string;
@@ -12,7 +13,7 @@ interface ReferenceListProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[];
     currentValue?: ObjectItem;
-    displayAttribute?: ListAttributeValue<string | Big>;
+    displayAttribute?: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -27,127 +28,124 @@ interface ReferenceListProps {
     optionsStyle: OptionsStyleEnum;
 }
 
-const ReferenceList = (props: ReferenceListProps): ReactElement => {
+const ReferenceList = ({
+    isClearable,
+    isReadOnly,
+    isSearchable,
+    mxFilter,
+    name,
+    onSelectAssociation,
+    optionTextType,
+    optionsStyle,
+    selectableObjects,
+    setMxFilter,
+    clearIcon,
+    currentValue,
+    displayAttribute,
+    moreResultsText,
+    noResultsText,
+    optionCustomContent,
+    placeholder,
+    selectableAttribute,
+    tabIndex
+}: ReferenceListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const searchInput = useRef<HTMLInputElement>(null);
     const srsRef = useRef(null);
 
-    const focusSearchInput = (): void => {
-        if (props.currentValue === undefined && searchInput.current !== null) {
-            searchInput.current.focus();
-        }
-    };
-
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
-        if (props.currentValue?.id === selectedObj?.id && props.isClearable) {
-            props.onSelectAssociation(undefined);
+        if (currentValue?.id === selectedObj?.id && isClearable) {
+            onSelectAssociation(undefined);
         } else {
-            props.onSelectAssociation(selectedObj);
+            onSelectAssociation(selectedObj);
         }
-        props.setMxFilter("");
+        setMxFilter("");
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
-        props.setMxFilter(value);
+        setMxFilter(value);
         setFocusedObjIndex(0);
-    };
-
-    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-        const keyPressed = event.key;
-        if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex > 0) {
-                setFocusedObjIndex(focusedObjIndex - 1);
-            } else {
-                setFocusedObjIndex(props.selectableObjects.length - 1);
-            }
-        } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex < props.selectableObjects.length - 1) {
-                setFocusedObjIndex(focusedObjIndex + 1);
-            } else {
-                setFocusedObjIndex(0);
-            }
-        } else if (keyPressed === "Enter") {
-            if (focusedObjIndex > -1) {
-                const currentSelectedObj = props.selectableObjects[focusedObjIndex];
-                if (
-                    props.selectableAttribute === undefined ||
-                    props.selectableAttribute?.get(currentSelectedObj).value
-                ) {
-                    onSelectHandler(props.selectableObjects[focusedObjIndex]);
-                }
-            }
-        } else if (keyPressed === "Escape" || keyPressed === "Tab") {
-            setFocusedObjIndex(-1);
-        }
-    };
-
-    const handleClear = (event: React.MouseEvent<HTMLDivElement>): void => {
-        event.stopPropagation();
-        props.setMxFilter("");
-        setFocusedObjIndex(-1);
-        if (props.mxFilter.trim() === "") {
-            onSelectHandler(undefined);
-        }
-        setTimeout(() => focusSearchInput(), 300);
     };
 
     return (
         <React.Fragment>
-            {props.isSearchable && (
+            {isSearchable && (
                 <div
                     className={"form-control"}
-                    tabIndex={props.tabIndex || 0}
-                    onKeyDown={handleInputKeyDown}
+                    tabIndex={tabIndex || 0}
+                    onKeyDown={event =>
+                        handleKeyNavigation(
+                            event,
+                            focusedObjIndex,
+                            setFocusedObjIndex,
+                            selectableObjects,
+                            onSelectHandler,
+                            selectableAttribute
+                        )
+                    }
                     ref={srsRef}
                 >
                     <input
-                        className=""
-                        name={props.name}
-                        placeholder={props.placeholder}
+                        name={name}
+                        placeholder={placeholder}
                         type="text"
                         onChange={handleInputChange}
-                        readOnly={props.isReadOnly}
-                        value={props.mxFilter}
+                        readOnly={isReadOnly}
+                        value={mxFilter}
                         ref={searchInput}
                     ></input>
 
-                    {props.isClearable && props.isReadOnly === false && (
-                        <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
+                    {isClearable && isReadOnly === false && (
+                        <ClearIcon
+                            onClick={event =>
+                                handleClear(
+                                    event,
+                                    mxFilter,
+                                    setMxFilter,
+                                    setFocusedObjIndex,
+                                    onSelectHandler,
+                                    searchInput
+                                )
+                            }
+                            title={"Clear"}
+                            mxIconOverride={clearIcon}
+                        />
                     )}
                 </div>
             )}
             <div className="form-control srs-selectable-list">
                 <OptionsMenu
-                    selectableObjects={props.selectableObjects}
-                    displayAttribute={props.displayAttribute}
+                    selectableObjects={selectableObjects}
+                    displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => {
                         const newObjSelectable =
-                            newObject !== undefined && props.selectableAttribute !== undefined
-                                ? props.selectableAttribute.get(newObject).value === true
+                            newObject !== undefined && selectableAttribute !== undefined
+                                ? selectableAttribute.get(newObject).value === true
                                 : true;
                         if (newObjSelectable) {
                             onSelectHandler(newObject);
                         }
                     }}
-                    currentValue={props.currentValue}
-                    currentFocus={props.selectableObjects[focusedObjIndex]}
-                    searchText={props.mxFilter}
-                    selectableAttribute={props.selectableAttribute}
-                    noResultsText={props.noResultsText}
-                    optionTextType={props.optionTextType}
-                    optionCustomContent={props.optionCustomContent}
-                    moreResultsText={props.moreResultsText}
-                    optionsStyle={props.optionsStyle}
+                    currentValue={currentValue}
+                    currentFocus={selectableObjects[focusedObjIndex]}
+                    selectableAttribute={selectableAttribute}
+                    noResultsText={noResultsText}
+                    optionTextType={optionTextType}
+                    optionCustomContent={optionCustomContent}
+                    moreResultsText={moreResultsText}
+                    optionsStyle={optionsStyle}
                     selectStyle={"list"}
-                    isReadyOnly={props.isReadOnly}
+                    isReadyOnly={isReadOnly}
                 />
-                {props.isSearchable === false && props.isClearable && props.isReadOnly === false && (
-                    <ClearIcon onClick={handleClear} title={"Clear"} mxIconOverride={props.clearIcon} />
+                {isSearchable === false && isClearable && isReadOnly === false && (
+                    <ClearIcon
+                        onClick={event =>
+                            handleClear(event, mxFilter, setMxFilter, setFocusedObjIndex, onSelectHandler, searchInput)
+                        }
+                        title={"Clear"}
+                        mxIconOverride={clearIcon}
+                    />
                 )}
             </div>
         </React.Fragment>
