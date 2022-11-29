@@ -153,7 +153,6 @@ const ReferenceDropdown = ({
                                 searchInput,
                                 setShowMenu
                             );
-                            
                         }}
                         title={"Clear"}
                         mxIconOverride={clearIcon}
