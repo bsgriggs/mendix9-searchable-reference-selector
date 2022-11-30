@@ -125,7 +125,7 @@ const OptionsMenu = ({
                         {noResultsText ? noResultsText : "No results found"}
                     </div>
                 ))}
-                {/* {isLoading && (
+            {/* {isLoading && (
                     <Spinner size="2em" color="#264ae5"/>
                 )} */}
         </div>

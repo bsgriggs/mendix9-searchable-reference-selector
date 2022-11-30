@@ -96,7 +96,7 @@ const ReferenceSetDropdown = ({
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {
-            if (currentValues!== undefined && currentValues.length > 0) {
+            if (currentValues !== undefined && currentValues.length > 0) {
                 if (currentValues.find(obj => obj.id === selectedObj.id)) {
                     if (isClearable || currentValues.length > 1) {
                         // obj already selected , deselect
@@ -151,7 +151,7 @@ const ReferenceSetDropdown = ({
             }
             ref={srsRef}
         >
-            {referenceSetStyle === "badges" && currentValues!== undefined && currentValues.length > 0 && (
+            {referenceSetStyle === "badges" && currentValues !== undefined && currentValues.length > 0 && (
                 <div className="srs-badge-row">
                     {maxReferenceDisplay > 0 && (
                         <React.Fragment>
@@ -196,7 +196,7 @@ const ReferenceSetDropdown = ({
                     )}
                 </div>
             )}
-            {referenceSetStyle === "commas" && currentValues!== undefined && currentValues.length > 0 && (
+            {referenceSetStyle === "commas" && currentValues !== undefined && currentValues.length > 0 && (
                 <div className="srs-badge-row">
                     {maxReferenceDisplay > 0 && (
                         <React.Fragment>
@@ -300,7 +300,7 @@ const ReferenceSetDropdown = ({
                     displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
                     currentValue={currentValues}
-                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
+                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
                     maxHeight={maxHeight}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}

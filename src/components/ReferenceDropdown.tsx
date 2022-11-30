@@ -201,7 +201,7 @@ const ReferenceDropdown = ({
                         onSelectHandler(newObject, newObjSelectable);
                     }}
                     currentValue={currentValue}
-                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
+                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
                     maxHeight={maxHeight}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}

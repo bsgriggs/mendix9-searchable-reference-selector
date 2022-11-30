@@ -130,7 +130,7 @@ const ReferenceList = ({
                         }
                     }}
                     currentValue={currentValue}
-                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
+                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
                     optionTextType={optionTextType}

@@ -54,44 +54,49 @@ const SearchableReferenceSelector = ({
     //     placeholder.status !== ValueStatus.Available ||
     //     maxMenuHeight.status !== ValueStatus.Available;
 
-    //     console.info("rendered", {options, isLoading, ...selectableObjects})
+    // console.info("rendered", { options, ...selectableObjects });
 
     if (Number(maxItems.value) > 1) {
         selectableObjects.setLimit(Number(maxItems.value));
     }
 
-    //load objects
+    // load objects
     useEffect(() => {
         if (selectableObjects.status === ValueStatus.Available) {
             setOptions(selectableObjects.items || []);
         }
     }, [selectableObjects]);
 
-    //apply filter
+    // apply filter
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (isSearchable) {
-                if (displayAttribute.filterable && displayAttribute.type === "String") {
-                    // data source supports xpath filtering
-                    const filterCondition = contains(attribute(displayAttribute.id), literal(mxFilter));
-                    selectableObjects.setFilter(filterCondition);
-                } else {
-                    // data source does not support xpath filter - filter on client
-                    if (mxFilter.trim().length > 0 && selectableObjects.items) {
-                        setOptions(
-                            selectableObjects.items.filter(obj => {
-                                const text = displayAttribute.get(obj).displayValue as string;
-                                return text !== undefined && text.toLowerCase().includes(mxFilter.trim().toLowerCase());
-                            })
-                        );
+        if (selectableObjects.status === ValueStatus.Available) {
+            const delayDebounceFn = setTimeout(() => {
+                if (isSearchable) {
+                    if (displayAttribute.filterable && displayAttribute.type === "String") {
+                        // data source supports xpath filtering
+                        const filterCondition = contains(attribute(displayAttribute.id), literal(mxFilter));
+                        selectableObjects.setFilter(filterCondition);
                     } else {
-                        setOptions(selectableObjects.items || []);
+                        // data source does not support xpath filter - filter on client
+                        if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                            setOptions(
+                                selectableObjects.items.filter(obj => {
+                                    const text = displayAttribute.get(obj).displayValue as string;
+                                    return (
+                                        text !== undefined && text.toLowerCase().includes(mxFilter.trim().toLowerCase())
+                                    );
+                                })
+                            );
+                        } else {
+                            setOptions(selectableObjects.items || []);
+                        }
                     }
                 }
-            }
-        }, filterDelay);
+            }, filterDelay);
 
-        return () => clearTimeout(delayDebounceFn);
+            return () => clearTimeout(delayDebounceFn);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mxFilter]);
 
     const onSelectReferenceHandler = (selectedObj: (ObjectItem & ObjectItem[]) | undefined): void => {

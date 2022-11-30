@@ -161,7 +161,7 @@ const ReferenceSetList = ({
                     displayAttribute={displayAttribute}
                     onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
                     currentValue={currentValues}
-                    currentFocus={selectableObjects !== undefined? selectableObjects[focusedObjIndex]: undefined}
+                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
                     selectableAttribute={selectableAttribute}
                     noResultsText={noResultsText}
                     optionTextType={optionTextType}
