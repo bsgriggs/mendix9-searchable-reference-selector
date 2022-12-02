@@ -43,7 +43,7 @@
                         <translation lang="en_US">Search for more results</translation>
                     </translations>
                 </property>
-                <property key="filterDelay" type="integer" defaultValue="300" required="true">
+                <property key="filterDelay" type="integer" defaultValue="500" required="true">
                     <caption>Filter Delay</caption>
                     <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
                 </property>

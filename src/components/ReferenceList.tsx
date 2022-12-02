@@ -83,7 +83,8 @@ const ReferenceList = ({
                             setFocusedObjIndex,
                             selectableObjects || [],
                             onSelectHandler,
-                            selectableAttribute
+                            selectableAttribute,
+                            false
                         )
                     }
                     ref={srsRef}
