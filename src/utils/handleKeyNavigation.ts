@@ -47,10 +47,13 @@ export default function handleKeyNavigation(
             if (selectableAttribute === undefined || selectableAttribute?.get(currentSelectedObj).value) {
                 onSelectHandler(selectableObjects[focusedObjIndex], true);
             }
+            if (setShowMenu !== undefined && closeOnSelect) {
+                setShowMenu(false);
+            }
         }
     } else if (keyPressed === "Escape" || keyPressed === "Tab") {
         setFocusedObjIndex(-1);
-        if (setShowMenu !== undefined && closeOnSelect) {
+        if (setShowMenu !== undefined) {
             setShowMenu(false);
         }
     }
