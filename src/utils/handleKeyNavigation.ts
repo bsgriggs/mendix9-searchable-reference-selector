@@ -12,46 +12,46 @@ export default function handleKeyNavigation(
     updatePosition?: () => void,
     setShowMenu?: (newShowMenu: boolean) => void
 ): void {
-        const keyPressed = event.key;
-        if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex > 0) {
-                setFocusedObjIndex(focusedObjIndex - 1);
-            } else {
-                setFocusedObjIndex(selectableObjects.length - 1);
-            }
-            if (updatePosition !== undefined) {
-                updatePosition();
-            }
-            if (setShowMenu !== undefined) {
-                setShowMenu(true);
-            }
-        } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
-            if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            } else if (focusedObjIndex < selectableObjects.length - 1) {
-                setFocusedObjIndex(focusedObjIndex + 1);
-            } else {
-                setFocusedObjIndex(0);
-            }            
-            if (updatePosition !== undefined) {
-                updatePosition();
-            }
-            if (setShowMenu !== undefined) {
-                setShowMenu(true);
-            }
-        } else if (keyPressed === "Enter") {
-            if (focusedObjIndex > -1) {
-                const currentSelectedObj = selectableObjects[focusedObjIndex];
-                if (selectableAttribute === undefined || selectableAttribute?.get(currentSelectedObj).value) {
-                    onSelectHandler(selectableObjects[focusedObjIndex], true);
-                }
-            }
-        } else if (keyPressed === "Escape" || keyPressed === "Tab") {
-            setFocusedObjIndex(-1);
-            if (setShowMenu !== undefined && closeOnSelect) {
-                setShowMenu(false);
+    const keyPressed = event.key;
+    if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
+        if (focusedObjIndex === -1) {
+            setFocusedObjIndex(0);
+        } else if (focusedObjIndex > 0) {
+            setFocusedObjIndex(focusedObjIndex - 1);
+        } else {
+            setFocusedObjIndex(selectableObjects.length - 1);
+        }
+        if (updatePosition !== undefined) {
+            updatePosition();
+        }
+        if (setShowMenu !== undefined) {
+            setShowMenu(true);
+        }
+    } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
+        if (focusedObjIndex === -1) {
+            setFocusedObjIndex(0);
+        } else if (focusedObjIndex < selectableObjects.length - 1) {
+            setFocusedObjIndex(focusedObjIndex + 1);
+        } else {
+            setFocusedObjIndex(0);
+        }
+        if (updatePosition !== undefined) {
+            updatePosition();
+        }
+        if (setShowMenu !== undefined) {
+            setShowMenu(true);
+        }
+    } else if (keyPressed === "Enter") {
+        if (focusedObjIndex > -1) {
+            const currentSelectedObj = selectableObjects[focusedObjIndex];
+            if (selectableAttribute === undefined || selectableAttribute?.get(currentSelectedObj).value) {
+                onSelectHandler(selectableObjects[focusedObjIndex], true);
             }
         }
+    } else if (keyPressed === "Escape" || keyPressed === "Tab") {
+        setFocusedObjIndex(-1);
+        if (setShowMenu !== undefined && closeOnSelect) {
+            setShowMenu(false);
+        }
+    }
 }

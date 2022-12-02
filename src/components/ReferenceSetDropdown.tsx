@@ -147,7 +147,7 @@ const ReferenceSetDropdown = ({
                     onSelectHandler,
                     selectableAttribute,
                     false,
-                    ()=>setPosition(mapPosition(srsRef.current)),
+                    () => setPosition(mapPosition(srsRef.current)),
                     setShowMenu
                 )
             }
