@@ -15,7 +15,7 @@ interface CurrentValueSetProps {
     displayAttribute: ListAttributeValue<string>;
     clearIcon?: DynamicValue<WebIcon>;
     onBadgeClick?: ListActionValue;
-    optionCustomContent: ListWidgetValue |undefined;
+    optionCustomContent: ListWidgetValue | undefined;
 }
 
 export default function CurrentValueSet({
@@ -44,7 +44,7 @@ export default function CurrentValueSet({
                                     isClearable={isClearable || currentValues.length > 1}
                                     isReadOnly={isReadOnly}
                                     optionTextType={optionTextType}
-                                    onRemoveAssociation={()=>onRemove(currentValue)}
+                                    onRemoveAssociation={() => onRemove(currentValue)}
                                     displayAttribute={displayAttribute}
                                     clearIcon={clearIcon}
                                     onBadgeClick={onBadgeClick}
@@ -62,7 +62,7 @@ export default function CurrentValueSet({
                                     isClearable={isClearable || currentValues.length > 1}
                                     isReadOnly={isReadOnly}
                                     optionTextType={optionTextType}
-                                    onRemoveAssociation={()=>onRemove(currentValue)}
+                                    onRemoveAssociation={() => onRemove(currentValue)}
                                     displayAttribute={displayAttribute}
                                     clearIcon={clearIcon}
                                     onBadgeClick={onBadgeClick}

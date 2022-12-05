@@ -75,7 +75,7 @@ const ReferenceList = ({
         <React.Fragment>
             {isSearchable && (
                 <div
-                className={`form-control ${isReadOnly? "read-only": ""}`}
+                    className={`form-control ${isReadOnly ? "read-only" : ""}`}
                     tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                     onKeyDown={event =>
                         handleKeyNavigation(

@@ -58,11 +58,7 @@ export function getProperties(
     }
 
     if (_values.selectStyle === "list") {
-        hidePropertiesIn(defaultProperties, _values, [
-            "maxMenuHeight",
-            "maxReferenceDisplay",
-            "dropdownIcon"
-        ]);
+        hidePropertiesIn(defaultProperties, _values, ["maxMenuHeight", "maxReferenceDisplay", "dropdownIcon"]);
     }
 
     if (_values.isClearable === false) {

@@ -6,7 +6,7 @@ import displayContent from "src/utils/displayContent";
 interface CommaProps {
     content: ObjectItem;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent: ListWidgetValue|undefined;
+    optionCustomContent: ListWidgetValue | undefined;
     displayAttribute?: ListAttributeValue<string>;
     showComma: boolean;
 }

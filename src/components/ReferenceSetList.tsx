@@ -120,7 +120,7 @@ const ReferenceSetList = ({
                     }
                     ref={srsRef}
                 >
-                    {(isReadOnly && currentValues !== undefined && currentValues.length > 0) ? (
+                    {isReadOnly && currentValues !== undefined && currentValues.length > 0 ? (
                         <CurrentValueSet
                             currentValues={currentValues}
                             displayAttribute={displayAttribute}
