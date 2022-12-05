@@ -9,7 +9,7 @@ interface BadgeProps {
     isClearable: boolean;
     isReadOnly: boolean;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
+    optionCustomContent: ListWidgetValue|undefined;
     onRemoveAssociation: () => void;
     displayAttribute?: ListAttributeValue<string>;
     clearIcon?: DynamicValue<WebIcon>;

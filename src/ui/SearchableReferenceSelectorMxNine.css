@@ -12,6 +12,7 @@ Place your custom CSS here
     cursor: pointer;
     flex-wrap: wrap;
     gap: 2px;
+    justify-content: space-between;
 }
 
 .srs .active.form-control {
@@ -19,6 +20,11 @@ Place your custom CSS here
     outline: 0;
     background-color: #fff;
     box-shadow: none;
+}
+
+.srs .read-only.form-control {
+    cursor: not-allowed;
+    background-color: #f8f8f8;
 }
 
 .srs input {
@@ -40,7 +46,7 @@ Place your custom CSS here
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 4px 4px 0 4px;
+    padding: 4px;
     width: 100%;
     gap: 4px;
 }
@@ -60,7 +66,7 @@ Place your custom CSS here
 }
 
 .srs .srs-text p {
-    line-height: 1;
+    line-height: 1.5;
     margin: 0;
 }
 
@@ -69,16 +75,15 @@ Place your custom CSS here
     border-radius: 4px;
     display: flex;
     align-items: center;
-    padding: 2px;
-}
-
-.srs .srs-badge .glyphicon, .srs .srs-badge img{
     padding: 4px;
 }
 
+.srs .srs-badge .glyphicon, .srs .srs-badge img{
+    padding: 2px;
+}
+
 .srs .srs-badge span {
-    padding-left: 4px;
-    font-size: smaller;
+    font-size: small;
 }
 
 .srs .srs-comma,

@@ -1,11 +1,9 @@
-import { RefObject } from "react";
-
-export default function focusSearchInput(input: RefObject<HTMLInputElement>, delay: number): void {
-    if (input.current !== null) {
+export default function focusSearchInput(input: HTMLInputElement| null, delay: number): void {
+    if (input !== null) {
         if (delay !== undefined) {
-            setTimeout(() => input.current?.focus(), delay);
+            setTimeout(() => input?.focus(), delay);
         } else {
-            input.current.focus();
+            input.focus();
         }
     }
 }

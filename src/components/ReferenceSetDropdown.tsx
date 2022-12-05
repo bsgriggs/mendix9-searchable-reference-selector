@@ -9,8 +9,6 @@ import {
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
-import Badge from "./Badge";
-import Comma from "./Comma";
 import SelectAllIcon from "./icons/SelectAllIcon";
 import ClearIcon from "./icons/ClearIcon";
 import focusSearchInput from "../utils/focusSearchInput";
@@ -18,6 +16,8 @@ import handleKeyNavigation from "src/utils/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import handleSelectAll from "src/utils/handleSelectAll";
 import handleRemoveObj from "src/utils/handleSelectSet";
+import SearchInput from "./SearchInput";
+import CurrentValueSet from "./CurrentValueSet";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -26,7 +26,7 @@ interface ReferenceSetDropdownProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValues: ObjectItem[] | undefined;
-    displayAttribute?: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -80,7 +80,7 @@ const ReferenceSetDropdown = ({
 }: ReferenceSetDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const searchInput = useRef<HTMLInputElement>(null);
+    const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
@@ -129,13 +129,15 @@ const ReferenceSetDropdown = ({
 
     return (
         <div
-            className={showMenu ? "form-control active" : "form-control"}
-            tabIndex={tabIndex || 0}
+            className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
+            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             onClick={() => {
-                setShowMenu(!showMenu);
-                setPosition(mapPosition(srsRef.current));
-                if (showMenu === false) {
-                    focusSearchInput(searchInput, 300);
+                if (!isReadOnly) {
+                    setShowMenu(!showMenu);
+                    setPosition(mapPosition(srsRef.current));
+                    if (showMenu === false) {
+                        focusSearchInput(searchInput, 300);
+                    }
                 }
             }}
             onKeyDown={event =>
@@ -153,150 +155,90 @@ const ReferenceSetDropdown = ({
             }
             ref={srsRef}
         >
-            {referenceSetStyle === "badges" && currentValues !== undefined && currentValues.length > 0 && (
-                <div className="srs-badge-row">
-                    {maxReferenceDisplay > 0 && (
-                        <React.Fragment>
-                            {currentValues.slice(0, maxReferenceDisplay).map((currentValue: ObjectItem, key) => (
-                                <Badge
-                                    key={key}
-                                    content={currentValue}
-                                    isClearable={isClearable || currentValues.length > 1}
-                                    isReadOnly={isReadOnly}
-                                    optionTextType={optionTextType}
-                                    onRemoveAssociation={() =>
-                                        handleRemoveObj(currentValue, setMxFilter, onSelectAssociation, currentValues)
-                                    }
-                                    displayAttribute={displayAttribute}
-                                    clearIcon={clearIcon}
-                                    onBadgeClick={onBadgeClick}
-                                />
-                            ))}
-                        </React.Fragment>
-                    )}
-                    {maxReferenceDisplay <= 0 && (
-                        <React.Fragment>
-                            {currentValues.map((currentValue: ObjectItem, key) => (
-                                <Badge
-                                    key={key}
-                                    content={currentValue}
-                                    isClearable={isClearable || currentValues.length > 1}
-                                    isReadOnly={isReadOnly}
-                                    optionTextType={optionTextType}
-                                    onRemoveAssociation={() =>
-                                        handleRemoveObj(currentValue, setMxFilter, onSelectAssociation, currentValues)
-                                    }
-                                    displayAttribute={displayAttribute}
-                                    clearIcon={clearIcon}
-                                    onBadgeClick={onBadgeClick}
-                                />
-                            ))}
-                        </React.Fragment>
-                    )}
-                    {currentValues.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
-                        <span className="srs-extra">{`(+ ${currentValues.length - maxReferenceDisplay})`}</span>
-                    )}
-                </div>
-            )}
-            {referenceSetStyle === "commas" && currentValues !== undefined && currentValues.length > 0 && (
-                <div className="srs-badge-row">
-                    {maxReferenceDisplay > 0 && (
-                        <React.Fragment>
-                            {currentValues.slice(0, maxReferenceDisplay).map((currentValue: ObjectItem, index) => (
-                                <React.Fragment key={index}>
-                                    <Comma
-                                        content={currentValue}
-                                        optionTextType={optionTextType}
-                                        displayAttribute={displayAttribute}
-                                        showComma={
-                                            index < currentValues.length - 1 && index !== maxReferenceDisplay - 1
-                                        }
-                                    />
-                                </React.Fragment>
-                            ))}
-                        </React.Fragment>
-                    )}
-                    {maxReferenceDisplay <= 0 && (
-                        <React.Fragment>
-                            {currentValues.map((currentValue: ObjectItem, index) => (
-                                <React.Fragment key={index}>
-                                    <Comma
-                                        content={currentValue}
-                                        optionTextType={optionTextType}
-                                        displayAttribute={displayAttribute}
-                                        showComma={
-                                            index < currentValues.length - 1 && index !== maxReferenceDisplay - 1
-                                        }
-                                    />
-                                </React.Fragment>
-                            ))}
-                        </React.Fragment>
-                    )}
-
-                    {currentValues.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
-                        <span className="srs-extra">{`(+ ${currentValues.length - maxReferenceDisplay})`}</span>
-                    )}
-                </div>
-            )}
-
-            {isSearchable && (
+            {isReadOnly && (currentValues === undefined || currentValues.length === 0) ? (
                 <input
                     name={name}
                     placeholder={placeholder}
                     type="text"
-                    onChange={handleInputChange}
                     readOnly={isReadOnly}
+                    disabled={isReadOnly}
                     value={mxFilter}
-                    ref={searchInput}
                     autoComplete="off"
-                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-                        if (showMenu) {
-                            event.stopPropagation();
-                        }
-                    }}
                 ></input>
+            ) : (
+                <CurrentValueSet
+                    currentValues={currentValues}
+                    displayAttribute={displayAttribute}
+                    isClearable={isClearable}
+                    isReadOnly={isReadOnly}
+                    maxReferenceDisplay={maxReferenceDisplay}
+                    onRemove={clickObj =>
+                        handleRemoveObj(clickObj, setMxFilter, onSelectAssociation, currentValues || [])
+                    }
+                    optionTextType={optionTextType}
+                    referenceSetStyle={referenceSetStyle}
+                    clearIcon={clearIcon}
+                    onBadgeClick={onBadgeClick}
+                    optionCustomContent={optionCustomContent}
+                />
             )}
 
-            {isSearchable === false && <span className="srs-text">{placeholder}</span>}
+            {!isReadOnly && (
+                <SearchInput
+                    currentValue={undefined}
+                    displayAttribute={displayAttribute}
+                    isReadOnly={isReadOnly}
+                    isSearchable={isSearchable}
+                    mxFilter={mxFilter}
+                    name={name}
+                    onChange={handleInputChange}
+                    optionCustomContent={optionCustomContent}
+                    optionTextType={optionTextType}
+                    placeholder={placeholder}
+                    setRef={newRef => setSearchInput(newRef)}
+                />
+            )}
 
-            <div className="srs-icon-row">
-                {showSelectAll && isReadOnly === false && (
-                    <SelectAllIcon
-                        onClick={event =>
-                            handleSelectAll(
-                                event,
-                                setMxFilter,
-                                setFocusedObjIndex,
-                                onSelectAssociation,
-                                selectableObjects || [],
-                                selectableAttribute
-                            )
-                        }
-                        title={"Select All"}
-                        mxIconOverride={selectAllIcon}
-                    />
-                )}
+            {!isReadOnly && (
+                <div className="srs-icon-row">
+                    {showSelectAll && (
+                        <SelectAllIcon
+                            onClick={event =>
+                                handleSelectAll(
+                                    event,
+                                    setMxFilter,
+                                    setFocusedObjIndex,
+                                    onSelectAssociation,
+                                    selectableObjects || [],
+                                    selectableAttribute
+                                )
+                            }
+                            title={"Select All"}
+                            mxIconOverride={selectAllIcon}
+                        />
+                    )}
 
-                {isClearable && isReadOnly === false && (
-                    <ClearIcon
-                        onClick={event => {
-                            setPosition(mapPosition(srsRef.current));
-                            handleClear(
-                                event,
-                                mxFilter,
-                                setMxFilter,
-                                setFocusedObjIndex,
-                                onSelectHandler,
-                                searchInput,
-                                setShowMenu
-                            );
-                        }}
-                        title={"Clear"}
-                        mxIconOverride={clearIcon}
-                    />
-                )}
-                <DropdownIcon mxIconOverride={dropdownIcon} />
-            </div>
+                    {isClearable && (
+                        <ClearIcon
+                            onClick={event => {
+                                setPosition(mapPosition(srsRef.current));
+                                handleClear(
+                                    event,
+                                    mxFilter,
+                                    setMxFilter,
+                                    setFocusedObjIndex,
+                                    onSelectHandler,
+                                    searchInput,
+                                    setShowMenu
+                                );
+                            }}
+                            title={"Clear"}
+                            mxIconOverride={clearIcon}
+                        />
+                    )}
+                    <DropdownIcon mxIconOverride={dropdownIcon} />
+                </div>
+            )}
             {showMenu && (
                 <OptionsMenu
                     selectableObjects={selectableObjects}

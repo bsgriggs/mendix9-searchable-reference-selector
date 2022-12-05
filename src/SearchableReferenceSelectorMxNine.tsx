@@ -220,6 +220,8 @@ const SearchableReferenceSelector = ({
                     isSearchable={isSearchable}
                     showSelectAll={showSelectAll}
                     selectAllIcon={selectAllIcon}
+                    maxReferenceDisplay={maxReferenceDisplay}
+                    referenceSetStyle={referenceSetStyle}
                     // isLoading={isLoading}
                 />
             )}

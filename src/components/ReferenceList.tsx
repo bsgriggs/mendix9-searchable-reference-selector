@@ -5,6 +5,7 @@ import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenc
 import ClearIcon from "./icons/ClearIcon";
 import handleKeyNavigation from "src/utils/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
+import SearchInput from "./SearchInput";
 
 interface ReferenceListProps {
     name: string;
@@ -13,7 +14,7 @@ interface ReferenceListProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValue?: ObjectItem | undefined;
-    displayAttribute?: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -52,7 +53,7 @@ const ReferenceList = ({
     tabIndex
 }: ReferenceListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const searchInput = useRef<HTMLInputElement>(null);
+    const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef(null);
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
@@ -74,8 +75,8 @@ const ReferenceList = ({
         <React.Fragment>
             {isSearchable && (
                 <div
-                    className={"form-control"}
-                    tabIndex={tabIndex || 0}
+                className={`form-control ${isReadOnly? "read-only": ""}`}
+                    tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                     onKeyDown={event =>
                         handleKeyNavigation(
                             event,
@@ -89,18 +90,21 @@ const ReferenceList = ({
                     }
                     ref={srsRef}
                 >
-                    <input
+                    <SearchInput
+                        currentValue={currentValue}
+                        displayAttribute={displayAttribute}
+                        isReadOnly={isReadOnly}
+                        isSearchable={isSearchable}
+                        mxFilter={mxFilter}
                         name={name}
-                        placeholder={placeholder}
-                        type="text"
                         onChange={handleInputChange}
-                        readOnly={isReadOnly}
-                        value={mxFilter}
-                        ref={searchInput}
-                        autoComplete="off"
-                    ></input>
+                        optionCustomContent={optionCustomContent}
+                        optionTextType={optionTextType}
+                        placeholder={placeholder}
+                        setRef={newRef => setSearchInput(newRef)}
+                    />
 
-                    {isClearable && isReadOnly === false && (
+                    {isClearable && !isReadOnly && (
                         <ClearIcon
                             onClick={event =>
                                 handleClear(
@@ -118,41 +122,50 @@ const ReferenceList = ({
                     )}
                 </div>
             )}
-            <div className="form-control srs-selectable-list">
-                <OptionsMenu
-                    selectableObjects={selectableObjects}
-                    displayAttribute={displayAttribute}
-                    onSelectOption={(newObject: ObjectItem | undefined) => {
-                        const newObjSelectable =
-                            newObject !== undefined && selectableAttribute !== undefined
-                                ? selectableAttribute.get(newObject).value === true
-                                : true;
-                        if (newObjSelectable) {
-                            onSelectHandler(newObject);
-                        }
-                    }}
-                    currentValue={currentValue}
-                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                    selectableAttribute={selectableAttribute}
-                    noResultsText={noResultsText}
-                    optionTextType={optionTextType}
-                    optionCustomContent={optionCustomContent}
-                    moreResultsText={moreResultsText}
-                    optionsStyle={optionsStyle}
-                    selectStyle={"list"}
-                    isReadyOnly={isReadOnly}
-                    // isLoading={isLoading}
-                />
-                {isSearchable === false && isClearable && isReadOnly === false && (
-                    <ClearIcon
-                        onClick={event =>
-                            handleClear(event, mxFilter, setMxFilter, setFocusedObjIndex, onSelectHandler, searchInput)
-                        }
-                        title={"Clear"}
-                        mxIconOverride={clearIcon}
+            {!isReadOnly && (
+                <div className="form-control srs-selectable-list">
+                    <OptionsMenu
+                        selectableObjects={selectableObjects}
+                        displayAttribute={displayAttribute}
+                        onSelectOption={(newObject: ObjectItem | undefined) => {
+                            const newObjSelectable =
+                                newObject !== undefined && selectableAttribute !== undefined
+                                    ? selectableAttribute.get(newObject).value === true
+                                    : true;
+                            if (newObjSelectable) {
+                                onSelectHandler(newObject);
+                            }
+                        }}
+                        currentValue={currentValue}
+                        currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
+                        selectableAttribute={selectableAttribute}
+                        noResultsText={noResultsText}
+                        optionTextType={optionTextType}
+                        optionCustomContent={optionCustomContent}
+                        moreResultsText={moreResultsText}
+                        optionsStyle={optionsStyle}
+                        selectStyle={"list"}
+                        isReadyOnly={isReadOnly}
+                        // isLoading={isLoading}
                     />
-                )}
-            </div>
+                    {isSearchable === false && isClearable && isReadOnly === false && (
+                        <ClearIcon
+                            onClick={event =>
+                                handleClear(
+                                    event,
+                                    mxFilter,
+                                    setMxFilter,
+                                    setFocusedObjIndex,
+                                    onSelectHandler,
+                                    searchInput
+                                )
+                            }
+                            title={"Clear"}
+                            mxIconOverride={clearIcon}
+                        />
+                    )}
+                </div>
+            )}
         </React.Fragment>
     );
 };

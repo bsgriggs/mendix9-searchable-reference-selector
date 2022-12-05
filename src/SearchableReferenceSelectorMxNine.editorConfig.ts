@@ -61,7 +61,6 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, [
             "maxMenuHeight",
             "maxReferenceDisplay",
-            "referenceSetStyle",
             "dropdownIcon"
         ]);
     }

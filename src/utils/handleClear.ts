@@ -1,4 +1,4 @@
-import { MouseEvent, RefObject } from "react";
+import { MouseEvent } from "react";
 import focusSearchInput from "./focusSearchInput";
 import { ObjectItem } from "mendix";
 
@@ -8,7 +8,7 @@ export default function handleClear(
     setMxFilter: (newFilter: string) => void,
     setFocusedObjIndex: (newIndex: number) => void,
     onSelectHandler: (selectedObj: ObjectItem | undefined, closeMenu?: boolean) => void,
-    searchInput: RefObject<HTMLInputElement>,
+    searchInput: HTMLInputElement | null,
     setShowMenu?: (newShowMenu: boolean) => void
 ): void {
     event.stopPropagation();

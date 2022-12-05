@@ -1,15 +1,15 @@
-import React, { createElement, useState, useRef, ReactElement, Fragment } from "react";
+import { createElement, useState, useRef, ReactElement, ChangeEvent } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import ClearIcon from "./icons/ClearIcon";
 import DropdownIcon from "./icons/DropdownIcon";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
-import displayContent from "src/utils/displayContent";
 import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
 import focusSearchInput from "../utils/focusSearchInput";
 import handleKeyNavigation from "../utils/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
+import SearchInput from "./SearchInput";
 
 interface ReferenceDropdownProps {
     name: string;
@@ -18,7 +18,7 @@ interface ReferenceDropdownProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValue?: ObjectItem | undefined;
-    displayAttribute?: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -62,7 +62,7 @@ const ReferenceDropdown = ({
 }: ReferenceDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const searchInput = useRef<HTMLInputElement>(null);
+    const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
@@ -88,7 +88,7 @@ const ReferenceDropdown = ({
         }
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setMxFilter(value);
         setFocusedObjIndex(0);
@@ -100,13 +100,15 @@ const ReferenceDropdown = ({
 
     return (
         <div
-            className={showMenu ? "form-control active" : "form-control"}
-            tabIndex={tabIndex || 0}
+            className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
+            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             onClick={() => {
-                setShowMenu(!showMenu);
-                setPosition(mapPosition(srsRef.current));
-                if (showMenu === false) {
-                    focusSearchInput(searchInput, 300);
+                if (!isReadOnly) {
+                    setShowMenu(!showMenu);
+                    setPosition(mapPosition(srsRef.current));
+                    if (showMenu === false && searchInput) {
+                        focusSearchInput(searchInput, 300);
+                    }
                 }
             }}
             onKeyDown={event =>
@@ -124,74 +126,44 @@ const ReferenceDropdown = ({
             }
             ref={srsRef}
         >
-            {optionTextType === "text" && (
-                <input
-                    name={name}
-                    placeholder={placeholder}
-                    type="text"
-                    onChange={handleInputChange}
-                    readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
-                    value={
-                        currentValue !== undefined && displayAttribute !== undefined
-                            ? displayAttribute.get(currentValue).displayValue
-                            : mxFilter
-                    }
-                    ref={searchInput}
-                    autoComplete="off"
-                    onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-                        if (showMenu) {
-                            event.stopPropagation();
-                        }
-                    }}
-                ></input>
-            )}
-            {optionTextType !== "text" && (
-                <Fragment>
-                    {currentValue === undefined && isReadOnly === false && isSearchable && (
-                        <input
-                            name={name}
-                            placeholder={placeholder}
-                            type="text"
-                            onChange={handleInputChange}
-                            readOnly={isReadOnly}
-                            value={mxFilter}
-                            ref={searchInput}
-                            onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-                                if (showMenu) {
-                                    event.stopPropagation();
-                                }
+            <SearchInput
+                currentValue={currentValue}
+                displayAttribute={displayAttribute}
+                isReadOnly={isReadOnly}
+                isSearchable={isSearchable}
+                mxFilter={mxFilter}
+                name={name}
+                onChange={handleInputChange}
+                optionCustomContent={optionCustomContent}
+                optionTextType={optionTextType}
+                placeholder={placeholder}
+                setRef={newRef => setSearchInput(newRef)}
+                showMenu={showMenu}
+            />
+            {!isReadOnly && (
+                <div className="srs-icon-row">
+                    {isClearable && (
+                        <ClearIcon
+                            onClick={event => {
+                                setPosition(mapPosition(srsRef.current));
+                                handleClear(
+                                    event,
+                                    mxFilter,
+                                    setMxFilter,
+                                    setFocusedObjIndex,
+                                    onSelectHandler,
+                                    searchInput,
+                                    setShowMenu
+                                );
                             }}
-                        ></input>
+                            title={"Clear"}
+                            mxIconOverride={clearIcon}
+                        />
                     )}
-                    {currentValue === undefined && isSearchable === false && (
-                        <span className="srs-text">{placeholder}</span>
-                    )}
-                    {currentValue !== undefined &&
-                        displayContent(currentValue, optionTextType, displayAttribute, optionCustomContent, "srs-text")}
-                </Fragment>
-            )}
 
-            <div className="srs-icon-row">
-                {isClearable && isReadOnly === false && (
-                    <ClearIcon
-                        onClick={event => {
-                            setPosition(mapPosition(srsRef.current));
-                            handleClear(
-                                event,
-                                mxFilter,
-                                setMxFilter,
-                                setFocusedObjIndex,
-                                onSelectHandler,
-                                searchInput,
-                                setShowMenu
-                            );
-                        }}
-                        title={"Clear"}
-                        mxIconOverride={clearIcon}
-                    />
-                )}
-                <DropdownIcon mxIconOverride={dropdownIcon} />
-            </div>
+                    <DropdownIcon mxIconOverride={dropdownIcon} />
+                </div>
+            )}
             {showMenu && (
                 <OptionsMenu
                     selectableObjects={selectableObjects}

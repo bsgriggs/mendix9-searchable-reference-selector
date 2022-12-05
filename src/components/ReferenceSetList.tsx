@@ -1,13 +1,19 @@
 import React, { createElement, useState, useRef, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
-import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import {
+    OptionsStyleEnum,
+    OptionTextTypeEnum,
+    ReferenceSetStyleEnum
+} from "typings/SearchableReferenceSelectorMxNineProps";
 import SelectAllIcon from "./icons/SelectAllIcon";
 import ClearIcon from "./icons/ClearIcon";
 import handleKeyNavigation from "src/utils/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import handleSelectAll from "src/utils/handleSelectAll";
 import handleRemoveObj from "src/utils/handleSelectSet";
+import SearchInput from "./SearchInput";
+import CurrentValueSet from "./CurrentValueSet";
 
 interface ReferenceSetListProps {
     name: string;
@@ -16,7 +22,7 @@ interface ReferenceSetListProps {
     noResultsText?: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValues: ObjectItem[] | undefined;
-    displayAttribute?: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent?: ListWidgetValue;
     selectableAttribute?: ListAttributeValue<boolean>;
@@ -31,6 +37,8 @@ interface ReferenceSetListProps {
     selectAllIcon?: DynamicValue<WebIcon>;
     moreResultsText?: string;
     optionsStyle: OptionsStyleEnum;
+    referenceSetStyle: ReferenceSetStyleEnum;
+    maxReferenceDisplay: number;
     // isLoading: boolean;
 }
 
@@ -56,10 +64,12 @@ const ReferenceSetList = ({
     placeholder,
     selectAllIcon,
     selectableAttribute,
-    tabIndex
+    tabIndex,
+    maxReferenceDisplay,
+    referenceSetStyle
 }: ReferenceSetListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const searchInput = useRef<HTMLInputElement>(null);
+    const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef(null);
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
@@ -95,8 +105,8 @@ const ReferenceSetList = ({
         <React.Fragment>
             {isSearchable && (
                 <div
-                    className={"form-control"}
-                    tabIndex={tabIndex || 0}
+                    className={`form-control ${isReadOnly ? "read-only" : ""}`}
+                    tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                     onKeyDown={event =>
                         handleKeyNavigation(
                             event,
@@ -110,18 +120,95 @@ const ReferenceSetList = ({
                     }
                     ref={srsRef}
                 >
-                    <input
-                        name={name}
-                        placeholder={placeholder}
-                        type="text"
-                        onChange={handleInputChange}
-                        readOnly={isReadOnly}
-                        value={mxFilter}
-                        ref={searchInput}
-                        autoComplete="off"
-                    ></input>
+                    {(isReadOnly && currentValues !== undefined && currentValues.length > 0) ? (
+                        <CurrentValueSet
+                            currentValues={currentValues}
+                            displayAttribute={displayAttribute}
+                            isClearable={isClearable}
+                            isReadOnly={isReadOnly}
+                            maxReferenceDisplay={maxReferenceDisplay}
+                            onRemove={clickObj =>
+                                handleRemoveObj(clickObj, setMxFilter, onSelectAssociation, currentValues || [])
+                            }
+                            optionTextType={optionTextType}
+                            referenceSetStyle={referenceSetStyle}
+                            clearIcon={clearIcon}
+                            optionCustomContent={optionCustomContent}
+                        />
+                    ) : (
+                        <SearchInput
+                            currentValue={undefined}
+                            displayAttribute={displayAttribute}
+                            isReadOnly={isReadOnly}
+                            isSearchable={isSearchable}
+                            mxFilter={mxFilter}
+                            name={name}
+                            onChange={handleInputChange}
+                            optionCustomContent={optionCustomContent}
+                            optionTextType={optionTextType}
+                            placeholder={placeholder}
+                            setRef={newRef => setSearchInput(newRef)}
+                        />
+                    )}
+
+                    {!isReadOnly && (
+                        <div className="srs-icon-row">
+                            {showSelectAll && (
+                                <SelectAllIcon
+                                    onClick={event =>
+                                        handleSelectAll(
+                                            event,
+                                            setMxFilter,
+                                            setFocusedObjIndex,
+                                            onSelectAssociation,
+                                            selectableObjects || [],
+                                            selectableAttribute
+                                        )
+                                    }
+                                    title={"Select All"}
+                                    mxIconOverride={selectAllIcon}
+                                />
+                            )}
+                            {isClearable && (
+                                <ClearIcon
+                                    onClick={event =>
+                                        handleClear(
+                                            event,
+                                            mxFilter,
+                                            setMxFilter,
+                                            setFocusedObjIndex,
+                                            onSelectHandler,
+                                            searchInput
+                                        )
+                                    }
+                                    title={"Clear"}
+                                    mxIconOverride={clearIcon}
+                                />
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+            {!isReadOnly && (
+                <div className="form-control srs-selectable-list">
+                    <OptionsMenu
+                        selectableObjects={selectableObjects}
+                        displayAttribute={displayAttribute}
+                        onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
+                        currentValue={currentValues}
+                        currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
+                        selectableAttribute={selectableAttribute}
+                        noResultsText={noResultsText}
+                        optionTextType={optionTextType}
+                        optionCustomContent={optionCustomContent}
+                        moreResultsText={moreResultsText}
+                        optionsStyle={optionsStyle}
+                        selectStyle={"list"}
+                        isReadyOnly={isReadOnly}
+                        // isLoading={isLoading}
+                    />
                     <div className="srs-icon-row">
-                        {showSelectAll && isReadOnly === false && (
+                        {isSearchable === false && showSelectAll && isReadOnly === false && (
                             <SelectAllIcon
                                 onClick={event =>
                                     handleSelectAll(
@@ -137,7 +224,7 @@ const ReferenceSetList = ({
                                 mxIconOverride={selectAllIcon}
                             />
                         )}
-                        {isClearable && isReadOnly === false && (
+                        {isSearchable === false && isClearable && isReadOnly === false && (
                             <ClearIcon
                                 onClick={event =>
                                     handleClear(
@@ -156,59 +243,6 @@ const ReferenceSetList = ({
                     </div>
                 </div>
             )}
-
-            <div className="form-control srs-selectable-list">
-                <OptionsMenu
-                    selectableObjects={selectableObjects}
-                    displayAttribute={displayAttribute}
-                    onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
-                    currentValue={currentValues}
-                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                    selectableAttribute={selectableAttribute}
-                    noResultsText={noResultsText}
-                    optionTextType={optionTextType}
-                    optionCustomContent={optionCustomContent}
-                    moreResultsText={moreResultsText}
-                    optionsStyle={optionsStyle}
-                    selectStyle={"list"}
-                    isReadyOnly={isReadOnly}
-                    // isLoading={isLoading}
-                />
-                <div className="srs-icon-row">
-                    {isSearchable === false && showSelectAll && isReadOnly === false && (
-                        <SelectAllIcon
-                            onClick={event =>
-                                handleSelectAll(
-                                    event,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectAssociation,
-                                    selectableObjects || [],
-                                    selectableAttribute
-                                )
-                            }
-                            title={"Select All"}
-                            mxIconOverride={selectAllIcon}
-                        />
-                    )}
-                    {isSearchable === false && isClearable && isReadOnly === false && (
-                        <ClearIcon
-                            onClick={event =>
-                                handleClear(
-                                    event,
-                                    mxFilter,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectHandler,
-                                    searchInput
-                                )
-                            }
-                            title={"Clear"}
-                            mxIconOverride={clearIcon}
-                        />
-                    )}
-                </div>
-            </div>
         </React.Fragment>
     );
 };
