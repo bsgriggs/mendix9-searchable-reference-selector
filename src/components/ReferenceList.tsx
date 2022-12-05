@@ -97,6 +97,7 @@ const ReferenceList = ({
                         readOnly={isReadOnly}
                         value={mxFilter}
                         ref={searchInput}
+                        autoComplete="off"
                     ></input>
 
                     {isClearable && isReadOnly === false && (

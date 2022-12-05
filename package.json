@@ -1,7 +1,7 @@
 {
     "name": "searchablereferenceselectormxnine",
     "widgetName": "SearchableReferenceSelectorMxNine",
-    "version": "1.5.3",
+    "version": "1.5.4",
     "description": "Mendix reference selector with a search bar and a clear button (Mendix 9)",
     "copyright": "© Mendix Technology BV 2022. All rights reserved.",
     "author": "Benjamin Griggs",
@@ -11,7 +11,7 @@
     "license": "MIT",
     "config": {
         "projectPath": "../..//",
-        "mendixHost": "http://localhost:8080",
+        "mendixHost": "http://localhost:8082",
         "developmentPort": 3000
     },
     "packagePath": "mendix",

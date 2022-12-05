@@ -118,6 +118,7 @@ const ReferenceSetList = ({
                         readOnly={isReadOnly}
                         value={mxFilter}
                         ref={searchInput}
+                        autoComplete="off"
                     ></input>
                     <div className="srs-icon-row">
                         {showSelectAll && isReadOnly === false && (

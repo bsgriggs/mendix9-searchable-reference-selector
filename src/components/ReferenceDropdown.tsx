@@ -137,6 +137,7 @@ const ReferenceDropdown = ({
                             : mxFilter
                     }
                     ref={searchInput}
+                    autoComplete="off"
                     onClick={(event: React.MouseEvent<HTMLInputElement>) => {
                         if (showMenu) {
                             event.stopPropagation();
