@@ -77,7 +77,7 @@ export default function CurrentValueSet({
                 </div>
             )}
             {referenceSetStyle === "commas" && currentValues !== undefined && currentValues.length > 0 && (
-                <div className="srs-badge-row">
+                <div className="srs-comma-row">
                     {maxReferenceDisplay > 0 && (
                         <Fragment>
                             {currentValues.slice(0, maxReferenceDisplay).map((currentValue: ObjectItem, index) => (

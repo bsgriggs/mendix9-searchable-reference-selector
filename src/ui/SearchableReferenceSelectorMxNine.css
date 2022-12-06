@@ -51,6 +51,19 @@ Place your custom CSS here
     gap: 4px;
 }
 
+.srs .srs-comma-row{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px;
+    width: 100%;
+    gap: 4px;
+}
+
+.srs .read-only .srs-comma-row {
+    padding: 8px;
+}
+
 .srs .glyphicon, .srs img{
     padding: 8px 4px;
     color: #6f6f6f;
@@ -87,9 +100,14 @@ Place your custom CSS here
 }
 
 .srs .srs-comma,
-.srs-extra {
+.srs .srs-extra {
     font-size: small;
-    padding: 2px;
+    padding: 0px;
+}
+
+.srs .read-only .srs-comma,
+.srs .read-only .srs-extra {
+    font-size: unset;
 }
 
 .srs .srs-dropdown {
