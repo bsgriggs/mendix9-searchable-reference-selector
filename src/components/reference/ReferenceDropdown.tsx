@@ -1,38 +1,37 @@
-import { createElement, useState, useRef, ReactElement, ChangeEvent } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
-import ClearIcon from "./icons/ClearIcon";
-import DropdownIcon from "./icons/DropdownIcon";
+import { createElement, useState, useRef, ReactElement, ChangeEvent, Fragment } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon } from "mendix";
 import OptionsMenu from "./OptionsMenu";
-import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import useOnClickOutside from "../custom hooks/useOnClickOutside";
-import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
-import focusSearchInput from "../utils/focusSearchInput";
-import handleKeyNavigation from "../utils/handleKeyNavigation";
+import { OptionsStyleSingleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import useOnClickOutside from "../../custom hooks/useOnClickOutside";
+import usePositionUpdate, { mapPosition, Position } from "../../custom hooks/usePositionUpdate";
+import focusSearchInput from "../../utils/focusSearchInput";
+import handleKeyNavigation from "../../utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import SearchInput from "./SearchInput";
+import MxIcon from "../MxIcon";
 
 interface ReferenceDropdownProps {
     name: string;
-    tabIndex?: number;
-    placeholder?: string;
-    noResultsText?: string;
+    tabIndex: number | undefined;
+    placeholder: string | undefined;
+    noResultsText: string;
     selectableObjects: ObjectItem[] | undefined;
-    currentValue?: ObjectItem | undefined;
+    currentValue: ObjectItem | undefined;
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    optionCustomContent: ListWidgetValue | undefined;
+    selectableAttribute: ListAttributeValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
-    clearIcon?: DynamicValue<WebIcon>;
-    dropdownIcon?: DynamicValue<WebIcon>;
+    clearIcon: WebIcon | undefined;
+    dropdownIcon: WebIcon | undefined;
     isSearchable: boolean;
     isReadOnly: boolean;
-    maxHeight?: string;
-    moreResultsText?: string;
-    optionsStyle: OptionsStyleEnum;
+    maxHeight: string;
+    moreResultsText: string | undefined;
+    optionsStyle: OptionsStyleSingleEnum;
     // isLoading: boolean;
 }
 
@@ -120,6 +119,7 @@ const ReferenceDropdown = ({
                     onSelectHandler,
                     selectableAttribute,
                     true,
+                    isReadOnly,
                     () => setPosition(mapPosition(srsRef.current)),
                     setShowMenu
                 )
@@ -141,54 +141,59 @@ const ReferenceDropdown = ({
                 showMenu={showMenu}
             />
             {!isReadOnly && (
-                <div className="srs-icon-row">
-                    {isClearable && (
-                        <ClearIcon
-                            onClick={event => {
-                                setPosition(mapPosition(srsRef.current));
-                                handleClear(
-                                    event,
-                                    mxFilter,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectHandler,
-                                    searchInput,
-                                    setShowMenu
-                                );
-                            }}
-                            title={"Clear"}
-                            mxIconOverride={clearIcon}
-                        />
-                    )}
+                <Fragment>
+                    <div className="srs-icon-row">
+                        {isClearable && (
+                            <MxIcon
+                                onClick={event => {
+                                    setPosition(mapPosition(srsRef.current));
+                                    handleClear(
+                                        event,
+                                        mxFilter,
+                                        setMxFilter,
+                                        setFocusedObjIndex,
+                                        onSelectHandler,
+                                        searchInput,
+                                        setShowMenu
+                                    );
+                                }}
+                                title={"Clear"}
+                                mxIconOverride={clearIcon}
+                                defaultClassName="remove"
+                            />
+                        )}
 
-                    <DropdownIcon mxIconOverride={dropdownIcon} />
-                </div>
-            )}
-            {showMenu && (
-                <OptionsMenu
-                    selectableObjects={selectableObjects}
-                    displayAttribute={displayAttribute}
-                    onSelectOption={(newObject: ObjectItem | undefined) => {
-                        const newObjSelectable =
-                            newObject !== undefined && selectableAttribute !== undefined
-                                ? selectableAttribute.get(newObject).value === true
-                                : true;
-                        onSelectHandler(newObject, newObjSelectable);
-                    }}
-                    currentValue={currentValue}
-                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                    maxHeight={maxHeight}
-                    selectableAttribute={selectableAttribute}
-                    noResultsText={noResultsText}
-                    optionTextType={optionTextType}
-                    optionCustomContent={optionCustomContent}
-                    moreResultsText={moreResultsText}
-                    optionsStyle={optionsStyle}
-                    selectStyle={"dropdown"}
-                    position={position}
-                    isReadyOnly={isReadOnly}
-                    // isLoading={isLoading}
-                />
+                        <MxIcon defaultClassName="menu-down" mxIconOverride={dropdownIcon} />
+                    </div>
+                    {showMenu && (
+                        <OptionsMenu
+                            selectableObjects={selectableObjects}
+                            displayAttribute={displayAttribute}
+                            onSelectOption={(newObject: ObjectItem | undefined) => {
+                                const newObjSelectable =
+                                    newObject !== undefined && selectableAttribute !== undefined
+                                        ? selectableAttribute.get(newObject).value === true
+                                        : true;
+                                onSelectHandler(newObject, newObjSelectable);
+                            }}
+                            currentValue={currentValue}
+                            currentFocus={
+                                selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined
+                            }
+                            maxHeight={maxHeight}
+                            selectableAttribute={selectableAttribute}
+                            noResultsText={noResultsText}
+                            optionTextType={optionTextType}
+                            optionCustomContent={optionCustomContent}
+                            moreResultsText={moreResultsText}
+                            optionsStyle={optionsStyle}
+                            selectStyle={"dropdown"}
+                            position={position}
+                            isReadyOnly={isReadOnly}
+                            // isLoading={isLoading}
+                        />
+                    )}{" "}
+                </Fragment>
             )}
         </div>
     );

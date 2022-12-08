@@ -1,8 +1,10 @@
-import { ReactElement, createElement } from "react";
+import { ReactElement, createElement, Fragment } from "react";
 import { SearchableReferenceSelectorMxNinePreviewProps } from "typings/SearchableReferenceSelectorMxNineProps";
 import { WebIcon } from "mendix";
 import { Icon } from "mendix/components/web/Icon";
-import Option, { focusModeEnum } from "./components/Option";
+import EnumOption from "./components/enum/Option";
+import RefOption from "./components/reference/Option";
+import { focusModeEnum } from "typings/general";
 
 type iconPreview =
     | {
@@ -39,22 +41,39 @@ const displayIcon = (propsIcon: iconPreview, defaultClassName: string): ReactEle
     );
 };
 
-export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
-    const lastPeriodIndex = props.association.lastIndexOf(".");
-    const associationDisplay = props.association.substring(lastPeriodIndex + 1);
-    const displayAttribute = "[" + associationDisplay + "/" + props.displayAttribute + "]";
+export function preview({
+    association,
+    clearIcon,
+    displayAttribute,
+    dropdownIcon,
+    enumAttribute,
+    isClearable,
+    isSearchable,
+    maxItems,
+    optionsStyleSet,
+    optionsStyleSingle,
+    readOnly,
+    selectAllIcon,
+    selectStyle,
+    selectionType,
+    showSelectAll
+}: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
+    const lastPeriodIndex = association.lastIndexOf(".");
+    const associationDisplay = association.substring(lastPeriodIndex + 1);
+    const formattedDisplayAttribute =
+        selectionType === "enumeration" ? enumAttribute : "[" + associationDisplay + "/" + displayAttribute + "]";
 
     return (
         <div className="srs">
             <div className="form-control">
-                {props.readOnly === false && props.isSearchable && (
-                    <input type="text" readOnly={props.readOnly} value={displayAttribute}></input>
+                {readOnly === false && isSearchable && (
+                    <input type="text" readOnly={readOnly} value={formattedDisplayAttribute}></input>
                 )}
-                {props.isSearchable === false && <span className="srs-text">{displayAttribute}</span>}
+                {isSearchable === false && <span className="srs-text">{formattedDisplayAttribute}</span>}
                 <div className="srs-icon-row">
-                    {props.showSelectAll && props.readOnly === false && displayIcon(props.selectAllIcon, "check")}
-                    {props.isClearable && props.readOnly === false && displayIcon(props.clearIcon, "remove")}
-                    {props.selectStyle === "dropdown" && displayIcon(props.dropdownIcon, "menu-down")}
+                    {showSelectAll && readOnly === false && displayIcon(selectAllIcon, "check")}
+                    {isClearable && readOnly === false && displayIcon(clearIcon, "remove")}
+                    {selectStyle === "dropdown" && displayIcon(dropdownIcon, "menu-down")}
                 </div>
             </div>
             <div
@@ -69,42 +88,71 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 }}
             >
                 <div>
-                    <Option
-                        index={1}
-                        isSelected
-                        isFocused={false}
-                        isSelectable
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        onSelect={() => {}}
-                        focusMode={focusModeEnum.hover}
-                        optionsStyle={props.optionsStyle}
-                    >
-                        <span>{displayAttribute + " 1"}</span>
-                    </Option>
-                    <Option
-                        index={2}
-                        isSelected={false}
-                        isFocused={false}
-                        isSelectable
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        onSelect={() => {}}
-                        focusMode={focusModeEnum.hover}
-                        optionsStyle={props.optionsStyle}
-                    >
-                        <span>{displayAttribute + " 2"}</span>
-                    </Option>
-                    <Option
-                        index={3}
-                        isSelected={false}
-                        isFocused={false}
-                        isSelectable={false}
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        onSelect={() => {}}
-                        focusMode={focusModeEnum.hover}
-                        optionsStyle={"cell"}
-                    >
-                        <span>{"..." + (props.maxItems !== "0" ? " up to " + props.maxItems : "")}</span>
-                    </Option>
+                    {selectionType === "enumeration" ? (
+                        <Fragment>
+                            <EnumOption
+                                isSelected
+                                isFocused={false}
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                onSelect={() => {}}
+                                focusMode={focusModeEnum.hover}
+                                optionsStyle={optionsStyleSingle}
+                                option={{ caption: formattedDisplayAttribute + " 1", name: "1" }}
+                                index={0}
+                                isSelectable
+                            />
+                            <EnumOption
+                                index={2}
+                                isSelected={false}
+                                isSelectable
+                                isFocused={false}
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                onSelect={() => {}}
+                                focusMode={focusModeEnum.hover}
+                                optionsStyle={optionsStyleSingle}
+                                option={{ caption: formattedDisplayAttribute + " 2", name: "2" }}
+                            />
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            <RefOption
+                                index={1}
+                                isSelected
+                                isFocused={false}
+                                isSelectable
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                onSelect={() => {}}
+                                focusMode={focusModeEnum.hover}
+                                optionsStyle={optionsStyleSet || optionsStyleSingle}
+                            >
+                                <span>{displayAttribute + " 1"}</span>
+                            </RefOption>
+                            <RefOption
+                                index={2}
+                                isSelected={false}
+                                isFocused={false}
+                                isSelectable
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                onSelect={() => {}}
+                                focusMode={focusModeEnum.hover}
+                                optionsStyle={optionsStyleSet || optionsStyleSingle}
+                            >
+                                <span>{displayAttribute + " 2"}</span>
+                            </RefOption>
+                            <RefOption
+                                index={3}
+                                isSelected={false}
+                                isFocused={false}
+                                isSelectable={false}
+                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                onSelect={() => {}}
+                                focusMode={focusModeEnum.hover}
+                                optionsStyle={"cell"}
+                            >
+                                <span>{"..." + (maxItems !== "0" ? " up to " + maxItems : "")}</span>
+                            </RefOption>
+                        </Fragment>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { createElement, Fragment, ReactElement } from "react";
 import { OptionTextTypeEnum, ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import { ObjectItem, ListAttributeValue, ListActionValue, DynamicValue, WebIcon, ListWidgetValue } from "mendix";
+import { ObjectItem, ListAttributeValue, ListActionValue, WebIcon, ListWidgetValue } from "mendix";
 import Badge from "./Badge";
 import Comma from "./Comma";
 
@@ -13,7 +13,7 @@ interface CurrentValueSetProps {
     optionTextType: OptionTextTypeEnum;
     onRemove: (clickObj: ObjectItem) => void;
     displayAttribute: ListAttributeValue<string>;
-    clearIcon?: DynamicValue<WebIcon>;
+    clearIcon: WebIcon | undefined;
     onBadgeClick?: ListActionValue;
     optionCustomContent: ListWidgetValue | undefined;
 }

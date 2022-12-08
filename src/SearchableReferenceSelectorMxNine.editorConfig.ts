@@ -36,12 +36,49 @@ export function getProperties(
     _values: SearchableReferenceSelectorMxNinePreviewProps,
     defaultProperties: Properties
 ): Properties {
-    // Do the values manipulation here to control the visibility of properties in Studio and Studio Pro conditionally.
-    /* Example
-    if (values.myProperty === "custom") {
-        delete defaultProperties.properties.myOtherProperty;
+    switch (_values.selectionType) {
+        case "enumeration":
+            hidePropertiesIn(defaultProperties, _values, [
+                "association",
+                "displayAttribute",
+                "selectableAttribute",
+                "selectableObjects",
+                "showSelectAll",
+                "referenceSetStyle",
+                "maxReferenceDisplay",
+                "selectAllIcon",
+                "onBadgeClick",
+                "optionTextType",
+                "optionsStyleSet",
+                "filterType",
+                "moreResultsText",
+                "maxItems"
+            ]);
+            break;
+        case "reference":
+            hidePropertiesIn(defaultProperties, _values, [
+                "showSelectAll",
+                "referenceSetStyle",
+                "maxReferenceDisplay",
+                "selectAllIcon",
+                "onBadgeClick",
+                "enumAttribute",
+                "optionsStyleSet"
+            ]);
+            break;
+        case "referenceSet":
+            hidePropertiesIn(defaultProperties, _values, ["enumAttribute", "optionsStyleSingle"]);
+            break;
     }
-    */
+
+    switch(_values.filterType){
+        case "auto":
+            hidePropertiesIn(defaultProperties, _values, ["searchText", "refreshAction", "hasMoreResultsManual"]);
+        break;
+        case "manual":
+            hidePropertiesIn(defaultProperties, _values, ["filterFunction", "maxItems"]);
+        break;
+    }
 
     if (_values.optionTextType !== "custom") {
         hidePropertiesIn(defaultProperties, _values, ["optionCustomContent"]);
@@ -58,7 +95,12 @@ export function getProperties(
     }
 
     if (_values.selectStyle === "list") {
-        hidePropertiesIn(defaultProperties, _values, ["maxMenuHeight", "maxReferenceDisplay", "dropdownIcon"]);
+        hidePropertiesIn(defaultProperties, _values, [
+            "maxMenuHeight",
+            "maxReferenceDisplay",
+            "referenceSetStyle",
+            "dropdownIcon"
+        ]);
     }
 
     if (_values.isClearable === false) {
@@ -70,7 +112,7 @@ export function getProperties(
     }
 
     if (_values.isSearchable === false) {
-        hidePropertiesIn(defaultProperties, _values, ["maxItems", "filterDelay", "moreResultsText"]);
+        hidePropertiesIn(defaultProperties, _values, ["maxItems", "filterDelay", "moreResultsText","filterDelay", "filterType", "filterFunction", "refreshAction", "searchText", "hasMoreResultsManual"]);
     }
 
     if (_values.isSearchable === false && _values.selectStyle === "list") {
@@ -82,16 +124,6 @@ export function getProperties(
 
 export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): Problem[] {
     const errors: Problem[] = [];
-    // Add errors to the above array to throw errors in Studio and Studio Pro.
-    /* Example
-    if (values.myProperty !== "custom") {
-        errors.push({
-            property: `myProperty`,
-            message: `The value of 'myProperty' is different of 'custom'.`,
-            url: "https://github.com/myrepo/mywidget"
-        });
-    }
-    */
 
     if (_values.optionTextType === "custom" && _values.optionCustomContent.widgetCount === 0) {
         errors.push({
@@ -121,6 +153,14 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `maxBadges`,
             message: `Max Badges must be greater than or equal to 1`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
+    if (_values.filterType === "manual" && _values.refreshAction === null) {
+        errors.push({
+            property: `refreshAction`,
+            message: `Refresh action is required and must be a Microflow or Nanoflow that has a Refresh in Client on the Search Text's object`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
     }

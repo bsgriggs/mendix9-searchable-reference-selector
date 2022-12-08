@@ -1,5 +1,5 @@
 import { ChangeEvent, createElement, Fragment, ReactElement, useEffect, useRef, MouseEvent } from "react";
-import displayContent from "src/utils/displayContent";
+import displayContent from "src/utils/reference/displayContent";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 
@@ -65,24 +65,25 @@ export default function SearchInput({
             )}
             {optionTextType !== "text" && (
                 <Fragment>
-                    {currentValue === undefined && isReadOnly === false && isSearchable && (
-                        <input
-                            name={name}
-                            placeholder={placeholder}
-                            type="text"
-                            onChange={event => onChange(event)}
-                            readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
-                            disabled={isReadOnly}
-                            value={mxFilter}
-                            ref={searchInput}
-                            autoComplete="off"
-                            onClick={(event: MouseEvent<HTMLInputElement>) => {
-                                if (showMenu) {
-                                    event.stopPropagation();
-                                }
-                            }}
-                        ></input>
-                    )}
+                    <input
+                        style={{
+                            display: currentValue === undefined && !isReadOnly && isSearchable ? "block" : "none"
+                        }}
+                        name={name}
+                        placeholder={placeholder}
+                        type="text"
+                        onChange={event => onChange(event)}
+                        readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
+                        disabled={isReadOnly}
+                        value={mxFilter}
+                        ref={searchInput}
+                        autoComplete="off"
+                        onClick={(event: MouseEvent<HTMLInputElement>) => {
+                            if (showMenu) {
+                                event.stopPropagation();
+                            }
+                        }}
+                    ></input>
                     {currentValue === undefined && isSearchable === false && (
                         <span className="srs-text">{placeholder}</span>
                     )}

@@ -1,13 +1,7 @@
 import { createElement, PropsWithChildren, ReactElement, ReactNode, MouseEvent } from "react";
 import useHover from "src/custom hooks/useHover";
-import { OptionsStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-
-export enum focusModeEnum {
-    // eslint-disable-next-line no-unused-vars
-    hover = "hover",
-    // eslint-disable-next-line no-unused-vars
-    arrow = "arrow"
-}
+import { focusModeEnum } from "typings/general";
+import { OptionsStyleSetEnum, OptionsStyleSingleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 
 interface OptionProps {
     index: number;
@@ -16,7 +10,7 @@ interface OptionProps {
     isSelectable: boolean;
     focusMode: focusModeEnum;
     onSelect: () => void;
-    optionsStyle: OptionsStyleEnum;
+    optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     children: ReactNode;
 }
 

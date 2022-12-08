@@ -1,51 +1,49 @@
-import React, { createElement, useState, useRef, ReactElement } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
-import DropdownIcon from "./icons/DropdownIcon";
-import OptionsMenu from "./OptionsMenu";
+import { createElement, useState, useRef, ReactElement, Fragment, ChangeEvent } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListActionValue } from "mendix";
+import OptionsMenu from "../reference/OptionsMenu";
 import {
-    OptionsStyleEnum,
+    OptionsStyleSetEnum,
     OptionTextTypeEnum,
     ReferenceSetStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
-import useOnClickOutside from "../custom hooks/useOnClickOutside";
-import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
-import SelectAllIcon from "./icons/SelectAllIcon";
-import ClearIcon from "./icons/ClearIcon";
-import focusSearchInput from "../utils/focusSearchInput";
-import handleKeyNavigation from "src/utils/handleKeyNavigation";
+import useOnClickOutside from "../../custom hooks/useOnClickOutside";
+import usePositionUpdate, { mapPosition, Position } from "../../custom hooks/usePositionUpdate";
+import focusSearchInput from "../../utils/focusSearchInput";
+import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
-import handleSelectAll from "src/utils/handleSelectAll";
-import handleRemoveObj from "src/utils/handleSelectSet";
-import SearchInput from "./SearchInput";
-import CurrentValueSet from "./CurrentValueSet";
+import handleSelectAll from "src/utils/reference/handleSelectAll";
+import handleRemoveObj from "src/utils/reference/handleSelectSet";
+import SearchInput from "../reference/SearchInput";
+import CurrentValueSet from "../reference/CurrentValueSet";
+import MxIcon from "../MxIcon";
 
 interface ReferenceSetDropdownProps {
     name: string;
-    tabIndex?: number;
-    placeholder?: string;
-    noResultsText?: string;
+    tabIndex: number | undefined;
+    placeholder: string | undefined;
+    noResultsText: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValues: ObjectItem[] | undefined;
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    optionCustomContent: ListWidgetValue | undefined;
+    selectableAttribute: ListAttributeValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem[] | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
-    clearIcon?: DynamicValue<WebIcon>;
+    clearIcon: WebIcon | undefined;
     isSearchable: boolean;
     isReadOnly: boolean;
     showSelectAll: boolean;
-    selectAllIcon?: DynamicValue<WebIcon>;
-    dropdownIcon?: DynamicValue<WebIcon>;
-    maxHeight?: string;
-    moreResultsText?: string;
-    optionsStyle: OptionsStyleEnum;
+    selectAllIcon: WebIcon | undefined;
+    dropdownIcon: WebIcon | undefined;
+    maxHeight: string;
+    moreResultsText: string | undefined;
+    optionsStyle: OptionsStyleSetEnum;
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
-    onBadgeClick?: ListActionValue;
+    onBadgeClick: ListActionValue | undefined;
     // isLoading: boolean;
 }
 
@@ -117,7 +115,7 @@ const ReferenceSetDropdown = ({
         setMxFilter("");
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setMxFilter(value);
         setFocusedObjIndex(0);
@@ -149,6 +147,7 @@ const ReferenceSetDropdown = ({
                     onSelectHandler,
                     selectableAttribute,
                     false,
+                    isReadOnly,
                     () => setPosition(mapPosition(srsRef.current)),
                     setShowMenu
                 )
@@ -184,80 +183,85 @@ const ReferenceSetDropdown = ({
             )}
 
             {!isReadOnly && (
-                <SearchInput
-                    currentValue={undefined}
-                    displayAttribute={displayAttribute}
-                    isReadOnly={isReadOnly}
-                    isSearchable={isSearchable}
-                    mxFilter={mxFilter}
-                    name={name}
-                    onChange={handleInputChange}
-                    optionCustomContent={optionCustomContent}
-                    optionTextType={optionTextType}
-                    placeholder={placeholder}
-                    setRef={newRef => setSearchInput(newRef)}
-                />
-            )}
+                <Fragment>
+                    <SearchInput
+                        currentValue={undefined}
+                        displayAttribute={displayAttribute}
+                        isReadOnly={isReadOnly}
+                        isSearchable={isSearchable}
+                        mxFilter={mxFilter}
+                        name={name}
+                        onChange={handleInputChange}
+                        optionCustomContent={optionCustomContent}
+                        optionTextType={optionTextType}
+                        placeholder={placeholder}
+                        setRef={newRef => setSearchInput(newRef)}
+                    />
 
-            {!isReadOnly && (
-                <div className="srs-icon-row">
-                    {showSelectAll && (
-                        <SelectAllIcon
-                            onClick={event =>
-                                handleSelectAll(
-                                    event,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectAssociation,
-                                    selectableObjects || [],
-                                    selectableAttribute
-                                )
+                    <div className="srs-icon-row">
+                        {showSelectAll && (
+                            <MxIcon
+                                onClick={event =>
+                                    handleSelectAll(
+                                        event,
+                                        setMxFilter,
+                                        setFocusedObjIndex,
+                                        onSelectAssociation,
+                                        selectableObjects || [],
+                                        selectableAttribute
+                                    )
+                                }
+                                title={"Select All"}
+                                mxIconOverride={selectAllIcon}
+                                defaultClassName="check"
+                            />
+                        )}
+
+                        {isClearable && (
+                            <MxIcon
+                                onClick={event => {
+                                    setPosition(mapPosition(srsRef.current));
+                                    handleClear(
+                                        event,
+                                        mxFilter,
+                                        setMxFilter,
+                                        setFocusedObjIndex,
+                                        onSelectHandler,
+                                        searchInput,
+                                        setShowMenu
+                                    );
+                                }}
+                                title={"Clear"}
+                                mxIconOverride={clearIcon}
+                                defaultClassName="remove"
+                            />
+                        )}
+                        <MxIcon mxIconOverride={dropdownIcon} defaultClassName="menu-down" />
+                    </div>
+
+                    {showMenu && (
+                        <OptionsMenu
+                            selectableObjects={selectableObjects}
+                            displayAttribute={displayAttribute}
+                            onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
+                            currentValue={currentValues}
+                            currentFocus={
+                                selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined
                             }
-                            title={"Select All"}
-                            mxIconOverride={selectAllIcon}
+                            maxHeight={maxHeight}
+                            selectableAttribute={selectableAttribute}
+                            noResultsText={noResultsText}
+                            optionTextType={optionTextType}
+                            optionCustomContent={optionCustomContent}
+                            moreResultsText={moreResultsText}
+                            optionsStyle={optionsStyle}
+                            selectStyle={"dropdown"}
+                            position={position}
+                            isReadyOnly={isReadOnly}
+                            // isLoading={isLoading}
                         />
                     )}
-
-                    {isClearable && (
-                        <ClearIcon
-                            onClick={event => {
-                                setPosition(mapPosition(srsRef.current));
-                                handleClear(
-                                    event,
-                                    mxFilter,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectHandler,
-                                    searchInput,
-                                    setShowMenu
-                                );
-                            }}
-                            title={"Clear"}
-                            mxIconOverride={clearIcon}
-                        />
-                    )}
-                    <DropdownIcon mxIconOverride={dropdownIcon} />
-                </div>
-            )}
-            {showMenu && (
-                <OptionsMenu
-                    selectableObjects={selectableObjects}
-                    displayAttribute={displayAttribute}
-                    onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
-                    currentValue={currentValues}
-                    currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                    maxHeight={maxHeight}
-                    selectableAttribute={selectableAttribute}
-                    noResultsText={noResultsText}
-                    optionTextType={optionTextType}
-                    optionCustomContent={optionCustomContent}
-                    moreResultsText={moreResultsText}
-                    optionsStyle={optionsStyle}
-                    selectStyle={"dropdown"}
-                    position={position}
-                    isReadyOnly={isReadOnly}
-                    // isLoading={isLoading}
-                />
+                </Fragment>
             )}
         </div>
     );

@@ -1,8 +1,8 @@
-import React, { createElement, ReactElement } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon, ListActionValue } from "mendix";
-import ClearIcon from "./icons/ClearIcon";
+import { createElement, ReactElement, MouseEvent } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListActionValue } from "mendix";
+import MxIcon from "../MxIcon";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import displayContent from "src/utils/displayContent";
+import displayContent from "src/utils/reference/displayContent";
 
 interface BadgeProps {
     content: ObjectItem;
@@ -12,8 +12,8 @@ interface BadgeProps {
     optionCustomContent: ListWidgetValue | undefined;
     onRemoveAssociation: () => void;
     displayAttribute?: ListAttributeValue<string>;
-    clearIcon?: DynamicValue<WebIcon>;
-    onBadgeClick?: ListActionValue;
+    clearIcon: WebIcon | undefined;
+    onBadgeClick: ListActionValue | undefined;
 }
 
 const Badge = ({
@@ -27,7 +27,7 @@ const Badge = ({
     onBadgeClick,
     optionCustomContent
 }: BadgeProps): ReactElement => {
-    const handleBadgeClick = (event: React.MouseEvent<HTMLSpanElement>): void => {
+    const handleBadgeClick = (event: MouseEvent<HTMLSpanElement>): void => {
         event.stopPropagation();
         if (onBadgeClick !== undefined) {
             const badgeClickAction = onBadgeClick.get(content);
@@ -41,13 +41,14 @@ const Badge = ({
         <div className="srs-badge" onClick={handleBadgeClick}>
             {displayContent(content, optionTextType, displayAttribute, optionCustomContent)}
             {isClearable && isReadOnly === false && (
-                <ClearIcon
-                    onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                <MxIcon
+                    onClick={(event: MouseEvent<HTMLDivElement>) => {
                         event.stopPropagation();
                         onRemoveAssociation();
                     }}
                     title="Remove"
                     mxIconOverride={clearIcon}
+                    defaultClassName="remove"
                 />
             )}
         </div>

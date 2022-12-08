@@ -29,7 +29,7 @@
                 </property>
                 <property key="showSelectAll" type="boolean" defaultValue="true">
                     <caption>Show Select All?</caption>
-                    <description>(Reference Set ONLY) When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
+                    <description>When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
                 </property>
                 <property key="maxItems" type="expression" defaultValue="50">
                     <caption>Max Items</caption>
@@ -43,9 +43,12 @@
                         <translation lang="en_US">Search for more results</translation>
                     </translations>
                 </property>
-                <property key="filterDelay" type="integer" defaultValue="500" required="true">
-                    <caption>Filter Delay</caption>
-                    <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
+                <property key="noResultsText" type="textTemplate">
+                    <caption>No Results Text</caption>
+                    <description>Message shown if no results were found</description>
+                    <translations>
+                        <translation lang="en_US">No results found</translation>
+                    </translations>
                 </property>
             </propertyGroup>
         </propertyGroup>
@@ -67,13 +70,20 @@
                     <enumerationValue key="custom">Custom</enumerationValue>
                 </enumerationValues>
             </property>
-            <property key="optionsStyle" type="enumeration" defaultValue="cell">
+            <property key="optionsStyleSingle" type="enumeration" defaultValue="cell">
+                <caption>Option Style</caption>
+                <description></description>
+                <enumerationValues>
+                    <enumerationValue key="cell">Cell</enumerationValue>
+                    <enumerationValue key="radio">Radio Buttons</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="optionsStyleSet" type="enumeration" defaultValue="cell">
                 <caption>Option Style</caption>
                 <description></description>
                 <enumerationValues>
                     <enumerationValue key="cell">Cell</enumerationValue>
                     <enumerationValue key="checkbox">Checkbox</enumerationValue>
-                    <enumerationValue key="radio">Radio Buttons</enumerationValue>
                 </enumerationValues>
             </property>
             <property key="optionCustomContent" type="widgets" required="false" dataSource="selectableObjects">
@@ -82,7 +92,7 @@
             </property>
             <property key="referenceSetStyle" type="enumeration" defaultValue="badges">
                 <caption>Reference Set Style</caption>
-                <description>(Reference Set ONLY) How the selected items are displayed</description>
+                <description>How the selected items are displayed</description>
                 <enumerationValues>
                     <enumerationValue key="badges">Badges</enumerationValue>
                     <enumerationValue key="commas">Comma Seperated</enumerationValue>
@@ -90,19 +100,12 @@
             </property>
             <property key="maxReferenceDisplay" type="integer" defaultValue="0">
                 <caption>Max Reference Display</caption>
-                <description>(Reference Set ONLY) How many many badges / items are displayed (0 = no limit)</description>
+                <description>How many many badges / items are displayed (0 = no limit)</description>
             </property>
             <property key="maxMenuHeight" type="expression" defaultValue="'15em'">
                 <caption>Max Menu Height</caption>
                 <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
                 <returnType type="String" />
-            </property>
-            <property key="noResultsText" type="textTemplate" >
-                <caption>No Results Text</caption>
-                <description>Message shown if no results were found</description>
-                <translations>
-                    <translation lang="en_US">No results found</translation>
-                </translations>
             </property>
             <property key="clearIcon" type="icon" required="false">
                 <caption>Clear Icon</caption>
@@ -114,11 +117,20 @@
             </property>
             <property key="selectAllIcon" type="icon" required="false">
                 <caption>Select All Icon Icon</caption>
-                <description>(Reference Set ONLY)</description>
+                <description></description>
             </property>
         </propertyGroup>
         <propertyGroup caption="Data Source">
             <propertyGroup caption="General">
+                <property key="selectionType" type="enumeration" defaultValue="enumeration">
+                    <caption>Selection Type</caption>
+                    <description>What is the user going to select?</description>
+                    <enumerationValues>
+                        <enumerationValue key="enumeration">Enumeration</enumerationValue>
+                        <enumerationValue key="reference">Reference</enumerationValue>
+                        <enumerationValue key="referenceSet">Reference Set</enumerationValue>
+                    </enumerationValues>
+                </property>
                 <property key="selectableObjects" type="datasource" isList="true" required="true">
                     <caption>Selectable Objects</caption>
                     <description>The objects that will be displayed</description>
@@ -146,17 +158,62 @@
                         <attributeType name="Boolean" />
                     </attributeTypes>
                 </property>
+                <property key="enumAttribute" type="attribute" required="true">
+                    <caption>Enum Attribute</caption>
+                    <description>The enum options that will be displayed</description>
+                    <attributeTypes>
+                        <attributeType name="Enum" />
+                    </attributeTypes>
+                </property>
             </propertyGroup>
             <propertyGroup caption="Actions">
-                <property key="onChangeAssociation" type="action">
+                <property key="onChange" type="action">
                     <caption>On Change</caption>
                     <description></description>
                 </property>
                 <property key="onBadgeClick" type="action" dataSource="selectableObjects">
                     <caption>On Badge Click</caption>
-                    <description>(Reference Set ONLY) Action performed when the user clicks on a reference set badge</description>
+                    <description>Action performed when the user clicks on a reference set badge</description>
                 </property>
             </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Filtering">
+            <property key="filterDelay" type="integer" defaultValue="300" required="true">
+                <caption>Filter Delay</caption>
+                <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
+            </property>
+            <property key="filterType" type="enumeration" defaultValue="auto">
+                <caption>Filter Type</caption>
+                <description>How should the filtering be handled?</description>
+                <enumerationValues>
+                    <enumerationValue key="auto">Auto - by Mendix</enumerationValue>
+                    <enumerationValue key="manual">Manual - by Data Source Microflow</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="filterFunction" type="enumeration" defaultValue="contains">
+                <caption>Filter Function</caption>
+                <description>How should the user's search text compare to the selectable values?</description>
+                <enumerationValues>
+                    <enumerationValue key="contains">Contains</enumerationValue>
+                    <enumerationValue key="startsWith">Starts With</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="searchText" type="attribute">
+                <caption>Search Text</caption>
+                <description>Attribute to set with the user's search</description>
+                <attributeTypes>
+                    <attributeType name="String" />
+                </attributeTypes>
+            </property>
+            <property key="hasMoreResultsManual" type="expression" defaultValue="">
+                <caption>Has More Results</caption>
+                <description>Expression to determine when to show the More Results Text (Easiest to include a boolean on your Search Text's object)</description>
+                <returnType type="Boolean" />
+            </property>
+            <property key="refreshAction" type="action" required="true">
+                <caption>Refresh Action</caption>
+                <description>Must be a Microflow or Nanoflow that has a Refresh in Client on the Search Text's object</description>
+            </property>
         </propertyGroup>
     </properties>
 </widget>

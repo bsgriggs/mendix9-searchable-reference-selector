@@ -1,13 +1,13 @@
 import { createElement, ReactElement } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
 import { OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import displayContent from "src/utils/displayContent";
+import displayContent from "src/utils/reference/displayContent";
 
 interface CommaProps {
     content: ObjectItem;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    displayAttribute?: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string> | undefined;
     showComma: boolean;
 }
 

@@ -1,42 +1,41 @@
-import React, { createElement, useState, useRef, ReactElement } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
-import OptionsMenu from "./OptionsMenu";
+import { createElement, useState, useRef, ReactElement, Fragment, ChangeEvent } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon } from "mendix";
+import OptionsMenu from "../reference/OptionsMenu";
 import {
-    OptionsStyleEnum,
+    OptionsStyleSetEnum,
     OptionTextTypeEnum,
     ReferenceSetStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
-import SelectAllIcon from "./icons/SelectAllIcon";
-import ClearIcon from "./icons/ClearIcon";
-import handleKeyNavigation from "src/utils/handleKeyNavigation";
+import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
-import handleSelectAll from "src/utils/handleSelectAll";
-import handleRemoveObj from "src/utils/handleSelectSet";
-import SearchInput from "./SearchInput";
-import CurrentValueSet from "./CurrentValueSet";
+import handleSelectAll from "src/utils/reference/handleSelectAll";
+import handleRemoveObj from "src/utils/reference/handleSelectSet";
+import SearchInput from "../reference/SearchInput";
+import CurrentValueSet from "../reference/CurrentValueSet";
+import MxIcon from "../MxIcon";
 
 interface ReferenceSetListProps {
     name: string;
-    tabIndex?: number;
-    placeholder?: string;
-    noResultsText?: string;
+    tabIndex: number | undefined;
+    placeholder: string | undefined;
+    noResultsText: string;
     selectableObjects: ObjectItem[] | undefined;
     currentValues: ObjectItem[] | undefined;
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    optionCustomContent: ListWidgetValue | undefined;
+    selectableAttribute: ListAttributeValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem[] | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
-    clearIcon?: DynamicValue<WebIcon>;
+    clearIcon: WebIcon | undefined;
     isSearchable: boolean;
     isReadOnly: boolean;
     showSelectAll: boolean;
-    selectAllIcon?: DynamicValue<WebIcon>;
-    moreResultsText?: string;
-    optionsStyle: OptionsStyleEnum;
+    selectAllIcon: WebIcon | undefined;
+    moreResultsText: string | undefined;
+    optionsStyle: OptionsStyleSetEnum;
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
     // isLoading: boolean;
@@ -95,14 +94,14 @@ const ReferenceSetList = ({
         setMxFilter("");
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setMxFilter(value);
         setFocusedObjIndex(0);
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             {isSearchable && (
                 <div
                     className={`form-control ${isReadOnly ? "read-only" : ""}`}
@@ -115,7 +114,8 @@ const ReferenceSetList = ({
                             selectableObjects || [],
                             onSelectHandler,
                             selectableAttribute,
-                            false
+                            false,
+                            isReadOnly
                         )
                     }
                     ref={srsRef}
@@ -154,7 +154,7 @@ const ReferenceSetList = ({
                     {!isReadOnly && (
                         <div className="srs-icon-row">
                             {showSelectAll && (
-                                <SelectAllIcon
+                                <MxIcon
                                     onClick={event =>
                                         handleSelectAll(
                                             event,
@@ -167,10 +167,11 @@ const ReferenceSetList = ({
                                     }
                                     title={"Select All"}
                                     mxIconOverride={selectAllIcon}
+                                    defaultClassName="check"
                                 />
                             )}
                             {isClearable && (
-                                <ClearIcon
+                                <MxIcon
                                     onClick={event =>
                                         handleClear(
                                             event,
@@ -183,6 +184,7 @@ const ReferenceSetList = ({
                                     }
                                     title={"Clear"}
                                     mxIconOverride={clearIcon}
+                                    defaultClassName="remove"
                                 />
                             )}
                         </div>
@@ -208,8 +210,8 @@ const ReferenceSetList = ({
                         // isLoading={isLoading}
                     />
                     <div className="srs-icon-row">
-                        {isSearchable === false && showSelectAll && isReadOnly === false && (
-                            <SelectAllIcon
+                        {isSearchable === false && showSelectAll && (
+                            <MxIcon
                                 onClick={event =>
                                     handleSelectAll(
                                         event,
@@ -222,10 +224,11 @@ const ReferenceSetList = ({
                                 }
                                 title={"Select All"}
                                 mxIconOverride={selectAllIcon}
+                                defaultClassName="check"
                             />
                         )}
                         {isSearchable === false && isClearable && isReadOnly === false && (
-                            <ClearIcon
+                            <MxIcon
                                 onClick={event =>
                                     handleClear(
                                         event,
@@ -238,12 +241,13 @@ const ReferenceSetList = ({
                                 }
                                 title={"Clear"}
                                 mxIconOverride={clearIcon}
+                                defaultClassName="remove"
                             />
                         )}
                     </div>
                 </div>
             )}
-        </React.Fragment>
+        </Fragment>
     );
 };
 

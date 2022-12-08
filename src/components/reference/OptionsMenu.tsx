@@ -1,24 +1,30 @@
-import React, { createElement, ReactElement, useEffect, useRef, useState } from "react";
+import { createElement, CSSProperties, Fragment, ReactElement, useEffect, useRef, useState } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
-import Option, { focusModeEnum } from "./Option";
-import { OptionTextTypeEnum, OptionsStyleEnum, SelectStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import displayContent from "src/utils/displayContent";
-import { Position } from "../custom hooks/usePositionUpdate";
+import Option from "./Option";
+import { focusModeEnum } from "typings/general";
+import {
+    OptionTextTypeEnum,
+    OptionsStyleSetEnum,
+    OptionsStyleSingleEnum,
+    SelectStyleEnum
+} from "typings/SearchableReferenceSelectorMxNineProps";
+import displayContent from "src/utils/reference/displayContent";
+import { Position } from "../../custom hooks/usePositionUpdate";
 // import Spinner from "./Spinner";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[] | undefined;
-    currentValue?: ObjectItem | ObjectItem[];
-    currentFocus?: ObjectItem;
-    displayAttribute?: ListAttributeValue<string>;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    currentValue: ObjectItem | ObjectItem[] | undefined;
+    currentFocus: ObjectItem | undefined;
+    displayAttribute: ListAttributeValue<string>;
+    selectableAttribute: ListAttributeValue<boolean> | undefined;
     onSelectOption: (newObject: ObjectItem) => void;
-    noResultsText?: string;
+    noResultsText: string;
     maxHeight?: string;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
-    moreResultsText?: string;
-    optionsStyle: OptionsStyleEnum;
+    optionCustomContent: ListWidgetValue | undefined;
+    moreResultsText: string | undefined;
+    optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     selectStyle: SelectStyleEnum;
     position?: Position;
     isReadyOnly: boolean;
@@ -29,7 +35,7 @@ const OptionsMenuStyle = (
     selectStyle: SelectStyleEnum,
     position: Position | undefined,
     maxHeight: string | undefined
-): React.CSSProperties => {
+): CSSProperties => {
     if (selectStyle === "dropdown" && position !== undefined) {
         const contentCloseToBottom = position.y > window.innerHeight * 0.7;
         return {
@@ -82,7 +88,7 @@ const OptionsMenu = ({
             onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
         >
             {selectableObjects !== undefined && selectableObjects.length > 0 && (
-                <React.Fragment>
+                <Fragment>
                     {selectableObjects.map((obj, key) => {
                         const isFocused = obj.id === currentFocus?.id;
                         const isSelected = currentValue
@@ -117,7 +123,7 @@ const OptionsMenu = ({
                             {moreResultsText}
                         </div>
                     )}
-                </React.Fragment>
+                </Fragment>
             )}
             {selectableObjects === undefined ||
                 (selectableObjects !== undefined && selectableObjects.length === 0 && (

@@ -1,32 +1,32 @@
-import React, { createElement, useState, useRef, ReactElement } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, DynamicValue, WebIcon } from "mendix";
-import OptionsMenu from "./OptionsMenu";
-import { OptionsStyleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import ClearIcon from "./icons/ClearIcon";
-import handleKeyNavigation from "src/utils/handleKeyNavigation";
+import { createElement, useState, useRef, ReactElement, Fragment, ChangeEvent } from "react";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon } from "mendix";
+import OptionsMenu from "../reference/OptionsMenu";
+import { OptionsStyleSingleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
-import SearchInput from "./SearchInput";
+import SearchInput from "../reference/SearchInput";
+import MxIcon from "../MxIcon";
 
 interface ReferenceListProps {
     name: string;
-    tabIndex?: number;
-    placeholder?: string;
-    noResultsText?: string;
+    tabIndex: number | undefined;
+    placeholder: string | undefined;
+    noResultsText: string;
     selectableObjects: ObjectItem[] | undefined;
-    currentValue?: ObjectItem | undefined;
+    currentValue: ObjectItem | undefined;
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
-    optionCustomContent?: ListWidgetValue;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    optionCustomContent: ListWidgetValue | undefined;
+    selectableAttribute: ListAttributeValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
-    clearIcon?: DynamicValue<WebIcon>;
+    clearIcon: WebIcon | undefined;
     isSearchable: boolean;
     isReadOnly: boolean;
-    moreResultsText?: string;
-    optionsStyle: OptionsStyleEnum;
+    moreResultsText: string | undefined;
+    optionsStyle: OptionsStyleSingleEnum;
     // isLoading: boolean;
 }
 
@@ -65,14 +65,14 @@ const ReferenceList = ({
         setMxFilter("");
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setMxFilter(value);
         setFocusedObjIndex(0);
     };
 
     return (
-        <React.Fragment>
+        <Fragment>
             {isSearchable && (
                 <div
                     className={`form-control ${isReadOnly ? "read-only" : ""}`}
@@ -85,6 +85,7 @@ const ReferenceList = ({
                             selectableObjects || [],
                             onSelectHandler,
                             selectableAttribute,
+                            isReadOnly,
                             false
                         )
                     }
@@ -105,7 +106,7 @@ const ReferenceList = ({
                     />
 
                     {isClearable && !isReadOnly && (
-                        <ClearIcon
+                        <MxIcon
                             onClick={event =>
                                 handleClear(
                                     event,
@@ -118,6 +119,7 @@ const ReferenceList = ({
                             }
                             title={"Clear"}
                             mxIconOverride={clearIcon}
+                            defaultClassName="remove"
                         />
                     )}
                 </div>
@@ -145,11 +147,10 @@ const ReferenceList = ({
                         moreResultsText={moreResultsText}
                         optionsStyle={optionsStyle}
                         selectStyle={"list"}
-                        isReadyOnly={isReadOnly}
-                        // isLoading={isLoading}
+                        isReadyOnly={isReadOnly} // isLoading={isLoading}
                     />
-                    {isSearchable === false && isClearable && isReadOnly === false && (
-                        <ClearIcon
+                    {isSearchable === false && isClearable && (
+                        <MxIcon
                             onClick={event =>
                                 handleClear(
                                     event,
@@ -162,11 +163,12 @@ const ReferenceList = ({
                             }
                             title={"Clear"}
                             mxIconOverride={clearIcon}
+                            defaultClassName="remove"
                         />
                     )}
                 </div>
             )}
-        </React.Fragment>
+        </Fragment>
     );
 };
 
