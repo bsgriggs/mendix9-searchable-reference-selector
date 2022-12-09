@@ -243,7 +243,7 @@ const SearchableReferenceSelector = ({
                 optionCustomContent={optionCustomContent}
                 mxFilter={mxFilter}
                 setMxFilter={setMxFilter}
-                moreResultsText={selectionType !== "enumeration" && (hasMoreResultsManual.value || selectableObjects.hasMoreItems)? moreResultsText.value : undefined}
+                moreResultsText={selectionType !== "enumeration" && ((hasMoreResultsManual && hasMoreResultsManual.value) || selectableObjects.hasMoreItems)? moreResultsText.value : undefined}
                 optionsStyleSingle={optionsStyleSingle}
                 optionsStyleSet={optionsStyleSet}
                 referenceSetStyle={referenceSetStyle}
