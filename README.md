@@ -49,7 +49,9 @@ Please see the following documentation based on the Selection Type you wish to u
 -   [Reference Selector](docs/Reference.md)
 -   [Reference Set Selector](docs/ReferenceSet.md)
 
-##Performance Issues?##
+Check [here](docs/ManualFiltering.md) for more information on using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in you microflow data source.
+
+## Performance Issues?
 You likely have too many options trying to render at once. Here's some things to help address the problem:  
 -   Try using the "Max Items" setting. This will limit the amount of options available on the first render and display the "More Results Text" at the end of the list. When a user searches for something, *it will still consider the options that are not rendered*
 -   Try limiting the data source based on what you already know. For example, if your form is for selecting McDonald's locations. Make the user select a state or country first then use that information to limit the data source.
