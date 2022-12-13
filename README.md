@@ -39,28 +39,15 @@ https://marketplace.mendix.com/link/component/116917
 
 -   N/A
 
-## Configuration
-Please see the following documentation based on 
+## Configuration  
+The following settings are available for all Selection Types.  
+![Domain](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/Domain.png)  
+The label is that text next to the textbox while the placeholder is the text inside of the textbox when there is no search. 
+
+Please see the following documentation based on the Selection Type you wish to use.
 -   [Enumeration Selector](docs/Enumeration.md)
 -   [Reference Selector](docs/Reference.md)
 -   [Reference Set Selector](docs/ReferenceSet.md)
-
-![Domain](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/Domain.png)  
-
-The following is an example for using the widget on a page with a Transaction to set its association set to TestObjs  
-
-![General](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/General.png)  
-
-![Style](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/Style.png)  
-
-![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/DataSource.png)  
-
-**When using reference sets, make sure that the page object is the owner of the association!!!**  
-In the example below, imagine your page has a QuestionConfig object and you want to select its OptionConfigs. You must use the QuestionConfig_OptionConfig association. If your page object is OptionConfig and you need to set its QuestionConfigs, use the OptionConfig_QuestionConfig association.  
-
-![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/referenceSetOwner.png)  
-
-*In the real world, you should only have 1 of these associations. Either decide which object should be the owner or set the association as "refer to each other"*
 
 ##Performance Issues?##
 You likely have too many options trying to render at once. Here's some things to help address the problem:  
