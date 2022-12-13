@@ -17,7 +17,13 @@ Check [here](docs/ManualFiltering.md) if you are using manual filtering. Many of
 
 #### Styling Settings  
 ![styleSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/styleSet.png)  
-
+**Select Style** - The results are either displayed in a dropdown when the user clicks on the textbox or the results are always displayed on the page in a list.  
+**Option Text Type** - Method of rendering the text. Text shows the value of the attribute selected. HTML will render the value inside a span using **dangerouslySetInnerHTML**. Because of this, you need to make sure the HTML content is sanitized and cannot have any malicious javascript. Custom mode will add a container for you to add any content once you save the widget settings. This is useful for displaying multiple attributes in the same option, but the filtering will only consider the attribute set in the Data Source tab. *If you need to filter on multiple attribute too, see the [Manual Filtering](docs/ManualFiltering.md) documentation.*  
+**Option Style** - Method of showing the selected options to the user. Cell mode will show the selected options with a background color while checkbox mode will show (guess what) checkboxes.  
+**Reference Set Style** - How the selected options are displayed if the dropdown is closed or the reference set is in read only mode. Badges mode show a container with a background color and the clear icon. Badges also have their own on-click behavior available in the Data Source tab (useful for opening a details page). Commas Separated mode will display a simple comma separated list of the selected values.  
+**Max Reference Display** - The number of badges or items in the comma separated list to display. When the limit is exceeded, the remainder is displayed as "(+x)". If the expression is set to 0, then no limit is applied and the badges / comma separated list will wrap to the next line.  
+**Max Menu Height** - (Dropdown Only) String expression for the CSS Height for the dropdown menu with a default of 15em.  
+**Icons** - Override the default icons with you own glyphicon / images  
 
 #### Data Source Settings
 
