@@ -1,4 +1,4 @@
-import { ObjectItem, ListAttributeValue } from "mendix";
+import { ObjectItem, ListExpressionValue } from "mendix";
 import { KeyboardEvent } from "react";
 
 export default function handleKeyNavigation(
@@ -7,7 +7,7 @@ export default function handleKeyNavigation(
     setFocusedObjIndex: (newIndex: number) => void,
     selectableObjects: ObjectItem[],
     onSelectHandler: (selectedObj: ObjectItem, closeMenu?: boolean) => void,
-    selectableAttribute: ListAttributeValue<boolean> | undefined,
+    selectableAttribute: ListExpressionValue<boolean> | undefined,
     closeOnSelect: boolean,
     isReadOnly: boolean,
     updatePosition?: () => void,

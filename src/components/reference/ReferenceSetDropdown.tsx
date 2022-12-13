@@ -1,5 +1,5 @@
 import { createElement, useState, useRef, ReactElement, Fragment, ChangeEvent } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListActionValue } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListActionValue, ListExpressionValue } from "mendix";
 import OptionsMenu from "../reference/OptionsMenu";
 import {
     OptionsStyleSetEnum,
@@ -27,7 +27,7 @@ interface ReferenceSetDropdownProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListAttributeValue<boolean> | undefined;
+    selectableAttribute: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem[] | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;

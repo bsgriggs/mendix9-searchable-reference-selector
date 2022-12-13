@@ -1,5 +1,5 @@
 import { createElement, useState, useRef, ReactElement, Fragment, ChangeEvent } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListExpressionValue } from "mendix";
 import OptionsMenu from "../reference/OptionsMenu";
 import { OptionsStyleSingleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
@@ -17,7 +17,7 @@ interface ReferenceListProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListAttributeValue<boolean> | undefined;
+    selectableAttribute: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;

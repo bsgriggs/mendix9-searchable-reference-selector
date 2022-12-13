@@ -4,7 +4,7 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
+import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
 export type SelectStyleEnum = "dropdown" | "list";
@@ -49,7 +49,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute?: ListAttributeValue<boolean>;
+    selectableAttribute: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
     onChange?: ActionValue;
     onBadgeClick?: ListActionValue;

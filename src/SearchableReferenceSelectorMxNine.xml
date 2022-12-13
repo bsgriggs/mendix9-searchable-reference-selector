@@ -151,13 +151,18 @@
                         <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
-                <property key="selectableAttribute" type="attribute" required="false" dataSource="selectableObjects">
+                <property key="selectableAttribute" type="expression" dataSource="selectableObjects" defaultValue="true">
+                    <caption>Selectable Attribute</caption>
+                    <description>The attribute on the datasource that determines if that object can be selected</description>
+                    <returnType type="Boolean" />
+                </property>
+                <!-- <property key="selectableAttribute" type="attribute" required="false" dataSource="selectableObjects">
                     <caption>Selectable Attribute</caption>
                     <description>The attribute on the datasource that determines if that object can be selected</description>
                     <attributeTypes>
                         <attributeType name="Boolean" />
                     </attributeTypes>
-                </property>
+                </property> -->
                 <property key="enumAttribute" type="attribute" required="true">
                     <caption>Enum Attribute</caption>
                     <description>The enum options that will be displayed</description>

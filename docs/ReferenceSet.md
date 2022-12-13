@@ -25,9 +25,17 @@ Check [here](docs/ManualFiltering.md) if you are using manual filtering. Many of
 **Max Menu Height** - (Dropdown Only) String expression for the CSS Height for the dropdown menu with a default of 15em.  
 **Icons** - Override the default icons with you own glyphicon / images  
 
-#### Data Source Settings
+#### Data Source Settings  
+![dataSource](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/datasourceSet.png)  
+**Selection Type** - What are we selecting? Should be Reference Set for this page of documentation.  
+**Selectable Objects** - The source of retrieving the objects displayed in the dropdown.  
+**Reference** - The reference set the will be populated by the user's selection.  
+**Attribute to Display** - The attribute to be displayed if Option Text Type is "Text" or "HTML". If Option Text Type is set to "Text", then this setting is still used for the filtering.  
+**Selectable Attribute** - Optional boolean expression for rendering an option as un-selectable. Useful if you want to display an option, but not allow the user to select it for a reason. For example, show a list of all users but do not allow inactive users to be selected.  
+**On Change** - Perform an MxAction when the user adds or removes a selection.  
+**On Badge Click** - Perform an MxAction when the user clicks on a badge (not the clear icon). This is useful for opening a details page for a particular badge. Available when Reference Set Style in the Style tab is set to Badges.  
 
-### Filtering Settings
+#### Filtering Settings  
 
 #### When using reference sets, make sure that the page object is the owner of the association!!!  
 In the example below, imagine your page has a QuestionConfig object and you want to select its OptionConfigs. You must use the QuestionConfig_OptionConfig association. If your page object is OptionConfig and you need to set its QuestionConfigs, use the OptionConfig_QuestionConfig association.  

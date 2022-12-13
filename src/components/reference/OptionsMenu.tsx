@@ -1,5 +1,5 @@
 import { createElement, CSSProperties, Fragment, ReactElement, useEffect, useRef, useState } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, ListExpressionValue } from "mendix";
 import Option from "./Option";
 import { focusModeEnum } from "typings/general";
 import {
@@ -17,7 +17,7 @@ interface OptionsMenuProps {
     currentValue: ObjectItem | ObjectItem[] | undefined;
     currentFocus: ObjectItem | undefined;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListAttributeValue<boolean> | undefined;
+    selectableAttribute: ListExpressionValue<boolean> | undefined;
     onSelectOption: (newObject: ObjectItem) => void;
     noResultsText: string;
     maxHeight?: string;

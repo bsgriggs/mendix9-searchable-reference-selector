@@ -24,7 +24,8 @@ import {
     WebIcon,
     ListAttributeValue,
     ListWidgetValue,
-    ListActionValue
+    ListActionValue,
+    ListExpressionValue
 } from "mendix";
 
 interface SelectorProps {
@@ -45,7 +46,7 @@ interface SelectorProps {
     maxMenuHeight: string;
     noResultsText: string;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListAttributeValue<boolean> | undefined;
+    selectableAttribute: ListExpressionValue<boolean> | undefined;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
     mxFilter: string;

@@ -1,5 +1,5 @@
 import { SearchableReferenceSelectorMxNinePreviewProps } from "../typings/SearchableReferenceSelectorMxNineProps";
-import { hidePropertiesIn } from "./utils/PageEditorUtils";
+import { hidePropertiesIn, hidePropertyIn } from "./utils/PageEditorUtils";
 
 export type Properties = PropertyGroup[];
 
@@ -117,6 +117,10 @@ export function getProperties(
 
     if (_values.isSearchable === false && _values.selectStyle === "list") {
         hidePropertiesIn(defaultProperties, _values, ["placeholder"]);
+    }
+
+    if(_values.filterType === "manual" && _values.optionTextType === "custom") {
+        hidePropertyIn(defaultProperties, _values, "displayAttribute");
     }
 
     return defaultProperties;

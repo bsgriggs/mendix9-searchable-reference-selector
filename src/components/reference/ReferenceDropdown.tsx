@@ -1,5 +1,5 @@
 import { createElement, useState, useRef, ReactElement, ChangeEvent, Fragment } from "react";
-import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon } from "mendix";
+import { ObjectItem, ListAttributeValue, ListWidgetValue, WebIcon, ListExpressionValue } from "mendix";
 import OptionsMenu from "./OptionsMenu";
 import { OptionsStyleSingleEnum, OptionTextTypeEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import useOnClickOutside from "../../custom hooks/useOnClickOutside";
@@ -20,7 +20,7 @@ interface ReferenceDropdownProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListAttributeValue<boolean> | undefined;
+    selectableAttribute: ListExpressionValue<boolean>| undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;

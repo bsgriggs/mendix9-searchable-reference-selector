@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { ObjectItem, ListAttributeValue } from "mendix";
+import { ObjectItem, ListExpressionValue } from "mendix";
 
 export default function handleSelectAll(
     event: MouseEvent<HTMLSpanElement>,
@@ -7,7 +7,7 @@ export default function handleSelectAll(
     setFocusedObjIndex: (newIndex: number) => void,
     onSelectAssociation: (newObjectList: ObjectItem[]) => void,
     selectableObjects: ObjectItem[],
-    selectableAttribute: ListAttributeValue<boolean> | undefined
+    selectableAttribute: ListExpressionValue<boolean> | undefined
 ): void {
     event.stopPropagation();
     setMxFilter("");
