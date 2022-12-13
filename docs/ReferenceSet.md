@@ -4,7 +4,7 @@ The following documentation is for using Selection Type "Reference Set" with Aut
 -   [Reference Selector](docs/Reference.md)
 -   [Reference Set Selector](docs/ReferenceSet.md)
 
-Check [here](docs/ManualFiltering.md) if you are using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in you microflow data source.
+Check [here](docs/ManualFiltering.md) for more information on using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in you microflow data source.
 
 #### Customization Settings  
 ![customizationSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/customizationSet.png)  
