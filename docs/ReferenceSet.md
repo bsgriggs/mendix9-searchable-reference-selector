@@ -1,4 +1,4 @@
-### Reference Set Selector
+## Reference Set Selector
 The following documentation is for using Selection Type "Reference Set" with Automatic filtering under the Data Source tab. If you need another selection type, see the documentation at these links:
 -   [Enumeration Selector](docs/Enumeration.md)
 -   [Reference Selector](docs/Reference.md)
@@ -6,7 +6,14 @@ The following documentation is for using Selection Type "Reference Set" with Aut
 
 Check [here](docs/ManualFiltering.md) for more information on using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in you microflow data source.
 
-#### Customization Settings  
+### When using reference sets, make sure that the page object is the owner of the association!!!  
+In the example below, imagine your page has a QuestionConfig object and you want to select its OptionConfigs. You must use the QuestionConfig_OptionConfig association. If your page object is OptionConfig and you need to set its QuestionConfigs, use the OptionConfig_QuestionConfig association.  
+
+![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/referenceSetOwner.png)  
+
+*Note: the owner of an association is denoted by which side(s) of the line has the black circle. In the real world, you should only have 1 of these associations. Either decide which object should be the owner or set the association as "refer to each other"*
+
+### Customization Settings  
 ![customizationSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/customizationSet.png)  
 **Searchable?** - Allow the user to filter the results by entering a search string. When disabled, the text box is read only. Disabling searchability can be useful when using Select Style "List on Page" and you have a limited set of results. The user would then see a simple list on the page of available options.  
 **Clearable?** - Allow the user to remove all selections / set the association as empty. You could disable this setting if you want the user to *always* have at least 1 selection.  
@@ -15,7 +22,7 @@ Check [here](docs/ManualFiltering.md) for more information on using manual filte
 **More Results Text** - Text displayed at the end of the results list if there are more results than the Max Items. This text is to inform the user that they need to enter search criteria to view more records. *If Max Items is set to 0, then this setting is not available because all records are always shown.*  
 **No Results Text** - Text displayed if there are not results. (i.e. either the data source returned nothing or the user enters a search text and nothing is found)  
 
-#### Styling Settings  
+### Styling Settings  
 ![styleSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/styleSet.png)  
 **Select Style** - The results are either displayed in a dropdown when the user clicks on the textbox or the results are always displayed on the page in a list.  
 **Option Text Type** - Method of rendering the text. Text shows the value of the attribute selected. HTML will render the value inside a span using **dangerouslySetInnerHTML**. Because of this, you need to make sure the HTML content is sanitized and cannot have any malicious javascript. Custom mode will add a container for you to add any content once you save the widget settings. This is useful for displaying multiple attributes in the same option, but the filtering will only consider the attribute set in the Data Source tab. *If you need to filter on multiple attribute too, see the [Manual Filtering](docs/ManualFiltering.md) documentation.*  
@@ -25,7 +32,7 @@ Check [here](docs/ManualFiltering.md) for more information on using manual filte
 **Max Menu Height** - (Dropdown Only) String expression for the CSS Height for the dropdown menu with a default of 15em.  
 **Icons** - Override the default icons with you own glyphicon / images  
 
-#### Data Source Settings  
+### Data Source Settings  
 ![dataSource](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/datasourceSet.png)  
 **Selection Type** - What are we selecting? Should be Reference Set for this page of documentation.  
 **Selectable Objects** - The source of retrieving the objects displayed in the dropdown.  
@@ -35,16 +42,9 @@ Check [here](docs/ManualFiltering.md) for more information on using manual filte
 **On Change** - Perform an MxAction when the user adds or removes a selection.  
 **On Badge Click** - Perform an MxAction when the user clicks on a badge (not the clear icon). This is useful for opening a details page for a particular badge. Available when Reference Set Style in the Style tab is set to Badges.  
 
-#### Filtering Settings  
+### Filtering Settings  
 ![filteringSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/filertingReference%26Set.png)  
 **Filter Delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Filter Type** - How the filtering is handled. Auto mode uses the Mendix [ListValue API](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/) to optimize memory management. Manual mode will allow you to set the user's search text as an attribute on the page then use that attribute inside the data source microflow. Manual mode changes many settings about the widget with the expectation that you will add them to you microflow. See the documentation [here](docs/ManualFiltering.md) for details.  
 **Filter Function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
 Starts With can help with performance, but it can be bad UX. For example, displaying a list of user full names would not work, because the user may enter the last name instead of the first name.  
-
-#### When using reference sets, make sure that the page object is the owner of the association!!!  
-In the example below, imagine your page has a QuestionConfig object and you want to select its OptionConfigs. You must use the QuestionConfig_OptionConfig association. If your page object is OptionConfig and you need to set its QuestionConfigs, use the OptionConfig_QuestionConfig association.  
-
-![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/referenceSetOwner.png)  
-
-*Note: the owner of an association is denoted by which side(s) of the line has the black circle. In the real world, you should only have 1 of these associations. Either decide which object should be the owner or set the association as "refer to each other"*
