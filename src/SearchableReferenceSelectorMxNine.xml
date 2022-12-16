@@ -31,6 +31,10 @@
                     <caption>Show Select All?</caption>
                     <description>When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
                 </property>
+                <property key="showLoadingAnimation" type="boolean" defaultValue="false">
+                    <caption>Show Loading Animation?</caption>
+                    <description>When true, the users actions will be ignored while the data source or the on-change actions are running</description>
+                </property>
                 <property key="maxItems" type="expression" defaultValue="50">
                     <caption>Max Items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>

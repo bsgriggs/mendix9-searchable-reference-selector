@@ -71,6 +71,7 @@ interface SelectorProps {
         enumAttribute: EditableValue<string>,
         onChange: ActionValue | undefined
     ) => void;
+    isLoading: boolean;
 }
 
 export default function Selector({
@@ -106,7 +107,8 @@ export default function Selector({
     showSelectAll,
     tabIndex,
     onSelectEnum,
-    onSelectReference
+    onSelectReference,
+    isLoading
 }: SelectorProps): ReactElement {
     // Determine which selector to render based on the user's props
     switch (selectionType) {
@@ -138,7 +140,7 @@ export default function Selector({
                             setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
                             moreResultsText={moreResultsText}
                             optionsStyle={optionsStyleSingle}
-                            // isLoading={isLoading}
+                            isLoading={isLoading}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -168,7 +170,7 @@ export default function Selector({
                             moreResultsText={moreResultsText}
                             optionsStyle={optionsStyleSingle}
                             isSearchable={isSearchable}
-                            // isLoading={isLoading}
+                            isLoading={isLoading}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -208,7 +210,7 @@ export default function Selector({
                             showSelectAll={showSelectAll}
                             selectAllIcon={selectAllIcon}
                             onBadgeClick={onBadgeClick}
-                            // isLoading={isLoading}
+                            isLoading={isLoading}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -242,7 +244,7 @@ export default function Selector({
                             selectAllIcon={selectAllIcon}
                             maxReferenceDisplay={maxReferenceDisplay}
                             referenceSetStyle={referenceSetStyle}
-                            // isLoading={isLoading}
+                            isLoading={isLoading}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -273,6 +275,7 @@ export default function Selector({
                             isReadOnly={enumAttribute.readOnly}
                             maxHeight={maxMenuHeight}
                             optionsStyle={optionsStyleSingle}
+                            isLoading={isLoading}
                         />
                         {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
                     </Fragment>
@@ -297,6 +300,7 @@ export default function Selector({
                             clearIcon={clearIcon}
                             isReadOnly={enumAttribute.readOnly}
                             optionsStyle={optionsStyleSingle}
+                            isLoading={isLoading}
                         />
                         {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
                     </Fragment>

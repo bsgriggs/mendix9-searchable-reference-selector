@@ -9,6 +9,7 @@ import handleKeyNavigation from "../../utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import SearchInput from "./SearchInput";
 import MxIcon from "../MxIcon";
+import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceDropdownProps {
     name: string;
@@ -32,11 +33,10 @@ interface ReferenceDropdownProps {
     maxHeight: string;
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSingleEnum;
-    // isLoading: boolean;
+    isLoading: boolean;
 }
 
 const ReferenceDropdown = ({
-    // isLoading,
     isClearable,
     isReadOnly,
     isSearchable,
@@ -57,7 +57,8 @@ const ReferenceDropdown = ({
     optionCustomContent,
     placeholder,
     selectableAttribute,
-    tabIndex
+    tabIndex,
+    isLoading
 }: ReferenceDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
@@ -143,6 +144,7 @@ const ReferenceDropdown = ({
             {!isReadOnly && (
                 <Fragment>
                     <div className="srs-icon-row">
+                        {isLoading && <LoadingIndicator />}
                         {isClearable && (
                             <MxIcon
                                 onClick={event => {

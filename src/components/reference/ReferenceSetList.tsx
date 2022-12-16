@@ -13,6 +13,7 @@ import handleRemoveObj from "src/utils/reference/handleSelectSet";
 import SearchInput from "../reference/SearchInput";
 import CurrentValueSet from "../reference/CurrentValueSet";
 import MxIcon from "../MxIcon";
+import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceSetListProps {
     name: string;
@@ -38,11 +39,11 @@ interface ReferenceSetListProps {
     optionsStyle: OptionsStyleSetEnum;
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
-    // isLoading: boolean;
+    isLoading: boolean;
 }
 
 const ReferenceSetList = ({
-    // isLoading,
+    isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -153,6 +154,8 @@ const ReferenceSetList = ({
 
                     {!isReadOnly && (
                         <div className="srs-icon-row">
+                        {isLoading && <LoadingIndicator />}
+
                             {showSelectAll && (
                                 <MxIcon
                                     onClick={event =>

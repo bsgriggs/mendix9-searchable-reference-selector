@@ -162,3 +162,17 @@ Place your custom CSS here
     margin-right: 0.5em !important;
     flex-shrink: 0 !important;
 }
+
+.srs .srs-loading-indicator{
+    display: flex;
+    gap: 4px;
+    padding: 8px 4px;
+}
+
+.srs .srs-loading-dot{
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color:#6f6f6f;
+}

@@ -16,6 +16,7 @@ import handleRemoveObj from "src/utils/reference/handleSelectSet";
 import SearchInput from "../reference/SearchInput";
 import CurrentValueSet from "../reference/CurrentValueSet";
 import MxIcon from "../MxIcon";
+import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -44,11 +45,11 @@ interface ReferenceSetDropdownProps {
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
     onBadgeClick: ListActionValue | undefined;
-    // isLoading: boolean;
+    isLoading: boolean;
 }
 
 const ReferenceSetDropdown = ({
-    // isLoading,
+    isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -199,6 +200,8 @@ const ReferenceSetDropdown = ({
                     />
 
                     <div className="srs-icon-row">
+                        {isLoading && <LoadingIndicator />}
+
                         {showSelectAll && (
                             <MxIcon
                                 onClick={event =>

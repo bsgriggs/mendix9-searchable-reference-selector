@@ -7,6 +7,7 @@ import handleKeyNavigation from "../../utils/enum/handleKeyNavigation";
 import handleClear from "../../utils/handleClear";
 import MxIcon from "../MxIcon";
 import SearchInput from "../enum/SearchInput";
+import LoadingIndicator from "../LoadingIndicator";
 
 interface EnumListProps {
     name: string;
@@ -23,6 +24,7 @@ interface EnumListProps {
     isSearchable: boolean;
     isReadOnly: boolean;
     optionsStyle: OptionsStyleSingleEnum;
+    isLoading:Boolean;
 }
 
 const EnumList = ({
@@ -39,7 +41,8 @@ const EnumList = ({
     currentValue,
     noResultsText,
     placeholder,
-    tabIndex
+    tabIndex,
+    isLoading
 }: EnumListProps): ReactElement => {
     const [focusedEnumIndex, setFocusedEnumIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
@@ -89,23 +92,26 @@ const EnumList = ({
                         setRef={newRef => setSearchInput(newRef)}
                     />
 
-                    {isClearable && !isReadOnly && (
-                        <MxIcon
-                            onClick={event =>
-                                handleClear(
-                                    event,
-                                    mxFilter,
-                                    setMxFilter,
-                                    setFocusedEnumIndex,
-                                    onSelectHandler,
-                                    searchInput
-                                )
-                            }
-                            title={"Clear"}
-                            mxIconOverride={clearIcon}
-                            defaultClassName="remove"
-                        />
-                    )}
+                    <div className="srs-icon-row">
+                        {isLoading && <LoadingIndicator />}
+                        {isClearable && !isReadOnly && (
+                            <MxIcon
+                                onClick={event =>
+                                    handleClear(
+                                        event,
+                                        mxFilter,
+                                        setMxFilter,
+                                        setFocusedEnumIndex,
+                                        onSelectHandler,
+                                        searchInput
+                                    )
+                                }
+                                title={"Clear"}
+                                mxIconOverride={clearIcon}
+                                defaultClassName="remove"
+                            />
+                        )}
+                    </div>
                 </div>
             )}
             {!isReadOnly && (

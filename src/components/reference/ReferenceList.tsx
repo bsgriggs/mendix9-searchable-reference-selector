@@ -6,6 +6,7 @@ import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import SearchInput from "../reference/SearchInput";
 import MxIcon from "../MxIcon";
+import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceListProps {
     name: string;
@@ -27,11 +28,11 @@ interface ReferenceListProps {
     isReadOnly: boolean;
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSingleEnum;
-    // isLoading: boolean;
+    isLoading: boolean;
 }
 
 const ReferenceList = ({
-    // isLoading,
+    isLoading,
     isClearable,
     isReadOnly,
     isSearchable,
@@ -105,23 +106,26 @@ const ReferenceList = ({
                         setRef={newRef => setSearchInput(newRef)}
                     />
 
-                    {isClearable && !isReadOnly && (
-                        <MxIcon
-                            onClick={event =>
-                                handleClear(
-                                    event,
-                                    mxFilter,
-                                    setMxFilter,
-                                    setFocusedObjIndex,
-                                    onSelectHandler,
-                                    searchInput
-                                )
-                            }
-                            title={"Clear"}
-                            mxIconOverride={clearIcon}
-                            defaultClassName="remove"
-                        />
-                    )}
+                    <div className="srs-icon-row">
+                        {isLoading && <LoadingIndicator />}
+                        {isClearable && !isReadOnly && (
+                            <MxIcon
+                                onClick={event =>
+                                    handleClear(
+                                        event,
+                                        mxFilter,
+                                        setMxFilter,
+                                        setFocusedObjIndex,
+                                        onSelectHandler,
+                                        searchInput
+                                    )
+                                }
+                                title={"Clear"}
+                                mxIconOverride={clearIcon}
+                                defaultClassName="remove"
+                            />
+                        )}
+                    </div>
                 </div>
             )}
             {!isReadOnly && (

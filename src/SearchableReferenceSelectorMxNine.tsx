@@ -22,7 +22,9 @@ const onSelectEnumerationHandler = (
     onChange: ActionValue | undefined
 ): void => {
     if (currentValue !== selectedEnum) {
-        enumAttribute.setValue(selectedEnum);
+        if (onChange === undefined || onChange.isExecuting === false) {
+            enumAttribute.setValue(selectedEnum);
+        }
         callMxAction(onChange);
     }
 };
@@ -51,9 +53,9 @@ const onSelectReferenceHandler = (
     association: ReferenceValue | ReferenceSetValue,
     onChange: ActionValue | undefined
 ): void => {
-    // update Mendix object
-    association.setValue(selectedObj);
-    // run on change
+    if (onChange === undefined || onChange.isExecuting === false) {
+        association.setValue(selectedObj);
+    }
     callMxAction(onChange);
 };
 
@@ -92,17 +94,15 @@ const SearchableReferenceSelector = ({
     filterType,
     searchText,
     refreshAction,
-    hasMoreResultsManual
+    hasMoreResultsManual,
+    showLoadingAnimation
 }: SearchableReferenceSelectorMxNineContainerProps): ReactElement => {
     const [mxFilter, setMxFilter] = useState<string>("");
     const [refOptions, setRefOptions] = useState<ObjectItem[]>();
     const [enumOptions, setEnumOptions] = useState<EnumOption[]>([]);
     const [enumUniverse, setEnumUniverse] = useState<EnumOption[]>([]);
 
-    if (
-        selectionType !== "enumeration" &&
-        Number(maxItems.value) > 1
-    ) {
+    if (selectionType !== "enumeration" && Number(maxItems.value) > 1) {
         selectableObjects.setLimit(Number(maxItems.value));
     }
 
@@ -168,14 +168,13 @@ const SearchableReferenceSelector = ({
                                 // data source does not support xpath filter - filter on client
                                 if (mxFilter.trim().length > 0 && selectableObjects.items) {
                                     setRefOptions(
-
                                         selectableObjects.items.filter(obj => {
                                             const text = displayAttribute.get(obj).displayValue as string;
                                             return filterFunction === "contains"
-                                            ? text !== undefined &&
-                                            text.toLowerCase().includes(mxFilter.trim().toLowerCase())
-                                            : text !== undefined &&
-                                            text.toLowerCase().startsWith(mxFilter.trim().toLowerCase())
+                                                ? text !== undefined &&
+                                                      text.toLowerCase().includes(mxFilter.trim().toLowerCase())
+                                                : text !== undefined &&
+                                                      text.toLowerCase().startsWith(mxFilter.trim().toLowerCase());
                                         })
                                     );
                                 } else {
@@ -194,10 +193,10 @@ const SearchableReferenceSelector = ({
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
             if (searchText.status === ValueStatus.Available && searchText.displayValue !== mxFilter) {
-                setMxFilter(searchText.displayValue)
+                setMxFilter(searchText.displayValue);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [searchText]);        
+        }, [searchText]);
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
@@ -243,7 +242,12 @@ const SearchableReferenceSelector = ({
                 optionCustomContent={optionCustomContent}
                 mxFilter={mxFilter}
                 setMxFilter={setMxFilter}
-                moreResultsText={selectionType !== "enumeration" && ((hasMoreResultsManual && hasMoreResultsManual.value) || selectableObjects.hasMoreItems)? moreResultsText.value : undefined}
+                moreResultsText={
+                    selectionType !== "enumeration" &&
+                    ((hasMoreResultsManual && hasMoreResultsManual.value) || selectableObjects.hasMoreItems)
+                        ? moreResultsText.value
+                        : undefined
+                }
                 optionsStyleSingle={optionsStyleSingle}
                 optionsStyleSet={optionsStyleSet}
                 referenceSetStyle={referenceSetStyle}
@@ -251,6 +255,12 @@ const SearchableReferenceSelector = ({
                 showSelectAll={showSelectAll}
                 onSelectReference={onSelectReferenceHandler}
                 onSelectEnum={onSelectEnumerationHandler}
+                isLoading={
+                    showLoadingAnimation &&
+                    ((onChange && onChange.isExecuting) ||
+                        (selectableObjects && selectableObjects.status === ValueStatus.Loading) ||
+                        (enumAttribute && enumAttribute.status === ValueStatus.Loading))
+                }
             />
         </div>
     );

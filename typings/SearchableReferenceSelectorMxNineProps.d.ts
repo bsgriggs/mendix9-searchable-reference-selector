@@ -1,7 +1,7 @@
 /**
  * This file was generated from SearchableReferenceSelectorMxNine.xml
  * WARNING: All changes made to this file will be overwritten
- * @author Mendix UI Content Team
+ * @author Mendix Widgets Framework Team
  */
 import { ComponentType } from "react";
 import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
@@ -31,6 +31,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
+    showLoadingAnimation: boolean;
     maxItems: DynamicValue<Big>;
     moreResultsText: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
@@ -67,6 +68,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
+    showLoadingAnimation: boolean;
     maxItems: string;
     moreResultsText: string;
     noResultsText: string;
