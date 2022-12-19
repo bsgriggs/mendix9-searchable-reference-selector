@@ -1,6 +1,7 @@
 import { createElement, useState, useEffect, ReactElement } from "react";
 import {
     FilterFunctionEnum,
+    FilterTypeEnum,
     SearchableReferenceSelectorMxNineContainerProps
 } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus, ActionValue, EditableValue, ReferenceValue, ReferenceSetValue } from "mendix";
@@ -9,8 +10,8 @@ import "./ui/SearchableReferenceSelectorMxNine.css";
 import { EnumOption } from "typings/general";
 import Selector from "./components/Selector";
 
-const callMxAction = (action?: ActionValue): void => {
-    if (action !== undefined && action.canExecute && action.isExecuting === false) {
+const callMxAction = (action: ActionValue | undefined, preventConcurrent: boolean): void => {
+    if (action !== undefined && action.canExecute && (!preventConcurrent || !action.isExecuting)) {
         action.execute();
     }
 };
@@ -22,10 +23,8 @@ const onSelectEnumerationHandler = (
     onChange: ActionValue | undefined
 ): void => {
     if (currentValue !== selectedEnum) {
-        if (onChange === undefined || onChange.isExecuting === false) {
-            enumAttribute.setValue(selectedEnum);
-        }
-        callMxAction(onChange);
+        enumAttribute.setValue(selectedEnum);
+        callMxAction(onChange, false);
     }
 };
 
@@ -53,10 +52,21 @@ const onSelectReferenceHandler = (
     association: ReferenceValue | ReferenceSetValue,
     onChange: ActionValue | undefined
 ): void => {
-    if (onChange === undefined || onChange.isExecuting === false) {
-        association.setValue(selectedObj);
+    association.setValue(selectedObj);
+    callMxAction(onChange, false);
+};
+
+const onShowMore = (
+    filterType: FilterTypeEnum,
+    newLimit: number | undefined,
+    setItemsLimit: (newLimit: number) => void,
+    onClickMoreResultsText: ActionValue | undefined
+): void => {
+    if (filterType === "auto" && newLimit) {
+        setItemsLimit(newLimit);
+    } else if (onClickMoreResultsText) {
+        callMxAction(onClickMoreResultsText, true);
     }
-    callMxAction(onChange);
 };
 
 const SearchableReferenceSelector = ({
@@ -87,7 +97,7 @@ const SearchableReferenceSelector = ({
     onChange,
     optionCustomContent,
     selectAllIcon,
-    selectableAttribute,
+    selectableCondition,
     tabIndex,
     selectableObjects,
     filterFunction,
@@ -95,15 +105,17 @@ const SearchableReferenceSelector = ({
     searchText,
     refreshAction,
     hasMoreResultsManual,
-    showLoadingAnimation
+    onClickMoreResultsText
 }: SearchableReferenceSelectorMxNineContainerProps): ReactElement => {
+    const defaultPageSize = selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined;
     const [mxFilter, setMxFilter] = useState<string>("");
     const [refOptions, setRefOptions] = useState<ObjectItem[]>();
     const [enumOptions, setEnumOptions] = useState<EnumOption[]>([]);
     const [enumUniverse, setEnumUniverse] = useState<EnumOption[]>([]);
+    const [itemsLimit, setItemsLimit] = useState<number | undefined>(defaultPageSize);
 
-    if (selectionType !== "enumeration" && Number(maxItems.value) > 1) {
-        selectableObjects.setLimit(Number(maxItems.value));
+    if (selectionType !== "enumeration" && filterType === "auto" && Number(maxItems.value) > 1) {
+        selectableObjects.setLimit(itemsLimit);
     }
 
     // load Options
@@ -128,6 +140,7 @@ const SearchableReferenceSelector = ({
             if (selectableObjects.status === ValueStatus.Available) {
                 setRefOptions(selectableObjects.items || []);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selectableObjects.items]);
     }
 
@@ -181,6 +194,7 @@ const SearchableReferenceSelector = ({
                                     setRefOptions(selectableObjects.items || []);
                                 }
                             }
+                            setItemsLimit(defaultPageSize);
                         }
                     }, filterDelay);
 
@@ -204,7 +218,7 @@ const SearchableReferenceSelector = ({
                 const delayDebounceFn = setTimeout(() => {
                     if (isSearchable) {
                         searchText.setValue(mxFilter);
-                        callMxAction(refreshAction);
+                        callMxAction(refreshAction, true);
                     }
                 }, filterDelay);
 
@@ -237,7 +251,7 @@ const SearchableReferenceSelector = ({
                 isSearchable={isSearchable}
                 maxMenuHeight={maxMenuHeight.value || "15em"}
                 noResultsText={noResultsText.value as string}
-                selectableAttribute={selectableAttribute}
+                selectableCondition={selectableCondition}
                 optionTextType={optionTextType}
                 optionCustomContent={optionCustomContent}
                 mxFilter={mxFilter}
@@ -255,11 +269,16 @@ const SearchableReferenceSelector = ({
                 showSelectAll={showSelectAll}
                 onSelectReference={onSelectReferenceHandler}
                 onSelectEnum={onSelectEnumerationHandler}
-                isLoading={
-                    showLoadingAnimation &&
-                    ((onChange && onChange.isExecuting) ||
-                        (selectableObjects && selectableObjects.status === ValueStatus.Loading) ||
-                        (enumAttribute && enumAttribute.status === ValueStatus.Loading))
+                // isLoading={
+                //     showLoadingAnimation &&
+                //     ((onChange && onChange.isExecuting) ||
+                //         (selectableObjects && selectableObjects.status === ValueStatus.Loading) ||
+                //         (enumAttribute && enumAttribute.status === ValueStatus.Loading))
+                // }
+                onSelectMoreOptions={
+                    itemsLimit && defaultPageSize && (selectableObjects.hasMoreItems || hasMoreResultsManual)
+                        ? () => onShowMore(filterType, itemsLimit + defaultPageSize, setItemsLimit, onClickMoreResultsText)
+                        : undefined
                 }
             />
         </div>

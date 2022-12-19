@@ -16,7 +16,7 @@ import handleRemoveObj from "src/utils/reference/handleSelectSet";
 import SearchInput from "../reference/SearchInput";
 import CurrentValueSet from "../reference/CurrentValueSet";
 import MxIcon from "../MxIcon";
-import LoadingIndicator from "../LoadingIndicator";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceSetDropdownProps {
     name: string;
@@ -28,8 +28,9 @@ interface ReferenceSetDropdownProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListExpressionValue<boolean> | undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem[] | undefined) => void;
+    onSelectMoreOptions: (() => void) | undefined;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
@@ -45,11 +46,11 @@ interface ReferenceSetDropdownProps {
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
     onBadgeClick: ListActionValue | undefined;
-    isLoading: boolean;
+    // isLoading: boolean;
 }
 
 const ReferenceSetDropdown = ({
-    isLoading,
+    // isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -74,8 +75,9 @@ const ReferenceSetDropdown = ({
     optionCustomContent,
     placeholder,
     selectAllIcon,
-    selectableAttribute,
-    tabIndex
+    selectableCondition,
+    tabIndex,
+    onSelectMoreOptions
 }: ReferenceSetDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
@@ -146,7 +148,7 @@ const ReferenceSetDropdown = ({
                     setFocusedObjIndex,
                     selectableObjects || [],
                     onSelectHandler,
-                    selectableAttribute,
+                    selectableCondition,
                     false,
                     isReadOnly,
                     () => setPosition(mapPosition(srsRef.current)),
@@ -200,7 +202,7 @@ const ReferenceSetDropdown = ({
                     />
 
                     <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                        {/* {isLoading && <LoadingIndicator />} */}
 
                         {showSelectAll && (
                             <MxIcon
@@ -211,7 +213,7 @@ const ReferenceSetDropdown = ({
                                         setFocusedObjIndex,
                                         onSelectAssociation,
                                         selectableObjects || [],
-                                        selectableAttribute
+                                        selectableCondition
                                     )
                                 }
                                 title={"Select All"}
@@ -252,7 +254,7 @@ const ReferenceSetDropdown = ({
                                 selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined
                             }
                             maxHeight={maxHeight}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             noResultsText={noResultsText}
                             optionTextType={optionTextType}
                             optionCustomContent={optionCustomContent}
@@ -261,7 +263,12 @@ const ReferenceSetDropdown = ({
                             selectStyle={"dropdown"}
                             position={position}
                             isReadyOnly={isReadOnly}
-                            // isLoading={isLoading}
+                            onSelectMoreOptions={()=>{
+                                if (onSelectMoreOptions){
+                                    onSelectMoreOptions();
+                                    focusSearchInput(searchInput, 300);
+                                }
+                            }}
                         />
                     )}
                 </Fragment>

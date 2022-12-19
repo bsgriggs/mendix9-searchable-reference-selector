@@ -7,7 +7,7 @@ import handleKeyNavigation from "../../utils/enum/handleKeyNavigation";
 import handleClear from "../../utils/handleClear";
 import MxIcon from "../MxIcon";
 import SearchInput from "../enum/SearchInput";
-import LoadingIndicator from "../LoadingIndicator";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface EnumListProps {
     name: string;
@@ -24,7 +24,7 @@ interface EnumListProps {
     isSearchable: boolean;
     isReadOnly: boolean;
     optionsStyle: OptionsStyleSingleEnum;
-    isLoading:Boolean;
+    // isLoading:Boolean;
 }
 
 const EnumList = ({
@@ -41,9 +41,9 @@ const EnumList = ({
     currentValue,
     noResultsText,
     placeholder,
-    tabIndex,
-    isLoading
-}: EnumListProps): ReactElement => {
+    tabIndex
+}: // isLoading
+EnumListProps): ReactElement => {
     const [focusedEnumIndex, setFocusedEnumIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const sesRef = useRef(null);
@@ -93,7 +93,7 @@ const EnumList = ({
                     />
 
                     <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                        {/* {isLoading && <LoadingIndicator />} */}
                         {isClearable && !isReadOnly && (
                             <MxIcon
                                 onClick={event =>

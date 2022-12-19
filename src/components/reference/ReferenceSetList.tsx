@@ -13,7 +13,8 @@ import handleRemoveObj from "src/utils/reference/handleSelectSet";
 import SearchInput from "../reference/SearchInput";
 import CurrentValueSet from "../reference/CurrentValueSet";
 import MxIcon from "../MxIcon";
-import LoadingIndicator from "../LoadingIndicator";
+import focusSearchInput from "src/utils/focusSearchInput";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceSetListProps {
     name: string;
@@ -25,8 +26,9 @@ interface ReferenceSetListProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListExpressionValue<boolean> | undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem[] | undefined) => void;
+    onSelectMoreOptions: (() => void) | undefined;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
@@ -39,11 +41,11 @@ interface ReferenceSetListProps {
     optionsStyle: OptionsStyleSetEnum;
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number;
-    isLoading: boolean;
+    // isLoading: boolean;
 }
 
 const ReferenceSetList = ({
-    isLoading,
+    // isLoading,
     currentValues,
     isClearable,
     isReadOnly,
@@ -63,10 +65,11 @@ const ReferenceSetList = ({
     optionCustomContent,
     placeholder,
     selectAllIcon,
-    selectableAttribute,
+    selectableCondition,
     tabIndex,
     maxReferenceDisplay,
-    referenceSetStyle
+    referenceSetStyle,
+    onSelectMoreOptions
 }: ReferenceSetListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
@@ -114,7 +117,7 @@ const ReferenceSetList = ({
                             setFocusedObjIndex,
                             selectableObjects || [],
                             onSelectHandler,
-                            selectableAttribute,
+                            selectableCondition,
                             false,
                             isReadOnly
                         )
@@ -154,7 +157,7 @@ const ReferenceSetList = ({
 
                     {!isReadOnly && (
                         <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                            {/* {isLoading && <LoadingIndicator />} */}
 
                             {showSelectAll && (
                                 <MxIcon
@@ -165,7 +168,7 @@ const ReferenceSetList = ({
                                             setFocusedObjIndex,
                                             onSelectAssociation,
                                             selectableObjects || [],
-                                            selectableAttribute
+                                            selectableCondition
                                         )
                                     }
                                     title={"Select All"}
@@ -202,7 +205,7 @@ const ReferenceSetList = ({
                         onSelectOption={(newObject: ObjectItem | undefined) => onSelectHandler(newObject)}
                         currentValue={currentValues}
                         currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                        selectableAttribute={selectableAttribute}
+                        selectableCondition={selectableCondition}
                         noResultsText={noResultsText}
                         optionTextType={optionTextType}
                         optionCustomContent={optionCustomContent}
@@ -210,7 +213,12 @@ const ReferenceSetList = ({
                         optionsStyle={optionsStyle}
                         selectStyle={"list"}
                         isReadyOnly={isReadOnly}
-                        // isLoading={isLoading}
+                        onSelectMoreOptions={()=>{
+                            if (onSelectMoreOptions){
+                                onSelectMoreOptions();
+                                focusSearchInput(searchInput, 300);
+                            }
+                        }}
                     />
                     <div className="srs-icon-row">
                         {isSearchable === false && showSelectAll && (
@@ -222,7 +230,7 @@ const ReferenceSetList = ({
                                         setFocusedObjIndex,
                                         onSelectAssociation,
                                         selectableObjects || [],
-                                        selectableAttribute
+                                        selectableCondition
                                     )
                                 }
                                 title={"Select All"}

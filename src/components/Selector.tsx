@@ -46,7 +46,7 @@ interface SelectorProps {
     maxMenuHeight: string;
     noResultsText: string;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListExpressionValue<boolean> | undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
     mxFilter: string;
@@ -71,7 +71,8 @@ interface SelectorProps {
         enumAttribute: EditableValue<string>,
         onChange: ActionValue | undefined
     ) => void;
-    isLoading: boolean;
+    onSelectMoreOptions: (() => void) | undefined;
+    // isLoading: boolean;
 }
 
 export default function Selector({
@@ -101,14 +102,15 @@ export default function Selector({
     referenceSetStyle,
     selectAllIcon,
     selectStyle,
-    selectableAttribute,
+    selectableCondition,
     selectionType,
     setMxFilter,
     showSelectAll,
     tabIndex,
     onSelectEnum,
     onSelectReference,
-    isLoading
+    // isLoading,
+    onSelectMoreOptions
 }: SelectorProps): ReactElement {
     // Determine which selector to render based on the user's props
     switch (selectionType) {
@@ -134,13 +136,14 @@ export default function Selector({
                             noResultsText={noResultsText}
                             displayAttribute={displayAttribute}
                             optionTextType={optionTextType}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             optionCustomContent={optionCustomContent}
                             mxFilter={mxFilter}
                             setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
                             moreResultsText={moreResultsText}
                             optionsStyle={optionsStyleSingle}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
+                            onSelectMoreOptions={onSelectMoreOptions}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -163,14 +166,15 @@ export default function Selector({
                             noResultsText={noResultsText}
                             displayAttribute={displayAttribute}
                             optionTextType={optionTextType}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             optionCustomContent={optionCustomContent}
                             mxFilter={mxFilter}
                             setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
                             moreResultsText={moreResultsText}
                             optionsStyle={optionsStyleSingle}
                             isSearchable={isSearchable}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
+                            onSelectMoreOptions={onSelectMoreOptions}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -199,7 +203,7 @@ export default function Selector({
                             noResultsText={noResultsText}
                             displayAttribute={displayAttribute}
                             optionTextType={optionTextType}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             optionCustomContent={optionCustomContent}
                             mxFilter={mxFilter}
                             setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
@@ -210,7 +214,8 @@ export default function Selector({
                             showSelectAll={showSelectAll}
                             selectAllIcon={selectAllIcon}
                             onBadgeClick={onBadgeClick}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
+                            onSelectMoreOptions={onSelectMoreOptions}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -233,7 +238,7 @@ export default function Selector({
                             noResultsText={noResultsText}
                             displayAttribute={displayAttribute}
                             optionTextType={optionTextType}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             optionCustomContent={optionCustomContent}
                             mxFilter={mxFilter}
                             setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
@@ -244,7 +249,8 @@ export default function Selector({
                             selectAllIcon={selectAllIcon}
                             maxReferenceDisplay={maxReferenceDisplay}
                             referenceSetStyle={referenceSetStyle}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
+                            onSelectMoreOptions={onSelectMoreOptions}
                         />
                         {association.validation && <Alert>{association.validation}</Alert>}
                     </Fragment>
@@ -275,7 +281,7 @@ export default function Selector({
                             isReadOnly={enumAttribute.readOnly}
                             maxHeight={maxMenuHeight}
                             optionsStyle={optionsStyleSingle}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
                         />
                         {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
                     </Fragment>
@@ -300,7 +306,7 @@ export default function Selector({
                             clearIcon={clearIcon}
                             isReadOnly={enumAttribute.readOnly}
                             optionsStyle={optionsStyleSingle}
-                            isLoading={isLoading}
+                            // isLoading={isLoading}
                         />
                         {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
                     </Fragment>

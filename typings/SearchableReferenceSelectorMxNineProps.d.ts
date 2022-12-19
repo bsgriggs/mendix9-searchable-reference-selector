@@ -31,7 +31,6 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
-    showLoadingAnimation: boolean;
     maxItems: DynamicValue<Big>;
     moreResultsText: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
@@ -50,7 +49,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     selectableObjects: ListValue;
     association: ReferenceValue | ReferenceSetValue;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListExpressionValue<boolean>;
+    selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
     onChange?: ActionValue;
     onBadgeClick?: ListActionValue;
@@ -59,6 +58,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     filterFunction: FilterFunctionEnum;
     searchText: EditableValue<string>;
     hasMoreResultsManual: DynamicValue<boolean>;
+    onClickMoreResultsText?: ActionValue;
     refreshAction?: ActionValue;
 }
 
@@ -68,7 +68,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
-    showLoadingAnimation: boolean;
     maxItems: string;
     moreResultsText: string;
     noResultsText: string;
@@ -87,7 +86,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     selectableObjects: {} | { type: string } | null;
     association: string;
     displayAttribute: string;
-    selectableAttribute: string;
+    selectableCondition: string;
     enumAttribute: string;
     onChange: {} | null;
     onBadgeClick: {} | null;
@@ -96,5 +95,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     filterFunction: FilterFunctionEnum;
     searchText: string;
     hasMoreResultsManual: string;
+    onClickMoreResultsText: {} | null;
     refreshAction: {} | null;
 }

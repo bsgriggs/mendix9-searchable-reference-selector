@@ -31,10 +31,10 @@
                     <caption>Show Select All?</caption>
                     <description>When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
                 </property>
-                <property key="showLoadingAnimation" type="boolean" defaultValue="false">
+                <!-- <property key="showLoadingAnimation" type="boolean" defaultValue="false">
                     <caption>Show Loading Animation?</caption>
                     <description>When true, the users actions will be ignored while the data source or the on-change actions are running</description>
-                </property>
+                </property> -->
                 <property key="maxItems" type="expression" defaultValue="50">
                     <caption>Max Items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>
@@ -42,9 +42,9 @@
                 </property>
                 <property key="moreResultsText" type="textTemplate">
                     <caption>More Results Text</caption>
-                    <description>Text shown if the there are more items than the max items being displayed.</description>
+                    <description>Text shown if the there are more items than the max items being displayed. Clicking on the text will extend the result size.</description>
                     <translations>
-                        <translation lang="en_US">Search for more results</translation>
+                        <translation lang="en_US">Show more results</translation>
                     </translations>
                 </property>
                 <property key="noResultsText" type="textTemplate">
@@ -155,9 +155,9 @@
                         <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
-                <property key="selectableAttribute" type="expression" dataSource="selectableObjects" defaultValue="true">
-                    <caption>Selectable Attribute</caption>
-                    <description>The attribute on the datasource that determines if that object can be selected</description>
+                <property key="selectableCondition" type="expression" dataSource="selectableObjects" defaultValue="true">
+                    <caption>Selectable Condition</caption>
+                    <description>Boolean expression that determines if that object can be selected</description>
                     <returnType type="Boolean" />
                 </property>
                 <!-- <property key="selectableAttribute" type="attribute" required="false" dataSource="selectableObjects">
@@ -218,6 +218,10 @@
                 <caption>Has More Results</caption>
                 <description>Expression to determine when to show the More Results Text (Easiest to include a boolean on your Search Text's object)</description>
                 <returnType type="Boolean" />
+            </property>
+            <property key="onClickMoreResultsText" type="action" required="false">
+                <caption>on Click More Results Text</caption>
+                <description>Mx Action that can be used to increase the page size on your data source when there are more results</description>
             </property>
             <property key="refreshAction" type="action" required="true">
                 <caption>Refresh Action</caption>

@@ -1,4 +1,4 @@
-import { createElement, CSSProperties, Fragment, ReactElement, useEffect, useRef, useState } from "react";
+import { createElement, CSSProperties, Fragment, ReactElement, useEffect, useRef, useState, MouseEvent } from "react";
 import { ObjectItem, ListAttributeValue, ListWidgetValue, ListExpressionValue } from "mendix";
 import Option from "./Option";
 import { focusModeEnum } from "typings/general";
@@ -10,15 +10,15 @@ import {
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import displayContent from "src/utils/reference/displayContent";
 import { Position } from "../../custom hooks/usePositionUpdate";
-// import Spinner from "./Spinner";
 
 interface OptionsMenuProps {
     selectableObjects: ObjectItem[] | undefined;
     currentValue: ObjectItem | ObjectItem[] | undefined;
     currentFocus: ObjectItem | undefined;
     displayAttribute: ListAttributeValue<string>;
-    selectableAttribute: ListExpressionValue<boolean> | undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     onSelectOption: (newObject: ObjectItem) => void;
+    onSelectMoreOptions: (() => void) | undefined;
     noResultsText: string;
     maxHeight?: string;
     optionTextType: OptionTextTypeEnum;
@@ -28,7 +28,6 @@ interface OptionsMenuProps {
     selectStyle: SelectStyleEnum;
     position?: Position;
     isReadyOnly: boolean;
-    // isLoading: boolean;
 }
 
 const OptionsMenuStyle = (
@@ -66,7 +65,8 @@ const OptionsMenu = ({
     noResultsText,
     optionCustomContent,
     position,
-    selectableAttribute
+    selectableCondition,
+    onSelectMoreOptions
 }: OptionsMenuProps): ReactElement => {
     const selectedObjRef = useRef<HTMLDivElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
@@ -105,8 +105,8 @@ const OptionsMenu = ({
                                     isSelectable={
                                         isReadyOnly
                                             ? false
-                                            : selectableAttribute
-                                            ? selectableAttribute.get(obj).value === true
+                                            : selectableCondition
+                                            ? selectableCondition.get(obj).value === true
                                             : true
                                     }
                                     onSelect={() => onSelectOption(obj)}
@@ -119,7 +119,20 @@ const OptionsMenu = ({
                         );
                     })}
                     {moreResultsText && (
-                        <div className="mx-text srs-infooption" role="option">
+                        <div
+                            className={
+                                onSelectMoreOptions !== undefined
+                                    ? "mx-text srs-infooption"
+                                    : "mx-text srs-infooption disabled"
+                            }
+                            role="option"
+                            onClick={(event: MouseEvent<HTMLDivElement>) => {
+                                if (onSelectMoreOptions !== undefined){
+                                    event.stopPropagation();
+                                    onSelectMoreOptions();
+                                }
+                            }}
+                        >
                             {moreResultsText}
                         </div>
                     )}
@@ -127,13 +140,10 @@ const OptionsMenu = ({
             )}
             {selectableObjects === undefined ||
                 (selectableObjects !== undefined && selectableObjects.length === 0 && (
-                    <div className="mx-text srs-infooption" role="option">
+                    <div className="mx-text srs-infooption disabled" role="option">
                         {noResultsText ? noResultsText : "No results found"}
                     </div>
                 ))}
-            {/* {isLoading && (
-                    <Spinner size="2em" color="#264ae5"/>
-                )} */}
         </div>
     );
 };

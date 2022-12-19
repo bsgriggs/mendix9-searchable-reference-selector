@@ -6,7 +6,8 @@ import handleKeyNavigation from "src/utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import SearchInput from "../reference/SearchInput";
 import MxIcon from "../MxIcon";
-import LoadingIndicator from "../LoadingIndicator";
+import focusSearchInput from "src/utils/focusSearchInput";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceListProps {
     name: string;
@@ -18,8 +19,9 @@ interface ReferenceListProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListExpressionValue<boolean> | undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
+    onSelectMoreOptions: (() => void) | undefined;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
@@ -28,11 +30,11 @@ interface ReferenceListProps {
     isReadOnly: boolean;
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSingleEnum;
-    isLoading: boolean;
+    // isLoading: boolean;
 }
 
 const ReferenceList = ({
-    isLoading,
+    // isLoading,
     isClearable,
     isReadOnly,
     isSearchable,
@@ -50,8 +52,9 @@ const ReferenceList = ({
     noResultsText,
     optionCustomContent,
     placeholder,
-    selectableAttribute,
-    tabIndex
+    selectableCondition,
+    tabIndex,
+    onSelectMoreOptions
 }: ReferenceListProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
@@ -85,7 +88,7 @@ const ReferenceList = ({
                             setFocusedObjIndex,
                             selectableObjects || [],
                             onSelectHandler,
-                            selectableAttribute,
+                            selectableCondition,
                             isReadOnly,
                             false
                         )
@@ -107,7 +110,7 @@ const ReferenceList = ({
                     />
 
                     <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                        {/* {isLoading && <LoadingIndicator />} */}
                         {isClearable && !isReadOnly && (
                             <MxIcon
                                 onClick={event =>
@@ -135,8 +138,8 @@ const ReferenceList = ({
                         displayAttribute={displayAttribute}
                         onSelectOption={(newObject: ObjectItem | undefined) => {
                             const newObjSelectable =
-                                newObject !== undefined && selectableAttribute !== undefined
-                                    ? selectableAttribute.get(newObject).value === true
+                                newObject !== undefined && selectableCondition !== undefined
+                                    ? selectableCondition.get(newObject).value === true
                                     : true;
                             if (newObjSelectable) {
                                 onSelectHandler(newObject);
@@ -144,14 +147,20 @@ const ReferenceList = ({
                         }}
                         currentValue={currentValue}
                         currentFocus={selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined}
-                        selectableAttribute={selectableAttribute}
+                        selectableCondition={selectableCondition}
                         noResultsText={noResultsText}
                         optionTextType={optionTextType}
                         optionCustomContent={optionCustomContent}
                         moreResultsText={moreResultsText}
                         optionsStyle={optionsStyle}
                         selectStyle={"list"}
-                        isReadyOnly={isReadOnly} // isLoading={isLoading}
+                        isReadyOnly={isReadOnly}
+                        onSelectMoreOptions={()=>{
+                            if (onSelectMoreOptions){
+                                onSelectMoreOptions();
+                                focusSearchInput(searchInput, 300);
+                            }
+                        }}
                     />
                     {isSearchable === false && isClearable && (
                         <MxIcon

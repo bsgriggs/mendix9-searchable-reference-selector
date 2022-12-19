@@ -41,7 +41,7 @@ export function getProperties(
             hidePropertiesIn(defaultProperties, _values, [
                 "association",
                 "displayAttribute",
-                "selectableAttribute",
+                "selectableCondition",
                 "selectableObjects",
                 "showSelectAll",
                 "referenceSetStyle",
@@ -71,13 +71,13 @@ export function getProperties(
             break;
     }
 
-    switch(_values.filterType){
+    switch (_values.filterType) {
         case "auto":
-            hidePropertiesIn(defaultProperties, _values, ["searchText", "refreshAction", "hasMoreResultsManual"]);
-        break;
+            hidePropertiesIn(defaultProperties, _values, ["searchText", "refreshAction", "hasMoreResultsManual", "onClickMoreResultsText"]);
+            break;
         case "manual":
             hidePropertiesIn(defaultProperties, _values, ["filterFunction", "maxItems"]);
-        break;
+            break;
     }
 
     if (_values.optionTextType !== "custom") {
@@ -112,14 +112,24 @@ export function getProperties(
     }
 
     if (_values.isSearchable === false) {
-        hidePropertiesIn(defaultProperties, _values, ["maxItems", "filterDelay", "moreResultsText","filterDelay", "filterType", "filterFunction", "refreshAction", "searchText", "hasMoreResultsManual"]);
+        hidePropertiesIn(defaultProperties, _values, [
+            "maxItems",
+            "filterDelay",
+            "moreResultsText",
+            "filterDelay",
+            "filterType",
+            "filterFunction",
+            "refreshAction",
+            "searchText",
+            "hasMoreResultsManual"
+        ]);
     }
 
     if (_values.isSearchable === false && _values.selectStyle === "list") {
         hidePropertiesIn(defaultProperties, _values, ["placeholder"]);
     }
 
-    if(_values.filterType === "manual" && _values.optionTextType === "custom") {
+    if (_values.filterType === "manual" && _values.optionTextType === "custom") {
         hidePropertyIn(defaultProperties, _values, "displayAttribute");
     }
 

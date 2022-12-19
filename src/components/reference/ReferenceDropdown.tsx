@@ -9,7 +9,7 @@ import handleKeyNavigation from "../../utils/reference/handleKeyNavigation";
 import handleClear from "src/utils/handleClear";
 import SearchInput from "./SearchInput";
 import MxIcon from "../MxIcon";
-import LoadingIndicator from "../LoadingIndicator";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceDropdownProps {
     name: string;
@@ -21,8 +21,9 @@ interface ReferenceDropdownProps {
     displayAttribute: ListAttributeValue<string>;
     optionTextType: OptionTextTypeEnum;
     optionCustomContent: ListWidgetValue | undefined;
-    selectableAttribute: ListExpressionValue<boolean>| undefined;
+    selectableCondition: ListExpressionValue<boolean> | undefined;
     onSelectAssociation: (newObject: ObjectItem | undefined) => void;
+    onSelectMoreOptions: (() => void) | undefined;
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
@@ -33,7 +34,7 @@ interface ReferenceDropdownProps {
     maxHeight: string;
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSingleEnum;
-    isLoading: boolean;
+    // isLoading: boolean;
 }
 
 const ReferenceDropdown = ({
@@ -56,9 +57,10 @@ const ReferenceDropdown = ({
     noResultsText,
     optionCustomContent,
     placeholder,
-    selectableAttribute,
+    selectableCondition,
     tabIndex,
-    isLoading
+    // isLoading,
+    onSelectMoreOptions
 }: ReferenceDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
@@ -118,7 +120,7 @@ const ReferenceDropdown = ({
                     setFocusedObjIndex,
                     selectableObjects || [],
                     onSelectHandler,
-                    selectableAttribute,
+                    selectableCondition,
                     true,
                     isReadOnly,
                     () => setPosition(mapPosition(srsRef.current)),
@@ -144,7 +146,7 @@ const ReferenceDropdown = ({
             {!isReadOnly && (
                 <Fragment>
                     <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                        {/* {isLoading && <LoadingIndicator />} */}
                         {isClearable && (
                             <MxIcon
                                 onClick={event => {
@@ -173,8 +175,8 @@ const ReferenceDropdown = ({
                             displayAttribute={displayAttribute}
                             onSelectOption={(newObject: ObjectItem | undefined) => {
                                 const newObjSelectable =
-                                    newObject !== undefined && selectableAttribute !== undefined
-                                        ? selectableAttribute.get(newObject).value === true
+                                    newObject !== undefined && selectableCondition !== undefined
+                                        ? selectableCondition.get(newObject).value === true
                                         : true;
                                 onSelectHandler(newObject, newObjSelectable);
                             }}
@@ -183,7 +185,7 @@ const ReferenceDropdown = ({
                                 selectableObjects !== undefined ? selectableObjects[focusedObjIndex] : undefined
                             }
                             maxHeight={maxHeight}
-                            selectableAttribute={selectableAttribute}
+                            selectableCondition={selectableCondition}
                             noResultsText={noResultsText}
                             optionTextType={optionTextType}
                             optionCustomContent={optionCustomContent}
@@ -192,7 +194,12 @@ const ReferenceDropdown = ({
                             selectStyle={"dropdown"}
                             position={position}
                             isReadyOnly={isReadOnly}
-                            // isLoading={isLoading}
+                            onSelectMoreOptions={()=>{
+                                if (onSelectMoreOptions){
+                                    onSelectMoreOptions();
+                                    focusSearchInput(searchInput, 300);
+                                }
+                            }}
                         />
                     )}{" "}
                 </Fragment>

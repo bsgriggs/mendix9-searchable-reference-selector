@@ -10,7 +10,7 @@ import handleKeyNavigation from "../../utils/enum/handleKeyNavigation";
 import handleClear from "../../utils/handleClear";
 import MxIcon from "../MxIcon";
 import SearchInput from "./SearchInput";
-import LoadingIndicator from "../LoadingIndicator";
+// import LoadingIndicator from "../LoadingIndicator";
 
 interface EnumDropdownProps {
     name: string;
@@ -29,7 +29,7 @@ interface EnumDropdownProps {
     isReadOnly: boolean;
     maxHeight: string;
     optionsStyle: OptionsStyleSingleEnum;
-    isLoading:Boolean;
+    // isLoading:Boolean;
 }
 
 const EnumDropdown = ({
@@ -48,9 +48,9 @@ const EnumDropdown = ({
     maxHeight,
     noResultsText,
     placeholder,
-    tabIndex,
-    isLoading
-}: EnumDropdownProps): ReactElement => {
+    tabIndex
+}: // isLoading
+EnumDropdownProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedEnumIndex, setFocusedEnumIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
@@ -129,7 +129,7 @@ const EnumDropdown = ({
             {!isReadOnly && (
                 <Fragment>
                     <div className="srs-icon-row">
-                        {isLoading && <LoadingIndicator />}
+                        {/* {isLoading && <LoadingIndicator />} */}
                         {isClearable && (
                             <MxIcon
                                 onClick={event =>
