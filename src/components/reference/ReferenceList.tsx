@@ -7,6 +7,7 @@ import handleClear from "src/utils/handleClear";
 import SearchInput from "../reference/SearchInput";
 import MxIcon from "../MxIcon";
 import focusSearchInput from "src/utils/focusSearchInput";
+import useOnClickOutside from "src/custom hooks/useOnClickOutside";
 // import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceListProps {
@@ -59,6 +60,12 @@ const ReferenceList = ({
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef(null);
+
+    useOnClickOutside(srsRef, () => {
+        // handle click outside
+        setFocusedObjIndex(-1);
+        setMxFilter("");
+    });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (currentValue?.id === selectedObj?.id && isClearable) {

@@ -7,6 +7,7 @@ import handleKeyNavigation from "../../utils/enum/handleKeyNavigation";
 import handleClear from "../../utils/handleClear";
 import MxIcon from "../MxIcon";
 import SearchInput from "../enum/SearchInput";
+import useOnClickOutside from "src/custom hooks/useOnClickOutside";
 // import LoadingIndicator from "../LoadingIndicator";
 
 interface EnumListProps {
@@ -47,6 +48,12 @@ EnumListProps): ReactElement => {
     const [focusedEnumIndex, setFocusedEnumIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const sesRef = useRef(null);
+
+    useOnClickOutside(sesRef, () => {
+        // handle click outside
+        setFocusedEnumIndex(-1);
+        setMxFilter("");
+    });
 
     const onSelectHandler = (selectedEnum: string | undefined): void => {
         if (currentValue === selectedEnum && isClearable) {

@@ -65,6 +65,7 @@ EnumDropdownProps): ReactElement => {
         // handle click outside
         setShowMenu(false);
         setFocusedEnumIndex(-1);
+        setMxFilter("");
     });
 
     const onSelectHandler = (selectedEnum: string | undefined, closeMenu: boolean): void => {

@@ -14,6 +14,7 @@ import SearchInput from "../reference/SearchInput";
 import CurrentValueSet from "../reference/CurrentValueSet";
 import MxIcon from "../MxIcon";
 import focusSearchInput from "src/utils/focusSearchInput";
+import useOnClickOutside from "src/custom hooks/useOnClickOutside";
 // import LoadingIndicator from "../LoadingIndicator";
 
 interface ReferenceSetListProps {
@@ -74,6 +75,12 @@ const ReferenceSetList = ({
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const srsRef = useRef(null);
+
+    useOnClickOutside(srsRef, () => {
+        // handle click outside
+        setFocusedObjIndex(-1);
+        setMxFilter("");
+    });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
         if (selectedObj !== undefined) {

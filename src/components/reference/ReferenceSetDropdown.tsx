@@ -93,6 +93,7 @@ const ReferenceSetDropdown = ({
         // handle click outside
         setShowMenu(false);
         setFocusedObjIndex(-1);
+        setMxFilter("");
     });
 
     const onSelectHandler = (selectedObj: ObjectItem | undefined): void => {
