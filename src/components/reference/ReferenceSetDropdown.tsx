@@ -132,7 +132,7 @@ const ReferenceSetDropdown = ({
     return (
         <div
             className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
-            style={{flexWrap: "wrap"}}
+            style={{ flexWrap: "wrap" }}
             tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             onClick={() => {
                 if (!isReadOnly) {
@@ -265,8 +265,8 @@ const ReferenceSetDropdown = ({
                             selectStyle={"dropdown"}
                             position={position}
                             isReadyOnly={isReadOnly}
-                            onSelectMoreOptions={()=>{
-                                if (onSelectMoreOptions){
+                            onSelectMoreOptions={() => {
+                                if (onSelectMoreOptions) {
                                     onSelectMoreOptions();
                                     focusSearchInput(searchInput, 300);
                                 }

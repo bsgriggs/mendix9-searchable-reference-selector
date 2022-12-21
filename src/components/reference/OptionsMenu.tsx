@@ -127,7 +127,7 @@ const OptionsMenu = ({
                             }
                             role="option"
                             onClick={(event: MouseEvent<HTMLDivElement>) => {
-                                if (onSelectMoreOptions !== undefined){
+                                if (onSelectMoreOptions !== undefined) {
                                     event.stopPropagation();
                                     onSelectMoreOptions();
                                 }

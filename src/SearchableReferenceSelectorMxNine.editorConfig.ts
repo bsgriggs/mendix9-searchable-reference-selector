@@ -73,7 +73,12 @@ export function getProperties(
 
     switch (_values.filterType) {
         case "auto":
-            hidePropertiesIn(defaultProperties, _values, ["searchText", "refreshAction", "hasMoreResultsManual", "onClickMoreResultsText"]);
+            hidePropertiesIn(defaultProperties, _values, [
+                "searchText",
+                "refreshAction",
+                "hasMoreResultsManual",
+                "onClickMoreResultsText"
+            ]);
             break;
         case "manual":
             hidePropertiesIn(defaultProperties, _values, ["filterFunction", "maxItems"]);

@@ -100,7 +100,7 @@ const ReferenceList = ({
                             false
                         )
                     }
-                    onClick={()=>focusSearchInput(searchInput, 300)}
+                    onClick={() => focusSearchInput(searchInput, 300)}
                     ref={srsRef}
                 >
                     <SearchInput
@@ -163,8 +163,8 @@ const ReferenceList = ({
                         optionsStyle={optionsStyle}
                         selectStyle={"list"}
                         isReadyOnly={isReadOnly}
-                        onSelectMoreOptions={()=>{
-                            if (onSelectMoreOptions){
+                        onSelectMoreOptions={() => {
+                            if (onSelectMoreOptions) {
                                 onSelectMoreOptions();
                                 focusSearchInput(searchInput, 300);
                             }

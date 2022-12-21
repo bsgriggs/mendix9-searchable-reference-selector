@@ -116,7 +116,7 @@ const ReferenceSetList = ({
             {isSearchable && (
                 <div
                     className={`form-control ${isReadOnly ? "read-only" : ""}`}
-                    style={{flexWrap: "wrap"}}
+                    style={{ flexWrap: "wrap" }}
                     tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                     onKeyDown={event =>
                         handleKeyNavigation(
@@ -130,7 +130,7 @@ const ReferenceSetList = ({
                             isReadOnly
                         )
                     }
-                    onClick={()=>focusSearchInput(searchInput, 300)}
+                    onClick={() => focusSearchInput(searchInput, 300)}
                     ref={srsRef}
                 >
                     {isReadOnly && currentValues !== undefined && currentValues.length > 0 ? (
@@ -222,8 +222,8 @@ const ReferenceSetList = ({
                         optionsStyle={optionsStyle}
                         selectStyle={"list"}
                         isReadyOnly={isReadOnly}
-                        onSelectMoreOptions={()=>{
-                            if (onSelectMoreOptions){
+                        onSelectMoreOptions={() => {
+                            if (onSelectMoreOptions) {
                                 onSelectMoreOptions();
                                 focusSearchInput(searchInput, 300);
                             }

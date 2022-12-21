@@ -33,9 +33,11 @@ export default function SearchInput({
     }, [searchInput]);
     return (
         <div className="srs-search-input">
-            {currentValue && mxFilter === "" && <span className="mx-text srs-current-value">{currentValue.caption}</span>}
+            {currentValue && mxFilter === "" && (
+                <span className="mx-text srs-current-value">{currentValue.caption}</span>
+            )}
             <input
-            style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
+                style={{ caretColor: currentValue !== undefined && mxFilter === "" ? "transparent" : "" }}
                 name={name}
                 placeholder={currentValue ? "" : placeholder}
                 type="text"
@@ -52,6 +54,5 @@ export default function SearchInput({
                 }}
             ></input>
         </div>
-
     );
 }

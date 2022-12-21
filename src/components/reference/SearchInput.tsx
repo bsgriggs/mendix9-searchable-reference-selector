@@ -33,7 +33,8 @@ export default function SearchInput({
     setRef
 }: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
-    const currentValueString = currentValue && displayAttribute ? displayAttribute.get(currentValue).displayValue : undefined;
+    const currentValueString =
+        currentValue && displayAttribute ? displayAttribute.get(currentValue).displayValue : undefined;
 
     useEffect(() => {
         if (searchInput !== null && searchInput.current !== null) {
@@ -50,7 +51,7 @@ export default function SearchInput({
                         <span className="mx-text srs-current-value">{currentValueString}</span>
                     )}
                     <input
-                    style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
+                        style={{ caretColor: currentValue !== undefined && mxFilter === "" ? "transparent" : "" }}
                         name={name}
                         placeholder={currentValue ? "" : placeholder}
                         type="text"
@@ -80,7 +81,7 @@ export default function SearchInput({
                             "mx-text srs-current-value"
                         )}
                     <input
-                    style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
+                        style={{ caretColor: currentValue !== undefined && mxFilter === "" ? "transparent" : "" }}
                         name={name}
                         placeholder={currentValue ? "" : placeholder}
                         type="text"
@@ -96,9 +97,7 @@ export default function SearchInput({
                             }
                         }}
                     ></input>
-                    {currentValue === undefined && !isSearchable && (
-                        <span className="srs-text">{placeholder}</span>
-                    )}
+                    {currentValue === undefined && !isSearchable && <span className="srs-text">{placeholder}</span>}
                 </Fragment>
             )}
         </div>

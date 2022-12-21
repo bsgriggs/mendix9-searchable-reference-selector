@@ -195,8 +195,8 @@ const ReferenceDropdown = ({
                             selectStyle={"dropdown"}
                             position={position}
                             isReadyOnly={isReadOnly}
-                            onSelectMoreOptions={()=>{
-                                if (onSelectMoreOptions){
+                            onSelectMoreOptions={() => {
+                                if (onSelectMoreOptions) {
                                     onSelectMoreOptions();
                                     focusSearchInput(searchInput, 300);
                                 }

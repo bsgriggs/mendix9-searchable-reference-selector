@@ -87,7 +87,7 @@ EnumListProps): ReactElement => {
                             isReadOnly
                         )
                     }
-                    onClick={()=>focusSearchInput(searchInput, 300)}
+                    onClick={() => focusSearchInput(searchInput, 300)}
                     ref={sesRef}
                 >
                     <SearchInput

@@ -277,7 +277,13 @@ const SearchableReferenceSelector = ({
                 // }
                 onSelectMoreOptions={
                     itemsLimit && defaultPageSize && (selectableObjects.hasMoreItems || hasMoreResultsManual)
-                        ? () => onShowMore(filterType, itemsLimit + defaultPageSize, setItemsLimit, onClickMoreResultsText)
+                        ? () =>
+                              onShowMore(
+                                  filterType,
+                                  itemsLimit + defaultPageSize,
+                                  setItemsLimit,
+                                  onClickMoreResultsText
+                              )
                         : undefined
                 }
             />
