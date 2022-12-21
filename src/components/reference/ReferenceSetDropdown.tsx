@@ -132,6 +132,7 @@ const ReferenceSetDropdown = ({
     return (
         <div
             className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
+            style={{flexWrap: "wrap"}}
             tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             onClick={() => {
                 if (!isReadOnly) {

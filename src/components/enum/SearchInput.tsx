@@ -32,21 +32,26 @@ export default function SearchInput({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
     return (
-        <input
-            name={name}
-            placeholder={placeholder}
-            type="text"
-            onChange={event => onChange(event)}
-            readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
-            disabled={isReadOnly}
-            value={currentValue !== undefined ? currentValue.caption : mxFilter}
-            ref={searchInput}
-            autoComplete="off"
-            onClick={(event: MouseEvent<HTMLInputElement>) => {
-                if (showMenu !== undefined && showMenu) {
-                    event.stopPropagation();
-                }
-            }}
-        ></input>
+        <div className="srs-search-input">
+            {currentValue && mxFilter === "" && <span className="mx-text srs-current-value">{currentValue.caption}</span>}
+            <input
+            style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
+                name={name}
+                placeholder={currentValue ? "" : placeholder}
+                type="text"
+                onChange={event => onChange(event)}
+                readOnly={isReadOnly || !isSearchable}
+                disabled={isReadOnly}
+                value={mxFilter}
+                ref={searchInput}
+                autoComplete="off"
+                onClick={(event: MouseEvent<HTMLInputElement>) => {
+                    if (showMenu !== undefined && showMenu) {
+                        event.stopPropagation();
+                    }
+                }}
+            ></input>
+        </div>
+
     );
 }

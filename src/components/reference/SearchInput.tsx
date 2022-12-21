@@ -12,7 +12,7 @@ interface SearchInputProps {
     isReadOnly: boolean;
     isSearchable: boolean;
     currentValue: ObjectItem | undefined;
-    displayAttribute: ListAttributeValue<string>;
+    displayAttribute: ListAttributeValue<string> | undefined;
     optionCustomContent: ListWidgetValue | undefined;
     setRef: (newRef: HTMLInputElement) => void;
     showMenu?: boolean;
@@ -33,47 +33,59 @@ export default function SearchInput({
     setRef
 }: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
+    const currentValueString = currentValue && displayAttribute ? displayAttribute.get(currentValue).displayValue : undefined;
+
     useEffect(() => {
         if (searchInput !== null && searchInput.current !== null) {
             setRef(searchInput.current);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
+
     return (
-        <Fragment>
+        <div className="srs-search-input">
             {optionTextType === "text" && (
-                <input
-                    name={name}
-                    placeholder={placeholder}
-                    type="text"
-                    onChange={event => onChange(event)}
-                    readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
-                    disabled={isReadOnly}
-                    value={
-                        currentValue !== undefined && displayAttribute !== undefined
-                            ? displayAttribute.get(currentValue).displayValue
-                            : mxFilter
-                    }
-                    ref={searchInput}
-                    autoComplete="off"
-                    onClick={(event: MouseEvent<HTMLInputElement>) => {
-                        if (showMenu !== undefined && showMenu) {
-                            event.stopPropagation();
-                        }
-                    }}
-                ></input>
+                <Fragment>
+                    {currentValue && mxFilter === "" && (
+                        <span className="mx-text srs-current-value">{currentValueString}</span>
+                    )}
+                    <input
+                    style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
+                        name={name}
+                        placeholder={currentValue ? "" : placeholder}
+                        type="text"
+                        onChange={event => onChange(event)}
+                        readOnly={isReadOnly || !isSearchable}
+                        disabled={isReadOnly}
+                        value={mxFilter}
+                        ref={searchInput}
+                        autoComplete="off"
+                        onClick={(event: MouseEvent<HTMLInputElement>) => {
+                            if (showMenu !== undefined && showMenu) {
+                                event.stopPropagation();
+                            }
+                        }}
+                    ></input>
+                </Fragment>
             )}
             {optionTextType !== "text" && (
                 <Fragment>
+                    {currentValue &&
+                        mxFilter === "" &&
+                        displayContent(
+                            currentValue,
+                            optionTextType,
+                            displayAttribute,
+                            optionCustomContent,
+                            "mx-text srs-current-value"
+                        )}
                     <input
-                        style={{
-                            display: currentValue === undefined && !isReadOnly && isSearchable ? "block" : "none"
-                        }}
+                    style={{caretColor: (currentValue !== undefined && mxFilter === "" ? 'transparent': "")}}
                         name={name}
-                        placeholder={placeholder}
+                        placeholder={currentValue ? "" : placeholder}
                         type="text"
                         onChange={event => onChange(event)}
-                        readOnly={isReadOnly || currentValue !== undefined || !isSearchable}
+                        readOnly={isReadOnly || !isSearchable}
                         disabled={isReadOnly}
                         value={mxFilter}
                         ref={searchInput}
@@ -84,13 +96,11 @@ export default function SearchInput({
                             }
                         }}
                     ></input>
-                    {currentValue === undefined && isSearchable === false && (
+                    {currentValue === undefined && !isSearchable && (
                         <span className="srs-text">{placeholder}</span>
                     )}
-                    {currentValue !== undefined &&
-                        displayContent(currentValue, optionTextType, displayAttribute, optionCustomContent, "srs-text")}
                 </Fragment>
             )}
-        </Fragment>
+        </div>
     );
 }

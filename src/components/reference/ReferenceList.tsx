@@ -100,6 +100,7 @@ const ReferenceList = ({
                             false
                         )
                     }
+                    onClick={()=>focusSearchInput(searchInput, 300)}
                     ref={srsRef}
                 >
                     <SearchInput

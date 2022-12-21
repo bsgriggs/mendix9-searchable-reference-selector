@@ -10,9 +10,11 @@ Place your custom CSS here
     padding: 0;
     align-items: center;
     cursor: pointer;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     gap: 2px;
     justify-content: space-between;
+    
+    min-height: 38px;
 }
 
 .srs .active.form-control {
@@ -27,12 +29,31 @@ Place your custom CSS here
     background-color: #f8f8f8;
 }
 
+.srs .srs-current-value{
+    white-space: unset;
+}
+
+.srs .srs-current-value p{
+    margin: 0;
+}
+
+.srs .srs-search-input{
+    flex-grow: 1;
+    padding: 8px;
+    position: relative;
+    min-height: 38px;
+}
+
 .srs input {
     border: none;
-    padding: 8px 0 8px 8px;
-    flex-grow: 1;
+    padding: 0;
+    /* margin: 8px; */
+    background: transparent;
     border-radius: 4px;
-    width: 30%;
+    position:absolute;
+    left: 8px;
+    bottom: 8px;
+    width: 100%
 }
 
 .srs .srs-icon-row {
@@ -64,7 +85,7 @@ Place your custom CSS here
     padding: 8px;
 }
 
-.srs .glyphicon, .srs img{
+.srs .srs-icon-row .glyphicon, .srs .srs-icon-row img{
     padding: 8px 4px;
     color: #6f6f6f;
 }

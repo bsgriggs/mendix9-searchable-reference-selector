@@ -8,6 +8,7 @@ import handleClear from "../../utils/handleClear";
 import MxIcon from "../MxIcon";
 import SearchInput from "../enum/SearchInput";
 import useOnClickOutside from "src/custom hooks/useOnClickOutside";
+import focusSearchInput from "src/utils/focusSearchInput";
 // import LoadingIndicator from "../LoadingIndicator";
 
 interface EnumListProps {
@@ -86,6 +87,7 @@ EnumListProps): ReactElement => {
                             isReadOnly
                         )
                     }
+                    onClick={()=>focusSearchInput(searchInput, 300)}
                     ref={sesRef}
                 >
                     <SearchInput

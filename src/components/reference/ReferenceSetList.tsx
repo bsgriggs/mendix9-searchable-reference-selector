@@ -116,6 +116,7 @@ const ReferenceSetList = ({
             {isSearchable && (
                 <div
                     className={`form-control ${isReadOnly ? "read-only" : ""}`}
+                    style={{flexWrap: "wrap"}}
                     tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                     onKeyDown={event =>
                         handleKeyNavigation(
@@ -129,6 +130,7 @@ const ReferenceSetList = ({
                             isReadOnly
                         )
                     }
+                    onClick={()=>focusSearchInput(searchInput, 300)}
                     ref={srsRef}
                 >
                     {isReadOnly && currentValues !== undefined && currentValues.length > 0 ? (
