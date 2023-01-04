@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <widget id="mendix.searchablereferenceselectormxnine.SearchableReferenceSelectorMxNine" pluginWidget="true" needsEntityContext="true" offlineCapable="true" supportedPlatform="Web" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
-    <name>Searchable Reference Selector Mx9</name>
-    <description>Mendix reference selector with a search bar and a clear button (Mendix 9)</description>
+    <name>Searchable Selector</name>
+    <description>Mendix reference, reference set, and enumeration selector with a search bar and a clear button</description>
     <helpUrl>https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md</helpUrl>
     <icon />
     <properties>
