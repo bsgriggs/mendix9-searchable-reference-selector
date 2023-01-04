@@ -44,7 +44,7 @@ Place your custom CSS here
     min-height: 38px;
 }
 
-.srs input {
+.srs .srs-search-input > input {
     border: none;
     padding: 0;
     /* margin: 8px; */
