@@ -35,10 +35,6 @@ https://marketplace.mendix.com/link/component/116917
 -   Support for arrow keys and enter key press
 -   Searching auto-highlights the first record for easy selecting with the enter key
 
-## Limitation
-
--   N/A
-
 ## Configuration  
 The following settings are available for all Selection Types.  
 ![general](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/general.png)  
