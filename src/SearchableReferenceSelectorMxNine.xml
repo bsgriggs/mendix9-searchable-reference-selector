@@ -139,11 +139,17 @@
                     <caption>Selectable Objects</caption>
                     <description>The objects that will be displayed</description>
                 </property>
-                <property key="association" type="association" selectableObjects="selectableObjects" required="true">
+                <property key="reference" type="association" selectableObjects="selectableObjects" required="true">
                     <caption>Reference</caption>
                     <description>The association to be set when the user clicks an option</description>
                     <associationTypes>
                         <associationType name="Reference" />
+                    </associationTypes>
+                </property>
+                <property key="referenceSet" type="association" selectableObjects="selectableObjects" required="true">
+                    <caption>Reference Set</caption>
+                    <description>The association to be set when the user clicks an option</description>
+                    <associationTypes>
                         <associationType name="ReferenceSet" />
                     </associationTypes>
                 </property>

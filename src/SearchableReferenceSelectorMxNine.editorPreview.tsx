@@ -42,7 +42,8 @@ const displayIcon = (propsIcon: iconPreview, defaultClassName: string): ReactEle
 };
 
 export function preview({
-    association,
+    reference,
+    referenceSet,
     clearIcon,
     displayAttribute,
     dropdownIcon,
@@ -58,8 +59,8 @@ export function preview({
     selectionType,
     showSelectAll
 }: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
-    const lastPeriodIndex = association.lastIndexOf(".");
-    const associationDisplay = association.substring(lastPeriodIndex + 1);
+    const lastPeriodIndex = selectionType ==="reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
+    const associationDisplay = selectionType ==="reference" ? reference.substring(lastPeriodIndex + 1) : referenceSet.substring(lastPeriodIndex + 1);
     const formattedDisplayAttribute =
         selectionType === "enumeration" ? enumAttribute : "[" + associationDisplay + "/" + displayAttribute + "]";
 

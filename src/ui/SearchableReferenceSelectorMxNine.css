@@ -1,6 +1,3 @@
-/*
-Place your custom CSS here
-*/
 .srs {
     width: 100%;
 }
@@ -13,8 +10,8 @@ Place your custom CSS here
     /* flex-wrap: wrap; */
     gap: 2px;
     justify-content: space-between;
-    
-    min-height: 38px;
+    /* min-height: 30.5em; */
+    flex-wrap: wrap;
 }
 
 .srs .active.form-control {
@@ -30,7 +27,9 @@ Place your custom CSS here
 }
 
 .srs .srs-current-value{
-    white-space: unset;
+    grid-column: 1;
+    height: min-content;
+    grid-row: 1;
 }
 
 .srs .srs-current-value p{
@@ -39,54 +38,56 @@ Place your custom CSS here
 
 .srs .srs-search-input{
     flex-grow: 1;
-    padding: 8px;
-    position: relative;
-    min-height: 38px;
+    padding: 0.5em;
+    display: grid;
+    flex: 1 1 0%;
+    grid-template-columns: 5fr 1fr;
+    align-items: center;
 }
 
 .srs .srs-search-input > input {
     border: none;
     padding: 0;
-    /* margin: 8px; */
     background: transparent;
-    border-radius: 4px;
-    position:absolute;
-    left: 8px;
-    bottom: 8px;
-    width: 100%
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .srs .srs-icon-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 0.25em;
     margin-left: auto;
+    grid-column: 2;
 }
 
-.srs .srs-badge-row{
+.srs .srs-badge-row, .srs .srs-comma-row{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 4px;
+    padding-bottom: 0.25em;
     width: 100%;
-    gap: 4px;
+    gap: 0.25em;
+    grid-column: 1/3;
+    grid-row: 1;
 }
 
-.srs .srs-comma-row{
+/* .srs .srs-comma-row{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 8px;
+    padding: 0.5em; 
     width: 100%;
-    gap: 4px;
-}
+    gap: 0.25em;
+    grid-column: 1/2;
+} */
 
 .srs .read-only .srs-comma-row {
-    padding: 8px;
+    padding: 0.5em;
 }
 
 .srs .srs-icon-row .glyphicon, .srs .srs-icon-row img{
-    padding: 8px 4px;
+    padding: 0.5em 0.25em;
     color: #6f6f6f;
 }
 
@@ -95,7 +96,7 @@ Place your custom CSS here
 }
 
 .srs .srs-text {
-    padding: 8px 0 8px 8px;
+    padding: 0.5em 0 0.5em 0.5em;
     flex-grow: 1;
 }
 
@@ -106,10 +107,10 @@ Place your custom CSS here
 
 .srs .srs-badge {
     background-color: #e7e7e7;
-    border-radius: 4px;
+    border-radius: 0.25em;
     display: flex;
     align-items: center;
-    padding: 4px;
+    padding: 0.25em;
 }
 
 .srs .srs-badge .glyphicon, .srs .srs-badge img{
@@ -134,17 +135,23 @@ Place your custom CSS here
 .srs .srs-dropdown {
     position: fixed;
     z-index: 302;
+}
+
+.srs .srs-menu{
     border: 1px solid #d7d7d7;
-    border-radius: 4px;
+    border-radius: 0.25em;
     background-color: #fff;
     overflow-y: auto;
     padding: 0.25em;
+}
+.has-error .srs .srs-menu  {
+    border-color: #a94442;
 }
 
 .srs .srs-option {
     cursor: pointer;
     padding: 0.5em;
-    border-radius: 4px;
+    border-radius: 0.25em;
     display: flex;
 }
 
@@ -184,10 +191,10 @@ Place your custom CSS here
     flex-shrink: 0 !important;
 }
 
-.srs .srs-loading-indicator{
+/* .srs .srs-loading-indicator{
     display: flex;
-    gap: 4px;
-    padding: 8px 4px;
+    gap: 0.25em;
+    padding: 0.5em 0.25em;
 }
 
 .srs .srs-loading-dot{
@@ -195,5 +202,6 @@ Place your custom CSS here
     width: 10px;
     height: 10px;
     border-radius: 100%;
-    background-color:#6f6f6f;
+    background-color:#6f6f6f; 
 }
+*/

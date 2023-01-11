@@ -47,7 +47,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     selectAllIcon?: DynamicValue<WebIcon>;
     selectionType: SelectionTypeEnum;
     selectableObjects: ListValue;
-    association: ReferenceValue | ReferenceSetValue;
+    reference: ReferenceValue;
+    referenceSet: ReferenceSetValue;
     displayAttribute: ListAttributeValue<string>;
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
@@ -84,7 +85,8 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     selectionType: SelectionTypeEnum;
     selectableObjects: {} | { type: string } | null;
-    association: string;
+    reference: string;
+    referenceSet: string;
     displayAttribute: string;
     selectableCondition: string;
     enumAttribute: string;

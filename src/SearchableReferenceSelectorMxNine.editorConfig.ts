@@ -39,7 +39,8 @@ export function getProperties(
     switch (_values.selectionType) {
         case "enumeration":
             hidePropertiesIn(defaultProperties, _values, [
-                "association",
+                "reference",
+                "referenceSet",
                 "displayAttribute",
                 "selectableCondition",
                 "selectableObjects",
@@ -63,11 +64,12 @@ export function getProperties(
                 "selectAllIcon",
                 "onBadgeClick",
                 "enumAttribute",
-                "optionsStyleSet"
+                "referenceSet",
+                "optionsStyleSet",                
             ]);
             break;
         case "referenceSet":
-            hidePropertiesIn(defaultProperties, _values, ["enumAttribute", "optionsStyleSingle"]);
+            hidePropertiesIn(defaultProperties, _values, ["enumAttribute","reference", "optionsStyleSingle"]);
             break;
     }
 
