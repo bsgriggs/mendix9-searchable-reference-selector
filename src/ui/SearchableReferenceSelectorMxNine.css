@@ -10,7 +10,7 @@
     /* flex-wrap: wrap; */
     gap: 2px;
     justify-content: space-between;
-    /* min-height: 30.5em; */
+    min-height: 38px;
     flex-wrap: wrap;
 }
 
@@ -82,9 +82,9 @@
     grid-column: 1/2;
 } */
 
-.srs .read-only .srs-comma-row {
+/* .srs .read-only .srs-comma-row {
     padding: 0.5em;
-}
+} */
 
 .srs .srs-icon-row .glyphicon, .srs .srs-icon-row img{
     padding: 0.5em 0.25em;

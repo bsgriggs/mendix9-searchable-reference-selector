@@ -199,51 +199,54 @@ const Selector = ({
                             onBadgeClick={onBadgeClick}
                         />
                     )}
+                    {!isReadOnly && (
                     <div className="srs-icon-row" style={{ gridRow: selectionType === "referenceSet" ? 2 : 1 }}>
-                        {selectionType === "referenceSet" && showSelectAll && (
-                            <MxIcon
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    setSearchFilter("");
-                                    setFocusedObjIndex(-1);
-                                    onSelect(options.filter(option => option.isSelectable));
-                                }}
-                                title={"Select All"}
-                                mxIconOverride={selectAllIcon}
-                                defaultClassName="check"
-                            />
-                        )}
+                    {selectionType === "referenceSet" && showSelectAll && (
+                        <MxIcon
+                            onClick={event => {
+                                event.stopPropagation();
+                                setSearchFilter("");
+                                setFocusedObjIndex(-1);
+                                onSelect(options.filter(option => option.isSelectable));
+                            }}
+                            title={"Select All"}
+                            mxIconOverride={selectAllIcon}
+                            defaultClassName="check"
+                        />
+                    )}
 
-                        {isClearable && (
-                            <MxIcon
-                                onClick={event => {
-                                    if (selectStyle === "dropdown") {
-                                        setPosition(mapPosition(srsRef.current));
-                                    }
-                                    handleClearAll(
-                                        event,
-                                        searchFilter,
-                                        setSearchFilter,
-                                        setFocusedObjIndex,
-                                        () => {
-                                            onSelectHandler(undefined);
-                                        },
-                                        searchInput,
-                                        setShowMenu
-                                    );
-                                }}
-                                title={"Clear"}
-                                mxIconOverride={clearIcon}
-                                defaultClassName="remove"
-                            />
-                        )}
-                        {selectStyle === "dropdown" && (
-                            <MxIcon mxIconOverride={dropdownIcon} defaultClassName="menu-down" />
-                        )}
-                    </div>
+                    {isClearable && (
+                        <MxIcon
+                            onClick={event => {
+                                if (selectStyle === "dropdown") {
+                                    setPosition(mapPosition(srsRef.current));
+                                }
+                                handleClearAll(
+                                    event,
+                                    searchFilter,
+                                    setSearchFilter,
+                                    setFocusedObjIndex,
+                                    () => {
+                                        onSelectHandler(undefined);
+                                    },
+                                    searchInput,
+                                    setShowMenu
+                                );
+                            }}
+                            title={"Clear"}
+                            mxIconOverride={clearIcon}
+                            defaultClassName="remove"
+                        />
+                    )}
+                    {selectStyle === "dropdown" && (
+                        <MxIcon mxIconOverride={dropdownIcon} defaultClassName="menu-down" />
+                    )}
+                </div>
+                    )}
+
                 </div>
             </div>
-            {(showMenu || selectStyle === "list") && (
+            {(showMenu || selectStyle === "list") && !isReadOnly &&(
                 <OptionsMenu
                     onSelect={onSelectHandler}
                     currentFocus={options[focusedObjIndex]}
