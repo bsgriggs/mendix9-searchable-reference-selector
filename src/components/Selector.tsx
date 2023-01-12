@@ -208,7 +208,10 @@ const Selector = ({
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
-    const hasCurrentValue = selectionType !== "referenceSet" ? currentValue !== undefined : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0;
+    const hasCurrentValue =
+        selectionType !== "referenceSet"
+            ? currentValue !== undefined
+            : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0;
 
     // Only mount the position tracking hook for dropdowns
     if (selectStyle === "dropdown") {

@@ -44,7 +44,7 @@ export default function SearchInput({
                 }}
                 tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                 name={name}
-                placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly)? placeholder : ""}
+                placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly) ? placeholder : ""}
                 type="text"
                 onChange={event => onChange(event)}
                 readOnly={isReadOnly || !isSearchable}
