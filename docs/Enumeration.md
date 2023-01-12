@@ -22,6 +22,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 ### Data Source Settings  
 ![dataSource](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/dataSourceEnum.png)  
 **On Change** - Perform an MxAction when the user adds or removes a selection.  
+**On Leave** - Perform an MxAction when the user clicks away or tabs away.  
 
 ### Filtering Settings  
 ![filteringEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/filteringEnum.png)  
