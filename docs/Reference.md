@@ -29,7 +29,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 **On Leave** - Perform an MxAction when the user clicks away or tabs away.  
 
 ### Filtering Settings  
-![filteringSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/filertingReference%26Set.png)  
+![filteringSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/filteringReference%26Set.png)  
 **Filter Delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Filter Type** - How the filtering is handled. Auto mode uses the Mendix [ListValue API](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/) to optimize memory management. Manual mode will allow you to set the user's search text as an attribute on the page then use that attribute inside the data source microflow. Manual mode changes many settings about the widget with the expectation that you will add them to you microflow. See the documentation [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md) for details.  
 **Filter Function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
