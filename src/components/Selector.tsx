@@ -405,7 +405,7 @@ const Selector = ({
                     onSelectMoreOptions={() => {
                         if (onSelectMoreOptions) {
                             onSelectMoreOptions();
-                            if (selectStyle === "dropdown"){
+                            if (selectStyle === "dropdown") {
                                 focusSearchInput(searchInput, 300);
                             }
                         }

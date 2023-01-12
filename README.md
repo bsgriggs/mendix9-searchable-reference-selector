@@ -1,6 +1,6 @@
-## Searchable Reference Selector for Mendix 9.13+
+## Searchable Selector
 
-Mendix reference selector with a search bar and a clear button.
+Mendix reference, reference set, and enumeration selector with a search bar and a clear button.
 
 **If you are using Mendix 8.17 - 9.12**, please use the following widget or check older version in the marketplace. (The older version does *not* support reference sets or enumerations)  
 https://github.com/bsgriggs/mendix8-searchable-reference-selector  

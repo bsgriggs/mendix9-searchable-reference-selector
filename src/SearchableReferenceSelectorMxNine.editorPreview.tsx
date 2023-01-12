@@ -79,7 +79,7 @@ export function preview({
     };
 
     return (
-        <div className="srs" >
+        <div className="srs">
             <Selector
                 name=""
                 hasMoreOptions={moreResultsText !== undefined}
@@ -98,7 +98,7 @@ export function preview({
                 selectStyle={"list"}
                 selectionType={selectionType}
                 showSelectAll={showSelectAll}
-                srsRef={{current: {} as HTMLDivElement}}
+                srsRef={{ current: {} as HTMLDivElement }}
                 clearIcon={
                     clearIcon !== null
                         ? clearIcon.type === "image"
