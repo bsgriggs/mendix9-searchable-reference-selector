@@ -1,6 +1,6 @@
 import { createElement, Fragment, ReactElement } from "react";
 import { ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import { ListActionValue, WebIcon } from "mendix";
+import { WebIcon } from "mendix";
 import Badge from "./Badge";
 import Comma from "./Comma";
 import { IOption } from "typings/option";
@@ -13,7 +13,7 @@ type CurrentValueDisplayProps = {
     onRemove: (clickObj: IOption) => void;
     referenceSetStyle: ReferenceSetStyleEnum;
     clearIcon: WebIcon | undefined;
-    onBadgeClick: ListActionValue | undefined;
+    onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
 };
 
 export default function CurrentValueDisplay({

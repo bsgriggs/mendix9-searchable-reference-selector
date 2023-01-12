@@ -1,8 +1,8 @@
 import { createElement, PropsWithChildren, ReactElement, MouseEvent } from "react";
-import useHover from "../../custom hooks/useHover";
-import { IOption } from "../../../typings/option";
+import useHover from "../custom hooks/useHover";
+import { IOption } from "../../typings/option";
 import { OptionsStyleSetEnum, OptionsStyleSingleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import { focusModeEnum } from "../../../typings/general";
+import { focusModeEnum } from "../../typings/general";
 
 interface OptionProps {
     index: number;
@@ -13,7 +13,14 @@ interface OptionProps {
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
 }
 
-const Option = ({ onSelect, option, index, focusMode, isFocused, optionsStyle }: PropsWithChildren<OptionProps>): ReactElement => {
+const Option = ({
+    onSelect,
+    option,
+    index,
+    focusMode,
+    isFocused,
+    optionsStyle
+}: PropsWithChildren<OptionProps>): ReactElement => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
     const determineClassName = (): string => {
         let className = "srs-option";
@@ -47,10 +54,12 @@ const Option = ({ onSelect, option, index, focusMode, isFocused, optionsStyle }:
             {optionsStyle === "checkbox" && (
                 <input type={"checkbox"} checked={option.isSelected} disabled={!option.isSelectable}></input>
             )}
-            {optionsStyle === "radio" && <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} />}
+            {optionsStyle === "radio" && (
+                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} />
+            )}
             {option.content}
         </div>
     );
-}
+};
 
 export default Option;

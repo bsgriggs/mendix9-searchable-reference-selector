@@ -65,11 +65,11 @@ export function getProperties(
                 "onBadgeClick",
                 "enumAttribute",
                 "referenceSet",
-                "optionsStyleSet",                
+                "optionsStyleSet"
             ]);
             break;
         case "referenceSet":
-            hidePropertiesIn(defaultProperties, _values, ["enumAttribute","reference", "optionsStyleSingle"]);
+            hidePropertiesIn(defaultProperties, _values, ["enumAttribute", "reference", "optionsStyleSingle"]);
             break;
     }
 

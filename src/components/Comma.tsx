@@ -6,10 +6,7 @@ interface CommaProps {
     option: IOption;
 }
 
-const Comma = ({
-    showComma,
-    option
-}: CommaProps): ReactElement => (
+const Comma = ({ showComma, option }: CommaProps): ReactElement => (
     <div className="srs-comma">
         {option.content}
         {showComma && <span>,</span>}

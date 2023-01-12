@@ -1,316 +1,419 @@
-import { createElement, Fragment, ReactElement } from "react";
-import { EnumOption } from "typings/general";
 import {
-    SelectionTypeEnum,
-    SelectStyleEnum,
-    OptionTextTypeEnum,
-    OptionsStyleSingleEnum,
+    createElement,
+    useState,
+    ReactElement,
+    ChangeEvent,
+    Fragment,
+    RefObject,
+    MouseEvent,
+    KeyboardEvent
+} from "react";
+import { WebIcon } from "mendix";
+import OptionsMenu from "./OptionMenu";
+import useOnClickOutside from "../custom hooks/useOnClickOutside";
+import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
+import SearchInput from "./SearchInput";
+import MxIcon from "./MxIcon";
+import { IOption } from "typings/option";
+import {
     OptionsStyleSetEnum,
-    ReferenceSetStyleEnum
+    OptionsStyleSingleEnum,
+    ReferenceSetStyleEnum,
+    SelectionTypeEnum,
+    SelectStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
-import { Alert } from "./Alert";
-import EnumDropdown from "./enum/EnumDropdown";
-import EnumList from "./enum/EnumList";
-import ReferenceDropdown from "./reference/ReferenceDropdown";
-import ReferenceList from "./reference/ReferenceList";
-import ReferenceSetDropdown from "./reference/ReferenceSetDropdown";
-import ReferenceSetList from "./reference/ReferenceSetList";
-import {
-    ObjectItem,
-    ActionValue,
-    EditableValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    WebIcon,
-    ListAttributeValue,
-    ListWidgetValue,
-    ListActionValue,
-    ListExpressionValue
-} from "mendix";
+import CurrentValueDisplay from "./CurrentValueDisplay";
+
+const onLeaveHandler = (
+    showMenu: boolean,
+    setShowMenu: (newShowMenu: boolean) => void,
+    searchFilter: string,
+    setSearchFilter: (newSearchFilter: string) => void,
+    focusedObjIndex: number,
+    setFocusedObjIndex: (newIndex: number) => void,
+    onLeave: () => void
+): void => {
+    if (showMenu) {
+        setShowMenu(false);
+    }
+    if (searchFilter.trim() !== "") {
+        setSearchFilter("");
+    }
+    if (focusedObjIndex !== -1) {
+        setFocusedObjIndex(-1);
+    }
+    onLeave();
+};
+
+const updatePositionManually = (
+    selectStyle: SelectStyleEnum,
+    setPosition: (newPosition: Position) => void,
+    srsRef: RefObject<HTMLDivElement>
+): void => {
+    if (selectStyle === "dropdown") {
+        setPosition(mapPosition(srsRef.current));
+    }
+};
+
+const handleClearAll = (
+    event: MouseEvent<HTMLDivElement | HTMLSpanElement>,
+    searchFilter: string,
+    setSearchFilter: (newFilter: string) => void,
+    focusedObjIndex: number,
+    setFocusedObjIndex: (newIndex: number) => void,
+    onSelectHandler: (selectedOption: IOption | undefined) => void,
+    searchInput: HTMLInputElement | null,
+    showMenu: boolean,
+    setShowMenu: (newShowMenu: boolean) => void
+): void => {
+    event.stopPropagation();
+    if (showMenu) {
+        setShowMenu(false);
+    }
+    if (focusedObjIndex !== -1) {
+        setFocusedObjIndex(-1);
+    }
+    if (searchFilter.trim() !== "") {
+        setSearchFilter("");
+    } else {
+        onSelectHandler(undefined);
+    }
+    focusSearchInput(searchInput, 300);
+};
+
+const focusSearchInput = (input: HTMLInputElement | null, delay: number): void => {
+    if (input !== null) {
+        if (delay !== undefined) {
+            setTimeout(() => input?.focus(), delay);
+        } else {
+            input.focus();
+        }
+    }
+};
+
+const handleKeyNavigation = (
+    event: KeyboardEvent<HTMLDivElement>,
+    focusedObjIndex: number,
+    setFocusedObjIndex: (newIndex: number) => void,
+    options: IOption[],
+    onSelect: (selectedObj: IOption) => void,
+    closeOnSelect: boolean,
+    setShowMenu: (newShowMenu: boolean) => void,
+    updatePosition: () => void,
+    onLeave: () => void
+): void => {
+    const keyPressed = event.key;
+    if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
+        if (focusedObjIndex === -1) {
+            setFocusedObjIndex(0);
+        } else if (focusedObjIndex > 0) {
+            setFocusedObjIndex(focusedObjIndex - 1);
+        } else {
+            setFocusedObjIndex(options.length - 1);
+        }
+        if (updatePosition !== undefined) {
+            updatePosition();
+        }
+        setShowMenu(true);
+    } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
+        if (focusedObjIndex === -1) {
+            setFocusedObjIndex(0);
+        } else if (focusedObjIndex < options.length - 1) {
+            setFocusedObjIndex(focusedObjIndex + 1);
+        } else {
+            setFocusedObjIndex(0);
+        }
+        if (updatePosition !== undefined) {
+            updatePosition();
+        }
+        setShowMenu(true);
+    } else if (keyPressed === "Enter") {
+        if (focusedObjIndex > -1) {
+            const currentFocusedOption = options[focusedObjIndex];
+            if (currentFocusedOption.isSelectable) {
+                onSelect(currentFocusedOption);
+            }
+            if (closeOnSelect) {
+                onLeave();
+            }
+        }
+    } else if (keyPressed === "Escape" || keyPressed === "Tab") {
+        onLeave();
+    }
+};
 
 interface SelectorProps {
-    selectionType: SelectionTypeEnum;
-    selectStyle: SelectStyleEnum;
     name: string;
-    tabIndex: number | undefined;
-    association: ReferenceValue | ReferenceSetValue;
+    tabIndex?: number;
+    placeholder: string | undefined;
+    noResultsText: string;
+    options: IOption[];
+    currentValue: IOption | IOption[] | undefined;
+    onSelect: (selectedOption: IOption | IOption[] | undefined) => void;
+    searchFilter: string;
+    setSearchFilter: (newFilter: string) => void;
     isClearable: boolean;
     clearIcon: WebIcon | undefined;
-    dropdownIcon: WebIcon | undefined;
-    selectAllIcon: WebIcon | undefined;
-    onChange: ActionValue | undefined;
-    onBadgeClick: ListActionValue | undefined;
-    refOptions: ObjectItem[] | undefined;
-    placeholder: string;
     isSearchable: boolean;
-    maxMenuHeight: string;
-    noResultsText: string;
-    displayAttribute: ListAttributeValue<string>;
-    selectableCondition: ListExpressionValue<boolean> | undefined;
-    optionTextType: OptionTextTypeEnum;
-    optionCustomContent: ListWidgetValue | undefined;
-    mxFilter: string;
-    setMxFilter: (newFilter: string) => void;
-    moreResultsText: string | undefined;
-    optionsStyleSingle: OptionsStyleSingleEnum;
-    optionsStyleSet: OptionsStyleSetEnum;
-    referenceSetStyle: ReferenceSetStyleEnum;
-    maxReferenceDisplay: number;
-    showSelectAll: boolean;
-    enumAttribute: EditableValue<string>;
-    enumUniverse: EnumOption[];
-    enumOptions: EnumOption[];
-    onSelectReference: (
-        selectedObj: (ObjectItem & ObjectItem[]) | undefined,
-        association: ReferenceValue | ReferenceSetValue,
-        onChange: ActionValue | undefined
-    ) => void;
-    onSelectEnum: (
-        currentValue: string | undefined,
-        selectedEnum: string | undefined,
-        enumAttribute: EditableValue<string>,
-        onChange: ActionValue | undefined
-    ) => void;
-    onSelectMoreOptions: (() => void) | undefined;
-    // isLoading: boolean;
+    isReadOnly: boolean;
+    selectionType: SelectionTypeEnum;
+    selectStyle: SelectStyleEnum;
+    showSelectAll: boolean; // selectionType = ReferenceSet
+    selectAllIcon: WebIcon | undefined; // selectionType = ReferenceSet
+    dropdownIcon: WebIcon | undefined; // selectStyle = Dropdown
+    maxMenuHeight: string; // selectStyle = Dropdown
+    hasMoreOptions: boolean; // selectionType = Reference or ReferenceSet
+    moreResultsText: string | undefined; // selectionType = Reference or ReferenceSet
+    onSelectMoreOptions: (() => void) | undefined; // selectionType = Reference or ReferenceSet
+    optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
+    referenceSetStyle: ReferenceSetStyleEnum; // selectionType = ReferenceSet
+    maxReferenceDisplay: number; // selectionType = ReferenceSet
+    onBadgeClick: ((selectedBadge: IOption) => void) | undefined; // selectionType = ReferenceSet
+    srsRef: RefObject<HTMLDivElement>;
+    onLeave: () => void;
 }
 
-export default function Selector({
-    association,
+const Selector = ({
     clearIcon,
-    displayAttribute,
+    currentValue,
     dropdownIcon,
-    enumAttribute,
-    enumOptions,
-    enumUniverse,
+    hasMoreOptions,
     isClearable,
+    isReadOnly,
     isSearchable,
     maxMenuHeight,
     maxReferenceDisplay,
     moreResultsText,
-    mxFilter,
     name,
     noResultsText,
     onBadgeClick,
-    onChange,
-    optionCustomContent,
-    optionTextType,
-    optionsStyleSet,
-    optionsStyleSingle,
+    onSelect,
+    onSelectMoreOptions,
+    options,
+    optionsStyle,
     placeholder,
-    refOptions,
     referenceSetStyle,
+    searchFilter,
     selectAllIcon,
-    selectStyle,
-    selectableCondition,
-    selectionType,
-    setMxFilter,
+    setSearchFilter,
     showSelectAll,
     tabIndex,
-    onSelectEnum,
-    onSelectReference,
-    // isLoading,
-    onSelectMoreOptions
-}: SelectorProps): ReactElement {
-    // Determine which selector to render based on the user's props
-    switch (selectionType) {
-        case "reference":
-            if (selectStyle === "dropdown") {
-                return (
-                    <Fragment>
-                        <ReferenceDropdown
-                            name={name}
-                            tabIndex={tabIndex}
-                            currentValue={association.value as ObjectItem}
-                            isClearable={isClearable}
-                            clearIcon={clearIcon}
-                            dropdownIcon={dropdownIcon}
-                            onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
-                                onSelectReference(newAssociation as ObjectItem & ObjectItem[], association, onChange)
-                            }
-                            selectableObjects={refOptions}
-                            placeholder={placeholder}
-                            isReadOnly={association.readOnly}
-                            isSearchable={isSearchable}
-                            maxHeight={maxMenuHeight}
-                            noResultsText={noResultsText}
-                            displayAttribute={displayAttribute}
-                            optionTextType={optionTextType}
-                            selectableCondition={selectableCondition}
-                            optionCustomContent={optionCustomContent}
-                            mxFilter={mxFilter}
-                            setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                            moreResultsText={moreResultsText}
-                            optionsStyle={optionsStyleSingle}
-                            // isLoading={isLoading}
-                            onSelectMoreOptions={onSelectMoreOptions}
-                        />
-                        {association.validation && <Alert>{association.validation}</Alert>}
-                    </Fragment>
-                );
-            } else {
-                return (
-                    <Fragment>
-                        <ReferenceList
-                            name={name}
-                            tabIndex={tabIndex}
-                            currentValue={association.value as ObjectItem}
-                            isClearable={isClearable}
-                            clearIcon={clearIcon}
-                            onSelectAssociation={(newAssociation: ObjectItem | undefined) =>
-                                onSelectReference(newAssociation as ObjectItem & ObjectItem[], association, onChange)
-                            }
-                            selectableObjects={refOptions}
-                            placeholder={placeholder}
-                            isReadOnly={association.readOnly}
-                            noResultsText={noResultsText}
-                            displayAttribute={displayAttribute}
-                            optionTextType={optionTextType}
-                            selectableCondition={selectableCondition}
-                            optionCustomContent={optionCustomContent}
-                            mxFilter={mxFilter}
-                            setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                            moreResultsText={moreResultsText}
-                            optionsStyle={optionsStyleSingle}
-                            isSearchable={isSearchable}
-                            // isLoading={isLoading}
-                            onSelectMoreOptions={onSelectMoreOptions}
-                        />
-                        {association.validation && <Alert>{association.validation}</Alert>}
-                    </Fragment>
-                );
-            }
+    selectStyle,
+    selectionType,
+    srsRef,
+    onLeave
+}: SelectorProps): ReactElement => {
+    const [showMenu, setShowMenu] = useState(false);
+    const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
+    const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
+    const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
-        case "referenceSet":
-            if (selectStyle === "dropdown") {
-                return (
-                    <Fragment>
-                        <ReferenceSetDropdown
-                            name={name}
-                            tabIndex={tabIndex}
-                            currentValues={association.value as ObjectItem[]}
-                            isClearable={isClearable}
-                            clearIcon={clearIcon}
-                            dropdownIcon={dropdownIcon}
-                            onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
-                                onSelectReference(newAssociation as ObjectItem & ObjectItem[], association, onChange)
-                            }
-                            selectableObjects={refOptions}
-                            placeholder={placeholder}
-                            isReadOnly={association.readOnly}
-                            isSearchable={isSearchable}
-                            maxHeight={maxMenuHeight}
-                            noResultsText={noResultsText}
-                            displayAttribute={displayAttribute}
-                            optionTextType={optionTextType}
-                            selectableCondition={selectableCondition}
-                            optionCustomContent={optionCustomContent}
-                            mxFilter={mxFilter}
-                            setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                            moreResultsText={moreResultsText}
-                            optionsStyle={optionsStyleSet}
-                            referenceSetStyle={referenceSetStyle}
-                            maxReferenceDisplay={maxReferenceDisplay}
-                            showSelectAll={showSelectAll}
-                            selectAllIcon={selectAllIcon}
-                            onBadgeClick={onBadgeClick}
-                            // isLoading={isLoading}
-                            onSelectMoreOptions={onSelectMoreOptions}
-                        />
-                        {association.validation && <Alert>{association.validation}</Alert>}
-                    </Fragment>
-                );
-            } else {
-                return (
-                    <Fragment>
-                        <ReferenceSetList
-                            name={name}
-                            tabIndex={tabIndex}
-                            currentValues={association.value as ObjectItem[]}
-                            isClearable={isClearable}
-                            clearIcon={clearIcon}
-                            onSelectAssociation={(newAssociation: ObjectItem[] | undefined) =>
-                                onSelectReference(newAssociation as ObjectItem & ObjectItem[], association, onChange)
-                            }
-                            selectableObjects={refOptions}
-                            placeholder={placeholder}
-                            isReadOnly={association.readOnly}
-                            noResultsText={noResultsText}
-                            displayAttribute={displayAttribute}
-                            optionTextType={optionTextType}
-                            selectableCondition={selectableCondition}
-                            optionCustomContent={optionCustomContent}
-                            mxFilter={mxFilter}
-                            setMxFilter={(newFilter: string) => setMxFilter(newFilter)}
-                            moreResultsText={moreResultsText}
-                            optionsStyle={optionsStyleSet}
-                            isSearchable={isSearchable}
-                            showSelectAll={showSelectAll}
-                            selectAllIcon={selectAllIcon}
-                            maxReferenceDisplay={maxReferenceDisplay}
-                            referenceSetStyle={referenceSetStyle}
-                            // isLoading={isLoading}
-                            onSelectMoreOptions={onSelectMoreOptions}
-                        />
-                        {association.validation && <Alert>{association.validation}</Alert>}
-                    </Fragment>
-                );
-            }
-
-        case "enumeration":
-            const currentValue = enumUniverse.find(enu => enu.name === enumAttribute.value);
-            if (selectStyle === "dropdown") {
-                return (
-                    <Fragment>
-                        <EnumDropdown
-                            name={name}
-                            tabIndex={tabIndex}
-                            placeholder={placeholder}
-                            noResultsText={noResultsText as string}
-                            options={enumOptions}
-                            currentValue={currentValue}
-                            onSelectEnum={(enumValue: string | undefined) =>
-                                onSelectEnum(enumAttribute.value, enumValue, enumAttribute, onChange)
-                            }
-                            mxFilter={mxFilter}
-                            setMxFilter={setMxFilter}
-                            isClearable={isClearable}
-                            isSearchable={isSearchable}
-                            clearIcon={clearIcon}
-                            dropdownIcon={dropdownIcon}
-                            isReadOnly={enumAttribute.readOnly}
-                            maxHeight={maxMenuHeight}
-                            optionsStyle={optionsStyleSingle}
-                            // isLoading={isLoading}
-                        />
-                        {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
-                    </Fragment>
-                );
-            } else {
-                return (
-                    <Fragment>
-                        <EnumList
-                            name={name}
-                            tabIndex={tabIndex}
-                            placeholder={placeholder}
-                            noResultsText={noResultsText}
-                            options={enumOptions}
-                            currentValue={currentValue}
-                            onSelectEnum={(enumValue: string | undefined) =>
-                                onSelectEnum(enumAttribute.value, enumValue, enumAttribute, onChange)
-                            }
-                            mxFilter={mxFilter}
-                            setMxFilter={setMxFilter}
-                            isClearable={isClearable}
-                            isSearchable={isSearchable}
-                            clearIcon={clearIcon}
-                            isReadOnly={enumAttribute.readOnly}
-                            optionsStyle={optionsStyleSingle}
-                            // isLoading={isLoading}
-                        />
-                        {enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
-                    </Fragment>
-                );
-            }
+    // Only mount the position tracking hook for dropdowns
+    if (selectStyle === "dropdown") {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        usePositionUpdate(srsRef, newPosition => {
+            setPosition(newPosition);
+        });
     }
-}
+
+    useOnClickOutside(srsRef, () => {
+        onLeaveHandler(
+            showMenu,
+            setShowMenu,
+            searchFilter,
+            setSearchFilter,
+            focusedObjIndex,
+            setFocusedObjIndex,
+            onLeave
+        );
+    });
+
+    const onSelectHandler = (selectedOption: IOption | undefined): void => {
+        if (selectedOption) {
+            if (Array.isArray(currentValue)) {
+                // reference set
+                if (currentValue !== undefined && currentValue.length > 0) {
+                    if (currentValue.find(option => option.id === selectedOption.id)) {
+                        if (isClearable || currentValue.length > 1) {
+                            // option already selected, deselect
+                            onSelect(currentValue.filter(option => option.id !== selectedOption.id));
+                        }
+                    } else {
+                        // list already exists, add to list
+                        onSelect([...currentValue, selectedOption]);
+                    }
+                } else {
+                    // list is empty, start list
+                    onSelect([selectedOption]);
+                }
+            } else {
+                // reference or enum
+                onSelect(selectedOption);
+            }
+        } else {
+            // clear the selection
+            onSelect(undefined);
+        }
+        if (selectionType !== "referenceSet") {
+            setShowMenu(false);
+        }
+        onLeaveHandler(
+            showMenu,
+            setShowMenu,
+            searchFilter,
+            setSearchFilter,
+            focusedObjIndex,
+            setFocusedObjIndex,
+            onLeave
+        );
+    };
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+        setSearchFilter(value);
+        setFocusedObjIndex(0);
+        // make sure the dropdown is open if the user is typing
+        if (value.trim() !== "" && !showMenu) {
+            setShowMenu(true);
+        }
+    };
+
+    return (
+        <Fragment>
+            <div
+                className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
+                tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
+                onClick={() => {
+                    if (!isReadOnly) {
+                        setShowMenu(!showMenu);
+                        updatePositionManually(selectStyle, setPosition, srsRef);
+                        if (showMenu === false) {
+                            focusSearchInput(searchInput, 300);
+                        }
+                    }
+                }}
+                onKeyDown={event => {
+                    if (!isReadOnly) {
+                        handleKeyNavigation(
+                            event,
+                            focusedObjIndex,
+                            setFocusedObjIndex,
+                            options,
+                            onSelectHandler,
+                            selectionType !== "referenceSet",
+                            setShowMenu,
+                            () => updatePositionManually(selectStyle, setPosition, srsRef),
+                            () =>
+                                onLeaveHandler(
+                                    showMenu,
+                                    setShowMenu,
+                                    searchFilter,
+                                    setSearchFilter,
+                                    focusedObjIndex,
+                                    setFocusedObjIndex,
+                                    onLeave
+                                )
+                        );
+                    }
+                }}
+                ref={srsRef}
+            >
+                <div className="srs-search-input">
+                    {/* Hide Search Input if read only and there is already a value */}
+                    {!(isReadOnly && currentValue !== undefined) && (
+                        <SearchInput
+                            isReadOnly={isReadOnly}
+                            isSearchable={isSearchable}
+                            name={name}
+                            onChange={handleInputChange}
+                            placeholder={placeholder}
+                            setRef={newRef => setSearchInput(newRef)}
+                            hasCurrentValue={currentValue !== undefined}
+                            searchFilter={searchFilter}
+                            showMenu={showMenu}
+                            isReferenceSet={selectionType === "referenceSet"}
+                        />
+                    )}
+
+                    {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
+                    {(selectionType === "referenceSet" || searchFilter === "") && (
+                        <CurrentValueDisplay
+                            currentValue={currentValue}
+                            isClearable={isClearable}
+                            isReadOnly={isReadOnly}
+                            maxReferenceDisplay={maxReferenceDisplay}
+                            onRemove={clickObj => onSelectHandler(clickObj)}
+                            referenceSetStyle={referenceSetStyle}
+                            clearIcon={clearIcon}
+                            onBadgeClick={onBadgeClick}
+                        />
+                    )}
+                    {!isReadOnly && (
+                        <div className="srs-icon-row" style={{ gridRow: selectionType === "referenceSet" ? 2 : 1 }}>
+                            {selectionType === "referenceSet" && showSelectAll && (
+                                <MxIcon
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        setSearchFilter("");
+                                        setFocusedObjIndex(-1);
+                                        onSelect(options.filter(option => option.isSelectable));
+                                    }}
+                                    title={"Select All"}
+                                    mxIconOverride={selectAllIcon}
+                                    defaultClassName="check"
+                                />
+                            )}
+
+                            {isClearable && (
+                                <MxIcon
+                                    onClick={event => {
+                                        updatePositionManually(selectStyle, setPosition, srsRef);
+                                        handleClearAll(
+                                            event,
+                                            searchFilter,
+                                            setSearchFilter,
+                                            focusedObjIndex,
+                                            setFocusedObjIndex,
+                                            onSelectHandler,
+                                            searchInput,
+                                            showMenu,
+                                            setShowMenu
+                                        );
+                                    }}
+                                    title={"Clear"}
+                                    mxIconOverride={clearIcon}
+                                    defaultClassName="remove"
+                                />
+                            )}
+                            {selectStyle === "dropdown" && (
+                                <MxIcon mxIconOverride={dropdownIcon} defaultClassName="menu-down" />
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+            {(showMenu || selectStyle === "list") && !isReadOnly && (
+                <OptionsMenu
+                    onSelect={onSelectHandler}
+                    currentFocus={options[focusedObjIndex]}
+                    maxMenuHeight={maxMenuHeight}
+                    noResultsText={noResultsText}
+                    moreResultsText={moreResultsText}
+                    optionsStyle={optionsStyle}
+                    selectStyle={selectStyle}
+                    position={position}
+                    onSelectMoreOptions={() => {
+                        if (onSelectMoreOptions) {
+                            onSelectMoreOptions();
+                            focusSearchInput(searchInput, 300);
+                        }
+                    }}
+                    options={options}
+                    hasMoreOptions={hasMoreOptions}
+                />
+            )}
+        </Fragment>
+    );
+};
+
+export default Selector;

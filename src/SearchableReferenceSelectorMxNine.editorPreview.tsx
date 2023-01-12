@@ -1,45 +1,8 @@
-import { ReactElement, createElement, Fragment } from "react";
+import { ReactElement, createElement } from "react";
 import { SearchableReferenceSelectorMxNinePreviewProps } from "typings/SearchableReferenceSelectorMxNineProps";
-import { WebIcon } from "mendix";
-import { Icon } from "mendix/components/web/Icon";
-import EnumOption from "./components/enum/Option";
-import RefOption from "./components/reference/Option";
-import { focusModeEnum } from "typings/general";
-
-type iconPreview =
-    | {
-          type: "glyph";
-          iconClass: string;
-      }
-    | {
-          type: "image";
-          imageUrl: string;
-      }
-    | null;
-
-const formatWebIcon = (propsIcon: iconPreview): WebIcon | undefined => {
-    if (propsIcon?.type === "glyph") {
-        const glyphIcon = { type: propsIcon.type, iconClass: propsIcon.iconClass };
-        return glyphIcon;
-        // there seems to be a bug with Mendix that the image does not load via url
-        // } else if (propsIcon?.type === "image") {
-        //     const imgIcon = { type: propsIcon.type, iconUrl: propsIcon.imageUrl };
-        //     return imgIcon;
-    } else {
-        return undefined;
-    }
-};
-
-const displayIcon = (propsIcon: iconPreview, defaultClassName: string): ReactElement => {
-    const webIcon = formatWebIcon(propsIcon);
-    return propsIcon !== null && webIcon !== undefined ? (
-        <div>
-            <Icon icon={webIcon} />
-        </div>
-    ) : (
-        <span className={"glyphicon glyphicon-" + defaultClassName} aria-hidden="true" />
-    );
-};
+import { displayTextContent } from "./utils/displayContent";
+import Selector from "./components/Selector";
+import { IOption } from "typings/option";
 
 export function preview({
     reference,
@@ -50,112 +13,125 @@ export function preview({
     enumAttribute,
     isClearable,
     isSearchable,
-    maxItems,
-    optionsStyleSet,
     optionsStyleSingle,
     readOnly,
     selectAllIcon,
-    selectStyle,
     selectionType,
-    showSelectAll
+    showSelectAll,
+    optionTextType,
+    optionCustomContent,
+    maxReferenceDisplay,
+    moreResultsText,
+    noResultsText,
+    optionsStyleSet,
+    placeholder,
+    referenceSetStyle
 }: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
-    const lastPeriodIndex = selectionType ==="reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
-    const associationDisplay = selectionType ==="reference" ? reference.substring(lastPeriodIndex + 1) : referenceSet.substring(lastPeriodIndex + 1);
+    const lastPeriodIndex = selectionType === "reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
+    const associationDisplay =
+        selectionType === "reference"
+            ? reference.substring(lastPeriodIndex + 1)
+            : referenceSet.substring(lastPeriodIndex + 1);
     const formattedDisplayAttribute =
         selectionType === "enumeration" ? enumAttribute : "[" + associationDisplay + "/" + displayAttribute + "]";
 
+    const option1: IOption = {
+        id: "1",
+        content:
+            optionTextType === "custom" ? (
+                <optionCustomContent.renderer caption="Place custom content here">
+                    <div style={{ width: "100%" }} />
+                </optionCustomContent.renderer>
+            ) : (
+                displayTextContent(formattedDisplayAttribute)
+            ),
+        isSelectable: true,
+        isSelected: true,
+        selectionType: "enumeration"
+    };
+    const option2: IOption = {
+        id: "2",
+        content:
+            optionTextType === "custom" ? (
+                <optionCustomContent.renderer caption="Place custom content here">
+                    <div style={{ width: "100%" }} />
+                </optionCustomContent.renderer>
+            ) : (
+                displayTextContent(formattedDisplayAttribute)
+            ),
+        isSelectable: true,
+        isSelected: false,
+        selectionType: "enumeration"
+    };
+    const option3: IOption = {
+        id: "3",
+        content:
+            optionTextType === "custom" ? (
+                <optionCustomContent.renderer caption="Place custom content here">
+                    <div style={{ width: "100%" }} />
+                </optionCustomContent.renderer>
+            ) : (
+                displayTextContent(formattedDisplayAttribute)
+            ),
+        isSelectable: false,
+        isSelected: false,
+        selectionType: "enumeration"
+    };
+
     return (
-        <div className="srs">
-            <div className="form-control">
-                {readOnly === false && isSearchable && (
-                    <input type="text" readOnly={readOnly} value={formattedDisplayAttribute}></input>
-                )}
-                {isSearchable === false && <span className="srs-text">{formattedDisplayAttribute}</span>}
-                <div className="srs-icon-row">
-                    {showSelectAll && readOnly === false && displayIcon(selectAllIcon, "check")}
-                    {isClearable && readOnly === false && displayIcon(clearIcon, "remove")}
-                    {selectStyle === "dropdown" && displayIcon(dropdownIcon, "menu-down")}
-                </div>
-            </div>
-            <div
-                className={`srs-list`}
-                style={{
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: "#d7d7d7",
-                    borderRadius: "4px",
-                    backgroundColor: "#fff",
-                    padding: "0.25em"
-                }}
-            >
-                <div>
-                    {selectionType === "enumeration" ? (
-                        <Fragment>
-                            <EnumOption
-                                isSelected
-                                isFocused={false}
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                onSelect={() => {}}
-                                focusMode={focusModeEnum.hover}
-                                optionsStyle={optionsStyleSingle}
-                                option={{ caption: formattedDisplayAttribute + " 1", name: "1" }}
-                                index={0}
-                                isSelectable
-                            />
-                            <EnumOption
-                                index={2}
-                                isSelected={false}
-                                isSelectable
-                                isFocused={false}
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                onSelect={() => {}}
-                                focusMode={focusModeEnum.hover}
-                                optionsStyle={optionsStyleSingle}
-                                option={{ caption: formattedDisplayAttribute + " 2", name: "2" }}
-                            />
-                        </Fragment>
-                    ) : (
-                        <Fragment>
-                            <RefOption
-                                index={1}
-                                isSelected
-                                isFocused={false}
-                                isSelectable
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                onSelect={() => {}}
-                                focusMode={focusModeEnum.hover}
-                                optionsStyle={optionsStyleSet || optionsStyleSingle}
-                            >
-                                <span>{displayAttribute + " 1"}</span>
-                            </RefOption>
-                            <RefOption
-                                index={2}
-                                isSelected={false}
-                                isFocused={false}
-                                isSelectable
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                onSelect={() => {}}
-                                focusMode={focusModeEnum.hover}
-                                optionsStyle={optionsStyleSet || optionsStyleSingle}
-                            >
-                                <span>{displayAttribute + " 2"}</span>
-                            </RefOption>
-                            <RefOption
-                                index={3}
-                                isSelected={false}
-                                isFocused={false}
-                                isSelectable={false}
-                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                onSelect={() => {}}
-                                focusMode={focusModeEnum.hover}
-                                optionsStyle={"cell"}
-                            >
-                                <span>{"..." + (maxItems !== "0" ? " up to " + maxItems : "")}</span>
-                            </RefOption>
-                        </Fragment>
-                    )}
-                </div>
-            </div>
+        <div className="srs" >
+            <Selector
+                name=""
+                hasMoreOptions={moreResultsText !== undefined}
+                isClearable={isClearable}
+                isReadOnly={readOnly}
+                isSearchable={isSearchable}
+                maxMenuHeight={""}
+                maxReferenceDisplay={maxReferenceDisplay || 0}
+                moreResultsText={moreResultsText}
+                noResultsText={noResultsText}
+                options={[option1, option2, option3]}
+                optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
+                placeholder={placeholder}
+                referenceSetStyle={referenceSetStyle}
+                searchFilter={""}
+                selectStyle={"list"}
+                selectionType={selectionType}
+                showSelectAll={showSelectAll}
+                srsRef={{current: {} as HTMLDivElement}}
+                clearIcon={
+                    clearIcon !== null
+                        ? clearIcon.type === "image"
+                            ? { type: "image", iconUrl: clearIcon.imageUrl }
+                            : { type: "glyph", iconClass: clearIcon.iconClass }
+                        : undefined
+                }
+                dropdownIcon={
+                    dropdownIcon !== null
+                        ? dropdownIcon.type === "image"
+                            ? { type: "image", iconUrl: dropdownIcon.imageUrl }
+                            : { type: "glyph", iconClass: dropdownIcon.iconClass }
+                        : undefined
+                }
+                selectAllIcon={
+                    selectAllIcon !== null
+                        ? selectAllIcon.type === "image"
+                            ? { type: "image", iconUrl: selectAllIcon.imageUrl }
+                            : { type: "glyph", iconClass: selectAllIcon.iconClass }
+                        : undefined
+                }
+                currentValue={selectionType === "referenceSet" ? option1 : undefined}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onLeave={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onSelect={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onSelectMoreOptions={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onBadgeClick={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                setSearchFilter={() => {}}
+            />
         </div>
     );
 }

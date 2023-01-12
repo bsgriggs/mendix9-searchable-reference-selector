@@ -1,5 +1,5 @@
 import { ChangeEvent, createElement, Fragment, ReactElement, useEffect, useRef, MouseEvent } from "react";
-import { displayTextContent } from "./displayContent";
+import { displayTextContent } from "../utils/displayContent";
 
 interface SearchInputProps {
     name: string | undefined;
@@ -33,12 +33,16 @@ export default function SearchInput({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
+
     return (
         <Fragment>
             <input
-                style={{ caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "", gridRow: isReferenceSet ? 2 : 1 }}
+                style={{
+                    caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "",
+                    gridRow: isReferenceSet ? 2 : 1
+                }}
                 name={name}
-                placeholder={hasCurrentValue && !isReferenceSet? "" : placeholder}
+                placeholder={hasCurrentValue && !isReferenceSet ? "" : placeholder}
                 type="text"
                 onChange={event => onChange(event)}
                 readOnly={isReadOnly || !isSearchable}
@@ -53,10 +57,7 @@ export default function SearchInput({
                 }}
             ></input>
             {!hasCurrentValue && !isSearchable && placeholder && (
-                <Fragment>
-                    {displayTextContent(placeholder, "srs-text")}
-                </Fragment>
-
+                <Fragment>{displayTextContent(placeholder, "srs-text")}</Fragment>
             )}
         </Fragment>
     );

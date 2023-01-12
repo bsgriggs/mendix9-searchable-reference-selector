@@ -16,9 +16,9 @@ import {
     ListWidgetValue
 } from "mendix";
 import { attribute, literal, contains, startsWith } from "mendix/filters/builders";
-import Selector from "./components/generic/Selector";
+import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
-import { displayTextContent, displayReferenceContent } from "./components/generic/displayContent";
+import { displayTextContent, displayReferenceContent } from "./utils/displayContent";
 import "./ui/SearchableReferenceSelectorMxNine.css";
 import { Alert } from "./components/Alert";
 
@@ -51,7 +51,7 @@ const mapEnum = (enumArray: string[], enumAttribute: EditableValue<string>): IOp
         return {
             content: displayTextContent(enumAttribute.formatter.format(value)),
             isSelectable: true,
-            isSelected: value === enumAttribute.value as string,
+            isSelected: value === (enumAttribute.value as string),
             selectionType: "enumeration",
             id: value
         };
@@ -64,7 +64,8 @@ const mapObjectItems = (
     optionCustomContent: ListWidgetValue | undefined,
     selectableCondition: ListExpressionValue<boolean>,
     association: ReferenceValue | ReferenceSetValue
-): IOption[] => objectItems
+): IOption[] =>
+    objectItems
         ? objectItems.map(objItem => {
               return {
                   content: displayReferenceContent(objItem, optionTextType, displayAttribute, optionCustomContent),
@@ -121,6 +122,7 @@ export default function SearchableReferenceSelector({
     dropdownIcon,
     onBadgeClick,
     onChange,
+    onLeave,
     optionCustomContent,
     selectAllIcon,
     selectableCondition,
@@ -388,7 +390,9 @@ export default function SearchableReferenceSelector({
                 name={name}
                 tabIndex={tabIndex}
                 selectAllIcon={selectAllIcon?.value}
-                onBadgeClick={onBadgeClick}
+                onBadgeClick={selectedOption =>
+                    onBadgeClick ? callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false) : undefined
+                }
                 placeholder={placeholder.value as string}
                 isSearchable={isSearchable}
                 maxMenuHeight={maxMenuHeight.value || "15em"}
@@ -434,6 +438,11 @@ export default function SearchableReferenceSelector({
                             ? reference
                             : referenceSet
                     );
+                }}
+                onLeave={() => {
+                    if (onLeave) {
+                        callMxAction(onLeave, false);
+                    }
                 }}
                 srsRef={srsRef}
             />

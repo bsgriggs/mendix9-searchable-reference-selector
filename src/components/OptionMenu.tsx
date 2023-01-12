@@ -6,16 +6,16 @@ import {
     OptionsStyleSingleEnum,
     SelectStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
-import { Position } from "../../custom hooks/usePositionUpdate";
+import { Position } from "../custom hooks/usePositionUpdate";
 import { IOption } from "typings/option";
 
 interface OptionMenuProps {
-    options:IOption[];
+    options: IOption[];
     currentFocus: IOption | undefined;
     onSelect: (selectedOption: IOption) => void;
     onSelectMoreOptions: (() => void) | undefined;
     noResultsText: string;
-    maxMenuHeight: string|undefined;
+    maxMenuHeight: string | undefined;
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     selectStyle: SelectStyleEnum;
@@ -83,7 +83,7 @@ const OptionsMenu = ({
                                 <Option
                                     index={key}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
-                                    onSelect={(selectedOption) => onSelect(selectedOption)}
+                                    onSelect={selectedOption => onSelect(selectedOption)}
                                     focusMode={focusMode}
                                     optionsStyle={optionsStyle}
                                     option={option}
@@ -98,7 +98,7 @@ const OptionsMenu = ({
                                     ? "mx-text srs-infooption"
                                     : "mx-text srs-infooption disabled"
                             }
-                            style={{cursor: onSelectMoreOptions ? "pointer": "default"}}
+                            style={{ cursor: onSelectMoreOptions ? "pointer" : "default" }}
                             role="option"
                             onClick={(event: MouseEvent<HTMLDivElement>) => {
                                 if (onSelectMoreOptions !== undefined) {
