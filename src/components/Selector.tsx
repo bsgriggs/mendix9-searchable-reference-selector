@@ -251,6 +251,11 @@ const Selector = ({
                     // list is empty, start list
                     onSelect([selectedOption]);
                 }
+                // for reference sets, do not close the menu on select
+                if (searchFilter.trim() !== "") {
+                    setSearchFilter("");
+                }
+                return;
             } else {
                 // reference or enum
                 onSelect(selectedOption);
