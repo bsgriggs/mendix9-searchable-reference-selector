@@ -24,7 +24,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 ### Data Source Settings  
 ![dataSource](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/dataSourceRef.png)  
-**Selectable Attribute** - Optional boolean expression for rendering an option as un-selectable. Useful if you want to display an option, but not allow the user to select it for a reason. For example, show a list of all users but do not allow inactive users to be selected.  
+**Selectable Condition** - Optional boolean expression for rendering an option as un-selectable. Useful if you want to display an option, but not allow the user to select it for a reason. For example, show a list of all users but do not allow inactive users to be selected.  
 **On Change** - Perform an MxAction when the user adds or removes a selection.  
 **On Leave** - Perform an MxAction when the user clicks away or tabs away.  
 
