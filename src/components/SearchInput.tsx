@@ -1,5 +1,4 @@
 import { ChangeEvent, createElement, Fragment, ReactElement, useEffect, useRef, MouseEvent } from "react";
-import { displayTextContent } from "../utils/displayContent";
 
 interface SearchInputProps {
     name: string | undefined;
@@ -45,7 +44,7 @@ export default function SearchInput({
                 }}
                 tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                 name={name}
-                placeholder={hasCurrentValue && !isReferenceSet ? "" : placeholder}
+                placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly)? placeholder : ""}
                 type="text"
                 onChange={event => onChange(event)}
                 readOnly={isReadOnly || !isSearchable}
@@ -59,9 +58,6 @@ export default function SearchInput({
                     }
                 }}
             ></input>
-            {!hasCurrentValue && !isSearchable && placeholder && (
-                <Fragment>{displayTextContent(placeholder, "srs-text")}</Fragment>
-            )}
         </Fragment>
     );
 }

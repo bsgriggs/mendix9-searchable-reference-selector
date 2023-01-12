@@ -208,6 +208,8 @@ const Selector = ({
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
+    const hasCurrentValue = selectionType !== "referenceSet" ? currentValue !== undefined : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0;
+
     // Only mount the position tracking hook for dropdowns
     if (selectStyle === "dropdown") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -232,7 +234,7 @@ const Selector = ({
         if (selectedOption) {
             if (Array.isArray(currentValue)) {
                 // reference set
-                if (currentValue !== undefined && currentValue.length > 0) {
+                if (hasCurrentValue) {
                     if (currentValue.find(option => option.id === selectedOption.id)) {
                         if (isClearable || currentValue.length > 1) {
                             // option already selected, deselect
@@ -319,7 +321,7 @@ const Selector = ({
             >
                 <div className="srs-search-input">
                     {/* Hide Search Input if read only and there is already a value */}
-                    {!(isReadOnly && currentValue !== undefined) && (
+                    {!(isReadOnly && hasCurrentValue) && (
                         <SearchInput
                             isReadOnly={isReadOnly}
                             isSearchable={isSearchable}
@@ -327,7 +329,7 @@ const Selector = ({
                             onChange={handleInputChange}
                             placeholder={placeholder}
                             setRef={newRef => setSearchInput(newRef)}
-                            hasCurrentValue={currentValue !== undefined}
+                            hasCurrentValue={hasCurrentValue}
                             searchFilter={searchFilter}
                             showMenu={showMenu}
                             isReferenceSet={selectionType === "referenceSet"}

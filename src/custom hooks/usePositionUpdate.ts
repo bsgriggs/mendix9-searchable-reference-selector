@@ -29,13 +29,17 @@ export default function usePositionUpdate(
 ): void {
     const [resizeObserver, setResizeObserver] = useState<ResizeObserver | null>(null);
 
-    const resizeHandler = (): void => {
-        handler(mapPosition(ref.current));
-    };
+    // const resizeHandler = (): void => {
+    //     handler(mapPosition(ref.current));
+    // };
 
     useEffect(() => {
         if (ref.current !== null) {
-            const observer = new ResizeObserver(resizeHandler);
+            const observer = new ResizeObserver(() => {
+                window.requestAnimationFrame(() => {
+                    handler(mapPosition(ref.current));
+                });
+            });
             observer.observe(ref.current);
             setResizeObserver(observer);
 
@@ -51,7 +55,7 @@ export default function usePositionUpdate(
                             iteratorEle?.style.overflowY === "auto" ||
                             iteratorEle.className === "mx-scrollcontainer-wrapper")
                     ) {
-                        iteratorEle.addEventListener("scroll", () => resizeHandler());
+                        iteratorEle.addEventListener("scroll", () => handler(mapPosition(ref.current)));
                         break;
                     }
                 } else {
