@@ -14,7 +14,7 @@
     flex-wrap: wrap;
 }
 
-.srs .active.form-control {
+.srs .active.form-control, .srs .form-control:focus-within {
     border-color: #264ae5;
     outline: 0;
     background-color: #fff;

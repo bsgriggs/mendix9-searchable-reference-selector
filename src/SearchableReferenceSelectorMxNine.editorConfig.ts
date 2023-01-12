@@ -104,8 +104,6 @@ export function getProperties(
     if (_values.selectStyle === "list") {
         hidePropertiesIn(defaultProperties, _values, [
             "maxMenuHeight",
-            "maxReferenceDisplay",
-            "referenceSetStyle",
             "dropdownIcon"
         ]);
     }

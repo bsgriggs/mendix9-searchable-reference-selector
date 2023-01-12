@@ -35,14 +35,14 @@ const onLeaveHandler = (
 ): void => {
     if (showMenu) {
         setShowMenu(false);
+        if (searchFilter.trim() !== "") {
+            setSearchFilter("");
+        }
+        if (focusedObjIndex !== -1) {
+            setFocusedObjIndex(-1);
+        }
+        onLeave();
     }
-    if (searchFilter.trim() !== "") {
-        setSearchFilter("");
-    }
-    if (focusedObjIndex !== -1) {
-        setFocusedObjIndex(-1);
-    }
-    onLeave();
 };
 
 const updatePositionManually = (
@@ -282,7 +282,6 @@ const Selector = ({
         <Fragment>
             <div
                 className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
-                tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                 onClick={() => {
                     if (!isReadOnly) {
                         setShowMenu(!showMenu);
@@ -332,6 +331,7 @@ const Selector = ({
                             searchFilter={searchFilter}
                             showMenu={showMenu}
                             isReferenceSet={selectionType === "referenceSet"}
+                            tabIndex={tabIndex}
                         />
                     )}
 
@@ -405,7 +405,9 @@ const Selector = ({
                     onSelectMoreOptions={() => {
                         if (onSelectMoreOptions) {
                             onSelectMoreOptions();
-                            focusSearchInput(searchInput, 300);
+                            if (selectStyle === "dropdown"){
+                                focusSearchInput(searchInput, 300);
+                            }
                         }
                     }}
                     options={options}

@@ -12,6 +12,7 @@ interface SearchInputProps {
     showMenu: boolean;
     hasCurrentValue: boolean;
     isReferenceSet: boolean;
+    tabIndex?: number;
 }
 
 export default function SearchInput({
@@ -24,7 +25,8 @@ export default function SearchInput({
     searchFilter,
     showMenu,
     hasCurrentValue,
-    isReferenceSet
+    isReferenceSet,
+    tabIndex
 }: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -41,6 +43,7 @@ export default function SearchInput({
                     caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "",
                     gridRow: isReferenceSet ? 2 : 1
                 }}
+                tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
                 name={name}
                 placeholder={hasCurrentValue && !isReferenceSet ? "" : placeholder}
                 type="text"

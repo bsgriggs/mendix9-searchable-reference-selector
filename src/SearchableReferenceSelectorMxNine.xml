@@ -177,7 +177,7 @@
                 </property>
                 <property key="onLeave" type="action">
                     <caption>On Leave</caption>
-                    <description>Action performed when the user closes the popup or clicks away or tabs away</description>
+                    <description>Action performed when the user closes the popup, clicks away, or tabs away</description>
                 </property>
                 <property key="onBadgeClick" type="action" dataSource="selectableObjects">
                     <caption>On Badge Click</caption>
