@@ -11,7 +11,7 @@ import {
 import { WebIcon } from "mendix";
 import OptionsMenu from "./OptionMenu";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
-import usePositionUpdate, { mapPosition, Position } from "../custom hooks/usePositionUpdate";
+import {usePositionObserver} from "../custom hooks/usePositionObserver";
 import SearchInput from "./SearchInput";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
@@ -45,15 +45,15 @@ const onLeaveHandler = (
     }
 };
 
-const updatePositionManually = (
-    selectStyle: SelectStyleEnum,
-    setPosition: (newPosition: Position) => void,
-    srsRef: RefObject<HTMLDivElement>
-): void => {
-    if (selectStyle === "dropdown") {
-        setPosition(mapPosition(srsRef.current));
-    }
-};
+// const updatePositionManually = (
+//     selectStyle: SelectStyleEnum,
+//     setPosition: (newPosition: Position) => void,
+//     srsRef: RefObject<HTMLDivElement>
+// ): void => {
+//     if (selectStyle === "dropdown") {
+//         setPosition(mapPosition(srsRef.current));
+//     }
+// };
 
 const handleClearAll = (
     event: MouseEvent<HTMLDivElement | HTMLSpanElement>,
@@ -99,7 +99,7 @@ const handleKeyNavigation = (
     onSelect: (selectedObj: IOption) => void,
     closeOnSelect: boolean,
     setShowMenu: (newShowMenu: boolean) => void,
-    updatePosition: () => void,
+    // updatePosition: () => void,
     onLeave: () => void
 ): void => {
     const keyPressed = event.key;
@@ -111,9 +111,9 @@ const handleKeyNavigation = (
         } else {
             setFocusedObjIndex(options.length - 1);
         }
-        if (updatePosition !== undefined) {
-            updatePosition();
-        }
+        // if (updatePosition !== undefined) {
+        //     updatePosition();
+        // }
         setShowMenu(true);
     } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
         if (focusedObjIndex === -1) {
@@ -123,9 +123,9 @@ const handleKeyNavigation = (
         } else {
             setFocusedObjIndex(0);
         }
-        if (updatePosition !== undefined) {
-            updatePosition();
-        }
+        // if (updatePosition !== undefined) {
+        //     updatePosition();
+        // }
         setShowMenu(true);
     } else if (keyPressed === "Enter") {
         if (focusedObjIndex > -1) {
@@ -206,20 +206,14 @@ const Selector = ({
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
-    const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
+    // const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
+
+    const position = usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
 
     const hasCurrentValue =
         selectionType !== "referenceSet"
             ? currentValue !== undefined
             : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0;
-
-    // Only mount the position tracking hook for dropdowns
-    if (selectStyle === "dropdown") {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        usePositionUpdate(srsRef, newPosition => {
-            setPosition(newPosition);
-        });
-    }
 
     useOnClickOutside(srsRef, () => {
         onLeaveHandler(
@@ -295,7 +289,7 @@ const Selector = ({
                 onClick={() => {
                     if (!isReadOnly) {
                         setShowMenu(!showMenu);
-                        updatePositionManually(selectStyle, setPosition, srsRef);
+                        // updatePositionManually(selectStyle, setPosition, srsRef);
                         if (showMenu === false) {
                             focusSearchInput(searchInput, 300);
                         }
@@ -311,7 +305,7 @@ const Selector = ({
                             onSelectHandler,
                             selectionType !== "referenceSet",
                             setShowMenu,
-                            () => updatePositionManually(selectStyle, setPosition, srsRef),
+                            // () => updatePositionManually(selectStyle, setPosition, srsRef),
                             () =>
                                 onLeaveHandler(
                                     showMenu,
@@ -377,7 +371,7 @@ const Selector = ({
                             {isClearable && (
                                 <MxIcon
                                     onClick={event => {
-                                        updatePositionManually(selectStyle, setPosition, srsRef);
+                                        // updatePositionManually(selectStyle, setPosition, srsRef);
                                         handleClearAll(
                                             event,
                                             searchFilter,

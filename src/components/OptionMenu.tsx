@@ -6,7 +6,6 @@ import {
     OptionsStyleSingleEnum,
     SelectStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
-import { Position } from "../custom hooks/usePositionUpdate";
 import { IOption } from "typings/option";
 
 interface OptionMenuProps {
@@ -19,22 +18,22 @@ interface OptionMenuProps {
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     selectStyle: SelectStyleEnum;
-    position?: Position;
+    position?: ClientRect;
     hasMoreOptions: boolean;
 }
 
 const OptionMenuStyle = (
     selectStyle: SelectStyleEnum,
-    position: Position | undefined,
+    position: ClientRect | undefined,
     maxMenuHeight: string | undefined
 ): CSSProperties => {
     if (selectStyle === "dropdown" && position !== undefined) {
         const contentCloseToBottom = position.y > window.innerHeight * 0.7;
         return {
             maxHeight: maxMenuHeight ? maxMenuHeight : "15em",
-            top: contentCloseToBottom ? "unset" : position.h + position.y,
+            top: contentCloseToBottom ? "unset" : position.height + position.y,
             bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
-            width: position.w,
+            width: position.width,
             left: position.x
         };
     } else {
