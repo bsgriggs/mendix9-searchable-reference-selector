@@ -11,7 +11,7 @@ import {
 import { WebIcon } from "mendix";
 import OptionsMenu from "./OptionMenu";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
-import {usePositionObserver} from "../custom hooks/usePositionObserver";
+import { usePositionObserver } from "../custom hooks/usePositionObserver";
 import SearchInput from "./SearchInput";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
