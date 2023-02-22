@@ -6,7 +6,8 @@ import {
     Fragment,
     RefObject,
     MouseEvent,
-    KeyboardEvent
+    KeyboardEvent,
+    useEffect
 } from "react";
 import { WebIcon } from "mendix";
 import OptionsMenu from "./OptionMenu";
@@ -150,8 +151,8 @@ interface SelectorProps {
     options: IOption[];
     currentValue: IOption | IOption[] | undefined;
     onSelect: (selectedOption: IOption | IOption[] | undefined) => void;
-    searchFilter: string;
-    setSearchFilter: (newFilter: string) => void;
+    // searchFilter: string;
+    setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
     clearIcon: WebIcon | undefined;
     isSearchable: boolean;
@@ -193,9 +194,9 @@ const Selector = ({
     optionsStyle,
     placeholder,
     referenceSetStyle,
-    searchFilter,
+    // searchFilter,
     selectAllIcon,
-    setSearchFilter,
+    setMxFilter,
     showSelectAll,
     tabIndex,
     selectStyle,
@@ -204,9 +205,15 @@ const Selector = ({
     onLeave
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
+    const [searchFilter, setSearchFilter] = useState("");
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
     // const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
+
+    useEffect(() => {
+        setMxFilter(searchFilter);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchFilter]);
 
     const position = usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
 

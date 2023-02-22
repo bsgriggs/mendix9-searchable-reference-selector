@@ -94,7 +94,6 @@ export function preview({
                 optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
                 placeholder={placeholder}
                 referenceSetStyle={referenceSetStyle}
-                searchFilter={""}
                 selectStyle={"list"}
                 selectionType={selectionType}
                 showSelectAll={showSelectAll}
@@ -130,7 +129,7 @@ export function preview({
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onBadgeClick={() => {}}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
-                setSearchFilter={() => {}}
+                setMxFilter={() => {}}
             />
         </div>
     );

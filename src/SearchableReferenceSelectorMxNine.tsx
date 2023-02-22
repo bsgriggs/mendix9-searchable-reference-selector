@@ -138,7 +138,7 @@ export default function SearchableReferenceSelector({
     tabIndex
 }: SearchableReferenceSelectorMxNineContainerProps): ReactElement {
     const defaultPageSize = selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined;
-    const [searchFilter, setSearchFilter] = useState<string>("");
+    const [mxFilter, setMxFilter] = useState<string>("");
     const [itemsLimit, setItemsLimit] = useState<number | undefined>(defaultPageSize);
     const [options, setOptions] = useState<IOption[]>([]);
     const [currentValue, setCurrentValue] = useState<IOption | IOption[] | undefined>();
@@ -266,8 +266,8 @@ export default function SearchableReferenceSelector({
                 if (enumAttribute.status === ValueStatus.Available && placeholder.status === ValueStatus.Available) {
                     const delayDebounceFn = setTimeout(() => {
                         if (isSearchable && enumAttribute.universe !== undefined) {
-                            if (searchFilter !== undefined && searchFilter.trim().length > 0) {
-                                const searchTextTrimmed = searchFilter.trim();
+                            if (mxFilter !== undefined && mxFilter.trim().length > 0) {
+                                const searchTextTrimmed = mxFilter.trim();
                                 if (filterFunction === "contains") {
                                     setOptions(
                                         mapEnum(
@@ -296,7 +296,7 @@ export default function SearchableReferenceSelector({
                     return () => clearTimeout(delayDebounceFn);
                 }
                 // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [searchFilter]);
+            }, [mxFilter]);
         } else {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             useEffect(() => {
@@ -307,23 +307,21 @@ export default function SearchableReferenceSelector({
                                 // data source supports xpath filtering
                                 const filterCondition =
                                     filterFunction === "contains"
-                                        ? contains(attribute(displayAttribute.id), literal(searchFilter))
-                                        : startsWith(attribute(displayAttribute.id), literal(searchFilter));
+                                        ? contains(attribute(displayAttribute.id), literal(mxFilter))
+                                        : startsWith(attribute(displayAttribute.id), literal(mxFilter));
                                 selectableObjects.setFilter(filterCondition);
                             } else {
                                 // data source does not support xpath filter - filter on client
-                                if (searchFilter.trim().length > 0 && selectableObjects.items) {
+                                if (mxFilter.trim().length > 0 && selectableObjects.items) {
                                     setOptions(
                                         mapObjectItems(
                                             selectableObjects.items.filter(obj => {
                                                 const text = displayAttribute.get(obj).displayValue as string;
                                                 return filterFunction === "contains"
                                                     ? text !== undefined &&
-                                                          text.toLowerCase().includes(searchFilter.trim().toLowerCase())
+                                                          text.toLowerCase().includes(mxFilter.trim().toLowerCase())
                                                     : text !== undefined &&
-                                                          text
-                                                              .toLowerCase()
-                                                              .startsWith(searchFilter.trim().toLowerCase());
+                                                          text.toLowerCase().startsWith(mxFilter.trim().toLowerCase());
                                             }),
                                             optionTextType,
                                             displayAttribute,
@@ -352,13 +350,13 @@ export default function SearchableReferenceSelector({
                     return () => clearTimeout(delayDebounceFn);
                 }
                 // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [searchFilter]);
+            }, [mxFilter]);
         }
     } else {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
-            if (searchText.status === ValueStatus.Available && searchText.displayValue !== searchFilter) {
-                setSearchFilter(searchText.displayValue);
+            if (searchText.status === ValueStatus.Available && searchText.displayValue !== mxFilter) {
+                setMxFilter(searchText.displayValue);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [searchText]);
@@ -368,7 +366,7 @@ export default function SearchableReferenceSelector({
             if (searchText.status === ValueStatus.Available) {
                 const delayDebounceFn = setTimeout(() => {
                     if (isSearchable) {
-                        searchText.setValue(searchFilter);
+                        searchText.setValue(mxFilter);
                         callMxAction(refreshAction, true);
                     }
                 }, filterDelay);
@@ -376,7 +374,7 @@ export default function SearchableReferenceSelector({
                 return () => clearTimeout(delayDebounceFn);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [searchFilter]);
+        }, [mxFilter]);
     }
 
     return (
@@ -425,8 +423,7 @@ export default function SearchableReferenceSelector({
                 isReadOnly={isReadOnly}
                 options={options}
                 optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
-                searchFilter={searchFilter}
-                setSearchFilter={setSearchFilter}
+                setMxFilter={setMxFilter}
                 onSelect={(selectedOption: IOption) => {
                     handleSelect(
                         isReadOnly,

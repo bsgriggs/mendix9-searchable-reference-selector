@@ -1,7 +1,7 @@
 {
     "name": "searchablereferenceselectormxnine",
     "widgetName": "SearchableReferenceSelectorMxNine",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Mendix reference, reference set, and enumeration selector with a search bar and a clear button",
     "copyright": "© Mendix Technology BV 2022. All rights reserved.",
     "author": "Benjamin Griggs",
