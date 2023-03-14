@@ -127,7 +127,7 @@ const OptionsMenu = ({
                 </Fragment>
             ) : (
                 <li className="mx-text srs-infooption disabled" role="option">
-                    {noResultsText ? noResultsText : "No results found"}
+                    {isLoading ? loadingText : noResultsText ? noResultsText : "No results found"}
                 </li>
             )}
         </ul>
