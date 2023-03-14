@@ -4,7 +4,19 @@
  * @author Mendix Widgets Framework Team
  */
 import { ComponentType } from "react";
-import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
+import {
+    ActionValue,
+    DynamicValue,
+    EditableValue,
+    ListValue,
+    ListActionValue,
+    ListAttributeValue,
+    ListExpressionValue,
+    ListWidgetValue,
+    ReferenceValue,
+    ReferenceSetValue,
+    WebIcon
+} from "mendix";
 import { Big } from "big.js";
 
 export type SelectStyleEnum = "dropdown" | "list";
@@ -34,6 +46,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     maxItems: DynamicValue<Big>;
     moreResultsText: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
+    loadingText: DynamicValue<string>;
+    allowLoadingSelect: boolean;
     selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
@@ -73,6 +87,8 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxItems: string;
     moreResultsText: string;
     noResultsText: string;
+    loadingText: string;
+    allowLoadingSelect: boolean;
     selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
@@ -81,9 +97,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     referenceSetStyle: ReferenceSetStyleEnum;
     maxReferenceDisplay: number | null;
     maxMenuHeight: string;
-    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    clearIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
     selectionType: SelectionTypeEnum;
     selectableObjects: {} | { type: string } | null;
     reference: string;

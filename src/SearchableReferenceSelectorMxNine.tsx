@@ -135,7 +135,9 @@ export default function SearchableReferenceSelector({
     name,
     onClickMoreResultsText,
     id,
-    tabIndex
+    tabIndex,
+    loadingText,
+    allowLoadingSelect
 }: SearchableReferenceSelectorMxNineContainerProps): ReactElement {
     const defaultPageSize = selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined;
     const [mxFilter, setMxFilter] = useState<string>("");
@@ -255,7 +257,7 @@ export default function SearchableReferenceSelector({
                 );
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectableObjects.items, reference, referenceSet]);
+        }, [selectableObjects, reference, referenceSet]);
     }
 
     // Determine the Filtering handling useEffect
@@ -380,6 +382,8 @@ export default function SearchableReferenceSelector({
     return (
         <div id={id} className="srs" ref={srsRef}>
             <Selector
+                isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
+                loadingText={loadingText.value as string}
                 clearIcon={clearIcon?.value}
                 dropdownIcon={dropdownIcon?.value}
                 isClearable={isClearable}
@@ -442,6 +446,7 @@ export default function SearchableReferenceSelector({
                     }
                 }}
                 srsRef={srsRef}
+                allowLoadingSelect={allowLoadingSelect}
             />
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}

@@ -56,7 +56,7 @@
 .srs .srs-icon-row {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5em;
     margin-left: auto;
     grid-column: 2;
 }
@@ -87,7 +87,7 @@
 } */
 
 .srs .srs-icon-row .glyphicon, .srs .srs-icon-row img{
-    padding: 0.5em 0.25em;
+    /* padding: 0.5em 0.25em; */
     color: #6f6f6f;
 }
 
@@ -143,7 +143,13 @@
     background-color: #fff;
     overflow-y: auto;
     padding: 0.25em;
+    margin-bottom: 0;
 }
+
+.srs .srs-menu li{
+    list-style: none;
+}
+
 .has-error .srs .srs-menu  {
     border-color: #a94442;
 }
@@ -191,17 +197,6 @@
     flex-shrink: 0 !important;
 }
 
-/* .srs .srs-loading-indicator{
-    display: flex;
-    gap: 0.25em;
-    padding: 0.5em 0.25em;
+.srs .wait .srs-option, .srs .wait .srs-infooption {
+    cursor: wait !important;
 }
-
-.srs .srs-loading-dot{
-    position: relative;
-    width: 10px;
-    height: 10px;
-    border-radius: 100%;
-    background-color:#6f6f6f; 
-}
-*/

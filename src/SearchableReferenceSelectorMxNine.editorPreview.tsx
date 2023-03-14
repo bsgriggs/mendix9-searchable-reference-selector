@@ -25,7 +25,9 @@ export function preview({
     noResultsText,
     optionsStyleSet,
     placeholder,
-    referenceSetStyle
+    referenceSetStyle,
+    loadingText,
+    allowLoadingSelect
 }: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
     const lastPeriodIndex = selectionType === "reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
     const associationDisplay =
@@ -81,6 +83,9 @@ export function preview({
     return (
         <div className="srs">
             <Selector
+                isLoading={false}
+                loadingText={loadingText}
+                allowLoadingSelect={allowLoadingSelect}
                 name=""
                 hasMoreOptions={moreResultsText !== undefined}
                 isClearable={isClearable}
@@ -97,7 +102,6 @@ export function preview({
                 selectStyle={"list"}
                 selectionType={selectionType}
                 showSelectAll={showSelectAll}
-                srsRef={{ current: {} as HTMLDivElement }}
                 clearIcon={
                     clearIcon !== null
                         ? clearIcon.type === "image"

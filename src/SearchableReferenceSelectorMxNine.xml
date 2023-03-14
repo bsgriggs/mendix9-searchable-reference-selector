@@ -50,6 +50,17 @@
                         <translation lang="en_US">No results found</translation>
                     </translations>
                 </property>
+                <property key="loadingText" type="textTemplate" required="true">
+                    <caption>Loading Text</caption>
+                    <description>Text shown in the dropdown while waiting for the data source</description>
+                    <translations>
+                        <translation lang="en_US">Loading ...</translation>
+                    </translations>
+                </property>
+                <property key="allowLoadingSelect" type="boolean" defaultValue="true">
+                    <caption>Allow Loading Select?</caption>
+                    <description>Allow the user to select an option while the data source is loading? (i.e. time between typing and the data source returning results)</description>
+                </property>
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Style">

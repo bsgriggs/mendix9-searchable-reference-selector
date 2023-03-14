@@ -46,16 +46,6 @@ const onLeaveHandler = (
     }
 };
 
-// const updatePositionManually = (
-//     selectStyle: SelectStyleEnum,
-//     setPosition: (newPosition: Position) => void,
-//     srsRef: RefObject<HTMLDivElement>
-// ): void => {
-//     if (selectStyle === "dropdown") {
-//         setPosition(mapPosition(srsRef.current));
-//     }
-// };
-
 const handleClearAll = (
     event: MouseEvent<HTMLDivElement | HTMLSpanElement>,
     searchFilter: string,
@@ -64,13 +54,10 @@ const handleClearAll = (
     setFocusedObjIndex: (newIndex: number) => void,
     onSelectHandler: (selectedOption: IOption | undefined) => void,
     searchInput: HTMLInputElement | null,
-    showMenu: boolean,
+    // showMenu: boolean,
     setShowMenu: (newShowMenu: boolean) => void
 ): void => {
     event.stopPropagation();
-    if (showMenu) {
-        setShowMenu(false);
-    }
     if (focusedObjIndex !== -1) {
         setFocusedObjIndex(-1);
     }
@@ -79,6 +66,7 @@ const handleClearAll = (
     } else {
         onSelectHandler(undefined);
     }
+    setTimeout(() => setShowMenu(true), 100);
     focusSearchInput(searchInput, 300);
 };
 
@@ -100,7 +88,6 @@ const handleKeyNavigation = (
     onSelect: (selectedObj: IOption) => void,
     closeOnSelect: boolean,
     setShowMenu: (newShowMenu: boolean) => void,
-    // updatePosition: () => void,
     onLeave: () => void
 ): void => {
     const keyPressed = event.key;
@@ -112,9 +99,6 @@ const handleKeyNavigation = (
         } else {
             setFocusedObjIndex(options.length - 1);
         }
-        // if (updatePosition !== undefined) {
-        //     updatePosition();
-        // }
         setShowMenu(true);
     } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
         if (focusedObjIndex === -1) {
@@ -124,9 +108,6 @@ const handleKeyNavigation = (
         } else {
             setFocusedObjIndex(0);
         }
-        // if (updatePosition !== undefined) {
-        //     updatePosition();
-        // }
         setShowMenu(true);
     } else if (keyPressed === "Enter") {
         if (focusedObjIndex > -1) {
@@ -151,7 +132,6 @@ interface SelectorProps {
     options: IOption[];
     currentValue: IOption | IOption[] | undefined;
     onSelect: (selectedOption: IOption | IOption[] | undefined) => void;
-    // searchFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
     clearIcon: WebIcon | undefined;
@@ -170,8 +150,11 @@ interface SelectorProps {
     referenceSetStyle: ReferenceSetStyleEnum; // selectionType = ReferenceSet
     maxReferenceDisplay: number; // selectionType = ReferenceSet
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined; // selectionType = ReferenceSet
-    srsRef: RefObject<HTMLDivElement>;
+    srsRef?: RefObject<HTMLDivElement>;
     onLeave: () => void;
+    isLoading: boolean;
+    loadingText: string;
+    allowLoadingSelect: boolean;
 }
 
 const Selector = ({
@@ -202,37 +185,43 @@ const Selector = ({
     selectStyle,
     selectionType,
     srsRef,
-    onLeave
+    onLeave,
+    isLoading,
+    loadingText,
+    allowLoadingSelect
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [searchFilter, setSearchFilter] = useState("");
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
-    // const [position, setPosition] = useState<Position>({ x: 0, y: 0, w: 0, h: 0 });
 
     useEffect(() => {
         setMxFilter(searchFilter);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchFilter]);
 
-    const position = usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const position = srsRef && usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
 
     const hasCurrentValue =
         selectionType !== "referenceSet"
             ? currentValue !== undefined
             : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0;
 
-    useOnClickOutside(srsRef, () => {
-        onLeaveHandler(
-            showMenu,
-            setShowMenu,
-            searchFilter,
-            setSearchFilter,
-            focusedObjIndex,
-            setFocusedObjIndex,
-            onLeave
-        );
-    });
+    if (srsRef) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useOnClickOutside(srsRef, () => {
+            onLeaveHandler(
+                showMenu,
+                setShowMenu,
+                searchFilter,
+                setSearchFilter,
+                focusedObjIndex,
+                setFocusedObjIndex,
+                onLeave
+            );
+        });
+    }
 
     const onSelectHandler = (selectedOption: IOption | undefined): void => {
         if (selectedOption) {
@@ -296,7 +285,6 @@ const Selector = ({
                 onClick={() => {
                     if (!isReadOnly) {
                         setShowMenu(!showMenu);
-                        // updatePositionManually(selectStyle, setPosition, srsRef);
                         if (showMenu === false) {
                             focusSearchInput(searchInput, 300);
                         }
@@ -387,7 +375,7 @@ const Selector = ({
                                             setFocusedObjIndex,
                                             onSelectHandler,
                                             searchInput,
-                                            showMenu,
+                                            // showMenu,
                                             setShowMenu
                                         );
                                     }}
@@ -423,6 +411,9 @@ const Selector = ({
                     }}
                     options={options}
                     hasMoreOptions={hasMoreOptions}
+                    isLoading={isLoading}
+                    loadingText={loadingText}
+                    allowLoadingSelect={allowLoadingSelect}
                 />
             )}
         </Fragment>

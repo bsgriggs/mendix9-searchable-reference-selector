@@ -53,7 +53,9 @@ export function getProperties(
                 "optionsStyleSet",
                 "filterType",
                 "moreResultsText",
-                "maxItems"
+                "maxItems",
+                "allowLoadingSelect",
+                "loadingText"
             ]);
             break;
         case "reference":
@@ -143,7 +145,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
 
     if (_values.optionTextType === "custom" && _values.optionCustomContent.widgetCount === 0) {
         errors.push({
-            property: `optionTextType`,
+            property: `optionCustomContent`,
             message: `Option Custom content is required when Option Text Type is 'Custom'.`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
@@ -161,14 +163,6 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `maxItems`,
             message: `Max Items must be greater than or equal to 0`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
-        });
-    }
-
-    if (parseInt(_values.maxItems) < 1) {
-        errors.push({
-            property: `maxBadges`,
-            message: `Max Badges must be greater than or equal to 1`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
     }

@@ -20,6 +20,9 @@ interface OptionMenuProps {
     selectStyle: SelectStyleEnum;
     position?: ClientRect;
     hasMoreOptions: boolean;
+    isLoading: boolean;
+    allowLoadingSelect: boolean;
+    loadingText: string;
 }
 
 const OptionMenuStyle = (
@@ -52,9 +55,12 @@ const OptionsMenu = ({
     noResultsText,
     position,
     onSelectMoreOptions,
-    hasMoreOptions
+    hasMoreOptions,
+    isLoading,
+    loadingText,
+    allowLoadingSelect
 }: OptionMenuProps): ReactElement => {
-    const selectedObjRef = useRef<HTMLDivElement>(null);
+    const selectedObjRef = useRef<HTMLLIElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
         currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
     );
@@ -68,56 +74,63 @@ const OptionsMenu = ({
     }, [currentFocus]);
 
     return (
-        <div
-            className={`srs-${selectStyle} srs-menu`}
+        <ul
+            className={`srs-${selectStyle} srs-menu${isLoading && !allowLoadingSelect ? " wait" : ""}`}
             style={OptionMenuStyle(selectStyle, position, maxMenuHeight)}
             onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
         >
-            {options.length > 0 && (
+            {options.length > 0 ? (
                 <Fragment>
+                    {isLoading && (
+                        <li className="mx-text srs-infooption disabled" role="option">
+                            {loadingText}
+                        </li>
+                    )}
                     {options.map((option, key) => {
                         const isFocused = option.id === currentFocus?.id;
                         return (
-                            <div key={key} ref={isFocused ? selectedObjRef : undefined}>
+                            <li key={key} ref={isFocused ? selectedObjRef : undefined}>
                                 <Option
                                     index={key}
                                     isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
-                                    onSelect={selectedOption => onSelect(selectedOption)}
+                                    onSelect={selectedOption => {
+                                        if (allowLoadingSelect || !isLoading) {
+                                            onSelect(selectedOption);
+                                        }
+                                    }}
                                     focusMode={focusMode}
                                     optionsStyle={optionsStyle}
                                     option={option}
                                 />
-                            </div>
+                            </li>
                         );
                     })}
                     {hasMoreOptions && (
-                        <div
+                        <li
                             className={
-                                onSelectMoreOptions !== undefined
+                                onSelectMoreOptions !== undefined && !isLoading
                                     ? "mx-text srs-infooption"
                                     : "mx-text srs-infooption disabled"
                             }
                             style={{ cursor: onSelectMoreOptions ? "pointer" : "default" }}
                             role="option"
-                            onClick={(event: MouseEvent<HTMLDivElement>) => {
-                                if (onSelectMoreOptions !== undefined) {
+                            onClick={(event: MouseEvent<HTMLLIElement>) => {
+                                if ((allowLoadingSelect || !isLoading) && onSelectMoreOptions !== undefined) {
                                     event.stopPropagation();
                                     onSelectMoreOptions();
                                 }
                             }}
                         >
-                            {moreResultsText}
-                        </div>
+                            {isLoading ? loadingText : moreResultsText}
+                        </li>
                     )}
                 </Fragment>
+            ) : (
+                <li className="mx-text srs-infooption disabled" role="option">
+                    {noResultsText ? noResultsText : "No results found"}
+                </li>
             )}
-            {options === undefined ||
-                (options !== undefined && options.length === 0 && (
-                    <div className="mx-text srs-infooption disabled" role="option">
-                        {noResultsText ? noResultsText : "No results found"}
-                    </div>
-                ))}
-        </div>
+        </ul>
     );
 };
 

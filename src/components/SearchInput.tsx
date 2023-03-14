@@ -39,7 +39,7 @@ export default function SearchInput({
         <Fragment>
             <input
                 style={{
-                    caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "",
+                    // caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "",
                     gridRow: isReferenceSet ? 2 : 1
                 }}
                 tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
