@@ -88,7 +88,9 @@ const handleKeyNavigation = (
     onSelect: (selectedObj: IOption) => void,
     closeOnSelect: boolean,
     setShowMenu: (newShowMenu: boolean) => void,
-    onLeave: () => void
+    onLeave: () => void,
+    allowLoadingSelect: boolean,
+    isLoading: boolean
 ): void => {
     const keyPressed = event.key;
     if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
@@ -110,7 +112,7 @@ const handleKeyNavigation = (
         }
         setShowMenu(true);
     } else if (keyPressed === "Enter") {
-        if (focusedObjIndex > -1) {
+        if (focusedObjIndex > -1 && (allowLoadingSelect || !isLoading)) {
             const currentFocusedOption = options[focusedObjIndex];
             if (currentFocusedOption.isSelectable) {
                 onSelect(currentFocusedOption);
@@ -310,7 +312,9 @@ const Selector = ({
                                     focusedObjIndex,
                                     setFocusedObjIndex,
                                     onLeave
-                                )
+                                ),
+                            allowLoadingSelect,
+                            isLoading
                         );
                     }
                 }}
