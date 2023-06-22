@@ -270,6 +270,11 @@ const Selector = ({
         );
     };
 
+    const optionClickHandler = (selectedOption: IOption | undefined): void => {
+        setFocusedObjIndex(-1);
+        onSelectHandler(selectedOption);
+    };
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setSearchFilter(value);
@@ -397,7 +402,7 @@ const Selector = ({
             </div>
             {(showMenu || selectStyle === "list") && !isReadOnly && (
                 <OptionsMenu
-                    onSelect={onSelectHandler}
+                    onSelect={optionClickHandler}
                     currentFocus={options[focusedObjIndex]}
                     maxMenuHeight={maxMenuHeight}
                     noResultsText={noResultsText}
