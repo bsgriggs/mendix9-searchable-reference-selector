@@ -273,6 +273,9 @@ const Selector = ({
     const optionClickHandler = (selectedOption: IOption | undefined): void => {
         setFocusedObjIndex(-1);
         onSelectHandler(selectedOption);
+        if (selectionType === "referenceSet") {
+            focusSearchInput(searchInput, 300);
+        }
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -350,7 +353,10 @@ const Selector = ({
                             isClearable={isClearable}
                             isReadOnly={isReadOnly}
                             maxReferenceDisplay={maxReferenceDisplay}
-                            onRemove={clickObj => onSelectHandler(clickObj)}
+                            onRemove={clickObj => {
+                                onSelectHandler(clickObj);
+                                focusSearchInput(searchInput, 300);
+                            }}
                             referenceSetStyle={referenceSetStyle}
                             clearIcon={clearIcon}
                             onBadgeClick={onBadgeClick}
