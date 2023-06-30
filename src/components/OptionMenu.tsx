@@ -1,4 +1,14 @@
-import { createElement, CSSProperties, Fragment, ReactElement, useEffect, useRef, useState, MouseEvent } from "react";
+import {
+    createElement,
+    CSSProperties,
+    Fragment,
+    ReactElement,
+    useEffect,
+    useRef,
+    useState,
+    MouseEvent,
+    useMemo
+} from "react";
 import Option from "./Option";
 import { focusModeEnum } from "typings/general";
 import {
@@ -10,7 +20,8 @@ import { IOption } from "typings/option";
 
 interface OptionMenuProps {
     options: IOption[];
-    currentFocus: IOption | undefined;
+    // currentFocus: IOption | undefined;
+    currentFocus: number;
     onSelect: (selectedOption: IOption) => void;
     onSelectMoreOptions: (() => void) | undefined;
     noResultsText: string;
@@ -24,25 +35,6 @@ interface OptionMenuProps {
     allowLoadingSelect: boolean;
     loadingText: string;
 }
-
-const OptionMenuStyle = (
-    selectStyle: SelectStyleEnum,
-    position: ClientRect | undefined,
-    maxMenuHeight: string | undefined
-): CSSProperties => {
-    if (selectStyle === "dropdown" && position !== undefined) {
-        const contentCloseToBottom = position.y > window.innerHeight * 0.7;
-        return {
-            maxHeight: maxMenuHeight ? maxMenuHeight : "15em",
-            top: contentCloseToBottom ? "unset" : position.height + position.y,
-            bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
-            width: position.width,
-            left: position.x
-        };
-    } else {
-        return {};
-    }
-};
 
 const OptionsMenu = ({
     options,
@@ -65,6 +57,21 @@ const OptionsMenu = ({
         currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
     );
 
+    const OptionMenuStyle = useMemo((): CSSProperties => {
+        if (selectStyle === "dropdown" && position !== undefined) {
+            const contentCloseToBottom = position.y > window.innerHeight * 0.7;
+            return {
+                maxHeight: maxMenuHeight ? maxMenuHeight : "15em",
+                top: contentCloseToBottom ? "unset" : position.height + position.y,
+                bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
+                width: position.width,
+                left: position.x
+            };
+        } else {
+            return {};
+        }
+    }, [position, maxMenuHeight, selectStyle]);
+
     // keep the selected item in view when using arrow keys
     useEffect(() => {
         if (selectedObjRef.current) {
@@ -76,7 +83,7 @@ const OptionsMenu = ({
     return (
         <ul
             className={`srs-${selectStyle} srs-menu${isLoading && !allowLoadingSelect ? " wait" : ""}`}
-            style={OptionMenuStyle(selectStyle, position, maxMenuHeight)}
+            style={OptionMenuStyle}
             onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
         >
             {options.length > 0 ? (
@@ -87,7 +94,7 @@ const OptionsMenu = ({
                         </li>
                     )}
                     {options.map((option, key) => {
-                        const isFocused = option.id === currentFocus?.id;
+                        const isFocused = key === currentFocus;
                         return (
                             <li key={key} ref={isFocused ? selectedObjRef : undefined}>
                                 <Option
@@ -106,22 +113,23 @@ const OptionsMenu = ({
                         );
                     })}
                     {hasMoreOptions && (
-                        <li
-                            className={
-                                onSelectMoreOptions !== undefined && !isLoading
-                                    ? "mx-text srs-infooption"
-                                    : "mx-text srs-infooption disabled"
-                            }
-                            style={{ cursor: onSelectMoreOptions ? "pointer" : "default" }}
-                            role="option"
-                            onClick={(event: MouseEvent<HTMLLIElement>) => {
-                                if ((allowLoadingSelect || !isLoading) && onSelectMoreOptions !== undefined) {
-                                    event.stopPropagation();
-                                    onSelectMoreOptions();
+                        <li key={options.length} ref={currentFocus === options.length ? selectedObjRef : undefined}>
+                            <div
+                                role="option"
+                                tabIndex={options.length}
+                                className={
+                                    currentFocus === options.length ? "srs-option focused" : "mx-text srs-infooption"
                                 }
-                            }}
-                        >
-                            {isLoading ? loadingText : moreResultsText}
+                                style={{ cursor: onSelectMoreOptions ? "pointer" : "default" }}
+                                onClick={(event: MouseEvent<HTMLDivElement>) => {
+                                    if ((allowLoadingSelect || !isLoading) && onSelectMoreOptions !== undefined) {
+                                        event.stopPropagation();
+                                        onSelectMoreOptions();
+                                    }
+                                }}
+                            >
+                                {isLoading ? loadingText : moreResultsText}
+                            </div>
                         </li>
                     )}
                 </Fragment>

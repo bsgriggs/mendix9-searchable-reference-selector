@@ -1,12 +1,12 @@
 {
     "name": "searchablereferenceselectormxnine",
     "widgetName": "SearchableReferenceSelectorMxNine",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "description": "Mendix reference, reference set, and enumeration selector with a search bar and a clear button",
     "copyright": "© Mendix Technology BV 2022. All rights reserved.",
     "author": "Benjamin Griggs",
     "engines": {
-        "node": ">=12"
+        "node": ">=16"
     },
     "license": "MIT",
     "config": {
@@ -25,7 +25,7 @@
         "release": "pluggable-widgets-tools release:web"
     },
     "devDependencies": {
-        "@mendix/pluggable-widgets-tools": "^9.13.0",
+        "@mendix/pluggable-widgets-tools": "~9.18.0",
         "@types/big.js": "^6.0.2",
         "@types/react": "~17.0.1",
         "@types/react-dom": "~17.0.1"

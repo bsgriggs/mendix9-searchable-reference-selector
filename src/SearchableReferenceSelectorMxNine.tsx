@@ -1,20 +1,6 @@
-import { createElement, useState, useEffect, ReactElement, useRef } from "react";
-import {
-    FilterTypeEnum,
-    OptionTextTypeEnum,
-    SearchableReferenceSelectorMxNineContainerProps
-} from "../typings/SearchableReferenceSelectorMxNineProps";
-import {
-    ObjectItem,
-    ValueStatus,
-    ActionValue,
-    EditableValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    ListAttributeValue,
-    ListExpressionValue,
-    ListWidgetValue
-} from "mendix";
+import React, { createElement, useMemo } from "react";
+import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
+import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains, startsWith } from "mendix/filters/builders";
 import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
@@ -22,239 +8,235 @@ import { displayTextContent, displayReferenceContent } from "./utils/displayCont
 import "./ui/SearchableReferenceSelectorMxNine.css";
 import { Alert } from "./components/Alert";
 
-const callMxAction = (action: ActionValue | undefined, preventConcurrent: boolean): void => {
-    if (action !== undefined && action.canExecute && (!preventConcurrent || !action.isExecuting)) {
-        action.execute();
-    }
-};
-
-const handleSelect = (
-    isReadOnly: boolean,
-    selectedOption: IOption | IOption[] | undefined,
-    onChange: ActionValue | undefined,
-    attribute: EditableValue<string> | ReferenceValue | ReferenceSetValue
-): void => {
-    if (!isReadOnly) {
-        if (Array.isArray(selectedOption)) {
-            attribute.setValue(selectedOption.map(option => option.id) as string & ObjectItem & ObjectItem[]);
-        } else if (selectedOption && selectedOption.isSelectable) {
-            attribute.setValue(selectedOption.id as string & ObjectItem & ObjectItem[]);
-        } else {
-            attribute.setValue(undefined);
-        }
-        callMxAction(onChange, false);
-    }
-};
-
-const mapEnum = (enumArray: string[], enumAttribute: EditableValue<string>): IOption[] =>
-    enumArray.map(value => {
-        return {
-            content: displayTextContent(enumAttribute.formatter.format(value)),
-            isSelectable: true,
-            isSelected: value === (enumAttribute.value as string),
-            selectionType: "enumeration",
-            id: value
-        };
-    });
-
-const mapObjectItems = (
-    objectItems: ObjectItem[] | undefined,
-    optionTextType: OptionTextTypeEnum,
-    displayAttribute: ListAttributeValue<string> | undefined,
-    optionCustomContent: ListWidgetValue | undefined,
-    selectableCondition: ListExpressionValue<boolean>,
-    association: ReferenceValue | ReferenceSetValue
-): IOption[] =>
-    objectItems
-        ? objectItems.map(objItem => {
-              return {
-                  content: displayReferenceContent(objItem, optionTextType, displayAttribute, optionCustomContent),
-                  isSelectable: selectableCondition.get(objItem).value as boolean,
-                  isSelected:
-                      association.type === "ReferenceSet"
-                          ? association.value
-                              ? association.value.find(option => option.id === objItem.id) !== undefined
-                              : false
-                          : association.value
-                          ? association.value.id === objItem.id
-                          : false,
-                  selectionType: "reference",
-                  id: objItem
-              };
-          })
-        : [];
-
-const onShowMore = (
-    filterType: FilterTypeEnum,
-    newLimit: number | undefined,
-    setItemsLimit: (newLimit: number) => void,
-    onClickMoreResultsText: ActionValue | undefined
-): void => {
-    if (filterType === "auto" && newLimit) {
-        setItemsLimit(newLimit);
-    } else if (onClickMoreResultsText) {
-        callMxAction(onClickMoreResultsText, true);
-    }
-};
-
 export default function SearchableReferenceSelector({
+    name,
+    tabIndex,
+    id,
+    isSearchable,
+    isClearable,
+    showSelectAll,
+    maxItems,
+    allowLoadingSelect,
+    clearSearchOnSelect,
+    placeholder,
+    moreResultsText,
+    noResultsText,
+    loadingText,
+    selectStyle,
+    optionTextType,
+    optionsStyleSingle,
+    optionsStyleSet,
+    optionCustomContent,
+    referenceSetStyle,
+    referenceSetValue,
+    referenceSetValueContent,
+    maxReferenceDisplay,
+    maxMenuHeight,
+    clearIcon,
+    dropdownIcon,
+    selectAllIcon,
+    selectionType,
+    selectableObjects,
     reference,
     referenceSet,
     displayAttribute,
-    filterDelay,
-    isClearable,
-    isSearchable,
-    maxItems,
-    maxMenuHeight,
-    maxReferenceDisplay,
-    moreResultsText,
-    noResultsText,
-    optionTextType,
-    optionsStyleSet,
-    optionsStyleSingle,
-    selectionType,
+    selectableCondition,
     enumAttribute,
-    placeholder,
-    referenceSetStyle,
-    selectStyle,
-    showSelectAll,
-    clearIcon,
-    dropdownIcon,
-    onBadgeClick,
     onChange,
     onLeave,
-    optionCustomContent,
-    selectAllIcon,
-    selectableCondition,
-    selectableObjects,
-    filterFunction,
+    onBadgeClick,
+    filterDelay,
     filterType,
+    filterFunction,
     searchText,
-    refreshAction,
     hasMoreResultsManual,
-    name,
     onClickMoreResultsText,
-    id,
-    tabIndex,
-    loadingText,
-    allowLoadingSelect
-}: SearchableReferenceSelectorMxNineContainerProps): ReactElement {
-    const defaultPageSize = selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined;
-    const [mxFilter, setMxFilter] = useState<string>("");
-    const [itemsLimit, setItemsLimit] = useState<number | undefined>(defaultPageSize);
-    const [options, setOptions] = useState<IOption[]>([]);
-    const [currentValue, setCurrentValue] = useState<IOption | IOption[] | undefined>();
-    const srsRef = useRef<HTMLDivElement>(null);
+    refreshAction
+}: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
+    const defaultPageSize = useMemo(
+        () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [maxItems]
+    );
+    const [mxFilter, setMxFilter] = React.useState<string>("");
+    const [itemsLimit, setItemsLimit] = React.useState<number | undefined>(defaultPageSize);
+    const [options, setOptions] = React.useState<IOption[]>([]);
+    const srsRef = React.useRef<HTMLDivElement>(null);
 
-    const isReadOnly =
-        (reference && reference.readOnly) ||
-        (referenceSet && referenceSet.readOnly) ||
-        (enumAttribute && enumAttribute.readOnly);
+    const isReadOnly = useMemo(
+        (): boolean =>
+            (selectionType === "reference" && reference.readOnly) ||
+            (selectionType === "referenceSet" && referenceSet.readOnly) ||
+            (selectionType === "enumeration" && enumAttribute.readOnly),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [reference, referenceSet, enumAttribute]
+    );
+
+    const hasMoreItems = useMemo(
+        () =>
+            (hasMoreResultsManual && hasMoreResultsManual.value) ||
+            ((selectableObjects && selectableObjects.hasMoreItems) as boolean),
+        [hasMoreResultsManual, selectableObjects]
+    );
 
     if (selectionType !== "enumeration" && filterType === "auto" && Number(maxItems.value) > 1) {
         selectableObjects.setLimit(itemsLimit);
     }
 
-    // set current value
-    switch (selectionType) {
-        case "enumeration":
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-                if (enumAttribute.status === ValueStatus.Available && enumAttribute.status === ValueStatus.Available) {
-                    if (enumAttribute.value !== undefined) {
-                        setCurrentValue({
-                            content: displayTextContent(enumAttribute.displayValue),
-                            isSelectable: true,
-                            isSelected: true,
-                            selectionType: "enumeration",
-                            id: enumAttribute.value
-                        });
-                    } else {
-                        setCurrentValue(undefined);
-                    }
-                }
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [enumAttribute.value]);
-            break;
-        case "reference":
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-                if (reference.value !== undefined && reference.status === ValueStatus.Available) {
-                    setCurrentValue({
-                        content: displayReferenceContent(
-                            reference.value,
-                            optionTextType,
-                            displayAttribute,
-                            optionCustomContent
-                        ),
-                        isSelectable: selectableCondition.get(reference.value).value as boolean,
-                        isSelected: true,
-                        selectionType: "reference",
-                        id: reference.value
-                    });
+    const handleSelect = React.useCallback(
+        (selectedOption: IOption | IOption[] | undefined): void => {
+            if (!isReadOnly) {
+                const attribute =
+                    selectionType === "enumeration"
+                        ? enumAttribute
+                        : selectionType === "reference"
+                        ? reference
+                        : referenceSet;
+                if (Array.isArray(selectedOption)) {
+                    attribute.setValue(selectedOption.map(option => option.id) as string & ObjectItem & ObjectItem[]);
+                } else if (selectedOption && selectedOption.isSelectable) {
+                    attribute.setValue(selectedOption.id as string & ObjectItem & ObjectItem[]);
                 } else {
-                    setCurrentValue(undefined);
+                    attribute.setValue(undefined);
                 }
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [reference.value]);
-            break;
-        case "referenceSet":
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-                if (referenceSet.value !== undefined && referenceSet.status === ValueStatus.Available) {
-                    setCurrentValue(
-                        referenceSet.value.map(reference => {
-                            return {
-                                content: displayReferenceContent(
-                                    reference,
-                                    optionTextType,
-                                    displayAttribute,
-                                    optionCustomContent
-                                ),
-                                isSelectable: selectableCondition.get(reference).value as boolean,
-                                isSelected: true,
-                                selectionType: "reference",
-                                id: reference
-                            };
-                        })
-                    );
-                } else {
-                    setCurrentValue(undefined);
-                }
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [referenceSet.value]);
-            break;
-    }
+                callMxAction(onChange, false);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [isReadOnly, enumAttribute, reference, referenceSet, onChange]
+    );
+
+    const mapEnum = React.useCallback(
+        (enumArray: string[]): IOption[] =>
+            enumArray.map(value => {
+                return {
+                    content: displayTextContent(enumAttribute.formatter.format(value)),
+                    isSelectable: true,
+                    isSelected: value === (enumAttribute.value as string),
+                    selectionType: "ENUMERATION",
+                    id: value
+                };
+            }),
+        [enumAttribute]
+    );
+
+    const mapObjectItems = React.useCallback(
+        (objectItems: ObjectItem[]): IOption[] =>
+            objectItems.map(objItem => {
+                return {
+                    content: displayReferenceContent(objItem, optionTextType, displayAttribute, optionCustomContent),
+                    isSelectable: selectableCondition.get(objItem).value as boolean,
+                    isSelected:
+                        selectionType === "referenceSet"
+                            ? referenceSet.value
+                                ? referenceSet.value.find(option => option.id === objItem.id) !== undefined
+                                : false
+                            : reference.value
+                            ? reference.value.id === objItem.id
+                            : false,
+                    selectionType: "REFERENCE",
+                    id: objItem
+                };
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [reference, referenceSet, optionTextType, displayAttribute, optionCustomContent, selectableCondition]
+    );
+
+    const onShowMore = (newLimit: number | undefined, onClickMoreResultsText: ActionValue | undefined): void => {
+        if (filterType === "auto" && newLimit) {
+            setItemsLimit(newLimit);
+        } else if (onClickMoreResultsText) {
+            callMxAction(onClickMoreResultsText, true);
+        }
+    };
+
+    const callMxAction = (action: ActionValue | undefined, preventConcurrent: boolean): void => {
+        if (action !== undefined && action.canExecute && (!preventConcurrent || !action.isExecuting)) {
+            action.execute();
+        }
+    };
+
+    const currentValue: IOption | IOption[] | undefined = useMemo(() => {
+        switch (selectionType) {
+            case "enumeration":
+                return enumAttribute.status === ValueStatus.Available &&
+                    enumAttribute.status === ValueStatus.Available &&
+                    enumAttribute.value !== undefined
+                    ? {
+                          content: displayTextContent(enumAttribute.displayValue),
+                          isSelectable: true,
+                          isSelected: true,
+                          selectionType: "ENUMERATION",
+                          id: enumAttribute.value
+                      }
+                    : undefined;
+            case "reference":
+                return reference.value !== undefined && reference.status === ValueStatus.Available
+                    ? {
+                          content: displayReferenceContent(
+                              reference.value,
+                              optionTextType,
+                              displayAttribute,
+                              optionCustomContent
+                          ),
+                          isSelectable: selectableCondition.get(reference.value).value as boolean,
+                          isSelected: true,
+                          selectionType: "REFERENCE",
+                          id: reference.value
+                      }
+                    : undefined;
+            case "referenceSet":
+                return referenceSet.value !== undefined && referenceSet.status === ValueStatus.Available
+                    ? referenceSet.value.map(reference => {
+                          return {
+                              content: displayReferenceContent(
+                                  reference,
+                                  optionTextType,
+                                  displayAttribute,
+                                  optionCustomContent
+                              ),
+                              badgeContent:
+                                  referenceSetValue === "CUSTOM" ? referenceSetValueContent.get(reference) : undefined,
+                              isSelectable: selectableCondition.get(reference).value as boolean,
+                              isSelected: true,
+                              selectionType: "REFERENCE",
+                              id: reference
+                          };
+                      })
+                    : undefined;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+        enumAttribute,
+        reference,
+        referenceSet,
+        selectableCondition,
+        displayAttribute,
+        optionCustomContent,
+        referenceSetValueContent
+    ]);
 
     // load Options
     if (selectionType === "enumeration") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
+        React.useEffect(() => {
             // enumAttribute.universe should never change, so this should only run on first load
-            if (enumAttribute.status === ValueStatus.Available && enumAttribute.universe !== undefined) {
-                setOptions(mapEnum(enumAttribute.universe, enumAttribute));
+            if (!isReadOnly && enumAttribute.status === ValueStatus.Available && enumAttribute.universe !== undefined) {
+                setOptions(mapEnum(enumAttribute.universe));
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [enumAttribute]);
     } else {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
+        React.useEffect(() => {
             // selectableObjects.items will automatically change when the Mendix data source is re-ran.
             if (
+                !isReadOnly &&
                 selectableObjects.status === ValueStatus.Available &&
                 (reference === undefined || reference.status === ValueStatus.Available) &&
                 (referenceSet === undefined || referenceSet.status === ValueStatus.Available)
             ) {
-                setOptions(
-                    mapObjectItems(
-                        selectableObjects.items,
-                        optionTextType,
-                        displayAttribute,
-                        optionCustomContent,
-                        selectableCondition,
-                        selectionType === "reference" ? reference : referenceSet
-                    )
-                );
+                setOptions(mapObjectItems(selectableObjects.items || []));
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selectableObjects, reference, referenceSet]);
@@ -264,8 +246,12 @@ export default function SearchableReferenceSelector({
     if (filterType === "auto") {
         if (selectionType === "enumeration") {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-                if (enumAttribute.status === ValueStatus.Available && placeholder.status === ValueStatus.Available) {
+            React.useEffect(() => {
+                if (
+                    !isReadOnly &&
+                    enumAttribute.status === ValueStatus.Available &&
+                    placeholder.status === ValueStatus.Available
+                ) {
                     const delayDebounceFn = setTimeout(() => {
                         if (isSearchable && enumAttribute.universe !== undefined) {
                             if (mxFilter !== undefined && mxFilter.trim().length > 0) {
@@ -275,8 +261,7 @@ export default function SearchableReferenceSelector({
                                         mapEnum(
                                             enumAttribute.universe.filter(option =>
                                                 option.toLowerCase().includes(searchTextTrimmed.toLowerCase())
-                                            ),
-                                            enumAttribute
+                                            )
                                         )
                                     );
                                 } else {
@@ -284,13 +269,12 @@ export default function SearchableReferenceSelector({
                                         mapEnum(
                                             enumAttribute.universe.filter(option =>
                                                 option.toLowerCase().startsWith(searchTextTrimmed.toLowerCase())
-                                            ),
-                                            enumAttribute
+                                            )
                                         )
                                     );
                                 }
                             } else {
-                                setOptions(mapEnum(enumAttribute.universe, enumAttribute));
+                                setOptions(mapEnum(enumAttribute.universe));
                             }
                         }
                     }, filterDelay);
@@ -301,8 +285,8 @@ export default function SearchableReferenceSelector({
             }, [mxFilter]);
         } else {
             // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-                if (selectableObjects.status === ValueStatus.Available) {
+            React.useEffect(() => {
+                if (!isReadOnly && selectableObjects.status === ValueStatus.Available) {
                     const delayDebounceFn = setTimeout(() => {
                         if (isSearchable) {
                             if (displayAttribute.filterable && displayAttribute.type === "String") {
@@ -324,25 +308,11 @@ export default function SearchableReferenceSelector({
                                                           text.toLowerCase().includes(mxFilter.trim().toLowerCase())
                                                     : text !== undefined &&
                                                           text.toLowerCase().startsWith(mxFilter.trim().toLowerCase());
-                                            }),
-                                            optionTextType,
-                                            displayAttribute,
-                                            optionCustomContent,
-                                            selectableCondition,
-                                            selectionType === "reference" ? reference : referenceSet
+                                            })
                                         )
                                     );
                                 } else {
-                                    setOptions(
-                                        mapObjectItems(
-                                            selectableObjects.items,
-                                            optionTextType,
-                                            displayAttribute,
-                                            optionCustomContent,
-                                            selectableCondition,
-                                            selectionType === "reference" ? reference : referenceSet
-                                        )
-                                    );
+                                    setOptions(mapObjectItems(selectableObjects.items || []));
                                 }
                             }
                             setItemsLimit(defaultPageSize);
@@ -356,7 +326,7 @@ export default function SearchableReferenceSelector({
         }
     } else {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
+        React.useEffect(() => {
             if (searchText.status === ValueStatus.Available && searchText.displayValue !== mxFilter) {
                 setMxFilter(searchText.displayValue);
             }
@@ -364,7 +334,7 @@ export default function SearchableReferenceSelector({
         }, [searchText]);
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
+        React.useEffect(() => {
             if (searchText.status === ValueStatus.Available) {
                 const delayDebounceFn = setTimeout(() => {
                     if (isSearchable) {
@@ -402,25 +372,11 @@ export default function SearchableReferenceSelector({
                 referenceSetStyle={referenceSetStyle}
                 maxReferenceDisplay={maxReferenceDisplay}
                 showSelectAll={showSelectAll}
-                hasMoreOptions={
-                    (hasMoreResultsManual && hasMoreResultsManual.value) ||
-                    ((selectableObjects && selectableObjects.hasMoreItems) as boolean)
-                }
-                moreResultsText={
-                    selectionType !== "enumeration" &&
-                    ((hasMoreResultsManual && hasMoreResultsManual.value) || selectableObjects.hasMoreItems)
-                        ? moreResultsText.value
-                        : undefined
-                }
+                hasMoreOptions={hasMoreItems}
+                moreResultsText={hasMoreItems ? moreResultsText.value : undefined}
                 onSelectMoreOptions={
-                    itemsLimit && defaultPageSize && (selectableObjects.hasMoreItems || hasMoreResultsManual?.value)
-                        ? () =>
-                              onShowMore(
-                                  filterType,
-                                  (itemsLimit || 0) + (defaultPageSize || 0),
-                                  setItemsLimit,
-                                  onClickMoreResultsText
-                              )
+                    itemsLimit && hasMoreItems
+                        ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), onClickMoreResultsText)
                         : undefined
                 }
                 currentValue={currentValue}
@@ -428,25 +384,11 @@ export default function SearchableReferenceSelector({
                 options={options}
                 optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
                 setMxFilter={setMxFilter}
-                onSelect={(selectedOption: IOption) => {
-                    handleSelect(
-                        isReadOnly,
-                        selectedOption,
-                        onChange,
-                        selectionType === "enumeration"
-                            ? enumAttribute
-                            : selectionType === "reference"
-                            ? reference
-                            : referenceSet
-                    );
-                }}
-                onLeave={() => {
-                    if (onLeave) {
-                        callMxAction(onLeave, false);
-                    }
-                }}
+                onSelect={handleSelect}
+                onLeave={() => callMxAction(onLeave, false)}
                 srsRef={srsRef}
                 allowLoadingSelect={allowLoadingSelect}
+                clearSearchOnSelect={clearSearchOnSelect}
             />
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}

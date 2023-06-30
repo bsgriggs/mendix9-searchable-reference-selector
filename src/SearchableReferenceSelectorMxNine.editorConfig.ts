@@ -1,15 +1,15 @@
 import { SearchableReferenceSelectorMxNinePreviewProps } from "../typings/SearchableReferenceSelectorMxNineProps";
-import { hidePropertiesIn, hidePropertyIn } from "./utils/PageEditorUtils";
+import { hidePropertiesIn, hidePropertyIn } from "@mendix/pluggable-widgets-tools";
 
 export type Properties = PropertyGroup[];
 
-export type PropertyGroup = {
+type PropertyGroup = {
     caption: string;
     propertyGroups?: PropertyGroup[];
     properties?: Property[];
 };
 
-export type Property = {
+type Property = {
     key: string;
     caption: string;
     description?: string;
@@ -55,7 +55,10 @@ export function getProperties(
                 "moreResultsText",
                 "maxItems",
                 "allowLoadingSelect",
-                "loadingText"
+                "loadingText",
+                "referenceSetValue",
+                "referenceSetValueContent",
+                "clearSearchOnSelect"
             ]);
             break;
         case "reference":
@@ -67,7 +70,10 @@ export function getProperties(
                 "onBadgeClick",
                 "enumAttribute",
                 "referenceSet",
-                "optionsStyleSet"
+                "optionsStyleSet",
+                "referenceSetValue",
+                "referenceSetValueContent",
+                "clearSearchOnSelect"
             ]);
             break;
         case "referenceSet":
@@ -105,6 +111,10 @@ export function getProperties(
 
     if (_values.selectStyle === "list") {
         hidePropertiesIn(defaultProperties, _values, ["maxMenuHeight", "dropdownIcon"]);
+    }
+
+    if (_values.referenceSetValue === "SAME") {
+        hidePropertyIn(defaultProperties, _values, "referenceSetValueContent");
     }
 
     if (_values.isClearable === false) {

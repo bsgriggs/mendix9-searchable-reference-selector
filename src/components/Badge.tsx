@@ -22,7 +22,7 @@ const Badge = ({
 }: BadgeProps): ReactElement => {
     return (
         <div className="srs-badge" onClick={() => (onBadgeClick ? onBadgeClick(option) : undefined)}>
-            {option.content}
+            {option.badgeContent ? option.badgeContent : option.content}
             {isClearable && !isReadOnly && (
                 <MxIcon
                     onClick={(event: MouseEvent<HTMLDivElement>) => {

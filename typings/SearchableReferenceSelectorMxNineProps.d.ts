@@ -1,22 +1,10 @@
 /**
  * This file was generated from SearchableReferenceSelectorMxNine.xml
  * WARNING: All changes made to this file will be overwritten
- * @author Mendix Widgets Framework Team
+ * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import {
-    ActionValue,
-    DynamicValue,
-    EditableValue,
-    ListValue,
-    ListActionValue,
-    ListAttributeValue,
-    ListExpressionValue,
-    ListWidgetValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    WebIcon
-} from "mendix";
+import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
 export type SelectStyleEnum = "dropdown" | "list";
@@ -29,6 +17,8 @@ export type OptionsStyleSetEnum = "cell" | "checkbox";
 
 export type ReferenceSetStyleEnum = "badges" | "commas";
 
+export type ReferenceSetValueEnum = "SAME" | "CUSTOM";
+
 export type SelectionTypeEnum = "enumeration" | "reference" | "referenceSet";
 
 export type FilterTypeEnum = "auto" | "manual";
@@ -39,21 +29,24 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     name: string;
     tabIndex?: number;
     id: string;
-    placeholder: DynamicValue<string>;
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
     maxItems: DynamicValue<Big>;
+    allowLoadingSelect: boolean;
+    clearSearchOnSelect: boolean;
+    placeholder: DynamicValue<string>;
     moreResultsText: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
     loadingText: DynamicValue<string>;
-    allowLoadingSelect: boolean;
     selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
     optionCustomContent?: ListWidgetValue;
     referenceSetStyle: ReferenceSetStyleEnum;
+    referenceSetValue: ReferenceSetValueEnum;
+    referenceSetValueContent: ListWidgetValue;
     maxReferenceDisplay: number;
     maxMenuHeight: DynamicValue<string>;
     clearIcon?: DynamicValue<WebIcon>;
@@ -80,26 +73,29 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
-    placeholder: string;
     isSearchable: boolean;
     isClearable: boolean;
     showSelectAll: boolean;
     maxItems: string;
+    allowLoadingSelect: boolean;
+    clearSearchOnSelect: boolean;
+    placeholder: string;
     moreResultsText: string;
     noResultsText: string;
     loadingText: string;
-    allowLoadingSelect: boolean;
     selectStyle: SelectStyleEnum;
     optionTextType: OptionTextTypeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     referenceSetStyle: ReferenceSetStyleEnum;
+    referenceSetValue: ReferenceSetValueEnum;
+    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     maxReferenceDisplay: number | null;
     maxMenuHeight: string;
-    clearIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
-    dropdownIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
-    selectAllIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     selectionType: SelectionTypeEnum;
     selectableObjects: {} | { type: string } | null;
     reference: string;

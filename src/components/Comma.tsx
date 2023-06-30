@@ -8,7 +8,7 @@ interface CommaProps {
 
 const Comma = ({ showComma, option }: CommaProps): ReactElement => (
     <div className="srs-comma">
-        {option.content}
+        {option.badgeContent ? option.badgeContent : option.content}
         {showComma && <span>,</span>}
     </div>
 );

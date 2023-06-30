@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ReactElement, createElement } from "react";
 import { SearchableReferenceSelectorMxNinePreviewProps } from "typings/SearchableReferenceSelectorMxNineProps";
 import { displayTextContent } from "./utils/displayContent";
@@ -27,7 +28,9 @@ export function preview({
     placeholder,
     referenceSetStyle,
     loadingText,
-    allowLoadingSelect
+    allowLoadingSelect,
+    referenceSetValue,
+    referenceSetValueContent
 }: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
     const lastPeriodIndex = selectionType === "reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
     const associationDisplay =
@@ -41,6 +44,7 @@ export function preview({
         id: "1",
         content:
             optionTextType === "custom" ? (
+                // @ts-ignore
                 <optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
                 </optionCustomContent.renderer>
@@ -49,12 +53,13 @@ export function preview({
             ),
         isSelectable: true,
         isSelected: true,
-        selectionType: "enumeration"
+        selectionType: "ENUMERATION"
     };
     const option2: IOption = {
         id: "2",
         content:
             optionTextType === "custom" ? (
+                // @ts-ignore
                 <optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
                 </optionCustomContent.renderer>
@@ -63,12 +68,13 @@ export function preview({
             ),
         isSelectable: true,
         isSelected: false,
-        selectionType: "enumeration"
+        selectionType: "ENUMERATION"
     };
     const option3: IOption = {
         id: "3",
         content:
             optionTextType === "custom" ? (
+                // @ts-ignore
                 <optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
                 </optionCustomContent.renderer>
@@ -77,7 +83,7 @@ export function preview({
             ),
         isSelectable: false,
         isSelected: false,
-        selectionType: "enumeration"
+        selectionType: "ENUMERATION"
     };
 
     return (
@@ -124,6 +130,7 @@ export function preview({
                         : undefined
                 }
                 currentValue={selectionType === "referenceSet" ? option1 : undefined}
+                clearSearchOnSelect
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onLeave={() => {}}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -135,6 +142,14 @@ export function preview({
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 setMxFilter={() => {}}
             />
+            {referenceSetValue === "CUSTOM" && (
+                <div className="srs-badge">
+                    {/* @ts-ignore */}
+                    <referenceSetValueContent.renderer caption="The value displayed in the badge or comma">
+                        <div style={{ width: "100%" }} />
+                    </referenceSetValueContent.renderer>
+                </div>
+            )}
         </div>
     );
 }

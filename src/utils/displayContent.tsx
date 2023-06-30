@@ -11,15 +11,13 @@ export const displayReferenceContent = (
     optionTextType: OptionTextTypeEnum,
     displayAttribute: ListAttributeValue<string> | undefined,
     optionCustomContent?: ListWidgetValue,
-    classOverride?: string
 ): ReactNode => {
     if (displayAttribute !== undefined) {
         if (optionTextType === "text") {
-            return <span className={classOverride}>{displayAttribute.get(displayObj).displayValue}</span>;
+            return <span >{displayAttribute.get(displayObj).displayValue}</span>;
         } else if (optionTextType === "html") {
             return (
                 <span
-                    className={classOverride}
                     dangerouslySetInnerHTML={{
                         __html: `${displayAttribute.get(displayObj).value?.toString()}`
                     }}
@@ -30,5 +28,5 @@ export const displayReferenceContent = (
     if (optionTextType === "custom" && optionCustomContent) {
         return optionCustomContent.get(displayObj);
     }
-    return <span className={classOverride}>No Content</span>;
+    return <span >No Content</span>;
 };

@@ -32,8 +32,7 @@ export default function SearchInput({
         if (searchInput !== null && searchInput.current !== null) {
             setRef(searchInput.current);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchInput]);
+    }, [searchInput, setRef]);
 
     return (
         <Fragment>

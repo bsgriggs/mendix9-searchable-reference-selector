@@ -2,12 +2,12 @@ import { ReactNode } from "react";
 import { ObjectItem } from "mendix";
 
 type enumOption = {
-    selectionType: "enumeration";
+    selectionType: "ENUMERATION";
     id: string;
 };
 
 type refOption = {
-    selectionType: "reference";
+    selectionType: "REFERENCE";
     id: ObjectItem;
 };
 
@@ -15,4 +15,5 @@ export type IOption = {
     isSelected: boolean;
     isSelectable: boolean;
     content: ReactNode;
+    badgeContent?: ReactNode;
 } & (enumOption | refOption);
