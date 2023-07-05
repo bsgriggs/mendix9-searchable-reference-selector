@@ -10,7 +10,6 @@
     <properties>
         <propertyGroup caption="General">
             <propertyGroup caption="System">
-                <systemProperty key="Label" />
                 <systemProperty key="Name"/>
                 <systemProperty key="TabIndex"/>
                 <systemProperty key="Editability"/>
@@ -45,6 +44,7 @@
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Text">
+            <systemProperty key="Label" />
             <property key="placeholder" type="textTemplate">
                 <caption>Placeholder</caption>
                 <description></description>
