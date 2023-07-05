@@ -36,10 +36,6 @@ https://marketplace.mendix.com/link/component/116917
 -   Searching auto-highlights the first record for easy selecting with the enter key
 
 ## Configuration  
-The following settings are available for all Selection Types.  
-![general](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v2/general.png)  
-The label is that text next to the textbox while the placeholder is the text inside of the textbox when there is no search. 
-
 Please see the following documentation based on the Selection Type you wish to use.
 -   [Enumeration Selector](docs/Enumeration.md)
 -   [Reference Selector](docs/Reference.md)
