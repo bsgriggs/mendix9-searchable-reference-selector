@@ -116,7 +116,7 @@ const OptionsMenu = ({
                         <li key={options.length} ref={currentFocus === options.length ? selectedObjRef : undefined}>
                             <div
                                 role="option"
-                                tabIndex={options.length}
+                                // tabIndex={options.length}
                                 className={
                                     currentFocus === options.length ? "srs-option focused" : "mx-text srs-infooption"
                                 }

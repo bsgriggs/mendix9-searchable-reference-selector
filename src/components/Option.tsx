@@ -38,10 +38,10 @@ const Option = ({
 
     return (
         <div
+            id={index.toString()}
             role="option"
             aria-selected={option.isSelected ? "true" : "false"}
             aria-disabled={!option.isSelectable}
-            tabIndex={index}
             className={determineClassName()}
             onClick={(event: MouseEvent<HTMLDivElement>) => {
                 event.stopPropagation();
@@ -52,10 +52,10 @@ const Option = ({
             ref={hoverRef}
         >
             {optionsStyle === "checkbox" && (
-                <input type={"checkbox"} checked={option.isSelected} disabled={!option.isSelectable}></input>
+                <input type={"checkbox"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1}></input>
             )}
             {optionsStyle === "radio" && (
-                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} />
+                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1}/>
             )}
             {option.content}
         </div>
