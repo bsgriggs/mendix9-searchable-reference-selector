@@ -9,7 +9,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 ### When using reference sets, make sure that the page object is the owner of the association!!!  
 In the example below, imagine your page has a QuestionConfig object and you want to select its OptionConfigs. You must use the QuestionConfig_OptionConfig association. If your page object is OptionConfig and you need to set its QuestionConfigs, use the OptionConfig_QuestionConfig association.  
 
-![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/referenceSetOwner.png)  
+![Data Source](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/referenceSetOwnerExample.png)  
 
 *Note: the owner of an association is denoted by which side(s) of the line has the black circle. In the real world, you should only have 1 of these associations. Either decide which object should be the owner or set the association as "refer to each other"*
 
