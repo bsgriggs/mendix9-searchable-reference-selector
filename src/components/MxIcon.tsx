@@ -1,26 +1,44 @@
-import { createElement, ReactElement, MouseEvent } from "react";
+import { createElement, ReactElement, MouseEvent, KeyboardEvent } from "react";
 import { WebIcon } from "mendix";
 import { Icon } from "mendix/components/web/Icon";
 
 interface IconProps {
     defaultClassName: string;
     mxIconOverride: WebIcon | undefined;
-    onClick?: (event: MouseEvent<HTMLSpanElement>) => void;
+    tabIndex?: number;
+    onClick?: () => void;
     title?: string;
 }
 
-const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick }: IconProps): ReactElement =>
-    mxIconOverride !== undefined ? (
-        <div onClick={onClick} title={title}>
+const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: IconProps): ReactElement => {
+    const onClickHandler = (event: MouseEvent<any>) => {
+        event.stopPropagation();
+        if (onClick) {
+            onClick();
+        }
+    };
+
+    const onEnterHandler = (event: KeyboardEvent<any>) => {
+        event.stopPropagation();
+        if (event.key === "Enter" && onClick) {
+            onClick();
+        }
+    };
+
+    return mxIconOverride !== undefined ? (
+        <div onClick={onClickHandler} onKeyDown={onEnterHandler} title={title} tabIndex={tabIndex}>
             <Icon icon={mxIconOverride} altText={title} />
         </div>
     ) : (
         <span
-            onClick={onClick}
+            onClick={onClickHandler}
+            onKeyDown={onEnterHandler}
+            tabIndex={tabIndex}
             className={`glyphicon glyphicon-${defaultClassName}`}
             aria-hidden="true"
             title={title}
         />
     );
+};
 
 export default MxIcon;

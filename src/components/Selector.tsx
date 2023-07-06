@@ -5,7 +5,6 @@ import {
     ChangeEvent,
     Fragment,
     RefObject,
-    MouseEvent,
     KeyboardEvent,
     useEffect,
     useCallback,
@@ -156,7 +155,6 @@ const Selector = ({
                         onSelect([selectedOption]);
                     }
                     // for reference sets, do not close the menu on select
-                    console.info("clearSearchOnSelect", clearSearchOnSelect);
                     if (clearSearchOnSelect) {
                         setSearchFilter("");
                     }
@@ -178,8 +176,7 @@ const Selector = ({
     );
 
     const handleClearAll = useCallback(
-        (event: MouseEvent<HTMLDivElement | HTMLSpanElement>): void => {
-            event.stopPropagation();
+        (): void => {
             if (focusedObjIndex !== -1) {
                 setFocusedObjIndex(-1);
             }
@@ -321,14 +318,15 @@ const Selector = ({
                             referenceSetStyle={referenceSetStyle}
                             clearIcon={clearIcon}
                             onBadgeClick={onBadgeClick}
+                            tabIndex={tabIndex}
                         />
                     )}
                     {!isReadOnly && (
                         <div className="srs-icon-row" style={{ gridRow: selectionType === "referenceSet" ? 2 : 1 }}>
                             {selectionType === "referenceSet" && showSelectAll && (
                                 <MxIcon
-                                    onClick={event => {
-                                        event.stopPropagation();
+                                    tabIndex={tabIndex || 0}
+                                    onClick={() => {
                                         setSearchFilter("");
                                         setFocusedObjIndex(-1);
                                         onSelect(options.filter(option => option.isSelectable));
@@ -341,6 +339,7 @@ const Selector = ({
 
                             {isClearable && (
                                 <MxIcon
+                                    tabIndex={tabIndex || 0}
                                     onClick={handleClearAll}
                                     title={"Clear"}
                                     mxIconOverride={clearIcon}

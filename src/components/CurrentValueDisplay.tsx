@@ -14,6 +14,7 @@ type CurrentValueDisplayProps = {
     referenceSetStyle: ReferenceSetStyleEnum;
     clearIcon: WebIcon | undefined;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
+    tabIndex?: number;
 };
 
 export default function CurrentValueDisplay({
@@ -24,7 +25,8 @@ export default function CurrentValueDisplay({
     clearIcon,
     onBadgeClick,
     isClearable,
-    isReadOnly
+    isReadOnly,
+    tabIndex
 }: CurrentValueDisplayProps): ReactElement {
     if (currentValue) {
         if (Array.isArray(currentValue)) {
@@ -44,6 +46,7 @@ export default function CurrentValueDisplay({
                                                 clearIcon={clearIcon}
                                                 onBadgeClick={onBadgeClick}
                                                 option={option}
+                                                tabIndex={tabIndex}
                                             />
                                         ))}
                                     </Fragment>
@@ -59,6 +62,7 @@ export default function CurrentValueDisplay({
                                                 clearIcon={clearIcon}
                                                 onBadgeClick={onBadgeClick}
                                                 option={option}
+                                                tabIndex={tabIndex}
                                             />
                                         ))}
                                     </Fragment>

@@ -1,15 +1,16 @@
-import { createElement, ReactElement, MouseEvent } from "react";
+import { createElement, ReactElement } from "react";
 import { WebIcon } from "mendix";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
 
 interface BadgeProps {
     option: IOption;
-    onRemoveAssociation: (selectedOption: IOption) => void;
+    onRemoveAssociation: () => void;
     clearIcon: WebIcon | undefined;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     isClearable: boolean;
     isReadOnly: boolean;
+    tabIndex?: number;
 }
 
 const Badge = ({
@@ -18,20 +19,19 @@ const Badge = ({
     onBadgeClick,
     option,
     isClearable,
-    isReadOnly
+    isReadOnly,
+    tabIndex
 }: BadgeProps): ReactElement => {
     return (
         <div className="srs-badge" onClick={() => (onBadgeClick ? onBadgeClick(option) : undefined)}>
             {option.badgeContent ? option.badgeContent : option.content}
             {isClearable && !isReadOnly && (
                 <MxIcon
-                    onClick={(event: MouseEvent<HTMLDivElement>) => {
-                        event.stopPropagation();
-                        onRemoveAssociation(option);
-                    }}
+                    onClick={onRemoveAssociation}
                     title="Remove"
                     mxIconOverride={clearIcon}
                     defaultClassName="remove"
+                    tabIndex={tabIndex || 0}
                 />
             )}
         </div>
