@@ -52,10 +52,15 @@ const Option = ({
             ref={hoverRef}
         >
             {optionsStyle === "checkbox" && (
-                <input type={"checkbox"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1}></input>
+                <input
+                    type={"checkbox"}
+                    checked={option.isSelected}
+                    disabled={!option.isSelectable}
+                    tabIndex={-1}
+                ></input>
             )}
             {optionsStyle === "radio" && (
-                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1}/>
+                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1} />
             )}
             {option.content}
         </div>

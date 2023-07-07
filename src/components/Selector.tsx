@@ -175,21 +175,18 @@ const Selector = ({
         [onSelect, currentValue, hasCurrentValue, clearSearchOnSelect, isClearable, onLeaveHandler, selectionType]
     );
 
-    const handleClearAll = useCallback(
-        (): void => {
-            if (focusedObjIndex !== -1) {
-                setFocusedObjIndex(-1);
-            }
-            if (searchFilter.trim() !== "") {
-                setSearchFilter("");
-            } else {
-                onSelectHandler(undefined);
-            }
-            setTimeout(() => setShowMenu(true), FOCUS_DELAY);
-            focusSearchInput();
-        },
-        [focusedObjIndex, searchFilter, onSelectHandler, focusSearchInput]
-    );
+    const handleClearAll = useCallback((): void => {
+        if (focusedObjIndex !== -1) {
+            setFocusedObjIndex(-1);
+        }
+        if (searchFilter.trim() !== "") {
+            setSearchFilter("");
+        } else {
+            onSelectHandler(undefined);
+        }
+        setTimeout(() => setShowMenu(true), FOCUS_DELAY);
+        focusSearchInput();
+    }, [focusedObjIndex, searchFilter, onSelectHandler, focusSearchInput]);
 
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLDivElement>): void => {

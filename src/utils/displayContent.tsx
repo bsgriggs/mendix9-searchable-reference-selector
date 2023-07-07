@@ -10,11 +10,11 @@ export const displayReferenceContent = (
     displayObj: ObjectItem,
     optionTextType: OptionTextTypeEnum,
     displayAttribute: ListAttributeValue<string> | undefined,
-    optionCustomContent?: ListWidgetValue,
+    optionCustomContent?: ListWidgetValue
 ): ReactNode => {
     if (displayAttribute !== undefined) {
         if (optionTextType === "text") {
-            return <span >{displayAttribute.get(displayObj).displayValue}</span>;
+            return <span>{displayAttribute.get(displayObj).displayValue}</span>;
         } else if (optionTextType === "html") {
             return (
                 <span
@@ -28,5 +28,5 @@ export const displayReferenceContent = (
     if (optionTextType === "custom" && optionCustomContent) {
         return optionCustomContent.get(displayObj);
     }
-    return <span >No Content</span>;
+    return <span>No Content</span>;
 };

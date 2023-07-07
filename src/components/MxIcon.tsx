@@ -11,14 +11,14 @@ interface IconProps {
 }
 
 const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: IconProps): ReactElement => {
-    const onClickHandler = (event: MouseEvent<any>) => {
+    const onClickHandler = (event: MouseEvent<any>): void => {
         event.stopPropagation();
         if (onClick) {
             onClick();
         }
     };
 
-    const onEnterHandler = (event: KeyboardEvent<any>) => {
+    const onEnterHandler = (event: KeyboardEvent<any>): void => {
         event.stopPropagation();
         if (event.key === "Enter" && onClick) {
             onClick();
