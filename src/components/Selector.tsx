@@ -162,7 +162,6 @@ const Selector = ({
                                 );
                             }
                         } else {
-                            console.info("add to list");
                             // list already exists, add to list
                             onSelect([...currentValue, selectedOption]);
                         }
