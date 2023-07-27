@@ -16,4 +16,5 @@ export type IOption = {
     isSelectable: boolean;
     content: ReactNode;
     badgeContent?: ReactNode;
+    // ariaLiveText?: string;
 } & (enumOption | refOption);

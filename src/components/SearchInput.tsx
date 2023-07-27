@@ -1,4 +1,4 @@
-import { ChangeEvent, createElement, Fragment, ReactElement, useEffect, useRef, MouseEvent } from "react";
+import { ChangeEvent, createElement, ReactElement, useEffect, useRef, MouseEvent } from "react";
 
 interface SearchInputProps {
     name: string | undefined;
@@ -9,6 +9,7 @@ interface SearchInputProps {
     isSearchable: boolean;
     setRef: (newRef: HTMLInputElement) => void;
     showMenu: boolean;
+    setShowMenu: (newValue: boolean) => void;
     hasCurrentValue: boolean;
     isReferenceSet: boolean;
     tabIndex?: number;
@@ -23,6 +24,7 @@ export default function SearchInput({
     setRef,
     searchFilter,
     showMenu,
+    setShowMenu,
     hasCurrentValue,
     isReferenceSet,
     tabIndex
@@ -35,28 +37,31 @@ export default function SearchInput({
     }, [searchInput, setRef]);
 
     return (
-        <Fragment>
-            <input
-                style={{
-                    // caretColor: !isReferenceSet && hasCurrentValue && searchFilter === "" ? "transparent" : "",
-                    gridRow: isReferenceSet ? 2 : 1
-                }}
-                tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
-                name={name}
-                placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly) ? placeholder : ""}
-                type="text"
-                onChange={event => onChange(event)}
-                readOnly={isReadOnly || !isSearchable}
-                disabled={isReadOnly}
-                value={searchFilter}
-                ref={searchInput}
-                autoComplete="off"
-                onClick={(event: MouseEvent<HTMLInputElement>) => {
-                    if (showMenu) {
-                        event.stopPropagation();
-                    }
-                }}
-            ></input>
-        </Fragment>
+        <input
+            style={{
+                gridRow: isReferenceSet ? 2 : 1,
+                cursor: !isReadOnly && !isSearchable && !hasCurrentValue ? "pointer" : "unset"
+            }}
+            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
+            name={name}
+            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly) ? placeholder : ""}
+            type="text"
+            onChange={event => onChange(event)}
+            readOnly={isReadOnly || !isSearchable}
+            disabled={isReadOnly}
+            value={searchFilter}
+            ref={searchInput}
+            autoComplete="off"
+            onClick={(event: MouseEvent<HTMLInputElement>) => {
+                if (showMenu) {
+                    event.stopPropagation();
+                }
+            }}
+            onFocus={() => {
+                if (!showMenu) {
+                    setShowMenu(true);
+                }
+            }}
+        ></input>
     );
 }

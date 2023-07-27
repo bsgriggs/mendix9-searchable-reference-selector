@@ -78,13 +78,13 @@ const OptionsMenu = ({
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [currentFocus]);
+    }, [selectedObjRef.current]);
 
     return (
         <ul
             className={`srs-${selectStyle} srs-menu${isLoading && !allowLoadingSelect ? " wait" : ""}`}
             style={OptionMenuStyle}
-            onMouseEnter={() => setFocusMode(focusModeEnum.hover)}
+            onMouseMove={() => setFocusMode(focusModeEnum.hover)}
         >
             {options.length > 0 ? (
                 <Fragment>
@@ -93,30 +93,26 @@ const OptionsMenu = ({
                             {loadingText}
                         </li>
                     )}
-                    {options.map((option, key) => {
-                        const isFocused = key === currentFocus;
-                        return (
-                            <li key={key} ref={isFocused ? selectedObjRef : undefined}>
-                                <Option
-                                    index={key}
-                                    isFocused={focusMode === focusModeEnum.arrow ? isFocused : false}
-                                    onSelect={selectedOption => {
-                                        if (allowLoadingSelect || !isLoading) {
-                                            onSelect(selectedOption);
-                                        }
-                                    }}
-                                    focusMode={focusMode}
-                                    optionsStyle={optionsStyle}
-                                    option={option}
-                                />
-                            </li>
-                        );
-                    })}
+                    {options.map((option, key) => (
+                        <li key={key} ref={key === currentFocus ? selectedObjRef : undefined}>
+                            <Option
+                                index={key}
+                                isFocused={key === currentFocus}
+                                onSelect={selectedOption => {
+                                    if (allowLoadingSelect || !isLoading) {
+                                        onSelect(selectedOption);
+                                    }
+                                }}
+                                focusMode={focusMode}
+                                optionsStyle={optionsStyle}
+                                option={option}
+                            />
+                        </li>
+                    ))}
                     {hasMoreOptions && (
                         <li key={options.length} ref={currentFocus === options.length ? selectedObjRef : undefined}>
                             <div
                                 role="option"
-                                // tabIndex={options.length}
                                 className={
                                     currentFocus === options.length ? "srs-option focused" : "mx-text srs-infooption"
                                 }

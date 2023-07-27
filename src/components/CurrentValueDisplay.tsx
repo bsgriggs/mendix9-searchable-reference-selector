@@ -13,6 +13,7 @@ type CurrentValueDisplayProps = {
     onRemove: (clickObj: IOption) => void;
     referenceSetStyle: ReferenceSetStyleEnum;
     clearIcon: WebIcon | undefined;
+    clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     tabIndex?: number;
 };
@@ -23,6 +24,7 @@ export default function CurrentValueDisplay({
     currentValue,
     onRemove,
     clearIcon,
+    clearIconTitle,
     onBadgeClick,
     isClearable,
     isReadOnly,
@@ -40,10 +42,11 @@ export default function CurrentValueDisplay({
                                         {currentValue.slice(0, maxReferenceDisplay).map((option, key) => (
                                             <Badge
                                                 key={key}
-                                                isClearable={isClearable || currentValue.length > 1}
+                                                isClearable={isClearable}
                                                 isReadOnly={isReadOnly}
                                                 onRemoveAssociation={() => onRemove(option)}
                                                 clearIcon={clearIcon}
+                                                clearIconTitle={clearIconTitle}
                                                 onBadgeClick={onBadgeClick}
                                                 option={option}
                                                 tabIndex={tabIndex}
@@ -56,10 +59,11 @@ export default function CurrentValueDisplay({
                                         {currentValue.map((option, key) => (
                                             <Badge
                                                 key={key}
-                                                isClearable={isClearable || currentValue.length > 1}
+                                                isClearable={isClearable}
                                                 isReadOnly={isReadOnly}
                                                 onRemoveAssociation={() => onRemove(option)}
                                                 clearIcon={clearIcon}
+                                                clearIconTitle={clearIconTitle}
                                                 onBadgeClick={onBadgeClick}
                                                 option={option}
                                                 tabIndex={tabIndex}

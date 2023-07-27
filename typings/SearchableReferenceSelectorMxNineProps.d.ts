@@ -7,9 +7,19 @@ import { ComponentType } from "react";
 import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
-export type SelectStyleEnum = "dropdown" | "list";
+export type SelectionTypeEnum = "enumeration" | "reference" | "referenceSet";
 
-export type OptionTextTypeEnum = "text" | "html" | "custom";
+export type OptionTextTypeEnum = "text" | "html" | "textTemplate" | "custom";
+
+export type FilterTypeEnum = "auto" | "manual";
+
+export type FilterFunctionEnum = "contains" | "startsWith";
+
+export interface SearchAttributesType {
+    searchAttribute: ListAttributeValue<string | Big>;
+}
+
+export type SelectStyleEnum = "dropdown" | "list";
 
 export type OptionsStyleSingleEnum = "cell" | "radio";
 
@@ -19,98 +29,102 @@ export type ReferenceSetStyleEnum = "badges" | "commas";
 
 export type ReferenceSetValueEnum = "SAME" | "CUSTOM";
 
-export type SelectionTypeEnum = "enumeration" | "reference" | "referenceSet";
-
-export type FilterTypeEnum = "auto" | "manual";
-
-export type FilterFunctionEnum = "contains" | "startsWith";
+export interface SearchAttributesPreviewType {
+    searchAttribute: string;
+}
 
 export interface SearchableReferenceSelectorMxNineContainerProps {
     name: string;
     tabIndex?: number;
     id: string;
-    isSearchable: boolean;
-    isClearable: boolean;
-    showSelectAll: boolean;
-    maxItems: DynamicValue<Big>;
-    allowLoadingSelect: boolean;
-    clearSearchOnSelect: boolean;
     placeholder: DynamicValue<string>;
-    moreResultsText: DynamicValue<string>;
-    noResultsText: DynamicValue<string>;
-    loadingText: DynamicValue<string>;
-    selectStyle: SelectStyleEnum;
-    optionTextType: OptionTextTypeEnum;
-    optionsStyleSingle: OptionsStyleSingleEnum;
-    optionsStyleSet: OptionsStyleSetEnum;
-    optionCustomContent?: ListWidgetValue;
-    referenceSetStyle: ReferenceSetStyleEnum;
-    referenceSetValue: ReferenceSetValueEnum;
-    referenceSetValueContent: ListWidgetValue;
-    maxReferenceDisplay: number;
-    maxMenuHeight: DynamicValue<string>;
-    clearIcon?: DynamicValue<WebIcon>;
-    dropdownIcon?: DynamicValue<WebIcon>;
-    selectAllIcon?: DynamicValue<WebIcon>;
     selectionType: SelectionTypeEnum;
     selectableObjects: ListValue;
     reference: ReferenceValue;
     referenceSet: ReferenceSetValue;
-    displayAttribute: ListAttributeValue<string>;
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
-    onChange?: ActionValue;
-    onLeave?: ActionValue;
-    onBadgeClick?: ListActionValue;
+    optionTextType: OptionTextTypeEnum;
+    displayAttribute: ListAttributeValue<string | Big>;
+    optionExpression: ListExpressionValue<string>;
+    optionCustomContent: ListWidgetValue;
+    isSearchable: boolean;
     filterDelay: number;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
+    searchAttributes: SearchAttributesType[];
     searchText: EditableValue<string>;
     hasMoreResultsManual: DynamicValue<boolean>;
     onClickMoreResultsText?: ActionValue;
-    refreshAction?: ActionValue;
+    selectStyle: SelectStyleEnum;
+    optionsStyleSingle: OptionsStyleSingleEnum;
+    optionsStyleSet: OptionsStyleSetEnum;
+    maxItems: DynamicValue<Big>;
+    allowLoadingSelect: boolean;
+    maxMenuHeight: DynamicValue<string>;
+    dropdownIcon?: DynamicValue<WebIcon>;
+    clearSearchOnSelect: boolean;
+    referenceSetStyle: ReferenceSetStyleEnum;
+    referenceSetValue: ReferenceSetValueEnum;
+    referenceSetValueContent: ListWidgetValue;
+    maxReferenceDisplay: number;
+    moreResultsText: DynamicValue<string>;
+    noResultsText: DynamicValue<string>;
+    loadingText: DynamicValue<string>;
+    showSelectAll: boolean;
+    selectAllIconTitle: DynamicValue<string>;
+    selectAllIcon?: DynamicValue<WebIcon>;
+    isClearable: boolean;
+    clearIconTitle: DynamicValue<string>;
+    clearIcon?: DynamicValue<WebIcon>;
+    onChange?: ActionValue;
+    onLeave?: ActionValue;
+    onBadgeClick?: ListActionValue;
 }
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
-    isSearchable: boolean;
-    isClearable: boolean;
-    showSelectAll: boolean;
-    maxItems: string;
-    allowLoadingSelect: boolean;
-    clearSearchOnSelect: boolean;
     placeholder: string;
-    moreResultsText: string;
-    noResultsText: string;
-    loadingText: string;
-    selectStyle: SelectStyleEnum;
-    optionTextType: OptionTextTypeEnum;
-    optionsStyleSingle: OptionsStyleSingleEnum;
-    optionsStyleSet: OptionsStyleSetEnum;
-    optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
-    referenceSetStyle: ReferenceSetStyleEnum;
-    referenceSetValue: ReferenceSetValueEnum;
-    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
-    maxReferenceDisplay: number | null;
-    maxMenuHeight: string;
-    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     selectionType: SelectionTypeEnum;
     selectableObjects: {} | { type: string } | null;
     reference: string;
     referenceSet: string;
-    displayAttribute: string;
     selectableCondition: string;
     enumAttribute: string;
-    onChange: {} | null;
-    onLeave: {} | null;
-    onBadgeClick: {} | null;
+    optionTextType: OptionTextTypeEnum;
+    displayAttribute: string;
+    optionExpression: string;
+    optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
+    isSearchable: boolean;
     filterDelay: number | null;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
+    searchAttributes: SearchAttributesPreviewType[];
     searchText: string;
     hasMoreResultsManual: string;
     onClickMoreResultsText: {} | null;
-    refreshAction: {} | null;
+    selectStyle: SelectStyleEnum;
+    optionsStyleSingle: OptionsStyleSingleEnum;
+    optionsStyleSet: OptionsStyleSetEnum;
+    maxItems: string;
+    allowLoadingSelect: boolean;
+    maxMenuHeight: string;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    clearSearchOnSelect: boolean;
+    referenceSetStyle: ReferenceSetStyleEnum;
+    referenceSetValue: ReferenceSetValueEnum;
+    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
+    maxReferenceDisplay: number | null;
+    moreResultsText: string;
+    noResultsText: string;
+    loadingText: string;
+    showSelectAll: boolean;
+    selectAllIconTitle: string;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    isClearable: boolean;
+    clearIconTitle: string;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    onChange: {} | null;
+    onLeave: {} | null;
+    onBadgeClick: {} | null;
 }

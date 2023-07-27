@@ -9,157 +9,20 @@
     <icon />
     <properties>
         <propertyGroup caption="General">
-            <propertyGroup caption="System">
-                <systemProperty key="Name"/>
-                <systemProperty key="TabIndex"/>
-                <systemProperty key="Editability"/>
-                <systemProperty key="Visibility"/>
-            </propertyGroup>
-            <propertyGroup caption="Customization">
-                <property key="isSearchable" type="boolean" defaultValue="true">
-                    <caption>Searchable?</caption>
-                    <description>When true, the user will be able to search with a textbox</description>
-                </property>
-                <property key="isClearable" type="boolean" defaultValue="true">
-                    <caption>Clearable?</caption>
-                    <description>When true, the search textbox will have either an 'X' icon or the Clear Icon</description>
-                </property>
-                <property key="showSelectAll" type="boolean" defaultValue="true">
-                    <caption>Show select all?</caption>
-                    <description>When true, the search textbox will have either a checkbox icon to select all values or the Select All Icon</description>
-                </property>
-                <property key="maxItems" type="expression" defaultValue="50">
-                    <caption>Max items</caption>
-                    <description>Limits the items shown. If 0, no limit is set.</description>
-                    <returnType type="Integer" />
-                </property>
-                <property key="allowLoadingSelect" type="boolean" defaultValue="true">
-                    <caption>Allow loading select?</caption>
-                    <description>Allow the user to select an option while the data source is loading? (i.e. time between typing and the data source returning results)</description>
-                </property>
-                <property key="clearSearchOnSelect" type="boolean" defaultValue="true">
-                    <caption>Clear search on select</caption>
-                    <description>When the user selects an option for the reference set, should the search text be cleared?</description>
+            <propertyGroup caption="Label">
+                <systemProperty key="Label" />
+                <property key="placeholder" type="textTemplate">
+                    <caption>Placeholder</caption>
+                    <description></description>
+                    <translations>
+                        <translation lang="en_US">Search ...</translation>
+                    </translations>
                 </property>
             </propertyGroup>
-        </propertyGroup>
-        <propertyGroup caption="Text">
-            <systemProperty key="Label" />
-            <property key="placeholder" type="textTemplate">
-                <caption>Placeholder</caption>
-                <description></description>
-                <translations>
-                    <translation lang="en_US">Search ...</translation>
-                </translations>
-            </property>
-            <property key="moreResultsText" type="textTemplate">
-                <caption>More results text</caption>
-                <description>Text shown if the there are more items than the max items being displayed. Clicking on the text will extend the result size.</description>
-                <translations>
-                    <translation lang="en_US">Show more results</translation>
-                </translations>
-            </property>
-            <property key="noResultsText" type="textTemplate">
-                <caption>No results text</caption>
-                <description>Message shown if no results were found</description>
-                <translations>
-                    <translation lang="en_US">No results found</translation>
-                </translations>
-            </property>
-            <property key="loadingText" type="textTemplate" required="true">
-                <caption>Loading text</caption>
-                <description>Text shown in the dropdown while waiting for the data source</description>
-                <translations>
-                    <translation lang="en_US">Loading ...</translation>
-                </translations>
-            </property>
-        </propertyGroup>
-        <propertyGroup caption="Style">
-            <property key="selectStyle" type="enumeration" defaultValue="dropdown">
-                <caption>Select style</caption>
-                <description></description>
-                <enumerationValues>
-                    <enumerationValue key="dropdown">Dropdown</enumerationValue>
-                    <enumerationValue key="list">List on Page</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="optionTextType" type="enumeration" defaultValue="text">
-                <caption>Option text type</caption>
-                <description></description>
-                <enumerationValues>
-                    <enumerationValue key="text">Text</enumerationValue>
-                    <enumerationValue key="html">HTML</enumerationValue>
-                    <enumerationValue key="custom">Custom</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="optionsStyleSingle" type="enumeration" defaultValue="cell">
-                <caption>Option style</caption>
-                <description></description>
-                <enumerationValues>
-                    <enumerationValue key="cell">Cell</enumerationValue>
-                    <enumerationValue key="radio">Radio Buttons</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="optionsStyleSet" type="enumeration" defaultValue="cell">
-                <caption>Option style</caption>
-                <description></description>
-                <enumerationValues>
-                    <enumerationValue key="cell">Cell</enumerationValue>
-                    <enumerationValue key="checkbox">Checkbox</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="optionCustomContent" type="widgets" required="false"
-                dataSource="selectableObjects">
-                <caption>Option custom content</caption>
-                <description>Used when the Option Text Type is set to Custom</description>
-            </property>
-            <property key="referenceSetStyle" type="enumeration" defaultValue="badges">
-                <caption>Reference set style</caption>
-                <description>How the selected items are displayed</description>
-                <enumerationValues>
-                    <enumerationValue key="badges">Badges</enumerationValue>
-                    <enumerationValue key="commas">Comma Seperated</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="referenceSetValue" type="enumeration" defaultValue="SAME">
-                <caption>Reference set value</caption>
-                <description>The text displayed in the badge or comma</description>
-                <enumerationValues>
-                    <enumerationValue key="SAME">Same as option</enumerationValue>
-                    <enumerationValue key="CUSTOM">Custom</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="referenceSetValueContent" type="widgets" dataSource="selectableObjects">
-                <caption>The value displayed in the badge or comma</caption>
-                <description></description>
-            </property>
-            <property key="maxReferenceDisplay" type="integer" defaultValue="0">
-                <caption>Max reference display</caption>
-                <description>How many many badges / items are displayed (0 = no limit)</description>
-            </property>
-            <property key="maxMenuHeight" type="expression" defaultValue="'15em'">
-                <caption>Max menu height</caption>
-                <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
-                <returnType type="String" />
-            </property>
-            <property key="clearIcon" type="icon" required="false">
-                <caption>Clear icon</caption>
-                <description></description>
-            </property>
-            <property key="dropdownIcon" type="icon" required="false">
-                <caption>Dropdown icon</caption>
-                <description></description>
-            </property>
-            <property key="selectAllIcon" type="icon" required="false">
-                <caption>Select all icon</caption>
-                <description></description>
-            </property>
-        </propertyGroup>
-        <propertyGroup caption="Data Source">
-            <propertyGroup caption="General">
+            <propertyGroup caption="Data source">
                 <property key="selectionType" type="enumeration" defaultValue="enumeration">
                     <caption>Selection type</caption>
-                    <description>What is the user going to select?</description>
+                    <description></description>
                     <enumerationValues>
                         <enumerationValue key="enumeration">Enumeration</enumerationValue>
                         <enumerationValue key="reference">Reference</enumerationValue>
@@ -168,12 +31,12 @@
                 </property>
                 <property key="selectableObjects" type="datasource" isList="true" required="true">
                     <caption>Selectable objects</caption>
-                    <description>The objects that will be displayed</description>
+                    <description></description>
                 </property>
                 <property key="reference" type="association" selectableObjects="selectableObjects"
                     required="true">
                     <caption>Reference</caption>
-                    <description>The association to be set when the user clicks an option</description>
+                    <description></description>
                     <associationTypes>
                         <associationType name="Reference" />
                     </associationTypes>
@@ -181,90 +44,299 @@
                 <property key="referenceSet" type="association"
                     selectableObjects="selectableObjects" required="true">
                     <caption>Reference set</caption>
-                    <description>The association to be set when the user clicks an option</description>
+                    <description></description>
                     <associationTypes>
                         <associationType name="ReferenceSet" />
                     </associationTypes>
                 </property>
-                <property key="displayAttribute" type="attribute" required="true"
-                    dataSource="selectableObjects">
-                    <caption>Attribute to display</caption>
-                    <description>The attribute that will be displayed for each selectable object</description>
-                    <attributeTypes>
-                        <attributeType name="String" />
-                        <attributeType name="Enum" />
-                    </attributeTypes>
-                </property>
                 <property key="selectableCondition" type="expression" dataSource="selectableObjects"
                     defaultValue="true">
-                    <caption>Selectable condition</caption>
-                    <description>Boolean expression that determines if that object can be selected</description>
+                    <caption>Option selectable?</caption>
+                    <description></description>
                     <returnType type="Boolean" />
                 </property>
                 <property key="enumAttribute" type="attribute" required="true">
                     <caption>Enum attribute</caption>
-                    <description>The enum options that will be displayed</description>
+                    <description></description>
                     <attributeTypes>
                         <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
+                <property key="optionTextType" type="enumeration" defaultValue="text">
+                    <caption>Option content type</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="text">Text</enumerationValue>
+                        <enumerationValue key="html">HTML</enumerationValue>
+                        <enumerationValue key="textTemplate">Expression</enumerationValue>
+                        <enumerationValue key="custom">Custom</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="displayAttribute" type="attribute" required="true"
+                    dataSource="selectableObjects">
+                    <caption>Option content</caption>
+                    <description>The attribute displayed for each option</description>
+                    <attributeTypes>
+                        <attributeType name="String" />
+                        <attributeType name="Integer" />
+                        <attributeType name="Long" />
+                        <attributeType name="Decimal" />
+                        <attributeType name="Enum" />
+                    </attributeTypes>
+                </property>
+                <property key="optionExpression" type="expression" required="true"
+                    dataSource="selectableObjects">
+                    <caption>Option content</caption>
+                    <description>The text displayed for each option</description>
+                    <returnType type="String" />
+                </property>
+                <property key="optionCustomContent" type="widgets" required="true"
+                    dataSource="selectableObjects">
+                    <caption>Option content</caption>
+                    <description></description>
+                </property>
             </propertyGroup>
-            <propertyGroup caption="Actions">
+            <propertyGroup caption="Searching">
+                <property key="isSearchable" type="boolean" defaultValue="true">
+                    <caption>Searchable?</caption>
+                    <description></description>
+                </property>
+                <property key="filterDelay" type="integer" defaultValue="500" required="true">
+                    <caption>Search delay (ms)</caption>
+                    <description></description>
+                </property>
+                <property key="filterType" type="enumeration" defaultValue="auto">
+                    <caption>Search type</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="auto">By Attribute(s)</enumerationValue>
+                        <enumerationValue key="manual">By Data Source Microflow</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="filterFunction" type="enumeration" defaultValue="contains">
+                    <caption>Search function</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="contains">Contains</enumerationValue>
+                        <enumerationValue key="startsWith">Starts With</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="searchAttributes" type="object" isList="true" required="false">
+                    <caption>Search attributes</caption>
+                    <description></description>
+                    <properties>
+                        <propertyGroup caption="Search attribute">
+                            <property key="searchAttribute" type="attribute" required="true"
+                                dataSource="../selectableObjects">
+                                <caption>Search attribute</caption>
+                                <description></description>
+                                <attributeTypes>
+                                    <attributeType name="String" />
+                                    <attributeType name="Integer" />
+                                    <attributeType name="Long" />
+                                    <attributeType name="Decimal" />
+                                    <attributeType name="Enum" />
+                                </attributeTypes>
+                            </property>
+                        </propertyGroup>
+                    </properties>
+                </property>
+                <property key="searchText" type="attribute">
+                    <caption>Search text</caption>
+                    <description></description>
+                    <attributeTypes>
+                        <attributeType name="String" />
+                    </attributeTypes>
+                </property>
+                <property key="hasMoreResultsManual" type="expression" defaultValue="">
+                    <caption>Has more results</caption>
+                    <description>Expression to determine when to show the More Results Text (Easiest to include a boolean on your Search Text's object)</description>
+                    <returnType type="Boolean" />
+                </property>
+                <property key="onClickMoreResultsText" type="action" required="false">
+                    <caption>More results action</caption>
+                    <description>Mx Action that can be used to increase the page size on your data source when there are more results</description>
+                </property>
+                <!-- <property key="refreshAction" type="action" required="true">
+                    <caption>Refresh action</caption>
+                    <description>Must be a Microflow or Nanoflow that has a Refresh in Client on the Search Text's
+                object</description>
+                </property> -->
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Style">
+            <propertyGroup caption="General">
+                <property key="selectStyle" type="enumeration" defaultValue="dropdown">
+                    <caption>Select style</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="dropdown">Dropdown</enumerationValue>
+                        <enumerationValue key="list">List on Page</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="optionsStyleSingle" type="enumeration" defaultValue="cell">
+                    <caption>Option style</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="cell">Cell</enumerationValue>
+                        <enumerationValue key="radio">Radio Buttons</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="optionsStyleSet" type="enumeration" defaultValue="cell">
+                    <caption>Option style</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="cell">Cell</enumerationValue>
+                        <enumerationValue key="checkbox">Checkbox</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="maxItems" type="expression" defaultValue="20">
+                    <caption>Max items</caption>
+                    <description>Limits the items shown. If 0, no limit is set.</description>
+                    <returnType type="Integer" />
+                </property>
+                <property key="allowLoadingSelect" type="boolean" defaultValue="true">
+                    <caption>Allow loading select?</caption>
+                    <description>Allow the user to select an option while the data source is loading? (i.e. time between typing and the data source returning results)</description>
+                </property>
+                <property key="maxMenuHeight" type="expression" defaultValue="'15em'">
+                    <caption>Max menu height</caption>
+                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
+                    <returnType type="String" />
+                </property>
+                <property key="dropdownIcon" type="icon" required="false">
+                    <caption>Dropdown icon</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Reference set options">
+                <property key="clearSearchOnSelect" type="boolean" defaultValue="true">
+                    <caption>Clear search on select</caption>
+                    <description>Should the search text be cleared when the user selects an option?</description>
+                </property>
+                <property key="referenceSetStyle" type="enumeration" defaultValue="badges">
+                    <caption>Selected values style</caption>
+                    <description>How the selected items are displayed</description>
+                    <enumerationValues>
+                        <enumerationValue key="badges">Badges</enumerationValue>
+                        <enumerationValue key="commas">Comma Seperated</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="referenceSetValue" type="enumeration" defaultValue="SAME">
+                    <caption>Selected values content</caption>
+                    <description>The text displayed in the badge or comma</description>
+                    <enumerationValues>
+                        <enumerationValue key="SAME">Same as option</enumerationValue>
+                        <enumerationValue key="CUSTOM">Custom</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="referenceSetValueContent" type="widgets"
+                    dataSource="selectableObjects">
+                    <caption>The value displayed in the badge or comma</caption>
+                    <description></description>
+                </property>
+                <property key="maxReferenceDisplay" type="integer" defaultValue="0">
+                    <caption>Max displayed</caption>
+                    <description>How many many badges / items are displayed (0 = no limit) ~ remainder is displayed as "(+n)"</description>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Customization">
+            <propertyGroup caption="Text">
+                <property key="moreResultsText" type="textTemplate">
+                    <caption>More results text</caption>
+                    <description>Text shown if the there are more results than what is being displayed. Clicking on the text will show more results.</description>
+                    <translations>
+                        <translation lang="en_US">Show more results</translation>
+                    </translations>
+                </property>
+                <property key="noResultsText" type="textTemplate">
+                    <caption>No results text</caption>
+                    <description>Message shown if no results were found</description>
+                    <translations>
+                        <translation lang="en_US">No results found</translation>
+                    </translations>
+                </property>
+                <property key="loadingText" type="textTemplate" required="true">
+                    <caption>Loading text</caption>
+                    <description>Text shown in the dropdown while waiting for the data source</description>
+                    <translations>
+                        <translation lang="en_US">Loading ...</translation>
+                    </translations>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Select all">
+                <property key="showSelectAll" type="boolean" defaultValue="true">
+                    <caption>Show select all?</caption>
+                    <description>Should the textbox have an icon to select all options?</description>
+                </property>
+                <property key="selectAllIconTitle" type="textTemplate" required="true">
+                    <caption>Select all icon title</caption>
+                    <description>Text shown when hovering on the select all icon</description>
+                    <translations>
+                        <translation lang="en_US">Select all</translation>
+                    </translations>
+                </property>
+                <property key="selectAllIcon" type="icon" required="false">
+                    <caption>Select all icon</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Clearing">
+                <property key="isClearable" type="boolean" defaultValue="true">
+                    <caption>Clearable?</caption>
+                    <description>Should the textbox have an icon to clear the search text or current value?</description>
+                </property>
+                <property key="clearIconTitle" type="textTemplate" required="true">
+                    <caption>Clear icon title</caption>
+                    <description>Text shown when hovering on the clear icon</description>
+                    <translations>
+                        <translation lang="en_US">Clear</translation>
+                    </translations>
+                </property>
+                <property key="clearIcon" type="icon" required="false">
+                    <caption>Clear icon</caption>
+                    <description></description>
+                </property>
+            </propertyGroup>
+
+        </propertyGroup>
+        <propertyGroup caption="Events">
+            <propertyGroup caption="Events">
                 <property key="onChange" type="action">
                     <caption>On change</caption>
                     <description></description>
                 </property>
                 <property key="onLeave" type="action">
                     <caption>On leave</caption>
-                    <description>Action performed when the user closes the popup, clicks away, or tabs away</description>
+                    <description></description>
                 </property>
                 <property key="onBadgeClick" type="action" dataSource="selectableObjects">
                     <caption>On badge click</caption>
-                    <description>Action performed when the user clicks on a reference set badge</description>
+                    <description></description>
                 </property>
             </propertyGroup>
         </propertyGroup>
-        <propertyGroup caption="Filtering">
-            <property key="filterDelay" type="integer" defaultValue="300" required="true">
-                <caption>Filter delay</caption>
-                <description>How many milliseconds after the user has stopped typing to apply the filter.</description>
-            </property>
-            <property key="filterType" type="enumeration" defaultValue="auto">
-                <caption>Filter type</caption>
-                <description>How should the filtering be handled?</description>
-                <enumerationValues>
-                    <enumerationValue key="auto">Auto - by Mendix</enumerationValue>
-                    <enumerationValue key="manual">Manual - by Data Source Microflow</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="filterFunction" type="enumeration" defaultValue="contains">
-                <caption>Filter function</caption>
-                <description>How should the user's search text compare to the selectable values?</description>
-                <enumerationValues>
-                    <enumerationValue key="contains">Contains</enumerationValue>
-                    <enumerationValue key="startsWith">Starts With</enumerationValue>
-                </enumerationValues>
-            </property>
-            <property key="searchText" type="attribute">
-                <caption>Search text</caption>
-                <description>Attribute to set with the user's search</description>
-                <attributeTypes>
-                    <attributeType name="String" />
-                </attributeTypes>
-            </property>
-            <property key="hasMoreResultsManual" type="expression" defaultValue="">
-                <caption>Has more results</caption>
-                <description>Expression to determine when to show the More Results Text (Easiest to include a boolean on your Search Text's object)</description>
-                <returnType type="Boolean" />
-            </property>
-            <property key="onClickMoreResultsText" type="action" required="false">
-                <caption>On click more results text</caption>
-                <description>Mx Action that can be used to increase the page size on your data source when there are more results</description>
-            </property>
-            <property key="refreshAction" type="action" required="true">
-                <caption>Refresh action</caption>
-                <description>Must be a Microflow or Nanoflow that has a Refresh in Client on the Search Text's object</description>
-            </property>
+        <!-- <propertyGroup caption="Accessibility">
+            <propertyGroup caption="Accessibility">
+                <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
+                    required="false">
+                    <caption>Aria live text</caption>
+                    <description>The text read aloud by a screen reader while focused on an option</description>
+                </property>
+            </propertyGroup>
+        </propertyGroup> -->
+        <propertyGroup caption="Common">
+            <propertyGroup caption="Common">
+                <systemProperty key="Name" />
+                <systemProperty key="TabIndex" />
+            </propertyGroup>
+            <propertyGroup caption="Visibility">
+                <systemProperty key="Visibility" />
+            </propertyGroup>
+            <propertyGroup caption="Editbility">
+                <systemProperty key="Editability" />
+            </propertyGroup>
         </propertyGroup>
     </properties>
 </widget>

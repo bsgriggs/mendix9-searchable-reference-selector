@@ -1,55 +1,24 @@
 /* eslint-disable */
-import { ReactElement, createElement } from "react";
+import { ReactElement, ReactNode, createElement } from "react";
 import { SearchableReferenceSelectorMxNinePreviewProps } from "typings/SearchableReferenceSelectorMxNineProps";
-import { displayTextContent } from "./utils/displayContent";
 import Selector from "./components/Selector";
 import { IOption } from "typings/option";
+import { getDisplayName } from "./SearchableReferenceSelectorMxNine.editorConfig";
 
-export function preview({
-    reference,
-    referenceSet,
-    clearIcon,
-    displayAttribute,
-    dropdownIcon,
-    enumAttribute,
-    isClearable,
-    isSearchable,
-    optionsStyleSingle,
-    readOnly,
-    selectAllIcon,
-    selectionType,
-    showSelectAll,
-    optionTextType,
-    optionCustomContent,
-    maxReferenceDisplay,
-    moreResultsText,
-    noResultsText,
-    optionsStyleSet,
-    placeholder,
-    referenceSetStyle,
-    loadingText,
-    allowLoadingSelect,
-    referenceSetValue,
-    referenceSetValueContent
-}: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
-    const lastPeriodIndex = selectionType === "reference" ? reference.lastIndexOf(".") : referenceSet.lastIndexOf(".");
-    const associationDisplay =
-        selectionType === "reference"
-            ? reference.substring(lastPeriodIndex + 1)
-            : referenceSet.substring(lastPeriodIndex + 1);
-    const formattedDisplayAttribute =
-        selectionType === "enumeration" ? enumAttribute : "[" + associationDisplay + "/" + displayAttribute + "]";
+export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
+    const displayName = getDisplayName(props);
+    const displayTextContent = (text: string): ReactNode => <span>{text}</span>;
 
     const option1: IOption = {
         id: "1",
         content:
-            optionTextType === "custom" ? (
+            props.optionTextType === "custom" ? (
                 // @ts-ignore
-                <optionCustomContent.renderer caption="Place custom content here">
+                <props.optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
-                </optionCustomContent.renderer>
+                </props.optionCustomContent.renderer>
             ) : (
-                displayTextContent(formattedDisplayAttribute)
+                displayTextContent(displayName)
             ),
         isSelectable: true,
         isSelected: true,
@@ -58,13 +27,13 @@ export function preview({
     const option2: IOption = {
         id: "2",
         content:
-            optionTextType === "custom" ? (
+            props.optionTextType === "custom" ? (
                 // @ts-ignore
-                <optionCustomContent.renderer caption="Place custom content here">
+                <props.optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
-                </optionCustomContent.renderer>
+                </props.optionCustomContent.renderer>
             ) : (
-                displayTextContent(formattedDisplayAttribute)
+                displayTextContent(displayName)
             ),
         isSelectable: true,
         isSelected: false,
@@ -73,13 +42,13 @@ export function preview({
     const option3: IOption = {
         id: "3",
         content:
-            optionTextType === "custom" ? (
+            props.optionTextType === "custom" ? (
                 // @ts-ignore
-                <optionCustomContent.renderer caption="Place custom content here">
+                <props.optionCustomContent.renderer caption="Place custom content here">
                     <div style={{ width: "100%" }} />
-                </optionCustomContent.renderer>
+                </props.optionCustomContent.renderer>
             ) : (
-                displayTextContent(formattedDisplayAttribute)
+                displayTextContent(displayName)
             ),
         isSelectable: false,
         isSelected: false,
@@ -90,46 +59,48 @@ export function preview({
         <div className="srs">
             <Selector
                 isLoading={false}
-                loadingText={loadingText}
-                allowLoadingSelect={allowLoadingSelect}
+                loadingText={props.loadingText}
+                allowLoadingSelect={props.allowLoadingSelect}
                 name=""
-                hasMoreOptions={moreResultsText !== undefined}
-                isClearable={isClearable}
-                isReadOnly={readOnly}
-                isSearchable={isSearchable}
+                hasMoreOptions={props.moreResultsText !== undefined}
+                isClearable={props.isClearable}
+                isReadOnly={props.readOnly}
+                isSearchable={props.isSearchable}
                 maxMenuHeight={""}
-                maxReferenceDisplay={maxReferenceDisplay || 0}
-                moreResultsText={moreResultsText}
-                noResultsText={noResultsText}
+                maxReferenceDisplay={props.maxReferenceDisplay || 0}
+                moreResultsText={props.moreResultsText}
+                noResultsText={props.noResultsText}
                 options={[option1, option2, option3]}
-                optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
-                placeholder={placeholder}
-                referenceSetStyle={referenceSetStyle}
+                optionsStyle={props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle}
+                placeholder={props.placeholder}
+                referenceSetStyle={props.referenceSetStyle}
                 selectStyle={"list"}
-                selectionType={selectionType}
-                showSelectAll={showSelectAll}
+                selectionType={props.selectionType}
+                showSelectAll={props.showSelectAll}
                 clearIcon={
-                    clearIcon !== null
-                        ? clearIcon.type === "image"
-                            ? { type: "image", iconUrl: clearIcon.imageUrl }
-                            : { type: "glyph", iconClass: clearIcon.iconClass }
+                    props.clearIcon !== null
+                        ? props.clearIcon.type === "image"
+                            ? { type: "image", iconUrl: props.clearIcon.imageUrl }
+                            : { type: "glyph", iconClass: props.clearIcon.iconClass }
                         : undefined
                 }
+                clearIconTitle={""}
                 dropdownIcon={
-                    dropdownIcon !== null
-                        ? dropdownIcon.type === "image"
-                            ? { type: "image", iconUrl: dropdownIcon.imageUrl }
-                            : { type: "glyph", iconClass: dropdownIcon.iconClass }
+                    props.dropdownIcon !== null
+                        ? props.dropdownIcon.type === "image"
+                            ? { type: "image", iconUrl: props.dropdownIcon.imageUrl }
+                            : { type: "glyph", iconClass: props.dropdownIcon.iconClass }
                         : undefined
                 }
                 selectAllIcon={
-                    selectAllIcon !== null
-                        ? selectAllIcon.type === "image"
-                            ? { type: "image", iconUrl: selectAllIcon.imageUrl }
-                            : { type: "glyph", iconClass: selectAllIcon.iconClass }
+                    props.selectAllIcon !== null
+                        ? props.selectAllIcon.type === "image"
+                            ? { type: "image", iconUrl: props.selectAllIcon.imageUrl }
+                            : { type: "glyph", iconClass: props.selectAllIcon.iconClass }
                         : undefined
                 }
-                currentValue={selectionType === "referenceSet" ? option1 : undefined}
+                selectAllIconTitle=""
+                currentValue={props.selectionType === "referenceSet" ? option1 : undefined}
                 clearSearchOnSelect
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onLeave={() => {}}
@@ -142,12 +113,12 @@ export function preview({
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 setMxFilter={() => {}}
             />
-            {referenceSetValue === "CUSTOM" && (
+            {props.referenceSetValue === "CUSTOM" && (
                 <div className="srs-badge">
                     {/* @ts-ignore */}
-                    <referenceSetValueContent.renderer caption="The value displayed in the badge or comma">
+                    <props.referenceSetValueContent.renderer caption="The value displayed in the badge or comma">
                         <div style={{ width: "100%" }} />
-                    </referenceSetValueContent.renderer>
+                    </props.referenceSetValueContent.renderer>
                 </div>
             )}
         </div>

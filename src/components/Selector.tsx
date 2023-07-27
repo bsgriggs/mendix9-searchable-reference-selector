@@ -17,6 +17,7 @@ import { usePositionObserver } from "../custom hooks/usePositionObserver";
 import SearchInput from "./SearchInput";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
+import { ObjectItem } from "mendix";
 import {
     OptionsStyleSetEnum,
     OptionsStyleSingleEnum,
@@ -39,12 +40,14 @@ interface SelectorProps {
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
     clearIcon: WebIcon | undefined;
+    clearIconTitle: string;
     isSearchable: boolean;
     isReadOnly: boolean;
     selectionType: SelectionTypeEnum;
     selectStyle: SelectStyleEnum;
     showSelectAll: boolean; // selectionType = ReferenceSet
     selectAllIcon: WebIcon | undefined; // selectionType = ReferenceSet
+    selectAllIconTitle: string; // selectionType = ReferenceSet
     dropdownIcon: WebIcon | undefined; // selectStyle = Dropdown
     maxMenuHeight: string; // selectStyle = Dropdown
     hasMoreOptions: boolean; // selectionType = Reference or ReferenceSet
@@ -64,6 +67,7 @@ interface SelectorProps {
 
 const Selector = ({
     clearIcon,
+    clearIconTitle,
     currentValue,
     dropdownIcon,
     hasMoreOptions,
@@ -82,8 +86,8 @@ const Selector = ({
     optionsStyle,
     placeholder,
     referenceSetStyle,
-    // searchFilter,
     selectAllIcon,
+    selectAllIconTitle,
     setMxFilter,
     showSelectAll,
     tabIndex,
@@ -141,12 +145,24 @@ const Selector = ({
                 if (Array.isArray(currentValue)) {
                     // reference set
                     if (hasCurrentValue) {
-                        if (currentValue.find(option => option.id === selectedOption.id)) {
+                        const selectedObjectItem = selectedOption.id as ObjectItem;
+                        if (
+                            currentValue.find(option => {
+                                const iteratorObjectItem = option.id as ObjectItem;
+                                return iteratorObjectItem.id === selectedObjectItem.id;
+                            }) !== undefined
+                        ) {
                             if (isClearable || currentValue.length > 1) {
                                 // option already selected, deselect
-                                onSelect(currentValue.filter(option => option.id !== selectedOption.id));
+                                onSelect(
+                                    currentValue.filter(option => {
+                                        const iteratorObjectItem = option.id as ObjectItem;
+                                        return iteratorObjectItem.id !== selectedObjectItem.id;
+                                    })
+                                );
                             }
                         } else {
+                            console.info("add to list");
                             // list already exists, add to list
                             onSelect([...currentValue, selectedOption]);
                         }
@@ -266,6 +282,18 @@ const Selector = ({
 
     return (
         <Fragment>
+            {/* Aria Live Text */}
+            {/* <div style={{ height: "0px !important" }} aria-live="polite">
+                {focusedObjIndex > -1
+                    ? options[focusedObjIndex].ariaLiveText
+                    : focusedObjIndex === options.length
+                    ? moreResultsText
+                    : currentValue
+                    ? Array.isArray(currentValue)
+                        ? "list selected values"
+                        : currentValue.ariaLiveText
+                    : ""}
+            </div> */}
             <div
                 className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
                 onClick={() => {
@@ -296,6 +324,7 @@ const Selector = ({
                             hasCurrentValue={hasCurrentValue}
                             searchFilter={searchFilter}
                             showMenu={showMenu}
+                            setShowMenu={setShowMenu}
                             isReferenceSet={selectionType === "referenceSet"}
                             tabIndex={tabIndex}
                         />
@@ -314,6 +343,7 @@ const Selector = ({
                             }}
                             referenceSetStyle={referenceSetStyle}
                             clearIcon={clearIcon}
+                            clearIconTitle={clearIconTitle}
                             onBadgeClick={onBadgeClick}
                             tabIndex={tabIndex}
                         />
@@ -328,7 +358,7 @@ const Selector = ({
                                         setFocusedObjIndex(-1);
                                         onSelect(options.filter(option => option.isSelectable));
                                     }}
-                                    title={"Select All"}
+                                    title={selectAllIconTitle}
                                     mxIconOverride={selectAllIcon}
                                     defaultClassName="check"
                                 />
@@ -338,7 +368,7 @@ const Selector = ({
                                 <MxIcon
                                     tabIndex={tabIndex || 0}
                                     onClick={handleClearAll}
-                                    title={"Clear"}
+                                    title={clearIconTitle}
                                     mxIconOverride={clearIcon}
                                     defaultClassName="remove"
                                 />

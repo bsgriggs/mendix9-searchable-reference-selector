@@ -1,10 +1,9 @@
-import React, { createElement, useMemo } from "react";
+import React, { ReactNode, createElement, useCallback, useMemo } from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus, ActionValue } from "mendix";
-import { attribute, literal, contains, startsWith } from "mendix/filters/builders";
+import { attribute, literal, contains, startsWith, or } from "mendix/filters/builders";
 import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
-import { displayTextContent, displayReferenceContent } from "./utils/displayContent";
 import "./ui/SearchableReferenceSelectorMxNine.css";
 import { Alert } from "./components/Alert";
 
@@ -23,7 +22,6 @@ export default function SearchableReferenceSelector({
     noResultsText,
     loadingText,
     selectStyle,
-    optionTextType,
     optionsStyleSingle,
     optionsStyleSet,
     optionCustomContent,
@@ -33,13 +31,15 @@ export default function SearchableReferenceSelector({
     maxReferenceDisplay,
     maxMenuHeight,
     clearIcon,
+    clearIconTitle,
     dropdownIcon,
     selectAllIcon,
+    selectAllIconTitle,
     selectionType,
     selectableObjects,
     reference,
     referenceSet,
-    displayAttribute,
+    searchAttributes,
     selectableCondition,
     enumAttribute,
     onChange,
@@ -51,7 +51,10 @@ export default function SearchableReferenceSelector({
     searchText,
     hasMoreResultsManual,
     onClickMoreResultsText,
-    refreshAction
+    // ariaLiveText,
+    displayAttribute,
+    optionExpression,
+    optionTextType
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
@@ -62,20 +65,29 @@ export default function SearchableReferenceSelector({
     const [itemsLimit, setItemsLimit] = React.useState<number | undefined>(defaultPageSize);
     const [options, setOptions] = React.useState<IOption[]>([]);
     const srsRef = React.useRef<HTMLDivElement>(null);
+    const serverSideSearching: boolean = useMemo(() => {
+        if (selectionType === "enumeration") {
+            return false;
+        }
+        return optionTextType === "text" || optionTextType === "html"
+            ? displayAttribute.type !== "Enum" && displayAttribute.filterable
+            : searchAttributes.every(
+                  value => value.searchAttribute.type !== "Enum" && value.searchAttribute.filterable
+              );
+    }, []);
 
     const isReadOnly = useMemo(
         (): boolean =>
             (selectionType === "reference" && reference.readOnly) ||
             (selectionType === "referenceSet" && referenceSet.readOnly) ||
             (selectionType === "enumeration" && enumAttribute.readOnly),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [reference, referenceSet, enumAttribute]
+        [reference, referenceSet, enumAttribute, selectionType]
     );
 
     const hasMoreItems = useMemo(
         () =>
             (hasMoreResultsManual && hasMoreResultsManual.value) ||
-            ((selectableObjects && selectableObjects.hasMoreItems) as boolean),
+            (((selectableObjects && selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
         [hasMoreResultsManual, selectableObjects]
     );
 
@@ -106,6 +118,26 @@ export default function SearchableReferenceSelector({
         [isReadOnly, enumAttribute, reference, referenceSet, onChange]
     );
 
+    const displayTextContent = useCallback((text: string): ReactNode => <span>{text}</span>, []);
+
+    const displayReferenceContent = useCallback(
+        (displayObj: ObjectItem): ReactNode =>
+            optionTextType === "text" ? (
+                <span>{displayAttribute.get(displayObj).value}</span>
+            ) : optionTextType === "html" ? (
+                <span
+                    dangerouslySetInnerHTML={{
+                        __html: `${displayAttribute.get(displayObj).value?.toString()}`
+                    }}
+                ></span>
+            ) : optionTextType === "textTemplate" ? (
+                <span>{optionExpression.get(displayObj).value}</span>
+            ) : (
+                <span>{optionCustomContent.get(displayObj)}</span>
+            ),
+        [optionTextType, optionCustomContent, displayAttribute, optionExpression]
+    );
+
     const mapEnum = React.useCallback(
         (enumArray: string[]): IOption[] =>
             enumArray.map(value => {
@@ -115,31 +147,34 @@ export default function SearchableReferenceSelector({
                     isSelected: value === (enumAttribute.value as string),
                     selectionType: "ENUMERATION",
                     id: value
+                    // ariaLiveText: value
                 };
             }),
-        [enumAttribute]
+        [enumAttribute, displayTextContent]
     );
 
     const mapObjectItems = React.useCallback(
         (objectItems: ObjectItem[]): IOption[] =>
             objectItems.map(objItem => {
                 return {
-                    content: displayReferenceContent(objItem, optionTextType, displayAttribute, optionCustomContent),
+                    content: displayReferenceContent(objItem),
                     isSelectable: selectableCondition.get(objItem).value as boolean,
                     isSelected:
                         selectionType === "referenceSet"
-                            ? referenceSet.value
-                                ? referenceSet.value.find(option => option.id === objItem.id) !== undefined
-                                : false
-                            : reference.value
-                            ? reference.value.id === objItem.id
-                            : false,
+                            ? referenceSet.value?.find(option => option.id === objItem.id) !== undefined
+                            : reference.value?.id === objItem.id,
+
                     selectionType: "REFERENCE",
                     id: objItem
+                    // ariaLiveText: ariaLiveText
+                    //     ? (ariaLiveText.get(objItem).value as string)
+                    //     : displayAttribute
+                    //     ? (displayAttribute.get(objItem).value as string)
+                    //     : undefined
                 };
             }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [reference, referenceSet, optionTextType, displayAttribute, optionCustomContent, selectableCondition]
+        [reference, referenceSet, optionCustomContent, selectableCondition]
     );
 
     const onShowMore = (newLimit: number | undefined, onClickMoreResultsText: ActionValue | undefined): void => {
@@ -168,73 +203,57 @@ export default function SearchableReferenceSelector({
                           isSelected: true,
                           selectionType: "ENUMERATION",
                           id: enumAttribute.value
+                          //   ariaLiveText: enumAttribute.displayValue
                       }
                     : undefined;
             case "reference":
                 return reference.value !== undefined && reference.status === ValueStatus.Available
                     ? {
-                          content: displayReferenceContent(
-                              reference.value,
-                              optionTextType,
-                              displayAttribute,
-                              optionCustomContent
-                          ),
+                          content: displayReferenceContent(reference.value),
                           isSelectable: selectableCondition.get(reference.value).value as boolean,
                           isSelected: true,
                           selectionType: "REFERENCE",
                           id: reference.value
+                          //   ariaLiveText: ariaLiveText
+                          //       ? (ariaLiveText.get(reference.value).value as string)
+                          //       : displayAttribute
+                          //       ? (displayAttribute.get(reference.value).value as string)
+                          //       : undefined
                       }
                     : undefined;
             case "referenceSet":
                 return referenceSet.value !== undefined && referenceSet.status === ValueStatus.Available
                     ? referenceSet.value.map(reference => {
                           return {
-                              content: displayReferenceContent(
-                                  reference,
-                                  optionTextType,
-                                  displayAttribute,
-                                  optionCustomContent
-                              ),
+                              content: displayReferenceContent(reference),
                               badgeContent:
                                   referenceSetValue === "CUSTOM" ? referenceSetValueContent.get(reference) : undefined,
                               isSelectable: selectableCondition.get(reference).value as boolean,
                               isSelected: true,
                               selectionType: "REFERENCE",
                               id: reference
+                              //   ariaLiveText: ariaLiveText
+                              //       ? (ariaLiveText.get(reference).value as string)
+                              //       : displayAttribute
+                              //       ? (displayAttribute.get(reference).value as string)
+                              //       : undefined
                           };
                       })
                     : undefined;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        enumAttribute,
-        reference,
-        referenceSet,
-        selectableCondition,
-        displayAttribute,
-        optionCustomContent,
-        referenceSetValueContent
-    ]);
+    }, [enumAttribute, reference, referenceSet, selectableCondition, optionCustomContent, referenceSetValueContent]);
 
-    // load Options
-    if (selectionType === "enumeration") {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        React.useEffect(() => {
-            // enumAttribute.universe should never change, so this should only run on first load
-            if (!isReadOnly && enumAttribute.status === ValueStatus.Available && enumAttribute.universe !== undefined) {
-                setOptions(mapEnum(enumAttribute.universe));
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [enumAttribute]);
-    } else {
+    // // load Options
+    if (selectionType !== "enumeration") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
             // selectableObjects.items will automatically change when the Mendix data source is re-ran.
             if (
                 !isReadOnly &&
                 selectableObjects.status === ValueStatus.Available &&
-                (reference === undefined || reference.status === ValueStatus.Available) &&
-                (referenceSet === undefined || referenceSet.status === ValueStatus.Available)
+                (selectionType !== "reference" || reference.status === ValueStatus.Available) &&
+                (selectionType !== "referenceSet" || referenceSet.status === ValueStatus.Available)
             ) {
                 setOptions(mapObjectItems(selectableObjects.items || []));
             }
@@ -243,86 +262,131 @@ export default function SearchableReferenceSelector({
     }
 
     // Determine the Filtering handling useEffect
-    if (filterType === "auto") {
-        if (selectionType === "enumeration") {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            React.useEffect(() => {
-                if (
-                    !isReadOnly &&
-                    enumAttribute.status === ValueStatus.Available &&
-                    placeholder.status === ValueStatus.Available
-                ) {
-                    const delayDebounceFn = setTimeout(() => {
-                        if (isSearchable && enumAttribute.universe !== undefined) {
-                            if (mxFilter !== undefined && mxFilter.trim().length > 0) {
-                                const searchTextTrimmed = mxFilter.trim();
-                                if (filterFunction === "contains") {
-                                    setOptions(
-                                        mapEnum(
-                                            enumAttribute.universe.filter(option =>
-                                                option.toLowerCase().includes(searchTextTrimmed.toLowerCase())
-                                            )
+    if (selectionType === "enumeration" && enumAttribute.universe) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        React.useEffect(() => {
+            if (!isReadOnly) {
+                const delayDebounceFn = setTimeout(() => {
+                    if (enumAttribute.universe) {
+                        if (mxFilter.trim().length > 0 && isSearchable) {
+                            if (filterFunction === "contains") {
+                                setOptions(
+                                    mapEnum(
+                                        enumAttribute.universe.filter(option =>
+                                            option.toLowerCase().includes(mxFilter.trim().toLowerCase())
                                         )
-                                    );
-                                } else {
-                                    setOptions(
-                                        mapEnum(
-                                            enumAttribute.universe.filter(option =>
-                                                option.toLowerCase().startsWith(searchTextTrimmed.toLowerCase())
-                                            )
-                                        )
-                                    );
-                                }
+                                    )
+                                );
                             } else {
-                                setOptions(mapEnum(enumAttribute.universe));
+                                setOptions(
+                                    mapEnum(
+                                        enumAttribute.universe.filter(option =>
+                                            option.toLowerCase().startsWith(mxFilter.trim().toLowerCase())
+                                        )
+                                    )
+                                );
                             }
+                        } else {
+                            setOptions(mapEnum(enumAttribute.universe));
+                        }
+                    }
+                }, filterDelay);
+
+                return () => clearTimeout(delayDebounceFn);
+            }
+        }, [mxFilter, enumAttribute.universe, isReadOnly]);
+    } else if (filterType === "auto") {
+        if (optionTextType === "text" || optionTextType === "html") {
+            // text/HTML option text types ~ use displayAttribute
+            if (serverSideSearching) {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                React.useEffect(() => {
+                    const debounce = setTimeout(() => {
+                        selectableObjects.setFilter(
+                            filterFunction === "contains"
+                                ? contains(attribute(displayAttribute.id), literal(mxFilter.trim()))
+                                : startsWith(attribute(displayAttribute.id), literal(mxFilter.trim()))
+                        );
+                    }, filterDelay);
+                    return () => clearTimeout(debounce);
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                }, [mxFilter]);
+            } else {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                React.useEffect(() => {
+                    const debounce = setTimeout(() => {
+                        if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                            setOptions(
+                                mapObjectItems(
+                                    selectableObjects.items.filter(item => {
+                                        const text = displayAttribute.get(item).displayValue as string;
+                                        return filterFunction === "contains"
+                                            ? text.toLocaleLowerCase().includes(mxFilter.trim().toLocaleLowerCase())
+                                            : text.toLocaleLowerCase().startsWith(mxFilter.trim().toLocaleLowerCase());
+                                    })
+                                )
+                            );
+                        } else {
+                            setOptions(mapObjectItems(selectableObjects.items || []));
                         }
                     }, filterDelay);
-
-                    return () => clearTimeout(delayDebounceFn);
-                }
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [mxFilter]);
+                    return () => clearTimeout(debounce);
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                }, [mxFilter, selectableObjects]);
+            }
         } else {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            React.useEffect(() => {
-                if (!isReadOnly && selectableObjects.status === ValueStatus.Available) {
-                    const delayDebounceFn = setTimeout(() => {
-                        if (isSearchable) {
-                            if (displayAttribute.filterable && displayAttribute.type === "String") {
-                                // data source supports xpath filtering
-                                const filterCondition =
-                                    filterFunction === "contains"
-                                        ? contains(attribute(displayAttribute.id), literal(mxFilter))
-                                        : startsWith(attribute(displayAttribute.id), literal(mxFilter));
-                                selectableObjects.setFilter(filterCondition);
-                            } else {
-                                // data source does not support xpath filter - filter on client
-                                if (mxFilter.trim().length > 0 && selectableObjects.items) {
-                                    setOptions(
-                                        mapObjectItems(
-                                            selectableObjects.items.filter(obj => {
-                                                const text = displayAttribute.get(obj).displayValue as string;
-                                                return filterFunction === "contains"
-                                                    ? text !== undefined &&
-                                                          text.toLowerCase().includes(mxFilter.trim().toLowerCase())
-                                                    : text !== undefined &&
-                                                          text.toLowerCase().startsWith(mxFilter.trim().toLowerCase());
-                                            })
-                                        )
-                                    );
-                                } else {
-                                    setOptions(mapObjectItems(selectableObjects.items || []));
-                                }
-                            }
-                            setItemsLimit(defaultPageSize);
+            // custom option text types ~ multiple search attributes
+            if (serverSideSearching) {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                React.useEffect(() => {
+                    const debounce = setTimeout(() => {
+                        const filter = searchAttributes.map(item =>
+                            filterFunction === "contains"
+                                ? contains(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
+                                : startsWith(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
+                        );
+                        if (filter !== undefined) {
+                            selectableObjects.setFilter(filter.length > 1 ? or(...filter) : filter[0]);
                         }
                     }, filterDelay);
-
-                    return () => clearTimeout(delayDebounceFn);
-                }
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [mxFilter]);
+                    return () => clearTimeout(debounce);
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                }, [mxFilter]);
+            } else {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                React.useEffect(() => {
+                    const debounce = setTimeout(() => {
+                        if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                            setOptions(
+                                mapObjectItems(
+                                    selectableObjects.items.filter(item => {
+                                        let match = false;
+                                        for (const searchItem of searchAttributes) {
+                                            const text = searchItem.searchAttribute.get(item).displayValue as string;
+                                            match =
+                                                filterFunction === "contains"
+                                                    ? text
+                                                          .toLocaleLowerCase()
+                                                          .includes(mxFilter.trim().toLocaleLowerCase())
+                                                    : text
+                                                          .toLocaleLowerCase()
+                                                          .startsWith(mxFilter.trim().toLocaleLowerCase());
+                                            if (match) {
+                                                break;
+                                            }
+                                        }
+                                        return match;
+                                    })
+                                )
+                            );
+                        } else {
+                            setOptions(mapObjectItems(selectableObjects.items || []));
+                        }
+                    }, filterDelay);
+                    return () => clearTimeout(debounce);
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                }, [mxFilter, selectableObjects]);
+            }
         }
     } else {
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -339,7 +403,7 @@ export default function SearchableReferenceSelector({
                 const delayDebounceFn = setTimeout(() => {
                     if (isSearchable) {
                         searchText.setValue(mxFilter);
-                        callMxAction(refreshAction, true);
+                        selectableObjects.reload();
                     }
                 }, filterDelay);
 
@@ -355,6 +419,7 @@ export default function SearchableReferenceSelector({
                 isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
                 loadingText={loadingText.value as string}
                 clearIcon={clearIcon?.value}
+                clearIconTitle={clearIconTitle.value as string}
                 dropdownIcon={dropdownIcon?.value}
                 isClearable={isClearable}
                 selectionType={selectionType}
@@ -372,6 +437,7 @@ export default function SearchableReferenceSelector({
                 referenceSetStyle={referenceSetStyle}
                 maxReferenceDisplay={maxReferenceDisplay}
                 showSelectAll={showSelectAll}
+                selectAllIconTitle={selectAllIconTitle.value as string}
                 hasMoreOptions={hasMoreItems}
                 moreResultsText={hasMoreItems ? moreResultsText.value : undefined}
                 onSelectMoreOptions={

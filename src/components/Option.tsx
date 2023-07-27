@@ -25,13 +25,13 @@ const Option = ({
     const determineClassName = (): string => {
         let className = "srs-option";
         if (optionsStyle === "cell" ? option.isSelected : false) {
-            className = className + " selected";
+            className += " selected";
         }
         if (!option.isSelectable) {
-            className = className + " disabled";
+            className += " disabled";
         }
         if (focusMode === focusModeEnum.arrow ? isFocused : optionsStyle === "cell" ? isHovered : false) {
-            className = className + " focused";
+            className += " focused";
         }
         return className;
     };
