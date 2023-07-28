@@ -222,12 +222,29 @@
                         <enumerationValue key="commas">Comma Seperated</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="isCompact" type="boolean" defaultValue="false">
+                    <caption>Compact?</caption>
+                    <description>Displays the badges and comma's in-line with the search input</description>
+                </property>
                 <property key="referenceSetValue" type="enumeration" defaultValue="SAME">
                     <caption>Selected values content</caption>
                     <description>The text displayed in the badge or comma</description>
                     <enumerationValues>
                         <enumerationValue key="SAME">Same as option</enumerationValue>
                         <enumerationValue key="CUSTOM">Custom</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="badgeColor" type="enumeration" defaultValue="default">
+                    <caption>Badge color</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="default">Default</enumerationValue>
+                        <enumerationValue key="info">Info</enumerationValue>
+                        <enumerationValue key="primary">Primary</enumerationValue>
+                        <enumerationValue key="inverse">Inverse</enumerationValue>
+                        <enumerationValue key="success">Success</enumerationValue>
+                        <enumerationValue key="warning">Warning</enumerationValue>
+                        <enumerationValue key="danger">Danger</enumerationValue>
                     </enumerationValues>
                 </property>
                 <property key="referenceSetValueContent" type="widgets"

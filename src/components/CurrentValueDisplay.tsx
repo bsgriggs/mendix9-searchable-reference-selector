@@ -1,5 +1,5 @@
-import { createElement, Fragment, ReactElement } from "react";
-import { ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import { createElement, Fragment, ReactElement, useMemo } from "react";
+import { BadgeColorEnum, ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import { WebIcon } from "mendix";
 import Badge from "./Badge";
 import Comma from "./Comma";
@@ -10,12 +10,14 @@ type CurrentValueDisplayProps = {
     isClearable: boolean;
     isReadOnly: boolean;
     maxReferenceDisplay: number;
-    onRemove: (clickObj: IOption) => void;
+    onRemove: (clickObj: IOption, byKeyboard: boolean) => void;
     referenceSetStyle: ReferenceSetStyleEnum;
     clearIcon: WebIcon | undefined;
     clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     tabIndex?: number;
+    isCompact: boolean;
+    badgeColor: BadgeColorEnum;
 };
 
 export default function CurrentValueDisplay({
@@ -28,94 +30,99 @@ export default function CurrentValueDisplay({
     onBadgeClick,
     isClearable,
     isReadOnly,
-    tabIndex
+    tabIndex,
+    isCompact,
+    badgeColor
 }: CurrentValueDisplayProps): ReactElement {
-    if (currentValue) {
-        if (Array.isArray(currentValue)) {
-            if (currentValue.length > 0) {
-                return (
-                    <div className={referenceSetStyle === "badges" ? "srs-badge-row" : "srs-comma-row"}>
-                        {referenceSetStyle === "badges" && currentValue.length > 0 && (
-                            <Fragment>
-                                {maxReferenceDisplay > 0 && (
-                                    <Fragment>
-                                        {currentValue.slice(0, maxReferenceDisplay).map((option, key) => (
+    const currentValueDisplay = useMemo(() => {
+        if (currentValue) {
+            if (Array.isArray(currentValue)) {
+                if (currentValue.length > 0) {
+                    const refSetCurrentValue = (
+                        <Fragment>
+                            {referenceSetStyle === "badges" && currentValue.length > 0 && (
+                                <Fragment>
+                                    {maxReferenceDisplay > 0 &&
+                                        currentValue
+                                            .slice(0, maxReferenceDisplay)
+                                            .map((option, key) => (
+                                                <Badge
+                                                    key={key}
+                                                    isClearable={isClearable}
+                                                    isReadOnly={isReadOnly}
+                                                    onRemoveAssociation={byKeyboard => onRemove(option, byKeyboard)}
+                                                    clearIcon={clearIcon}
+                                                    clearIconTitle={clearIconTitle}
+                                                    onBadgeClick={onBadgeClick}
+                                                    option={option}
+                                                    tabIndex={tabIndex}
+                                                    badgeColor={badgeColor}
+                                                />
+                                            ))}
+                                    {maxReferenceDisplay <= 0 &&
+                                        currentValue.map((option, key) => (
                                             <Badge
                                                 key={key}
                                                 isClearable={isClearable}
                                                 isReadOnly={isReadOnly}
-                                                onRemoveAssociation={() => onRemove(option)}
+                                                onRemoveAssociation={byKeyboard => onRemove(option, byKeyboard)}
                                                 clearIcon={clearIcon}
                                                 clearIconTitle={clearIconTitle}
                                                 onBadgeClick={onBadgeClick}
                                                 option={option}
                                                 tabIndex={tabIndex}
+                                                badgeColor={badgeColor}
                                             />
                                         ))}
-                                    </Fragment>
-                                )}
-                                {maxReferenceDisplay <= 0 && (
-                                    <Fragment>
-                                        {currentValue.map((option, key) => (
-                                            <Badge
-                                                key={key}
-                                                isClearable={isClearable}
-                                                isReadOnly={isReadOnly}
-                                                onRemoveAssociation={() => onRemove(option)}
-                                                clearIcon={clearIcon}
-                                                clearIconTitle={clearIconTitle}
-                                                onBadgeClick={onBadgeClick}
-                                                option={option}
-                                                tabIndex={tabIndex}
-                                            />
-                                        ))}
-                                    </Fragment>
-                                )}
-                            </Fragment>
-                        )}
-                        {referenceSetStyle === "commas" && currentValue.length > 0 && (
-                            <Fragment>
-                                {maxReferenceDisplay > 0 && (
-                                    <Fragment>
-                                        {currentValue.slice(0, maxReferenceDisplay).map((option, index) => (
-                                            <Fragment key={index}>
+                                </Fragment>
+                            )}
+                            {referenceSetStyle === "commas" && currentValue.length > 0 && (
+                                <Fragment>
+                                    {maxReferenceDisplay > 0 &&
+                                        currentValue
+                                            .slice(0, maxReferenceDisplay)
+                                            .map((option, index) => (
                                                 <Comma
+                                                    key={index}
                                                     option={option}
                                                     showComma={
                                                         index < currentValue.length - 1 &&
                                                         index !== maxReferenceDisplay - 1
                                                     }
                                                 />
-                                            </Fragment>
+                                            ))}
+                                    {maxReferenceDisplay <= 0 &&
+                                        currentValue.map((option, index) => (
+                                            <Comma
+                                                key={index}
+                                                option={option}
+                                                showComma={
+                                                    index < currentValue.length - 1 && index !== maxReferenceDisplay - 1
+                                                }
+                                            />
                                         ))}
-                                    </Fragment>
-                                )}
-                                {maxReferenceDisplay <= 0 && (
-                                    <Fragment>
-                                        {currentValue.map((option, index) => (
-                                            <Fragment key={index}>
-                                                <Comma
-                                                    option={option}
-                                                    showComma={
-                                                        index < currentValue.length - 1 &&
-                                                        index !== maxReferenceDisplay - 1
-                                                    }
-                                                />
-                                            </Fragment>
-                                        ))}
-                                    </Fragment>
-                                )}
-                            </Fragment>
-                        )}
-                        {currentValue.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
-                            <span className="srs-extra">{`(+ ${currentValue.length - maxReferenceDisplay})`}</span>
-                        )}
-                    </div>
-                );
+                                </Fragment>
+                            )}
+                            {currentValue.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
+                                <span className="srs-comma">{`(+ ${currentValue.length - maxReferenceDisplay})`}</span>
+                            )}
+                        </Fragment>
+                    );
+
+                    return isCompact ? (
+                        refSetCurrentValue
+                    ) : (
+                        <div className={referenceSetStyle === "badges" ? "srs-badge-row" : "srs-comma-row"}>
+                            {refSetCurrentValue}
+                        </div>
+                    );
+                }
+            } else {
+                return <div className="srs-current-value">{currentValue.content}</div>;
             }
-        } else {
-            return <div className="srs-current-value">{currentValue.content}</div>;
         }
-    }
-    return <Fragment />;
+        return <Fragment />;
+    }, [currentValue, clearIconTitle, isReadOnly]);
+
+    return currentValueDisplay;
 }

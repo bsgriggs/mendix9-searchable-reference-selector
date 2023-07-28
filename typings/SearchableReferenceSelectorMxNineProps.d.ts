@@ -29,6 +29,8 @@ export type ReferenceSetStyleEnum = "badges" | "commas";
 
 export type ReferenceSetValueEnum = "SAME" | "CUSTOM";
 
+export type BadgeColorEnum = "default" | "info" | "primary" | "inverse" | "success" | "warning" | "danger";
+
 export interface SearchAttributesPreviewType {
     searchAttribute: string;
 }
@@ -65,7 +67,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     dropdownIcon?: DynamicValue<WebIcon>;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
+    isCompact: boolean;
     referenceSetValue: ReferenceSetValueEnum;
+    badgeColor: BadgeColorEnum;
     referenceSetValueContent: ListWidgetValue;
     maxReferenceDisplay: number;
     moreResultsText: DynamicValue<string>;
@@ -112,7 +116,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
+    isCompact: boolean;
     referenceSetValue: ReferenceSetValueEnum;
+    badgeColor: BadgeColorEnum;
     referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     maxReferenceDisplay: number | null;
     moreResultsText: string;

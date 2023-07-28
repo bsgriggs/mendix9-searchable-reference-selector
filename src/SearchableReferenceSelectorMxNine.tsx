@@ -4,7 +4,7 @@ import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains, startsWith, or } from "mendix/filters/builders";
 import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
-import "./ui/SearchableReferenceSelectorMxNine.css";
+import "./ui/SearchableReferenceSelectorMxNine.scss";
 import { Alert } from "./components/Alert";
 
 export default function SearchableReferenceSelector({
@@ -54,7 +54,9 @@ export default function SearchableReferenceSelector({
     // ariaLiveText,
     displayAttribute,
     optionExpression,
-    optionTextType
+    optionTextType,
+    isCompact,
+    badgeColor
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
@@ -455,6 +457,8 @@ export default function SearchableReferenceSelector({
                 srsRef={srsRef}
                 allowLoadingSelect={allowLoadingSelect}
                 clearSearchOnSelect={clearSearchOnSelect}
+                isCompact={isCompact}
+                badgeColor={badgeColor}
             />
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}

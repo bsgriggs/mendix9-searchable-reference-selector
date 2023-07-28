@@ -17,6 +17,7 @@ import {
     SelectStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import { IOption } from "typings/option";
+import classNames from "classnames";
 
 interface OptionMenuProps {
     options: IOption[];
@@ -82,7 +83,12 @@ const OptionsMenu = ({
 
     return (
         <ul
-            className={`srs-${selectStyle} srs-menu${isLoading && !allowLoadingSelect ? " wait" : ""}`}
+            className={classNames(
+                "srs-menu",
+                { "srs-dropdown": selectStyle === "dropdown" },
+                { "srs-list": selectStyle === "list" },
+                { wait: isLoading && !allowLoadingSelect }
+            )}
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
         >

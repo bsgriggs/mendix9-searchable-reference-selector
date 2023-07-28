@@ -163,7 +163,8 @@ export function getProperties(
                 // "ariaLiveText",
                 "optionTextType",
                 "displayAttribute",
-                "optionExpression"
+                "optionExpression",
+                "isCompact"
             ]);
             break;
         case "reference":
@@ -179,7 +180,8 @@ export function getProperties(
                 "optionsStyleSet",
                 "referenceSetValue",
                 "referenceSetValueContent",
-                "clearSearchOnSelect"
+                "clearSearchOnSelect",
+                "isCompact"
             ]);
             break;
         case "referenceSet":
@@ -233,6 +235,10 @@ export function getProperties(
 
     if (_values.selectStyle === "list" || _values.referenceSetStyle === "commas") {
         hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
+    }
+
+    if (_values.selectionType === "referenceSet" && _values.referenceSetStyle === "commas") {
+        hidePropertyIn(defaultProperties, _values, "badgeColor");
     }
 
     if (_values.selectStyle === "list") {

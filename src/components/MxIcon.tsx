@@ -6,7 +6,7 @@ interface IconProps {
     defaultClassName: string;
     mxIconOverride: WebIcon | undefined;
     tabIndex?: number;
-    onClick?: () => void;
+    onClick?: (byKeyboard: boolean) => void;
     title?: string;
 }
 
@@ -14,14 +14,14 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
     const onClickHandler = (event: MouseEvent<any>): void => {
         event.stopPropagation();
         if (onClick) {
-            onClick();
+            onClick(false);
         }
     };
 
     const onEnterHandler = (event: KeyboardEvent<any>): void => {
         event.stopPropagation();
         if (event.key === "Enter" && onClick) {
-            onClick();
+            onClick(true);
         }
     };
 

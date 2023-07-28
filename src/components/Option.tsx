@@ -3,6 +3,7 @@ import useHover from "../custom hooks/useHover";
 import { IOption } from "../../typings/option";
 import { OptionsStyleSetEnum, OptionsStyleSingleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import { focusModeEnum } from "../../typings/general";
+import classNames from "classnames";
 
 interface OptionProps {
     index: number;
@@ -22,27 +23,23 @@ const Option = ({
     optionsStyle
 }: PropsWithChildren<OptionProps>): ReactElement => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
-    const determineClassName = (): string => {
-        let className = "srs-option";
-        if (optionsStyle === "cell" ? option.isSelected : false) {
-            className += " selected";
-        }
-        if (!option.isSelectable) {
-            className += " disabled";
-        }
-        if (focusMode === focusModeEnum.arrow ? isFocused : optionsStyle === "cell" ? isHovered : false) {
-            className += " focused";
-        }
-        return className;
-    };
 
     return (
         <div
             id={index.toString()}
+            className={classNames(
+                "srs-option",
+                { selected: optionsStyle === "cell" && option.isSelected },
+                { disabled: !option.isSelectable },
+                {
+                    focused:
+                        (focusMode === focusModeEnum.arrow && isFocused) ||
+                        (focusMode === focusModeEnum.hover && optionsStyle === "cell" && isHovered)
+                }
+            )}
             role="option"
             aria-selected={option.isSelected ? "true" : "false"}
             aria-disabled={!option.isSelectable}
-            className={determineClassName()}
             onClick={(event: MouseEvent<HTMLDivElement>) => {
                 event.stopPropagation();
                 if (option.isSelectable) {

@@ -4,11 +4,11 @@ import {
     ReactElement,
     ChangeEvent,
     Fragment,
-    RefObject,
     KeyboardEvent,
     useEffect,
     useCallback,
-    useMemo
+    useMemo,
+    RefObject
 } from "react";
 import { WebIcon } from "mendix";
 import OptionsMenu from "./OptionMenu";
@@ -19,6 +19,7 @@ import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
 import { ObjectItem } from "mendix";
 import {
+    BadgeColorEnum,
     OptionsStyleSetEnum,
     OptionsStyleSingleEnum,
     ReferenceSetStyleEnum,
@@ -26,6 +27,7 @@ import {
     SelectStyleEnum
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import CurrentValueDisplay from "./CurrentValueDisplay";
+import classNames from "classnames";
 
 const FOCUS_DELAY = 300;
 
@@ -55,6 +57,8 @@ interface SelectorProps {
     onSelectMoreOptions: (() => void) | undefined; // selectionType = Reference or ReferenceSet
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     referenceSetStyle: ReferenceSetStyleEnum; // selectionType = ReferenceSet
+    badgeColor: BadgeColorEnum; // selectionType = ReferenceSet && referenceSetStyle === badges
+    isCompact: boolean; // selectionType = ReferenceSet
     maxReferenceDisplay: number; // selectionType = ReferenceSet
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined; // selectionType = ReferenceSet
     srsRef?: RefObject<HTMLDivElement>;
@@ -86,6 +90,7 @@ const Selector = ({
     optionsStyle,
     placeholder,
     referenceSetStyle,
+    isCompact,
     selectAllIcon,
     selectAllIconTitle,
     setMxFilter,
@@ -98,7 +103,8 @@ const Selector = ({
     isLoading,
     loadingText,
     allowLoadingSelect,
-    clearSearchOnSelect
+    clearSearchOnSelect,
+    badgeColor
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [searchFilter, setSearchFilter] = useState("");
@@ -294,7 +300,7 @@ const Selector = ({
                     : ""}
             </div> */}
             <div
-                className={`form-control ${showMenu ? "active" : ""} ${isReadOnly ? "read-only" : ""}`}
+                className={classNames("form-control", { active: showMenu }, { "read-only": isReadOnly })}
                 onClick={() => {
                     if (!isReadOnly) {
                         setShowMenu(!showMenu);
@@ -310,43 +316,61 @@ const Selector = ({
                 }}
                 ref={srsRef}
             >
-                <div className="srs-search-input">
-                    {/* Hide Search Input if read only and there is already a value */}
-                    {!(isReadOnly && hasCurrentValue) && (
-                        <SearchInput
-                            isReadOnly={isReadOnly}
-                            isSearchable={isSearchable}
-                            name={name}
-                            onChange={handleInputChange}
-                            placeholder={placeholder}
-                            setRef={newRef => setSearchInput(newRef)}
-                            hasCurrentValue={hasCurrentValue}
-                            searchFilter={searchFilter}
-                            showMenu={showMenu}
-                            setShowMenu={setShowMenu}
-                            isReferenceSet={selectionType === "referenceSet"}
-                            tabIndex={tabIndex}
-                        />
-                    )}
-
-                    {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
-                    {(selectionType === "referenceSet" || searchFilter === "") && (
-                        <CurrentValueDisplay
-                            currentValue={currentValue}
-                            isClearable={isClearable}
-                            isReadOnly={isReadOnly}
-                            maxReferenceDisplay={maxReferenceDisplay}
-                            onRemove={clickObj => {
-                                onSelectHandler(clickObj);
-                                focusSearchInput();
-                            }}
-                            referenceSetStyle={referenceSetStyle}
-                            clearIcon={clearIcon}
-                            clearIconTitle={clearIconTitle}
-                            onBadgeClick={onBadgeClick}
-                            tabIndex={tabIndex}
-                        />
-                    )}
+                <div className="srs-select">
+                    <div
+                        className={classNames(
+                            "srs-value-container",
+                            { "srs-multi": selectionType === "referenceSet" },
+                            { "srs-compact": isCompact },
+                            { "has-value": hasCurrentValue }
+                        )}
+                    >
+                        {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
+                        {(selectionType === "referenceSet" || searchFilter === "") && (
+                            <CurrentValueDisplay
+                                currentValue={currentValue}
+                                isClearable={isClearable}
+                                isReadOnly={isReadOnly}
+                                maxReferenceDisplay={maxReferenceDisplay}
+                                onRemove={(clickObj, byKeyboard) => {
+                                    onSelectHandler(clickObj);
+                                    if (
+                                        !byKeyboard ||
+                                        (currentValue !== undefined &&
+                                            Array.isArray(currentValue) &&
+                                            currentValue.length === 1)
+                                    ) {
+                                        focusSearchInput();
+                                    }
+                                }}
+                                referenceSetStyle={referenceSetStyle}
+                                clearIcon={clearIcon}
+                                clearIconTitle={clearIconTitle}
+                                onBadgeClick={onBadgeClick}
+                                tabIndex={tabIndex}
+                                isCompact={isCompact}
+                                badgeColor={badgeColor}
+                            />
+                        )}
+                        {/* Hide Search Input if read only and there is already a value */}
+                        {!(isReadOnly && hasCurrentValue) && (
+                            <SearchInput
+                                isReadOnly={isReadOnly}
+                                isSearchable={isSearchable}
+                                name={name}
+                                onChange={handleInputChange}
+                                placeholder={placeholder}
+                                setRef={newRef => setSearchInput(newRef)}
+                                hasCurrentValue={hasCurrentValue}
+                                searchFilter={searchFilter}
+                                showMenu={showMenu}
+                                setShowMenu={setShowMenu}
+                                isReferenceSet={selectionType === "referenceSet"}
+                                tabIndex={tabIndex}
+                                isCompact={isCompact}
+                            />
+                        )}
+                    </div>
                     {!isReadOnly && (
                         <div className="srs-icon-row" style={{ gridRow: selectionType === "referenceSet" ? 2 : 1 }}>
                             {selectionType === "referenceSet" && showSelectAll && (

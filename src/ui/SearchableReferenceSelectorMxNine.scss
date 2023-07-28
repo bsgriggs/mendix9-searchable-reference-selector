@@ -1,0 +1,188 @@
+$padding-xs: 0.2em;
+$padding-sm: 0.3em;
+$padding-md: 0.5em;
+
+.srs {
+    width: 100%;
+    .form-control {
+        width: inherit;
+        padding: 0;
+        align-items: center;
+        cursor: pointer;
+        gap: $padding-sm;
+        justify-content: space-between;
+        height: min-content;
+        min-height: 38px;
+        flex-wrap: wrap;
+
+        .srs-select {
+            display: flex;
+            width: 100%;
+            .srs-value-container {
+                padding: $padding-md;
+                display: grid;
+                flex: 1 1 0%;
+                align-items: center;
+                // for enum and ref
+                .srs-current-value {
+                    grid-column: 1;
+                    height: min-content;
+                    grid-row: 1;
+                    p {
+                        margin: 0;
+                    }
+                }
+                > input {
+                    border: none;
+                    padding: 0;
+                    background: transparent;
+                    grid-column: 1;
+                    grid-row: 1;
+                    cursor: pointer;
+                }
+                &.srs-multi {
+                    > input {
+                        grid-row: 2;
+                    }
+                }
+                // not used for compact
+
+                .srs-badge-row,
+                .srs-comma-row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    padding-bottom: $padding-md;
+                    width: 100%;
+                }
+                .srs-badge-row {
+                    margin: -$padding-md;
+                }
+                .srs-badge,
+                .srs-comma {
+                    grid-row: 1;
+                    width: fit-content;
+                }
+                .srs-badge {
+                    border-radius: $padding-sm;
+                    display: flex;
+                    align-items: center;
+                    padding: $padding-xs;
+                    margin: $padding-sm;
+                    .glyphicon,
+                    img {
+                        padding: $padding-xs;
+                    }
+                    span {
+                        font-size: small;
+                    }
+                    p {
+                        line-height: 1;
+                        margin: 0;
+                    }
+                }
+                .srs-comma {
+                    font-size: small;
+                    padding: 0px;
+                    margin-right: $padding-sm;
+                }
+                &.srs-compact {
+                    display: flex;
+                    flex-wrap: wrap;
+                    .srs-badge {
+                        margin: $padding-xs;
+                    }
+                    &.has-value {
+                        padding: $padding-xs;
+                        > input {
+                            padding: $padding-sm;
+                        }
+                    }
+                }
+            }
+            .srs-icon-row {
+                display: flex;
+                align-items: center;
+                padding-right: $padding-md;
+                .glyphicon,
+                img {
+                    padding: $padding-md $padding-sm;
+                    color: #6f6f6f;
+                }
+            }
+        }
+        &.active,
+        &:focus-within {
+            border-color: #264ae5;
+            outline: 0;
+            background-color: #fff;
+            box-shadow: none;
+        }
+        &.read-only {
+            cursor: not-allowed;
+            background-color: #f8f8f8;
+            input {
+                cursor: not-allowed !important;
+            }
+        }
+    }
+
+    .srs-dropdown {
+        position: fixed;
+        z-index: 302;
+    }
+    .srs-menu {
+        border: 1px solid #d7d7d7;
+        border-radius: $padding-xs;
+        background-color: #fff;
+        overflow-y: auto;
+        padding: $padding-xs;
+        margin-bottom: 0;
+        li {
+            list-style: none;
+        }
+    }
+    .srs-option {
+        cursor: pointer;
+        padding: $padding-md;
+        border-radius: $padding-xs;
+        display: flex;
+        input {
+            max-width: 16px;
+        }
+        p {
+            width: fit-content;
+            margin: 0;
+        }
+        &.disabled {
+            color: #6f6f6f;
+            cursor: not-allowed;
+        }
+        &.focused:not(.disabled) {
+            background-color: #d7d7d7;
+        }
+        &.selected {
+            background-color: #e7e7e7;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: $padding-md !important;
+            flex-shrink: 0 !important;
+        }
+    }
+    .srs-infooption {
+        // used for moreResultsText, loadingText, and noResultsFound
+        padding: $padding-md;
+        color: #6f6f6f;
+    }
+    .wait .srs-option,
+    .wait .srs-infooption {
+        // loading style
+        cursor: wait !important;
+    }
+}
+
+.has-error .srs .srs-menu {
+    border-color: #a94442;
+}

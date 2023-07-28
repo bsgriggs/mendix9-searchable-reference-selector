@@ -13,6 +13,7 @@ interface SearchInputProps {
     hasCurrentValue: boolean;
     isReferenceSet: boolean;
     tabIndex?: number;
+    isCompact: boolean;
 }
 
 export default function SearchInput({
@@ -27,7 +28,8 @@ export default function SearchInput({
     setShowMenu,
     hasCurrentValue,
     isReferenceSet,
-    tabIndex
+    tabIndex,
+    isCompact
 }: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
     useEffect(() => {
@@ -38,13 +40,13 @@ export default function SearchInput({
 
     return (
         <input
-            style={{
-                gridRow: isReferenceSet ? 2 : 1,
-                cursor: !isReadOnly && !isSearchable && !hasCurrentValue ? "pointer" : "unset"
-            }}
-            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             name={name}
-            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly) ? placeholder : ""}
+            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
+            style={{
+                // cursor: !isReadOnly && !isSearchable && !hasCurrentValue ? "pointer" : "",
+                width: isCompact && hasCurrentValue && searchFilter.length === 0 ? "10px" : ""
+            }}
+            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : ""}
             type="text"
             onChange={event => onChange(event)}
             readOnly={isReadOnly || !isSearchable}

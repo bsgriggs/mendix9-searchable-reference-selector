@@ -72,11 +72,13 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 noResultsText={props.noResultsText}
                 options={[option1, option2, option3]}
                 optionsStyle={props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle}
+                badgeColor={props.badgeColor}
                 placeholder={props.placeholder}
                 referenceSetStyle={props.referenceSetStyle}
                 selectStyle={"list"}
                 selectionType={props.selectionType}
                 showSelectAll={props.showSelectAll}
+                isCompact={props.isCompact}
                 clearIcon={
                     props.clearIcon !== null
                         ? props.clearIcon.type === "image"
@@ -126,5 +128,5 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
 }
 
 export function getPreviewCss(): string {
-    return require("./ui/SearchableReferenceSelectorMxNine.css");
+    return require("./ui/SearchableReferenceSelectorMxNine.scss");
 }
