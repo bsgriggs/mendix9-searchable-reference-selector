@@ -1,6 +1,7 @@
 $padding-xs: 0.2em;
 $padding-sm: 0.3em;
 $padding-md: 0.5em;
+$padding-lg: 0.7em;
 
 .srs {
     width: 100%;
@@ -41,7 +42,7 @@ $padding-md: 0.5em;
                     align-items: center;
                 }
                 &.srs-badges {
-                    gap: $padding-md;
+                    gap: $padding-lg;
                     .srs-badge {
                         border-radius: $padding-sm;
                         display: flex;
