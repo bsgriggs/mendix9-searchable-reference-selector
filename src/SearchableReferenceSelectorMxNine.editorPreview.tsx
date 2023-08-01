@@ -58,10 +58,11 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
     return (
         <div className="srs">
             <Selector
+                id={""}
+                name={""}
                 isLoading={false}
                 loadingText={props.loadingText}
                 allowLoadingSelect={props.allowLoadingSelect}
-                name=""
                 hasMoreOptions={props.moreResultsText !== undefined}
                 isClearable={props.isClearable}
                 isReadOnly={props.readOnly}

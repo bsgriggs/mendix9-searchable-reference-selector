@@ -123,7 +123,8 @@ export const getDisplayName = (_values: SearchableReferenceSelectorMxNinePreview
                     ? _values.optionTextType !== "textTemplate"
                         ? _values.displayAttribute
                         : _values.optionExpression
-                    : "CustomContent") +
+                    : "CustomContent"
+                ).trim() +
                 "]"
             );
         } else {
@@ -160,7 +161,7 @@ export function getProperties(
                 "clearSearchOnSelect",
                 "searchAttributes",
                 "optionCustomContent",
-                // "ariaLiveText",
+                "ariaLiveText",
                 "optionTextType",
                 "displayAttribute",
                 "optionExpression",
@@ -237,7 +238,7 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
     }
 
-    if (_values.selectionType === "referenceSet" && _values.referenceSetStyle === "commas") {
+    if (!(_values.selectionType === "referenceSet" && _values.referenceSetStyle === "badges")) {
         hidePropertyIn(defaultProperties, _values, "badgeColor");
     }
 
@@ -266,7 +267,8 @@ export function getProperties(
             "filterType",
             "filterFunction",
             "searchText",
-            "hasMoreResultsManual"
+            "hasMoreResultsManual",
+            "clearSearchOnSelect"
         ]);
     }
 

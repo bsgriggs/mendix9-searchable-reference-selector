@@ -308,7 +308,7 @@
                     <caption>Clear icon title</caption>
                     <description>Text shown when hovering on the clear icon</description>
                     <translations>
-                        <translation lang="en_US">Clear</translation>
+                        <translation lang="en_US">Remove</translation>
                     </translations>
                 </property>
                 <property key="clearIcon" type="icon" required="false">
@@ -334,7 +334,7 @@
                 </property>
             </propertyGroup>
         </propertyGroup>
-        <!-- <propertyGroup caption="Accessibility">
+        <propertyGroup caption="Accessibility">
             <propertyGroup caption="Accessibility">
                 <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
                     required="false">
@@ -342,7 +342,7 @@
                     <description>The text read aloud by a screen reader while focused on an option</description>
                 </property>
             </propertyGroup>
-        </propertyGroup> -->
+        </propertyGroup>
         <propertyGroup caption="Common">
             <propertyGroup caption="Common">
                 <systemProperty key="Name" />

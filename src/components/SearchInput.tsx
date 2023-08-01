@@ -1,7 +1,8 @@
 import { ChangeEvent, createElement, ReactElement, useEffect, useRef, MouseEvent } from "react";
 
 interface SearchInputProps {
-    name: string | undefined;
+    id: string;
+    name: string;
     placeholder: string | undefined;
     searchFilter: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -17,6 +18,7 @@ interface SearchInputProps {
 }
 
 export default function SearchInput({
+    id,
     name,
     placeholder,
     onChange,
@@ -43,10 +45,9 @@ export default function SearchInput({
             name={name}
             tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             style={{
-                // cursor: !isReadOnly && !isSearchable && !hasCurrentValue ? "pointer" : "",
-                width: isCompact && hasCurrentValue && searchFilter.length === 0 ? "10px" : ""
+                width: isCompact && hasCurrentValue && searchFilter.length === 0 ? "10px" : undefined
             }}
-            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : ""}
+            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : undefined}
             type="text"
             onChange={event => onChange(event)}
             readOnly={isReadOnly || !isSearchable}
@@ -54,6 +55,10 @@ export default function SearchInput({
             value={searchFilter}
             ref={searchInput}
             autoComplete="off"
+            aria-labelledby={id + "-label"}
+            aria-haspopup
+            aria-expanded={showMenu}
+            role="combobox"
             onClick={(event: MouseEvent<HTMLInputElement>) => {
                 if (showMenu) {
                     event.stopPropagation();

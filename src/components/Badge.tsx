@@ -36,7 +36,7 @@ const Badge = ({
             {isClearable && !isReadOnly && (
                 <MxIcon
                     onClick={onRemoveAssociation}
-                    title={clearIconTitle}
+                    title={clearIconTitle + " " + option.ariaLiveText}
                     mxIconOverride={clearIcon}
                     defaultClassName="remove"
                     tabIndex={tabIndex || 0}

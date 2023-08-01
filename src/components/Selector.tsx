@@ -10,14 +10,13 @@ import {
     useMemo,
     RefObject
 } from "react";
-import { WebIcon } from "mendix";
+import { WebIcon, ObjectItem } from "mendix";
 import OptionsMenu from "./OptionMenu";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import { usePositionObserver } from "../custom hooks/usePositionObserver";
 import SearchInput from "./SearchInput";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
-import { ObjectItem } from "mendix";
 import {
     BadgeColorEnum,
     OptionsStyleSetEnum,
@@ -32,6 +31,7 @@ import classNames from "classnames";
 const FOCUS_DELAY = 300;
 
 interface SelectorProps {
+    id: string;
     name: string;
     tabIndex?: number;
     placeholder: string | undefined;
@@ -81,6 +81,7 @@ const Selector = ({
     maxMenuHeight,
     maxReferenceDisplay,
     moreResultsText,
+    id,
     name,
     noResultsText,
     onBadgeClick,
@@ -288,17 +289,23 @@ const Selector = ({
     return (
         <Fragment>
             {/* Aria Live Text */}
-            {/* <div style={{ height: "0px !important" }} aria-live="polite">
-                {focusedObjIndex > -1
-                    ? options[focusedObjIndex].ariaLiveText
-                    : focusedObjIndex === options.length
-                    ? moreResultsText
-                    : currentValue
-                    ? Array.isArray(currentValue)
-                        ? "list selected values"
-                        : currentValue.ariaLiveText
+            <div className="srs-aria-live" aria-live="polite">
+                {showMenu
+                    ? isLoading
+                        ? loadingText
+                        : focusedObjIndex === options.length
+                        ? moreResultsText
+                        : focusedObjIndex > -1
+                        ? options[focusedObjIndex].ariaLiveText
+                        : currentValue
+                        ? Array.isArray(currentValue)
+                            ? currentValue.map((value, index) =>
+                                  index < currentValue.length - 1 ? value.ariaLiveText + "&" : value.ariaLiveText
+                              )
+                            : currentValue.ariaLiveText
+                        : ""
                     : ""}
-            </div> */}
+            </div>
             <div
                 className={classNames("form-control", { active: showMenu }, { "read-only": isReadOnly })}
                 onClick={() => {
@@ -322,7 +329,8 @@ const Selector = ({
                             "srs-value-container",
                             { "srs-multi": selectionType === "referenceSet" },
                             { "srs-compact": isCompact },
-                            { "has-value": hasCurrentValue }
+                            { "srs-badges": selectionType === "referenceSet" && referenceSetStyle === "badges" },
+                            { "srs-commas": selectionType === "referenceSet" && referenceSetStyle === "commas" }
                         )}
                     >
                         {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
@@ -335,11 +343,18 @@ const Selector = ({
                                 onRemove={(clickObj, byKeyboard) => {
                                     onSelectHandler(clickObj);
                                     if (
-                                        !byKeyboard ||
-                                        (currentValue !== undefined &&
-                                            Array.isArray(currentValue) &&
-                                            currentValue.length === 1)
+                                        byKeyboard &&
+                                        currentValue !== undefined &&
+                                        Array.isArray(currentValue) &&
+                                        currentValue.length === 1
                                     ) {
+                                        // focus the next remove icon for easier clear by keyboard navigation
+                                        const nextIcon = srsRef?.current?.querySelector(".remove") as HTMLButtonElement;
+                                        if (nextIcon) {
+                                            nextIcon.focus();
+                                        }
+                                    } else {
+                                        // re-focus the search input for easier muli-select
                                         focusSearchInput();
                                     }
                                 }}
@@ -348,16 +363,19 @@ const Selector = ({
                                 clearIconTitle={clearIconTitle}
                                 onBadgeClick={onBadgeClick}
                                 tabIndex={tabIndex}
-                                isCompact={isCompact}
                                 badgeColor={badgeColor}
                             />
+                        )}
+                        {selectionType === "referenceSet" && hasCurrentValue && !isCompact && !isReadOnly && (
+                            <div className="srs-separator" />
                         )}
                         {/* Hide Search Input if read only and there is already a value */}
                         {!(isReadOnly && hasCurrentValue) && (
                             <SearchInput
+                                id={id}
+                                name={name}
                                 isReadOnly={isReadOnly}
                                 isSearchable={isSearchable}
-                                name={name}
                                 onChange={handleInputChange}
                                 placeholder={placeholder}
                                 setRef={newRef => setSearchInput(newRef)}

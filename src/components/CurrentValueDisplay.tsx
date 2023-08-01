@@ -16,7 +16,6 @@ type CurrentValueDisplayProps = {
     clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     tabIndex?: number;
-    isCompact: boolean;
     badgeColor: BadgeColorEnum;
 };
 
@@ -31,7 +30,6 @@ export default function CurrentValueDisplay({
     isClearable,
     isReadOnly,
     tabIndex,
-    isCompact,
     badgeColor
 }: CurrentValueDisplayProps): ReactElement {
     const currentValueDisplay = useMemo(() => {
@@ -108,21 +106,26 @@ export default function CurrentValueDisplay({
                             )}
                         </Fragment>
                     );
-
-                    return isCompact ? (
-                        refSetCurrentValue
-                    ) : (
-                        <div className={referenceSetStyle === "badges" ? "srs-badge-row" : "srs-comma-row"}>
-                            {refSetCurrentValue}
-                        </div>
-                    );
+                    return refSetCurrentValue;
                 }
             } else {
                 return <div className="srs-current-value">{currentValue.content}</div>;
             }
         }
         return <Fragment />;
-    }, [currentValue, clearIconTitle, isReadOnly]);
+    }, [
+        currentValue,
+        clearIconTitle,
+        isReadOnly,
+        badgeColor,
+        clearIcon,
+        isClearable,
+        maxReferenceDisplay,
+        onBadgeClick,
+        onRemove,
+        referenceSetStyle,
+        tabIndex
+    ]);
 
     return currentValueDisplay;
 }

@@ -1,4 +1,4 @@
-import React, { ReactNode, createElement, useCallback, useMemo } from "react";
+import React, { Fragment, ReactNode, createElement, useCallback, useMemo } from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains, startsWith, or } from "mendix/filters/builders";
@@ -8,9 +8,9 @@ import "./ui/SearchableReferenceSelectorMxNine.scss";
 import { Alert } from "./components/Alert";
 
 export default function SearchableReferenceSelector({
+    id,
     name,
     tabIndex,
-    id,
     isSearchable,
     isClearable,
     showSelectAll,
@@ -51,7 +51,7 @@ export default function SearchableReferenceSelector({
     searchText,
     hasMoreResultsManual,
     onClickMoreResultsText,
-    // ariaLiveText,
+    ariaLiveText,
     displayAttribute,
     optionExpression,
     optionTextType,
@@ -60,8 +60,8 @@ export default function SearchableReferenceSelector({
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [maxItems]
+
+        [maxItems, selectionType]
     );
     const [mxFilter, setMxFilter] = React.useState<string>("");
     const [itemsLimit, setItemsLimit] = React.useState<number | undefined>(defaultPageSize);
@@ -76,6 +76,7 @@ export default function SearchableReferenceSelector({
             : searchAttributes.every(
                   value => value.searchAttribute.type !== "Enum" && value.searchAttribute.filterable
               );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const isReadOnly = useMemo(
@@ -90,7 +91,7 @@ export default function SearchableReferenceSelector({
         () =>
             (hasMoreResultsManual && hasMoreResultsManual.value) ||
             (((selectableObjects && selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
-        [hasMoreResultsManual, selectableObjects]
+        [hasMoreResultsManual, selectableObjects, serverSideSearching]
     );
 
     if (selectionType !== "enumeration" && filterType === "auto" && Number(maxItems.value) > 1) {
@@ -116,8 +117,8 @@ export default function SearchableReferenceSelector({
                 callMxAction(onChange, false);
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [isReadOnly, enumAttribute, reference, referenceSet, onChange]
+
+        [isReadOnly, enumAttribute, reference, referenceSet, onChange, selectionType]
     );
 
     const displayTextContent = useCallback((text: string): ReactNode => <span>{text}</span>, []);
@@ -148,11 +149,23 @@ export default function SearchableReferenceSelector({
                     isSelectable: true,
                     isSelected: value === (enumAttribute.value as string),
                     selectionType: "ENUMERATION",
-                    id: value
-                    // ariaLiveText: value
+                    id: value,
+                    ariaLiveText: enumAttribute.formatter.format(value)
                 };
             }),
         [enumAttribute, displayTextContent]
+    );
+
+    const mapAriaLiveText = React.useCallback(
+        (objectItem: ObjectItem): string =>
+            ariaLiveText
+                ? (ariaLiveText.get(objectItem).value as string)
+                : displayAttribute
+                ? (displayAttribute.get(objectItem).value as string)
+                : optionExpression
+                ? (optionExpression.get(objectItem).value as string)
+                : "",
+        [ariaLiveText, displayAttribute, optionExpression]
     );
 
     const mapObjectItems = React.useCallback(
@@ -167,16 +180,12 @@ export default function SearchableReferenceSelector({
                             : reference.value?.id === objItem.id,
 
                     selectionType: "REFERENCE",
-                    id: objItem
-                    // ariaLiveText: ariaLiveText
-                    //     ? (ariaLiveText.get(objItem).value as string)
-                    //     : displayAttribute
-                    //     ? (displayAttribute.get(objItem).value as string)
-                    //     : undefined
+                    id: objItem,
+                    ariaLiveText: mapAriaLiveText(objItem)
                 };
             }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [reference, referenceSet, optionCustomContent, selectableCondition]
+
+        [reference, referenceSet, selectableCondition, displayReferenceContent, mapAriaLiveText, selectionType]
     );
 
     const onShowMore = (newLimit: number | undefined, onClickMoreResultsText: ActionValue | undefined): void => {
@@ -204,8 +213,8 @@ export default function SearchableReferenceSelector({
                           isSelectable: true,
                           isSelected: true,
                           selectionType: "ENUMERATION",
-                          id: enumAttribute.value
-                          //   ariaLiveText: enumAttribute.displayValue
+                          id: enumAttribute.value,
+                          ariaLiveText: enumAttribute.displayValue
                       }
                     : undefined;
             case "reference":
@@ -215,12 +224,8 @@ export default function SearchableReferenceSelector({
                           isSelectable: selectableCondition.get(reference.value).value as boolean,
                           isSelected: true,
                           selectionType: "REFERENCE",
-                          id: reference.value
-                          //   ariaLiveText: ariaLiveText
-                          //       ? (ariaLiveText.get(reference.value).value as string)
-                          //       : displayAttribute
-                          //       ? (displayAttribute.get(reference.value).value as string)
-                          //       : undefined
+                          id: reference.value,
+                          ariaLiveText: mapAriaLiveText(reference.value)
                       }
                     : undefined;
             case "referenceSet":
@@ -233,18 +238,24 @@ export default function SearchableReferenceSelector({
                               isSelectable: selectableCondition.get(reference).value as boolean,
                               isSelected: true,
                               selectionType: "REFERENCE",
-                              id: reference
-                              //   ariaLiveText: ariaLiveText
-                              //       ? (ariaLiveText.get(reference).value as string)
-                              //       : displayAttribute
-                              //       ? (displayAttribute.get(reference).value as string)
-                              //       : undefined
+                              id: reference,
+                              ariaLiveText: mapAriaLiveText(reference)
                           };
                       })
                     : undefined;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [enumAttribute, reference, referenceSet, selectableCondition, optionCustomContent, referenceSetValueContent]);
+    }, [
+        enumAttribute,
+        reference,
+        referenceSet,
+        selectableCondition,
+        referenceSetValueContent,
+        displayReferenceContent,
+        displayTextContent,
+        mapAriaLiveText,
+        referenceSetValue,
+        selectionType
+    ]);
 
     // // load Options
     if (selectionType !== "enumeration") {
@@ -259,8 +270,7 @@ export default function SearchableReferenceSelector({
             ) {
                 setOptions(mapObjectItems(selectableObjects.items || []));
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectableObjects, reference, referenceSet]);
+        }, [selectableObjects, reference, referenceSet, isReadOnly, mapObjectItems, selectionType]);
     }
 
     // Determine the Filtering handling useEffect
@@ -296,6 +306,7 @@ export default function SearchableReferenceSelector({
 
                 return () => clearTimeout(delayDebounceFn);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [mxFilter, enumAttribute.universe, isReadOnly]);
     } else if (filterType === "auto") {
         if (optionTextType === "text" || optionTextType === "html") {
@@ -416,53 +427,58 @@ export default function SearchableReferenceSelector({
     }
 
     return (
-        <div id={id} className="srs" ref={srsRef}>
-            <Selector
-                isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
-                loadingText={loadingText.value as string}
-                clearIcon={clearIcon?.value}
-                clearIconTitle={clearIconTitle.value as string}
-                dropdownIcon={dropdownIcon?.value}
-                isClearable={isClearable}
-                selectionType={selectionType}
-                selectStyle={selectStyle}
-                name={name}
-                tabIndex={tabIndex}
-                selectAllIcon={selectAllIcon?.value}
-                onBadgeClick={selectedOption =>
-                    onBadgeClick ? callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false) : undefined
-                }
-                placeholder={placeholder.value as string}
-                isSearchable={isSearchable}
-                maxMenuHeight={maxMenuHeight.value || "15em"}
-                noResultsText={noResultsText.value as string}
-                referenceSetStyle={referenceSetStyle}
-                maxReferenceDisplay={maxReferenceDisplay}
-                showSelectAll={showSelectAll}
-                selectAllIconTitle={selectAllIconTitle.value as string}
-                hasMoreOptions={hasMoreItems}
-                moreResultsText={hasMoreItems ? moreResultsText.value : undefined}
-                onSelectMoreOptions={
-                    itemsLimit && hasMoreItems
-                        ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), onClickMoreResultsText)
-                        : undefined
-                }
-                currentValue={currentValue}
-                isReadOnly={isReadOnly}
-                options={options}
-                optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
-                setMxFilter={setMxFilter}
-                onSelect={handleSelect}
-                onLeave={() => callMxAction(onLeave, false)}
-                srsRef={srsRef}
-                allowLoadingSelect={allowLoadingSelect}
-                clearSearchOnSelect={clearSearchOnSelect}
-                isCompact={isCompact}
-                badgeColor={badgeColor}
-            />
+        <Fragment>
+            <div id={id} className="srs" ref={srsRef}>
+                <Selector
+                    id={id}
+                    name={name}
+                    isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
+                    loadingText={loadingText.value as string}
+                    clearIcon={clearIcon?.value}
+                    clearIconTitle={clearIconTitle.value as string}
+                    dropdownIcon={dropdownIcon?.value}
+                    isClearable={isClearable}
+                    selectionType={selectionType}
+                    selectStyle={selectStyle}
+                    tabIndex={tabIndex}
+                    selectAllIcon={selectAllIcon?.value}
+                    onBadgeClick={selectedOption =>
+                        onBadgeClick
+                            ? callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false)
+                            : undefined
+                    }
+                    placeholder={placeholder.value as string}
+                    isSearchable={isSearchable}
+                    maxMenuHeight={maxMenuHeight.value || "15em"}
+                    noResultsText={noResultsText.value as string}
+                    referenceSetStyle={referenceSetStyle}
+                    maxReferenceDisplay={maxReferenceDisplay}
+                    showSelectAll={showSelectAll}
+                    selectAllIconTitle={selectAllIconTitle.value as string}
+                    hasMoreOptions={hasMoreItems}
+                    moreResultsText={hasMoreItems ? moreResultsText.value : undefined}
+                    onSelectMoreOptions={
+                        itemsLimit && hasMoreItems
+                            ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), onClickMoreResultsText)
+                            : undefined
+                    }
+                    currentValue={currentValue}
+                    isReadOnly={isReadOnly}
+                    options={options}
+                    optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
+                    setMxFilter={setMxFilter}
+                    onSelect={handleSelect}
+                    onLeave={() => callMxAction(onLeave, false)}
+                    srsRef={srsRef}
+                    allowLoadingSelect={allowLoadingSelect}
+                    clearSearchOnSelect={clearSearchOnSelect}
+                    isCompact={isCompact}
+                    badgeColor={badgeColor}
+                />
+            </div>
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}
             {referenceSet && referenceSet.validation && <Alert>{referenceSet.validation}</Alert>}
-        </div>
+        </Fragment>
     );
 }

@@ -21,7 +21,6 @@ import classNames from "classnames";
 
 interface OptionMenuProps {
     options: IOption[];
-    // currentFocus: IOption | undefined;
     currentFocus: number;
     onSelect: (selectedOption: IOption) => void;
     onSelectMoreOptions: (() => void) | undefined;
@@ -30,7 +29,7 @@ interface OptionMenuProps {
     moreResultsText: string | undefined;
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
     selectStyle: SelectStyleEnum;
-    position?: ClientRect;
+    position?: DOMRect;
     hasMoreOptions: boolean;
     isLoading: boolean;
     allowLoadingSelect: boolean;
@@ -79,7 +78,7 @@ const OptionsMenu = ({
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [selectedObjRef.current]);
+    }, [currentFocus]);
 
     return (
         <ul

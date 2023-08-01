@@ -26,7 +26,13 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
     };
 
     return mxIconOverride !== undefined ? (
-        <div onClick={onClickHandler} onKeyDown={onEnterHandler} title={title} tabIndex={tabIndex}>
+        <div
+            onClick={onClickHandler}
+            onKeyDown={onEnterHandler}
+            title={title}
+            tabIndex={tabIndex}
+            className={defaultClassName}
+        >
             <Icon icon={mxIconOverride} altText={title} />
         </div>
     ) : (
@@ -34,8 +40,7 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
             onClick={onClickHandler}
             onKeyDown={onEnterHandler}
             tabIndex={tabIndex}
-            className={`glyphicon glyphicon-${defaultClassName}`}
-            aria-hidden="true"
+            className={`glyphicon glyphicon-${defaultClassName} ${defaultClassName}`}
             title={title}
         />
     );
