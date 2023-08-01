@@ -113,6 +113,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 onSelectMoreOptions={() => {}}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onBadgeClick={() => {}}
+                mxFilter=""
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 setMxFilter={() => {}}
             />

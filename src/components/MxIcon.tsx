@@ -1,6 +1,7 @@
 import { createElement, ReactElement, MouseEvent, KeyboardEvent } from "react";
 import { WebIcon } from "mendix";
 import { Icon } from "mendix/components/web/Icon";
+import classNames from "classnames";
 
 interface IconProps {
     defaultClassName: string;
@@ -25,24 +26,20 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
         }
     };
 
-    return mxIconOverride !== undefined ? (
+    return (
         <div
             onClick={onClickHandler}
             onKeyDown={onEnterHandler}
             title={title}
             tabIndex={tabIndex}
-            className={defaultClassName}
+            className={classNames(defaultClassName, { "srs-icon-focusable": tabIndex !== undefined })}
         >
-            <Icon icon={mxIconOverride} altText={title} />
+            {mxIconOverride !== undefined ? (
+                <Icon icon={mxIconOverride} altText={title} />
+            ) : (
+                <span className={`glyphicon glyphicon-${defaultClassName}`} />
+            )}
         </div>
-    ) : (
-        <span
-            onClick={onClickHandler}
-            onKeyDown={onEnterHandler}
-            tabIndex={tabIndex}
-            className={`glyphicon glyphicon-${defaultClassName} ${defaultClassName}`}
-            title={title}
-        />
     );
 };
 

@@ -5,7 +5,6 @@ import {
     ChangeEvent,
     Fragment,
     KeyboardEvent,
-    useEffect,
     useCallback,
     useMemo,
     RefObject
@@ -39,6 +38,7 @@ interface SelectorProps {
     options: IOption[];
     currentValue: IOption | IOption[] | undefined;
     onSelect: (selectedOption: IOption | IOption[] | undefined) => void;
+    mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
     clearIcon: WebIcon | undefined;
@@ -94,6 +94,7 @@ const Selector = ({
     isCompact,
     selectAllIcon,
     selectAllIconTitle,
+    mxFilter,
     setMxFilter,
     showSelectAll,
     tabIndex,
@@ -108,13 +109,8 @@ const Selector = ({
     badgeColor
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
-    const [searchFilter, setSearchFilter] = useState("");
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
-
-    useEffect(() => {
-        setMxFilter(searchFilter);
-    }, [searchFilter, setMxFilter]);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const position = srsRef && usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
@@ -136,15 +132,15 @@ const Selector = ({
     const onLeaveHandler = useCallback((): void => {
         if (showMenu) {
             setShowMenu(false);
-            if (searchFilter.trim() !== "") {
-                setSearchFilter("");
+            if (mxFilter.trim() !== "") {
+                setMxFilter("");
             }
             if (focusedObjIndex !== -1) {
                 setFocusedObjIndex(-1);
             }
             onLeave();
         }
-    }, [showMenu, searchFilter, focusedObjIndex, onLeave]);
+    }, [showMenu, mxFilter, focusedObjIndex, onLeave, setMxFilter]);
 
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
@@ -178,7 +174,7 @@ const Selector = ({
                     }
                     // for reference sets, do not close the menu on select
                     if (clearSearchOnSelect) {
-                        setSearchFilter("");
+                        setMxFilter("");
                     }
                     return;
                 } else {
@@ -194,21 +190,30 @@ const Selector = ({
             }
             onLeaveHandler();
         },
-        [onSelect, currentValue, hasCurrentValue, clearSearchOnSelect, isClearable, onLeaveHandler, selectionType]
+        [
+            onSelect,
+            currentValue,
+            hasCurrentValue,
+            clearSearchOnSelect,
+            isClearable,
+            onLeaveHandler,
+            selectionType,
+            setMxFilter
+        ]
     );
 
     const handleClearAll = useCallback((): void => {
         if (focusedObjIndex !== -1) {
             setFocusedObjIndex(-1);
         }
-        if (searchFilter.trim() !== "") {
-            setSearchFilter("");
+        if (mxFilter.trim() !== "") {
+            setMxFilter("");
         } else {
             onSelectHandler(undefined);
         }
         setTimeout(() => setShowMenu(true), FOCUS_DELAY);
         focusSearchInput();
-    }, [focusedObjIndex, searchFilter, onSelectHandler, focusSearchInput]);
+    }, [focusedObjIndex, mxFilter, onSelectHandler, focusSearchInput, setMxFilter]);
 
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLDivElement>): void => {
@@ -278,7 +283,7 @@ const Selector = ({
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
-        setSearchFilter(value);
+        setMxFilter(value);
         setFocusedObjIndex(0);
         // make sure the dropdown is open if the user is typing
         if (value.trim() !== "" && !showMenu) {
@@ -334,7 +339,7 @@ const Selector = ({
                         )}
                     >
                         {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
-                        {(selectionType === "referenceSet" || searchFilter === "") && (
+                        {(selectionType === "referenceSet" || mxFilter === "") && (
                             <CurrentValueDisplay
                                 currentValue={currentValue}
                                 isClearable={isClearable}
@@ -342,14 +347,11 @@ const Selector = ({
                                 maxReferenceDisplay={maxReferenceDisplay}
                                 onRemove={(clickObj, byKeyboard) => {
                                     onSelectHandler(clickObj);
-                                    if (
-                                        byKeyboard &&
-                                        currentValue !== undefined &&
-                                        Array.isArray(currentValue) &&
-                                        currentValue.length === 1
-                                    ) {
+                                    if (byKeyboard && hasCurrentValue) {
                                         // focus the next remove icon for easier clear by keyboard navigation
-                                        const nextIcon = srsRef?.current?.querySelector(".remove") as HTMLButtonElement;
+                                        const nextIcon = srsRef?.current?.querySelector(
+                                            ".srs-icon-focusable"
+                                        ) as HTMLButtonElement;
                                         if (nextIcon) {
                                             nextIcon.focus();
                                         }
@@ -366,9 +368,7 @@ const Selector = ({
                                 badgeColor={badgeColor}
                             />
                         )}
-                        {selectionType === "referenceSet" && hasCurrentValue && !isCompact && !isReadOnly && (
-                            <div className="srs-separator" />
-                        )}
+
                         {/* Hide Search Input if read only and there is already a value */}
                         {!(isReadOnly && hasCurrentValue) && (
                             <SearchInput
@@ -380,7 +380,7 @@ const Selector = ({
                                 placeholder={placeholder}
                                 setRef={newRef => setSearchInput(newRef)}
                                 hasCurrentValue={hasCurrentValue}
-                                searchFilter={searchFilter}
+                                searchFilter={mxFilter}
                                 showMenu={showMenu}
                                 setShowMenu={setShowMenu}
                                 isReferenceSet={selectionType === "referenceSet"}
@@ -395,7 +395,7 @@ const Selector = ({
                                 <MxIcon
                                     tabIndex={tabIndex || 0}
                                     onClick={() => {
-                                        setSearchFilter("");
+                                        setMxFilter("");
                                         setFocusedObjIndex(-1);
                                         onSelect(options.filter(option => option.isSelectable));
                                     }}

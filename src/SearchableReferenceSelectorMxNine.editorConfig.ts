@@ -234,7 +234,7 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
     }
 
-    if (_values.selectStyle === "list" || _values.referenceSetStyle === "commas") {
+    if (_values.referenceSetStyle === "commas") {
         hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
     }
 

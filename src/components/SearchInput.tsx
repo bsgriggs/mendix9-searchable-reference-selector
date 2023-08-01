@@ -34,6 +34,7 @@ export default function SearchInput({
     isCompact
 }: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
+    // pass the ref back up for focus controls
     useEffect(() => {
         if (searchInput !== null && searchInput.current !== null) {
             setRef(searchInput.current);
@@ -42,29 +43,38 @@ export default function SearchInput({
 
     return (
         <input
-            name={name}
+            name={name} // required for screen readers
             tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
             style={{
-                width: isCompact && hasCurrentValue && searchFilter.length === 0 ? "10px" : undefined
+                width:
+                    hasCurrentValue && !isCompact && !isReadOnly && isSearchable // force the input to the next display flex line
+                        ? "100%"
+                        : (isCompact || (!isSearchable && hasCurrentValue)) && // For compact or non-searchable modes, make the input take the least amount of space possible until a search text is typed.
+                          hasCurrentValue &&
+                          searchFilter.length === 0
+                        ? "1px" // cannot use display: none, because the input is needed for screen readers, focusing, and keyboard controls
+                        : undefined,
+                height: !isSearchable && hasCurrentValue ? "0px" : undefined
             }}
-            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : undefined}
+            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : undefined} // only show the placeholder for non-compact ref sets or if there is a current value for enums/refs
             type="text"
-            onChange={event => onChange(event)}
+            onChange={onChange}
             readOnly={isReadOnly || !isSearchable}
             disabled={isReadOnly}
             value={searchFilter}
-            ref={searchInput}
+            ref={searchInput} // for focus controls
             autoComplete="off"
-            aria-labelledby={id + "-label"}
-            aria-haspopup
-            aria-expanded={showMenu}
-            role="combobox"
+            aria-labelledby={id + "-label"} // for screen readers
+            aria-haspopup // for screen readers
+            aria-expanded={showMenu} // for screen readers
+            role="combobox" // for screen readers
             onClick={(event: MouseEvent<HTMLInputElement>) => {
                 if (showMenu) {
-                    event.stopPropagation();
+                    event.stopPropagation(); // prevent the click from closing the menu
                 }
             }}
             onFocus={() => {
+                // ensure the menu is showing no matter how the input was focused
                 if (!showMenu) {
                     setShowMenu(true);
                 }

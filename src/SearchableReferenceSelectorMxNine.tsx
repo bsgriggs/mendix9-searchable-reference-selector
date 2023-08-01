@@ -60,7 +60,6 @@ export default function SearchableReferenceSelector({
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
-
         [maxItems, selectionType]
     );
     const [mxFilter, setMxFilter] = React.useState<string>("");
@@ -257,7 +256,7 @@ export default function SearchableReferenceSelector({
         selectionType
     ]);
 
-    // // load Options
+    // load Options
     if (selectionType !== "enumeration") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
@@ -307,7 +306,7 @@ export default function SearchableReferenceSelector({
                 return () => clearTimeout(delayDebounceFn);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [mxFilter, enumAttribute.universe, isReadOnly]);
+        }, [mxFilter, enumAttribute, isReadOnly]);
     } else if (filterType === "auto") {
         if (optionTextType === "text" || optionTextType === "html") {
             // text/HTML option text types ~ use displayAttribute
@@ -466,6 +465,7 @@ export default function SearchableReferenceSelector({
                     isReadOnly={isReadOnly}
                     options={options}
                     optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
+                    mxFilter={mxFilter}
                     setMxFilter={setMxFilter}
                     onSelect={handleSelect}
                     onLeave={() => callMxAction(onLeave, false)}
