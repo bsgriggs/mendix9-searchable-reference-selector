@@ -15,8 +15,8 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 **Enum attribute** - The attribute that will be set when the user selects an option. The widget automatically displays all possible options for the selected enumeration.  
 
 **Searchable?** - Whether or not the user can search for an enumeration value
-**Filter Delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
-**Filter Function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
+**Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
+**Search function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
 
 *Starts With can help with performance but it can be bad UX depending on the use case. For example, displaying a list of user full names would not work, because the user may enter the last name instead of the first name.*  
 
