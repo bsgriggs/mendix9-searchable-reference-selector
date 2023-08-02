@@ -8,9 +8,11 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 ## General Settings
 ![generalEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalRef.png)  
+### Label
 **Label** - Mendix label, displayed either horizontally or vertically to the input based on your parent data view's settings.  
 **Placeholder** - The text that is shown while no options are selected.  
 
+### Data source
 **Selection type** - The attribute or association type that the widget is expected to set.  
 **Selectable objects** - The data source that determines the list of options.  
 **Reference** - The association that will be set when the user selects an option.  
@@ -25,6 +27,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 | ![studioProOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustom.png)    | ![BrowserOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustomUI.png)    |  
 | *This image is for a reference set, but the idea is the same* | *This image is for a reference set, but the idea is the same* |  
 
+### Searching
 **Searchable?** - Whether or not the user can search for a value.  
 **Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Search type** - How the searching is handled. 
@@ -61,10 +64,12 @@ If you used Option Content Type "Expression" or "Custom" you will a new option c
 
 ## Customization Settings  
 ![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/customizationRef.png)  
+### Text
 **More Results Text** - Text displayed at the end of the results list if there are more results than the Max Items. This text is to inform the user that they need to enter search criteria to view more records. *If Max Items is set to 0, then this setting is not available because all records are always shown.*  
 **No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user enters a search text and nothing is found)  
 **Loading Text** - Text shown while the data source is still loading.  
 
+### Clearing
 **Clearable?** - Allows the user to set the value as empty.  
 **Clear icon text** - Tooltip text for the clear icon.  
 **Clear icon** - Override the default clear icon with your own glyphicon or images.  
