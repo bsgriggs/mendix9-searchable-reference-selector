@@ -29,7 +29,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 **Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Search type** - How the searching is handled. 
 - "By Attribute(s)" uses the Mendix [ListValue API](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/) to do optimal server-side filtering.
-- "By Data Source Microflow" will allow you to get the user's search text as an attribute on the page and then use that attribute inside the data source microflow to filter the options however you want. If you want to use this mode, see details [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md).
+- "By Data Source Microflow" will allow you to get the user's search text as an attribute on the page and then use that attribute inside the data source Microflow to filter the options however you want. If you want to use this mode, see details [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md).
 
 **Search function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
 
@@ -73,6 +73,10 @@ If you used Option Content Type "Expression" or "Custom" you will a new option c
 ![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsEnum&Ref.png)  
 **On Change** - Perform an MxAction when the user selects an option different from the current value.  
 **On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
+
+## Accessibility
+![accessibilityRef&Set](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/accessibilityRef&Set.png)  
+**Aria live text** - The text read by a screen reader when an option is selected or highlighted with keyboard navigation. If no value is set, the widget will default to the Option Content attribute or the Option Expression. If you're using Option Content Type "Custom", then this text is the only way the screen reader knows what text to read for the option.  
 
 ## Common Settings  
 ![styleEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/common.png)  
