@@ -33,7 +33,7 @@ In the example below, the page would have a Project object and the user selects 
 | ![studioProOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustom.png)    | ![BrowserOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustomUI.png)    |  
 
 ### Searching
-**Searchable?** - Whether or not the user can search for an enumeration value
+**Searchable?** - Whether or not the user can search for a value.  
 **Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Search type** - How the searching is handled. 
 - "By Attribute(s)" uses the Mendix [ListValue API](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/) to do optimal server-side filtering.
