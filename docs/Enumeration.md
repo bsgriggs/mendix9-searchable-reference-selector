@@ -8,12 +8,15 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 ## General Settings
 ![generalEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalEnum.png)  
+### Label
 **Label** - Mendix label, displayed either horizontally or vertically to the input based on your parent data view's settings.  
 **Placeholder** - The text that is shown while no options are selected.  
 
+### Data source
 **Selection type** - The attribute or association type that the widget is expected to set.  
 **Enum attribute** - The attribute that will be set when the user selects an option. The widget automatically displays all possible options for the selected enumeration.  
 
+### Searching
 **Searchable?** - Whether or not the user can search for an enumeration value
 **Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
 **Search function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
@@ -33,8 +36,10 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 ## Customization Settings  
 ![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/customizationEnum.png)  
+### Text
 **No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user enters a search text and nothing is found)  
 
+### Clearing
 **Clearable?** - Allows the user to set the value as empty.  
 **Clear icon text** - Tooltip text for the clear icon.  
 **Clear icon** - Override the default clear icon with your own glyphicon or images.  
