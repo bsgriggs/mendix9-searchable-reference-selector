@@ -109,53 +109,13 @@ If you used Option Content Type "Expression" or "Custom" you will a new option c
 **On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
 **On Badge Click** - Perform an MxAction when the user clicks on the content of a badge. Can be used to show an Edit page for the badge's object (as long as the save button does a 'refresh in client').  
 
+## Accessibility
+![accessibilityRef&Set](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/accessibilityRef&Set.png)  
+**Aria live text** - The text read by a screen reader when an option is selected or highlighted. If no value is set, the widget will default to the Option Content attribute or the Option Expression. If you're using Option Content Type "Custom", then this text is the only way the screen reader knows what text to read for the option.  
+
 ## Common Settings  
 ![common](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/common.png)  
 **Name** - Mendix name for the widget.  
 **Tab index** - The tab order of the widget. This should be left at 0 for most situations.  
 **Visible** - Boolean expression that determines if the widget is rendered at all.  
 **Editable** - Boolean expression that determines if the user is allowed to select a value.  
-
-
-
-
-### Customization Settings  
-![customizationSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/customizationRefSet.png)  
-**Searchable?** - Allow the user to filter the results by entering a search string. When disabled, the text box is read only. Disabling searchability can be useful when using Select Style "List on Page" and you have a limited set of results. The user would then see a simple list on the page of available options.  
-**Clearable?** - Allow the user to remove all selections / set the association as empty. You could disable this setting if you want the user to *always* have at least 1 selection.  
-**Show Select All?** - Display a button to allow the user to select all the records currently shown to the user. This does **not** select records outside the maximum. For example, if you have Max Items set to 50 and the user clicks Select All -> only the first 50 records will be set on the reference set.  
-**Max Items** - Integer expression for the limit of records to display at once. **Very important setting if you encounter performance issues**. If the value is set to 0, then no limit will be applied.  
-**More Results Text** - Text displayed at the end of the results list if there are more results than the Max Items. This text is to inform the user that they need to enter search criteria to view more records. *If Max Items is set to 0, then this setting is not available because all records are always shown.*  
-**No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user enters a search text and nothing is found)  
-
-### Text Settings
-![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/textRef.png)  
-**Label** - MxLabel displayed near the textbox.  
-**Placeholder** - Text shown in the text box when there is no current value or current search.  
-**More Results Text** - Text displayed at the end of the results list if there are more results than the Max Items. This text is to inform the user that they need to enter search criteria to view more records. *If Max Items is set to 0, then this setting is not available because all records are always shown.*  
-**No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user enters a search text and nothing is found)  
-**Loading Text** - Text shown while the data source is still loading.  
-
-### Styling Settings  
-![styleSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/styleRefSet.png)  
-**Select Style** - The results are either displayed in a dropdown when the user clicks on the textbox or the results are always displayed on the page in a list.  
-**Option Text Type** - Method of rendering the text. Text shows the value of the attribute selected. HTML will render the value inside a span using **dangerouslySetInnerHTML**. Because of this, you need to make sure the HTML content is sanitized and cannot have any malicious javascript. Custom mode will add a container for you to add any content once you save the widget settings. This is useful for displaying multiple attributes in the same option, but the filtering will only consider the attribute set in the Data Source tab. *If you need to filter on multiple attribute too, see the [Manual Filtering](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md) documentation.*  
-**Option Style** - Method of showing the selected options to the user. Cell mode will show the selected options with a background color while checkbox mode will show (guess what) checkboxes.  
-**Reference Set Style** - How the selected options are displayed if the dropdown is closed or the reference set is in read only mode. Badges mode show a container with a background color and the clear icon. Badges also have their own on-click behavior available in the Data Source tab (useful for opening a details page). Commas Separated mode will display a simple comma separated list of the selected values.  
-**Max Reference Display** - The number of badges or items in the comma separated list to display. When the limit is exceeded, the remainder is displayed as "(+x)". If the expression is set to 0, then no limit is applied and the badges / comma separated list will wrap to the next line.  
-**Max Menu Height** - (Dropdown Only) String expression for the CSS Height for the dropdown menu with a default of 15em.  
-**Icons** - Override the default icons with you own glyphicon / images  
-
-### Data Source Settings  
-![dataSource](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/datasourceSet.png)  
-**Selectable Condition** - Optional boolean expression for rendering an option as un-selectable. Useful if you want to display an option, but not allow the user to select it for a reason. For example, show a list of all users but do not allow inactive users to be selected.  
-**On Change** - Perform an MxAction when the user adds or removes a selection.  
-**On Leave** - Perform an MxAction when the user clicks away or tabs away.  
-**On Badge Click** - Perform an MxAction when the user clicks on a badge (not the clear icon). This is useful for opening a details page for a particular badge. Available when Reference Set Style in the Style tab is set to Badges.  
-
-### Filtering Settings  
-![filteringSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/filteringReference%26Set.png)  
-**Filter Delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance optimization, so be sure not to set the value too low!  
-**Filter Type** - How the filtering is handled. Auto mode uses the Mendix [ListValue API](https://docs.mendix.com/apidocs-mxsdk/apidocs/pluggable-widgets-client-apis-list-values/) to optimize memory management. Manual mode will allow you to set the user's search text as an attribute on the page then use that attribute inside the data source microflow. Manual mode changes many settings about the widget with the expectation that you will add them to you microflow. See the documentation [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md) for details.  
-**Filter Function** - How the user's text is used to filter the results list. Contains mode will return any options where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact match at the beginning of the option's text.  
-Starts With can help with performance, but it can be bad UX. For example, displaying a list of user full names would not work, because the user may enter the last name instead of the first name. *(Note: using the contains function does NOT apply database indexes. If you encounter performance issues, consider using startsWith instead.)*
