@@ -20,7 +20,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 - "Expression" will require a string expression to be entered and is useful if you need to concatenate multiple attributes (e.g. employee name and employee id). You will have to select at least 1 search attribute in the search attributes list below.  
 - "Custom" - Studio Pro will add a new container below the widget where you can add Mendix widgets for each option. You could, for example, have employee profile pictures next to each of their names. You will have to select at least 1 search attribute in the search attributes list below.  
 
-| Option content type "Custom" - Studio Pro | Option content type "Custom" - Browser |  
+| "Custom" - Studio Pro | "Custom" - Browser |  
 | ------------- | ------------- |  
 | ![studioProOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustom.png)    | ![BrowserOptionContentType](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/optionContentTypeCustomUI.png)    |  
 | *This image is for a reference set, but the idea is the same* | *This image is for a reference set, but the idea is the same* |  
@@ -35,8 +35,8 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 *Starts With can help with performance but it can be bad UX depending on the use case. For example, displaying a list of user full names would not work, because the user may enter the last name instead of the first name.*  
 
-If you used Option Content Type "Expression" or "Custom" you will see the following filter settings.  
-![generalEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalRefExpression.png)  
+If you used Option Content Type "Expression" or "Custom" you will a new option called "Search attributes". At least 1 search attribute is required.  
+![generalRefExpression](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalRefExpression.png)  
 **Search attributes** - The list of attributes that are used to filter each option. For example, the user can enter "Bob" and it will check if either the Name or Region attributes contain "bob". **WARNING - selecting an enum attribute will force the widget to use less-efficient client-side filtering and should be avoided if possible.**   
 
 ## Style Settings
