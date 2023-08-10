@@ -157,11 +157,6 @@
                     <caption>More results action</caption>
                     <description>Mx Action that can be used to increase the page size on your data source when there are more results</description>
                 </property>
-                <!-- <property key="refreshAction" type="action" required="true">
-                    <caption>Refresh action</caption>
-                    <description>Must be a Microflow or Nanoflow that has a Refresh in Client on the Search Text's
-                object</description>
-                </property> -->
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Style">

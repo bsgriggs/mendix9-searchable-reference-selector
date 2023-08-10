@@ -125,11 +125,11 @@ export default function SearchableReferenceSelector({
     const displayReferenceContent = useCallback(
         (displayObj: ObjectItem): ReactNode =>
             optionTextType === "text" ? (
-                <span>{displayAttribute.get(displayObj).value}</span>
+                <span>{displayAttribute.get(displayObj).displayValue}</span>
             ) : optionTextType === "html" ? (
                 <span
                     dangerouslySetInnerHTML={{
-                        __html: `${displayAttribute.get(displayObj).value?.toString()}`
+                        __html: `${displayAttribute.get(displayObj).displayValue?.toString()}`
                     }}
                 ></span>
             ) : optionTextType === "textTemplate" ? (
@@ -160,7 +160,7 @@ export default function SearchableReferenceSelector({
             ariaLiveText
                 ? (ariaLiveText.get(objectItem).value as string)
                 : displayAttribute
-                ? (displayAttribute.get(objectItem).value as string)
+                ? (displayAttribute.get(objectItem).displayValue as string)
                 : optionExpression
                 ? (optionExpression.get(objectItem).value as string)
                 : "",
