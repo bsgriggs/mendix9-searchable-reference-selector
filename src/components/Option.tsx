@@ -6,7 +6,6 @@ import { focusModeEnum } from "../../typings/general";
 import classNames from "classnames";
 
 interface OptionProps {
-    index: number;
     onSelect: (selectedOption: IOption) => void;
     option: IOption;
     isFocused: boolean;
@@ -17,7 +16,6 @@ interface OptionProps {
 const Option = ({
     onSelect,
     option,
-    index,
     focusMode,
     isFocused,
     optionsStyle
@@ -26,7 +24,6 @@ const Option = ({
 
     return (
         <div
-            id={index.toString()}
             className={classNames(
                 "srs-option",
                 { selected: optionsStyle === "cell" && option.isSelected },

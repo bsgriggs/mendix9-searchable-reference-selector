@@ -13,15 +13,15 @@ interface IconProps {
 
 const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: IconProps): ReactElement => {
     const onClickHandler = (event: MouseEvent<any>): void => {
-        event.stopPropagation();
         if (onClick) {
+            event.stopPropagation();
             onClick(false);
         }
     };
 
     const onEnterHandler = (event: KeyboardEvent<any>): void => {
-        event.stopPropagation();
         if (event.key === "Enter" && onClick) {
+            event.stopPropagation();
             onClick(true);
         }
     };
@@ -33,12 +33,9 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
             title={title}
             tabIndex={tabIndex}
             className={classNames(defaultClassName, { "srs-icon-focusable": tabIndex !== undefined })}
+            role={onClick ? "button" : undefined}
         >
-            {mxIconOverride !== undefined ? (
-                <Icon icon={mxIconOverride} altText={title} />
-            ) : (
-                <span className={`glyphicon glyphicon-${defaultClassName}`} />
-            )}
+            <Icon icon={mxIconOverride || { type: "glyph", iconClass: `glyphicon-${defaultClassName}` }} />
         </div>
     );
 };

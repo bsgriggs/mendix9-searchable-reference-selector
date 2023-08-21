@@ -84,6 +84,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     onChange?: ActionValue;
     onLeave?: ActionValue;
     onBadgeClick?: ListActionValue;
+    onExtraClick?: ActionValue;
     ariaLiveText?: ListExpressionValue<string>;
 }
 
@@ -134,5 +135,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     onChange: {} | null;
     onLeave: {} | null;
     onBadgeClick: {} | null;
+    onExtraClick: {} | null;
     ariaLiveText: string;
 }

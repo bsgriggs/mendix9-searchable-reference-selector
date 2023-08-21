@@ -101,7 +101,6 @@ const OptionsMenu = ({
                     {options.map((option, key) => (
                         <li key={key} ref={key === currentFocus ? selectedObjRef : undefined}>
                             <Option
-                                index={key}
                                 isFocused={key === currentFocus}
                                 onSelect={selectedOption => {
                                     if (allowLoadingSelect || !isLoading) {

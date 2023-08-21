@@ -28,11 +28,29 @@ const Badge = ({
     badgeColor
 }: BadgeProps): ReactElement => {
     return (
-        <div
-            className={`srs-badge label-${badgeColor}`}
-            onClick={() => (onBadgeClick ? onBadgeClick(option) : undefined)}
-        >
-            {option.badgeContent ? option.badgeContent : option.content}
+        <div className={`srs-badge label-${badgeColor}`}>
+            <div
+                tabIndex={onBadgeClick ? tabIndex || 0 : undefined}
+                onClick={
+                    onBadgeClick
+                        ? event => {
+                              event.stopPropagation();
+                              onBadgeClick(option);
+                          }
+                        : undefined
+                }
+                onKeyDown={event => {
+                    if (event.key === "Enter" && onBadgeClick) {
+                        event.stopPropagation();
+                        onBadgeClick(option);
+                    }
+                }}
+                aria-label={option.ariaLiveText}
+                role={onBadgeClick ? "button" : undefined}
+            >
+                {option.badgeContent ? option.badgeContent : option.content}
+            </div>
+
             {isClearable && !isReadOnly && (
                 <MxIcon
                     onClick={onRemoveAssociation}

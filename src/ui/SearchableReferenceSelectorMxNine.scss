@@ -2,6 +2,7 @@ $padding-xs: 0.2em;
 $padding-sm: 0.3em;
 $padding-md: 0.5em;
 $padding-lg: 0.7em;
+$focus-outline: -webkit-focus-ring-color auto 1px;
 
 .srs {
     width: 100%;
@@ -46,7 +47,7 @@ $padding-lg: 0.7em;
                     .srs-badge {
                         border-radius: $padding-sm;
                         display: flex;
-                        padding: $padding-sm;
+                        padding: $padding-xs $padding-sm;
                         margin: 0-$padding-xs 0 0-$padding-xs 0-$padding-xs;
                         gap: $padding-sm;
                         align-items: center;
@@ -60,6 +61,9 @@ $padding-lg: 0.7em;
                         p {
                             margin: 0;
                         }
+                        > div:focus-visible {
+                            outline: $focus-outline;
+                        }
                     }
                 }
                 &.srs-commas {
@@ -68,6 +72,9 @@ $padding-lg: 0.7em;
                         display: flex;
                         font-size: small;
                         padding: 0px;
+                        &:focus-visible {
+                            outline: $focus-outline;
+                        }
                     }
                 }
             }
@@ -95,12 +102,12 @@ $padding-lg: 0.7em;
     }
 
     .srs-icon-focusable:focus-visible {
-        outline: -webkit-focus-ring-color auto 1px;
+        outline: $focus-outline;
     }
 
     .srs-dropdown {
         position: fixed;
-        z-index: 302;
+        z-index: 80;
     }
     .srs-menu {
         border: 1px solid #d7d7d7;

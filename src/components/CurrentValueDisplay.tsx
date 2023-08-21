@@ -15,6 +15,7 @@ type CurrentValueDisplayProps = {
     clearIcon: WebIcon | undefined;
     clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
+    onExtraClick: (() => void) | undefined;
     tabIndex?: number;
     badgeColor: BadgeColorEnum;
 };
@@ -27,6 +28,7 @@ export default function CurrentValueDisplay({
     clearIcon,
     clearIconTitle,
     onBadgeClick,
+    onExtraClick,
     isClearable,
     isReadOnly,
     tabIndex,
@@ -87,6 +89,8 @@ export default function CurrentValueDisplay({
                                                         index < currentValue.length - 1 &&
                                                         index !== maxReferenceDisplay - 1
                                                     }
+                                                    onBadgeClick={onBadgeClick}
+                                                    tabIndex={tabIndex}
                                                 />
                                             ))}
                                     {maxReferenceDisplay <= 0 &&
@@ -97,12 +101,32 @@ export default function CurrentValueDisplay({
                                                 showComma={
                                                     index < currentValue.length - 1 && index !== maxReferenceDisplay - 1
                                                 }
+                                                onBadgeClick={onBadgeClick}
+                                                tabIndex={tabIndex}
                                             />
                                         ))}
                                 </Fragment>
                             )}
                             {currentValue.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
-                                <span className="srs-comma">{`(+ ${currentValue.length - maxReferenceDisplay})`}</span>
+                                <span
+                                    className="srs-comma"
+                                    tabIndex={onExtraClick ? tabIndex || 0 : undefined}
+                                    onClick={
+                                        onExtraClick
+                                            ? event => {
+                                                  event.stopPropagation();
+                                                  onExtraClick();
+                                              }
+                                            : undefined
+                                    }
+                                    onKeyDown={event => {
+                                        if (event.key === "Enter" && onExtraClick) {
+                                            event.stopPropagation();
+                                            onExtraClick();
+                                        }
+                                    }}
+                                    role={onExtraClick ? "button" : undefined}
+                                >{`(+ ${currentValue.length - maxReferenceDisplay})`}</span>
                             )}
                         </Fragment>
                     );

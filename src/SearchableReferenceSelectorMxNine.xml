@@ -324,8 +324,12 @@
                     <description></description>
                 </property>
                 <property key="onBadgeClick" type="action" dataSource="selectableObjects">
-                    <caption>On badge click</caption>
+                    <caption>On value click</caption>
                     <description></description>
+                </property>
+                <property key="onExtraClick" type="action">
+                    <caption>On extra click</caption>
+                    <description>Action called when the user clicks on the (+n) text</description>
                 </property>
             </propertyGroup>
         </propertyGroup>

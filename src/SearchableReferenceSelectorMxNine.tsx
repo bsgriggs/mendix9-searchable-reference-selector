@@ -45,6 +45,7 @@ export default function SearchableReferenceSelector({
     onChange,
     onLeave,
     onBadgeClick,
+    onExtraClick,
     filterDelay,
     filterType,
     filterFunction,
@@ -446,6 +447,7 @@ export default function SearchableReferenceSelector({
                             ? callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false)
                             : undefined
                     }
+                    onExtraClick={onExtraClick ? () => callMxAction(onExtraClick, true) : undefined}
                     placeholder={placeholder.value as string}
                     isSearchable={isSearchable}
                     maxMenuHeight={maxMenuHeight.value || "15em"}

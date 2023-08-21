@@ -234,9 +234,9 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
     }
 
-    if (_values.referenceSetStyle === "commas") {
-        hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
-    }
+    // if (_values.referenceSetStyle === "commas") {
+    //     hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
+    // }
 
     if (!(_values.selectionType === "referenceSet" && _values.referenceSetStyle === "badges")) {
         hidePropertyIn(defaultProperties, _values, "badgeColor");
@@ -274,6 +274,10 @@ export function getProperties(
 
     if (_values.isSearchable === false && _values.selectStyle === "list") {
         hidePropertiesIn(defaultProperties, _values, ["placeholder"]);
+    }
+
+    if (_values.maxReferenceDisplay !== null && _values.maxReferenceDisplay === 0) {
+        hidePropertyIn(defaultProperties, _values, "onExtraClick");
     }
 
     return defaultProperties;

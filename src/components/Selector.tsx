@@ -61,6 +61,7 @@ interface SelectorProps {
     isCompact: boolean; // selectionType = ReferenceSet
     maxReferenceDisplay: number; // selectionType = ReferenceSet
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined; // selectionType = ReferenceSet
+    onExtraClick: (() => void) | undefined; // selectionType = ReferenceSet & maxReferenceDisplay > 0
     srsRef?: RefObject<HTMLDivElement>;
     onLeave: () => void;
     isLoading: boolean;
@@ -85,6 +86,7 @@ const Selector = ({
     name,
     noResultsText,
     onBadgeClick,
+    onExtraClick,
     onSelect,
     onSelectMoreOptions,
     options,
@@ -364,6 +366,7 @@ const Selector = ({
                                 clearIcon={clearIcon}
                                 clearIconTitle={clearIconTitle}
                                 onBadgeClick={onBadgeClick}
+                                onExtraClick={onExtraClick}
                                 tabIndex={tabIndex}
                                 badgeColor={badgeColor}
                             />
