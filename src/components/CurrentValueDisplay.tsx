@@ -148,7 +148,8 @@ export default function CurrentValueDisplay({
         onBadgeClick,
         onRemove,
         referenceSetStyle,
-        tabIndex
+        tabIndex,
+        onExtraClick
     ]);
 
     return currentValueDisplay;
