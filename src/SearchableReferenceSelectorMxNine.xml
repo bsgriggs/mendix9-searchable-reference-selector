@@ -325,7 +325,7 @@
                 </property>
                 <property key="onBadgeClick" type="action" dataSource="selectableObjects">
                     <caption>On value click</caption>
-                    <description></description>
+                    <description>Action called when the user clicks on one of the currently selected values</description>
                 </property>
                 <property key="onExtraClick" type="action">
                     <caption>On extra click</caption>
