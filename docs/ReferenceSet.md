@@ -107,7 +107,8 @@ If you used Option Content Type "Expression" or "Custom" you will a new option c
 ![eventsSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsSet.png)  
 **On Change** - Perform an MxAction when the user selects an option different from the current value.  
 **On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
-**On Badge Click** - Perform an MxAction when the user clicks on the content of a badge. Can be used to show an Edit page for the badge's object (as long as the save button does a 'refresh in client').  
+**On Value Click** - Perform an MxAction when the user clicks on one of the currently selected values. Can be used to show an Edit page for the select object (as long as the save button does a 'refresh in client').  
+**On Extra Click** - Perform an MxAction when the user clicks on the (+n) text. Can be used to show a list of all selected values in a popup.
 
 ## Accessibility
 ![accessibilityRef&Set](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/accessibilityRef&Set.png)  
