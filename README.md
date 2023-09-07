@@ -1,3 +1,4 @@
+<!-- prettier-ignore-start -->
 ## Searchable Selector
 
 Mendix reference, reference set, and enumeration selector with a search bar and a clear button.
@@ -39,11 +40,11 @@ https://marketplace.mendix.com/link/component/116917
 
 ## Configuration  
 Please see the following documentation based on the Selection Type you wish to use.
--   [Enumeration Selector](docs/Enumeration.md)
--   [Reference Selector](docs/Reference.md)
--   [Reference Set Selector](docs/ReferenceSet.md)
+-   [Enumeration Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Enumeration.md)
+-   [Reference Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Reference.md)
+-   [Reference Set Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ReferenceSet.md)
 
-Check [here](docs/ManualFiltering.md) for more information on using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in your microflow data source.
+Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ManualFiltering.md) for more information on using manual filtering. Many of the options are removed with the expectation you will be adding the features manually in your microflow data source.
 
 ## Performance Issues?
 You likely have too many options trying to render at once. Here are some things to help address the problem:  
@@ -66,3 +67,4 @@ This widget is open source. Feel free to clone the GitHub repository, make whate
 ## Development and contribution
 
 Benjamin Griggs
+<!-- prettier-ignore-end -->
