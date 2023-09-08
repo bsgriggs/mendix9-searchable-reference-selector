@@ -281,11 +281,12 @@ export default function SearchableReferenceSelector({
                 const delayDebounceFn = setTimeout(() => {
                     if (enumAttribute.universe) {
                         if (mxFilter.trim().length > 0 && isSearchable) {
+                            const searchText = mxFilter.trim().toLowerCase();
                             if (filterFunction === "contains") {
                                 setOptions(
                                     mapEnum(
                                         enumAttribute.universe.filter(option =>
-                                            option.toLowerCase().includes(mxFilter.trim().toLowerCase())
+                                            enumAttribute.formatter.format(option).toLowerCase().includes(searchText)
                                         )
                                     )
                                 );
@@ -293,7 +294,7 @@ export default function SearchableReferenceSelector({
                                 setOptions(
                                     mapEnum(
                                         enumAttribute.universe.filter(option =>
-                                            option.toLowerCase().startsWith(mxFilter.trim().toLowerCase())
+                                            enumAttribute.formatter.format(option).toLowerCase().startsWith(searchText)
                                         )
                                     )
                                 );
