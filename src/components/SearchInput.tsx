@@ -10,75 +10,59 @@ interface SearchInputProps {
     isSearchable: boolean;
     setRef: (newRef: HTMLInputElement) => void;
     showMenu: boolean;
-    setShowMenu: (newValue: boolean) => void;
     hasCurrentValue: boolean;
     isReferenceSet: boolean;
     tabIndex?: number;
     isCompact: boolean;
+    onFocus: () => void;
 }
 
-export default function SearchInput({
-    id,
-    name,
-    placeholder,
-    onChange,
-    isReadOnly,
-    isSearchable,
-    setRef,
-    searchFilter,
-    showMenu,
-    setShowMenu,
-    hasCurrentValue,
-    isReferenceSet,
-    tabIndex,
-    isCompact
-}: SearchInputProps): ReactElement {
+export default function SearchInput(props: SearchInputProps): ReactElement {
     const searchInput = useRef<HTMLInputElement>(null);
     // pass the ref back up for focus controls
     useEffect(() => {
         if (searchInput !== null && searchInput.current !== null) {
-            setRef(searchInput.current);
+            props.setRef(searchInput.current);
         }
-    }, [searchInput, setRef]);
+    }, [searchInput, props.setRef]);
 
     return (
         <input
-            name={name} // required for screen readers
-            tabIndex={!isReadOnly ? tabIndex || 0 : undefined}
+            name={props.name} // required for screen readers
+            tabIndex={!props.isReadOnly ? props.tabIndex || 0 : undefined}
             style={{
                 width:
-                    hasCurrentValue && !isCompact && !isReadOnly && isSearchable // force the input to the next display flex line
+                    props.hasCurrentValue && !props.isCompact && !props.isReadOnly && props.isSearchable // force the input to the next display flex line
                         ? "100%"
-                        : (isCompact || (!isSearchable && hasCurrentValue)) && // For compact or non-searchable modes, make the input take the least amount of space possible until a search text is typed.
-                          hasCurrentValue &&
-                          searchFilter.length === 0
+                        : (props.isCompact || (!props.isSearchable && props.hasCurrentValue)) && // For compact or non-searchable modes, make the input take the least amount of space possible until a search text is typed.
+                          props.hasCurrentValue &&
+                          props.searchFilter.length === 0
                         ? "1px" // cannot use display: none, because the input is needed for screen readers, focusing, and keyboard controls
                         : undefined,
-                height: !isSearchable && hasCurrentValue ? "0px" : undefined
+                height: !props.isSearchable && props.hasCurrentValue ? "0px" : undefined
             }}
-            placeholder={!hasCurrentValue || (isReferenceSet && !isReadOnly && !isCompact) ? placeholder : undefined} // only show the placeholder for non-compact ref sets or if there is a current value for enums/refs
+            placeholder={
+                !props.hasCurrentValue || (props.isReferenceSet && !props.isReadOnly && !props.isCompact)
+                    ? props.placeholder
+                    : undefined
+            } // only show the placeholder for non-compact ref sets or if there is a current value for enums/refs
             type="text"
-            onChange={onChange}
-            readOnly={isReadOnly || !isSearchable}
-            disabled={isReadOnly}
-            value={searchFilter}
+            onChange={props.onChange}
+            readOnly={props.isReadOnly || !props.isSearchable}
+            disabled={props.isReadOnly}
+            value={props.searchFilter}
             ref={searchInput} // for focus controls
             autoComplete="off"
-            aria-labelledby={id + "-label"} // for screen readers
+            aria-labelledby={props.id + "-label"} // for screen readers
             aria-haspopup // for screen readers
-            aria-expanded={showMenu} // for screen readers
+            aria-expanded={props.showMenu} // for screen readers
             role="combobox" // for screen readers
             onClick={(event: MouseEvent<HTMLInputElement>) => {
-                if (showMenu) {
+                if (props.showMenu) {
                     event.stopPropagation(); // prevent the click from closing the menu
                 }
             }}
-            onFocus={() => {
-                // ensure the menu is showing no matter how the input was focused
-                if (!showMenu) {
-                    setShowMenu(true);
-                }
-            }}
+            onFocus={props.onFocus}
         ></input>
     );
 }

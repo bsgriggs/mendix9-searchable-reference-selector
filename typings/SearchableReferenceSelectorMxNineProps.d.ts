@@ -82,6 +82,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     clearIconTitle: DynamicValue<string>;
     clearIcon?: DynamicValue<WebIcon>;
     onChange?: ActionValue;
+    onEnter?: ActionValue;
     onLeave?: ActionValue;
     onBadgeClick?: ListActionValue;
     onExtraClick?: ActionValue;
@@ -133,6 +134,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     clearIconTitle: string;
     clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     onChange: {} | null;
+    onEnter: {} | null;
     onLeave: {} | null;
     onBadgeClick: {} | null;
     onExtraClick: {} | null;

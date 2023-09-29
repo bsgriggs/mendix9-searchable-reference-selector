@@ -108,6 +108,8 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onLeave={() => {}}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onEnter={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onSelect={() => {}}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onSelectMoreOptions={() => {}}

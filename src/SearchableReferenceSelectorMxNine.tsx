@@ -57,7 +57,8 @@ export default function SearchableReferenceSelector({
     optionExpression,
     optionTextType,
     isCompact,
-    badgeColor
+    badgeColor,
+    onEnter
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
@@ -94,7 +95,7 @@ export default function SearchableReferenceSelector({
         [hasMoreResultsManual, selectableObjects, serverSideSearching]
     );
 
-    if (selectionType !== "enumeration" && filterType === "auto" && Number(maxItems.value) > 1) {
+    if (serverSideSearching && filterType === "auto" && Number(maxItems.value) > 1) {
         selectableObjects.setLimit(itemsLimit);
     }
 
@@ -443,9 +444,9 @@ export default function SearchableReferenceSelector({
                     selectStyle={selectStyle}
                     tabIndex={tabIndex}
                     selectAllIcon={selectAllIcon?.value}
-                    onBadgeClick={selectedOption =>
+                    onBadgeClick={
                         onBadgeClick
-                            ? callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false)
+                            ? selectedOption => callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false)
                             : undefined
                     }
                     onExtraClick={onExtraClick ? () => callMxAction(onExtraClick, true) : undefined}
@@ -477,6 +478,7 @@ export default function SearchableReferenceSelector({
                     clearSearchOnSelect={clearSearchOnSelect}
                     isCompact={isCompact}
                     badgeColor={badgeColor}
+                    onEnter={() => callMxAction(onEnter, true)}
                 />
             </div>
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}

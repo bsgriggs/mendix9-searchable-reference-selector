@@ -64,6 +64,7 @@ interface SelectorProps {
     onExtraClick: (() => void) | undefined; // selectionType = ReferenceSet & maxReferenceDisplay > 0
     srsRef?: RefObject<HTMLDivElement>;
     onLeave: () => void;
+    onEnter: () => void;
     isLoading: boolean;
     loadingText: string;
     allowLoadingSelect: boolean;
@@ -108,7 +109,8 @@ const Selector = ({
     loadingText,
     allowLoadingSelect,
     clearSearchOnSelect,
-    badgeColor
+    badgeColor,
+    onEnter
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
@@ -270,10 +272,8 @@ const Selector = ({
         ]
     );
 
-    if (srsRef) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useOnClickOutside(srsRef, onLeaveHandler);
-    }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useOnClickOutside(srsRef, onLeaveHandler);
 
     const optionClickHandler = (selectedOption: IOption | undefined): void => {
         setFocusedObjIndex(-1);
@@ -385,10 +385,15 @@ const Selector = ({
                                 hasCurrentValue={hasCurrentValue}
                                 searchFilter={mxFilter}
                                 showMenu={showMenu}
-                                setShowMenu={setShowMenu}
                                 isReferenceSet={selectionType === "referenceSet"}
                                 tabIndex={tabIndex}
                                 isCompact={isCompact}
+                                onFocus={() => {
+                                    if (!showMenu) {
+                                        setShowMenu(true);
+                                    }
+                                    onEnter();
+                                }}
                             />
                         )}
                     </div>
