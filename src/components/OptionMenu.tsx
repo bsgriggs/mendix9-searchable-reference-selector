@@ -92,6 +92,7 @@ const OptionsMenu = ({
             )}
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
+            role="listbox"
         >
             {options.length > 0 ? (
                 <Fragment>
@@ -101,7 +102,13 @@ const OptionsMenu = ({
                         </li>
                     )}
                     {options.map((option, key) => (
-                        <li key={key} ref={key === currentFocus ? selectedObjRef : undefined}>
+                        <li
+                            key={key}
+                            ref={key === currentFocus ? selectedObjRef : undefined}
+                            role="option"
+                            aria-selected={option.isSelected ? "true" : "false"}
+                            aria-disabled={!option.isSelectable}
+                        >
                             <Option
                                 isFocused={key === currentFocus}
                                 onSelect={selectedOption => {
@@ -116,7 +123,11 @@ const OptionsMenu = ({
                         </li>
                     ))}
                     {hasMoreOptions && (
-                        <li key={options.length} ref={currentFocus === options.length ? selectedObjRef : undefined}>
+                        <li
+                            key={options.length}
+                            ref={currentFocus === options.length ? selectedObjRef : undefined}
+                            role="option"
+                        >
                             <div
                                 role="option"
                                 className={

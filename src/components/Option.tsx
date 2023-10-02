@@ -34,9 +34,6 @@ const Option = ({
                         (focusMode === focusModeEnum.hover && optionsStyle === "cell" && isHovered)
                 }
             )}
-            role="option"
-            aria-selected={option.isSelected ? "true" : "false"}
-            aria-disabled={!option.isSelectable}
             onClick={(event: MouseEvent<HTMLDivElement>) => {
                 event.stopPropagation();
                 if (option.isSelectable) {
