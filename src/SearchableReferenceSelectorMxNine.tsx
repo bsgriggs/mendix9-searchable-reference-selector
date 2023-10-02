@@ -58,7 +58,8 @@ export default function SearchableReferenceSelector({
     optionTextType,
     isCompact,
     badgeColor,
-    onEnter
+    onEnter,
+    ariaLabel
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
     const defaultPageSize = useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
@@ -144,16 +145,14 @@ export default function SearchableReferenceSelector({
 
     const mapEnum = React.useCallback(
         (enumArray: string[]): IOption[] =>
-            enumArray.map(value => {
-                return {
-                    content: displayTextContent(enumAttribute.formatter.format(value)),
-                    isSelectable: true,
-                    isSelected: value === (enumAttribute.value as string),
-                    selectionType: "ENUMERATION",
-                    id: value,
-                    ariaLiveText: enumAttribute.formatter.format(value)
-                };
-            }),
+            enumArray.map(value => ({
+                content: displayTextContent(enumAttribute.formatter.format(value)),
+                isSelectable: true,
+                isSelected: value === (enumAttribute.value as string),
+                selectionType: "ENUMERATION",
+                id: value,
+                ariaLiveText: enumAttribute.formatter.format(value)
+            })),
         [enumAttribute, displayTextContent]
     );
 
@@ -171,21 +170,18 @@ export default function SearchableReferenceSelector({
 
     const mapObjectItems = React.useCallback(
         (objectItems: ObjectItem[]): IOption[] =>
-            objectItems.map(objItem => {
-                return {
-                    content: displayReferenceContent(objItem),
-                    isSelectable: selectableCondition.get(objItem).value as boolean,
-                    isSelected:
-                        selectionType === "referenceSet"
-                            ? referenceSet.value?.find(option => option.id === objItem.id) !== undefined
-                            : reference.value?.id === objItem.id,
+            objectItems.map(objItem => ({
+                content: displayReferenceContent(objItem),
+                isSelectable: selectableCondition.get(objItem).value as boolean,
+                isSelected:
+                    selectionType === "referenceSet"
+                        ? referenceSet.value?.find(option => option.id === objItem.id) !== undefined
+                        : reference.value?.id === objItem.id,
 
-                    selectionType: "REFERENCE",
-                    id: objItem,
-                    ariaLiveText: mapAriaLiveText(objItem)
-                };
-            }),
-
+                selectionType: "REFERENCE",
+                id: objItem,
+                ariaLiveText: mapAriaLiveText(objItem)
+            })),
         [reference, referenceSet, selectableCondition, displayReferenceContent, mapAriaLiveText, selectionType]
     );
 
@@ -206,9 +202,7 @@ export default function SearchableReferenceSelector({
     const currentValue: IOption | IOption[] | undefined = useMemo(() => {
         switch (selectionType) {
             case "enumeration":
-                return enumAttribute.status === ValueStatus.Available &&
-                    enumAttribute.status === ValueStatus.Available &&
-                    enumAttribute.value !== undefined
+                return enumAttribute.status === ValueStatus.Available && enumAttribute.value !== undefined
                     ? {
                           content: displayTextContent(enumAttribute.displayValue),
                           isSelectable: true,
@@ -231,18 +225,16 @@ export default function SearchableReferenceSelector({
                     : undefined;
             case "referenceSet":
                 return referenceSet.value !== undefined && referenceSet.status === ValueStatus.Available
-                    ? referenceSet.value.map(reference => {
-                          return {
-                              content: displayReferenceContent(reference),
-                              badgeContent:
-                                  referenceSetValue === "CUSTOM" ? referenceSetValueContent.get(reference) : undefined,
-                              isSelectable: selectableCondition.get(reference).value as boolean,
-                              isSelected: true,
-                              selectionType: "REFERENCE",
-                              id: reference,
-                              ariaLiveText: mapAriaLiveText(reference)
-                          };
-                      })
+                    ? referenceSet.value.map(reference => ({
+                          content: displayReferenceContent(reference),
+                          badgeContent:
+                              referenceSetValue === "CUSTOM" ? referenceSetValueContent.get(reference) : undefined,
+                          isSelectable: selectableCondition.get(reference).value as boolean,
+                          isSelected: true,
+                          selectionType: "REFERENCE",
+                          id: reference,
+                          ariaLiveText: mapAriaLiveText(reference)
+                      }))
                     : undefined;
         }
     }, [
@@ -258,7 +250,7 @@ export default function SearchableReferenceSelector({
         selectionType
     ]);
 
-    // load Options
+    // load Options ~ handle if the selected value changed outside the widget
     if (selectionType !== "enumeration") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
@@ -272,10 +264,17 @@ export default function SearchableReferenceSelector({
                 setOptions(mapObjectItems(selectableObjects.items || []));
             }
         }, [selectableObjects, reference, referenceSet, isReadOnly, mapObjectItems, selectionType]);
+    } else {
+        React.useEffect(() => {
+            if (!isReadOnly && enumAttribute.status === ValueStatus.Available && enumAttribute.universe) {
+                setOptions(mapEnum(enumAttribute.universe));
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [enumAttribute, isReadOnly]);
     }
 
     // Determine the Filtering handling useEffect
-    if (selectionType === "enumeration" && enumAttribute.universe) {
+    if (selectionType === "enumeration") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
             if (!isReadOnly) {
@@ -283,23 +282,20 @@ export default function SearchableReferenceSelector({
                     if (enumAttribute.universe) {
                         if (mxFilter.trim().length > 0 && isSearchable) {
                             const searchText = mxFilter.trim().toLowerCase();
-                            if (filterFunction === "contains") {
-                                setOptions(
-                                    mapEnum(
-                                        enumAttribute.universe.filter(option =>
-                                            enumAttribute.formatter.format(option).toLowerCase().includes(searchText)
-                                        )
-                                    )
-                                );
-                            } else {
-                                setOptions(
-                                    mapEnum(
-                                        enumAttribute.universe.filter(option =>
-                                            enumAttribute.formatter.format(option).toLowerCase().startsWith(searchText)
-                                        )
-                                    )
-                                );
-                            }
+                            setOptions(
+                                mapEnum(
+                                    filterFunction === "contains"
+                                        ? enumAttribute.universe.filter(option =>
+                                              enumAttribute.formatter.format(option).toLowerCase().includes(searchText)
+                                          )
+                                        : enumAttribute.universe.filter(option =>
+                                              enumAttribute.formatter
+                                                  .format(option)
+                                                  .toLowerCase()
+                                                  .startsWith(searchText)
+                                          )
+                                )
+                            );
                         } else {
                             setOptions(mapEnum(enumAttribute.universe));
                         }
@@ -309,101 +305,113 @@ export default function SearchableReferenceSelector({
                 return () => clearTimeout(delayDebounceFn);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [mxFilter, enumAttribute, isReadOnly]);
+        }, [mxFilter, isReadOnly]);
     } else if (filterType === "auto") {
         if (optionTextType === "text" || optionTextType === "html") {
             // text/HTML option text types ~ use displayAttribute
             if (serverSideSearching) {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 React.useEffect(() => {
-                    const debounce = setTimeout(() => {
-                        selectableObjects.setFilter(
-                            filterFunction === "contains"
-                                ? contains(attribute(displayAttribute.id), literal(mxFilter.trim()))
-                                : startsWith(attribute(displayAttribute.id), literal(mxFilter.trim()))
-                        );
-                    }, filterDelay);
-                    return () => clearTimeout(debounce);
+                    if (!isReadOnly) {
+                        const debounce = setTimeout(() => {
+                            selectableObjects.setFilter(
+                                filterFunction === "contains"
+                                    ? contains(attribute(displayAttribute.id), literal(mxFilter.trim()))
+                                    : startsWith(attribute(displayAttribute.id), literal(mxFilter.trim()))
+                            );
+                        }, filterDelay);
+                        return () => clearTimeout(debounce);
+                    }
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter]);
+                }, [mxFilter, isReadOnly]);
             } else {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 React.useEffect(() => {
-                    const debounce = setTimeout(() => {
-                        if (mxFilter.trim().length > 0 && selectableObjects.items) {
-                            setOptions(
-                                mapObjectItems(
-                                    selectableObjects.items.filter(item => {
-                                        const text = displayAttribute.get(item).displayValue as string;
-                                        return filterFunction === "contains"
-                                            ? text.toLocaleLowerCase().includes(mxFilter.trim().toLocaleLowerCase())
-                                            : text.toLocaleLowerCase().startsWith(mxFilter.trim().toLocaleLowerCase());
-                                    })
-                                )
-                            );
-                        } else {
-                            setOptions(mapObjectItems(selectableObjects.items || []));
-                        }
-                    }, filterDelay);
-                    return () => clearTimeout(debounce);
+                    if (!isReadOnly) {
+                        const debounce = setTimeout(() => {
+                            if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                                setOptions(
+                                    mapObjectItems(
+                                        selectableObjects.items.filter(item => {
+                                            const text = displayAttribute.get(item).displayValue as string;
+                                            return filterFunction === "contains"
+                                                ? text.toLocaleLowerCase().includes(mxFilter.trim().toLocaleLowerCase())
+                                                : text
+                                                      .toLocaleLowerCase()
+                                                      .startsWith(mxFilter.trim().toLocaleLowerCase());
+                                        })
+                                    )
+                                );
+                            } else {
+                                setOptions(mapObjectItems(selectableObjects.items || []));
+                            }
+                        }, filterDelay);
+                        return () => clearTimeout(debounce);
+                    }
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, selectableObjects]);
+                }, [mxFilter, selectableObjects, isReadOnly]);
             }
         } else {
             // custom option text types ~ multiple search attributes
             if (serverSideSearching) {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 React.useEffect(() => {
-                    const debounce = setTimeout(() => {
-                        const filter = searchAttributes.map(item =>
-                            filterFunction === "contains"
-                                ? contains(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
-                                : startsWith(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
-                        );
-                        if (filter !== undefined) {
-                            selectableObjects.setFilter(filter.length > 1 ? or(...filter) : filter[0]);
-                        }
-                    }, filterDelay);
-                    return () => clearTimeout(debounce);
+                    if (!isReadOnly) {
+                        const debounce = setTimeout(() => {
+                            const filter = searchAttributes.map(item =>
+                                filterFunction === "contains"
+                                    ? contains(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
+                                    : startsWith(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
+                            );
+                            if (filter !== undefined) {
+                                selectableObjects.setFilter(filter.length > 1 ? or(...filter) : filter[0]);
+                            }
+                        }, filterDelay);
+                        return () => clearTimeout(debounce);
+                    }
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter]);
+                }, [mxFilter, isReadOnly]);
             } else {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 React.useEffect(() => {
-                    const debounce = setTimeout(() => {
-                        if (mxFilter.trim().length > 0 && selectableObjects.items) {
-                            setOptions(
-                                mapObjectItems(
-                                    selectableObjects.items.filter(item => {
-                                        let match = false;
-                                        for (const searchItem of searchAttributes) {
-                                            const text = searchItem.searchAttribute.get(item).displayValue as string;
-                                            match =
-                                                filterFunction === "contains"
-                                                    ? text
-                                                          .toLocaleLowerCase()
-                                                          .includes(mxFilter.trim().toLocaleLowerCase())
-                                                    : text
-                                                          .toLocaleLowerCase()
-                                                          .startsWith(mxFilter.trim().toLocaleLowerCase());
-                                            if (match) {
-                                                break;
+                    if (!isReadOnly) {
+                        const debounce = setTimeout(() => {
+                            if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                                setOptions(
+                                    mapObjectItems(
+                                        selectableObjects.items.filter(item => {
+                                            let match = false;
+                                            for (const searchItem of searchAttributes) {
+                                                const text = searchItem.searchAttribute.get(item)
+                                                    .displayValue as string;
+                                                match =
+                                                    filterFunction === "contains"
+                                                        ? text
+                                                              .toLocaleLowerCase()
+                                                              .includes(mxFilter.trim().toLocaleLowerCase())
+                                                        : text
+                                                              .toLocaleLowerCase()
+                                                              .startsWith(mxFilter.trim().toLocaleLowerCase());
+                                                if (match) {
+                                                    break;
+                                                }
                                             }
-                                        }
-                                        return match;
-                                    })
-                                )
-                            );
-                        } else {
-                            setOptions(mapObjectItems(selectableObjects.items || []));
-                        }
-                    }, filterDelay);
-                    return () => clearTimeout(debounce);
+                                            return match;
+                                        })
+                                    )
+                                );
+                            } else {
+                                setOptions(mapObjectItems(selectableObjects.items || []));
+                            }
+                        }, filterDelay);
+                        return () => clearTimeout(debounce);
+                    }
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, selectableObjects]);
+                }, [mxFilter, selectableObjects, isReadOnly]);
             }
         }
     } else {
+        // filter type manual, dev is expected to make filter logic inside their data source Microflow
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
             if (searchText.status === ValueStatus.Available && searchText.displayValue !== mxFilter) {
@@ -414,7 +422,7 @@ export default function SearchableReferenceSelector({
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
         React.useEffect(() => {
-            if (searchText.status === ValueStatus.Available) {
+            if (searchText.status === ValueStatus.Available && !isReadOnly) {
                 const delayDebounceFn = setTimeout(() => {
                     if (isSearchable) {
                         searchText.setValue(mxFilter);
@@ -425,7 +433,7 @@ export default function SearchableReferenceSelector({
                 return () => clearTimeout(delayDebounceFn);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [mxFilter]);
+        }, [mxFilter, isReadOnly]);
     }
 
     return (
@@ -434,6 +442,7 @@ export default function SearchableReferenceSelector({
                 <Selector
                     id={id}
                     name={name}
+                    ariaLabel={ariaLabel?.value}
                     isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
                     loadingText={loadingText.value as string}
                     clearIcon={clearIcon?.value}

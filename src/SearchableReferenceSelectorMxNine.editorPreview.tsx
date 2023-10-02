@@ -60,6 +60,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
             <Selector
                 id={""}
                 name={""}
+                ariaLabel={""}
                 isLoading={false}
                 loadingText={props.loadingText}
                 allowLoadingSelect={props.allowLoadingSelect}

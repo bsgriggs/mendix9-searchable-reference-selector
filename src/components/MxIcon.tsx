@@ -20,8 +20,9 @@ const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: 
     };
 
     const onEnterHandler = (event: KeyboardEvent<any>): void => {
-        if (event.key === "Enter" && onClick) {
+        if ((event.key === "Enter" || event.key === " ") && onClick) {
             event.stopPropagation();
+            event.preventDefault();
             onClick(true);
         }
     };

@@ -33,6 +33,7 @@ interface SelectorProps {
     id: string;
     name: string;
     tabIndex?: number;
+    ariaLabel: string | undefined;
     placeholder: string | undefined;
     noResultsText: string;
     options: IOption[];
@@ -110,7 +111,8 @@ const Selector = ({
     allowLoadingSelect,
     clearSearchOnSelect,
     badgeColor,
-    onEnter
+    onEnter,
+    ariaLabel
 }: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
@@ -222,7 +224,7 @@ const Selector = ({
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLDivElement>): void => {
             const keyPressed = event.key;
-            if (keyPressed === "ArrowUp" || keyPressed === "ArrowLeft") {
+            if (keyPressed === "ArrowUp") {
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
                 } else if (focusedObjIndex > 0) {
@@ -233,7 +235,7 @@ const Selector = ({
                     setFocusedObjIndex(options.length - 1);
                 }
                 setShowMenu(true);
-            } else if (keyPressed === "ArrowDown" || keyPressed === "ArrowRight") {
+            } else if (keyPressed === "ArrowDown") {
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
                 } else if (
@@ -258,6 +260,11 @@ const Selector = ({
                 }
             } else if (keyPressed === "Escape" || keyPressed === "Tab") {
                 onLeaveHandler();
+            } else if (keyPressed === " " && !showMenu) {
+                event.preventDefault();
+                // event.stopPropagation();
+                setShowMenu(true);
+                setFocusedObjIndex(0);
             }
         },
         [
@@ -278,9 +285,7 @@ const Selector = ({
     const optionClickHandler = (selectedOption: IOption | undefined): void => {
         setFocusedObjIndex(-1);
         onSelectHandler(selectedOption);
-        if (selectionType === "referenceSet") {
-            focusSearchInput();
-        }
+        focusSearchInput(); // re-focus the input so the user can tab away
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -377,6 +382,7 @@ const Selector = ({
                             <SearchInput
                                 id={id}
                                 name={name}
+                                ariaLabel={ariaLabel}
                                 isReadOnly={isReadOnly}
                                 isSearchable={isSearchable}
                                 onChange={handleInputChange}
@@ -388,12 +394,7 @@ const Selector = ({
                                 isReferenceSet={selectionType === "referenceSet"}
                                 tabIndex={tabIndex}
                                 isCompact={isCompact}
-                                onFocus={() => {
-                                    if (!showMenu) {
-                                        setShowMenu(true);
-                                    }
-                                    onEnter();
-                                }}
+                                onFocus={onEnter}
                             />
                         )}
                     </div>
@@ -431,6 +432,8 @@ const Selector = ({
             </div>
             {(showMenu || selectStyle === "list") && !isReadOnly && (
                 <OptionsMenu
+                    id={id}
+                    ariaLabel={ariaLabel}
                     onSelect={optionClickHandler}
                     currentFocus={focusedObjIndex}
                     maxMenuHeight={maxMenuHeight}

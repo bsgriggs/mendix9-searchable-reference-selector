@@ -1,8 +1,9 @@
-import { ChangeEvent, createElement, ReactElement, useEffect, useRef, MouseEvent } from "react";
+import { ChangeEvent, createElement, ReactElement, useEffect, useRef } from "react";
 
 interface SearchInputProps {
     id: string;
     name: string;
+    ariaLabel: string | undefined;
     placeholder: string | undefined;
     searchFilter: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -53,11 +54,14 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
             value={props.searchFilter}
             ref={searchInput} // for focus controls
             autoComplete="off"
-            aria-labelledby={props.id + "-label"} // for screen readers
+            aria-labelledby={
+                props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
+            } // for screen readers
+            aria-label={props.ariaLabel} // for screen readers
             aria-haspopup // for screen readers
             aria-expanded={props.showMenu} // for screen readers
             role="combobox" // for screen readers
-            onClick={(event: MouseEvent<HTMLInputElement>) => {
+            onClick={event => {
                 if (props.showMenu) {
                     event.stopPropagation(); // prevent the click from closing the menu
                 }

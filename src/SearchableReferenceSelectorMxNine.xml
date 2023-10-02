@@ -339,6 +339,11 @@
         </propertyGroup>
         <propertyGroup caption="Accessibility">
             <propertyGroup caption="Accessibility">
+                <property key="ariaLabel" type="textTemplate"
+                    required="false">
+                    <caption>Aria label</caption>
+                    <description>The text read aloud by a screen reader when first focusing on the input</description>
+                </property>
                 <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
                     required="false">
                     <caption>Aria live text</caption>

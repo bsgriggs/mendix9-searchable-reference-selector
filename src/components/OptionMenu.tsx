@@ -20,6 +20,8 @@ import { IOption } from "typings/option";
 import classNames from "classnames";
 
 interface OptionMenuProps {
+    id: string;
+    ariaLabel: string | undefined;
     options: IOption[];
     currentFocus: number;
     onSelect: (selectedOption: IOption) => void;
@@ -37,6 +39,8 @@ interface OptionMenuProps {
 }
 
 const OptionsMenu = ({
+    id,
+    ariaLabel,
     options,
     onSelect,
     optionsStyle,
@@ -93,6 +97,8 @@ const OptionsMenu = ({
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
             role="listbox"
+            aria-labelledby={ariaLabel === undefined || ariaLabel.trim() === "" ? id + "-label" : undefined} // for screen readers
+            aria-label={ariaLabel} // for screen readers
         >
             {options.length > 0 ? (
                 <Fragment>
@@ -129,7 +135,6 @@ const OptionsMenu = ({
                             role="option"
                         >
                             <div
-                                role="option"
                                 className={
                                     currentFocus === options.length ? "srs-option focused" : "mx-text srs-infooption"
                                 }
