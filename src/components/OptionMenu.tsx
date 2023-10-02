@@ -61,14 +61,16 @@ const OptionsMenu = ({
         if (selectStyle === "dropdown" && position !== undefined) {
             const contentCloseToBottom = position.y > window.innerHeight * 0.7;
             return {
-                maxHeight: maxMenuHeight ? maxMenuHeight : "15em",
+                maxHeight: maxMenuHeight ? maxMenuHeight : undefined,
                 top: contentCloseToBottom ? "unset" : position.height + position.y,
                 bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
                 width: position.width,
                 left: position.x
             };
         } else {
-            return {};
+            return {
+                maxHeight: maxMenuHeight ? maxMenuHeight : undefined
+            };
         }
     }, [position, maxMenuHeight, selectStyle]);
 

@@ -63,7 +63,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     optionsStyleSet: OptionsStyleSetEnum;
     maxItems: DynamicValue<Big>;
     allowLoadingSelect: boolean;
-    maxMenuHeight: DynamicValue<string>;
+    maxMenuHeight?: DynamicValue<string>;
     dropdownIcon?: DynamicValue<WebIcon>;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;

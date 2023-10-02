@@ -51,7 +51,7 @@ interface SelectorProps {
     selectAllIcon: WebIcon | undefined; // selectionType = ReferenceSet
     selectAllIconTitle: string; // selectionType = ReferenceSet
     dropdownIcon: WebIcon | undefined; // selectStyle = Dropdown
-    maxMenuHeight: string; // selectStyle = Dropdown
+    maxMenuHeight: string | undefined; // selectStyle = Dropdown
     hasMoreOptions: boolean; // selectionType = Reference or ReferenceSet
     moreResultsText: string | undefined; // selectionType = Reference or ReferenceSet
     onSelectMoreOptions: (() => void) | undefined; // selectionType = Reference or ReferenceSet

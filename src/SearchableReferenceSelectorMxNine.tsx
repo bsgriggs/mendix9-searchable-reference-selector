@@ -452,7 +452,7 @@ export default function SearchableReferenceSelector({
                     onExtraClick={onExtraClick ? () => callMxAction(onExtraClick, true) : undefined}
                     placeholder={placeholder.value as string}
                     isSearchable={isSearchable}
-                    maxMenuHeight={maxMenuHeight.value || "15em"}
+                    maxMenuHeight={maxMenuHeight?.value}
                     noResultsText={noResultsText.value as string}
                     referenceSetStyle={referenceSetStyle}
                     maxReferenceDisplay={maxReferenceDisplay}

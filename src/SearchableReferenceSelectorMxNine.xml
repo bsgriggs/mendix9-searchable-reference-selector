@@ -194,9 +194,9 @@
                     <caption>Allow loading select?</caption>
                     <description>Allow the user to select an option while the data source is loading? (i.e. time between typing and the data source returning results)</description>
                 </property>
-                <property key="maxMenuHeight" type="expression" defaultValue="'15em'">
+                <property key="maxMenuHeight" type="expression" defaultValue="" required="false">
                     <caption>Max menu height</caption>
-                    <description>CSS Height (i.e. 200px, 20em ... ) for the select menu (default = 15em)</description>
+                    <description>Custom CSS Height for the select menu (default 15em)</description>
                     <returnType type="String" />
                 </property>
                 <property key="dropdownIcon" type="icon" required="false">
