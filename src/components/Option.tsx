@@ -1,4 +1,4 @@
-import { createElement, PropsWithChildren, ReactElement, MouseEvent } from "react";
+import { createElement, PropsWithChildren, ReactElement } from "react";
 import useHover from "../custom hooks/useHover";
 import { IOption } from "../../typings/option";
 import { OptionsStyleSetEnum, OptionsStyleSingleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
@@ -13,47 +13,48 @@ interface OptionProps {
     optionsStyle: OptionsStyleSetEnum | OptionsStyleSingleEnum;
 }
 
-const Option = ({
-    onSelect,
-    option,
-    focusMode,
-    isFocused,
-    optionsStyle
-}: PropsWithChildren<OptionProps>): ReactElement => {
+const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
     const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
     return (
         <div
             className={classNames(
                 "srs-option",
-                { selected: optionsStyle === "cell" && option.isSelected },
-                { disabled: !option.isSelectable },
+                { selected: props.optionsStyle === "cell" && props.option.isSelected },
                 {
                     focused:
-                        (focusMode === focusModeEnum.arrow && isFocused) ||
-                        (focusMode === focusModeEnum.hover && optionsStyle === "cell" && isHovered)
-                }
+                        (props.focusMode === focusModeEnum.arrow && props.isFocused) ||
+                        (props.focusMode === focusModeEnum.hover && props.optionsStyle === "cell" && isHovered)
+                },
+                { disabled: !props.option.isSelectable }
             )}
-            onClick={(event: MouseEvent<HTMLDivElement>) => {
+            onClick={event => {
                 event.stopPropagation();
-                if (option.isSelectable) {
-                    onSelect(option);
+                if (props.option.isSelectable) {
+                    props.onSelect(props.option);
                 }
             }}
             ref={hoverRef}
         >
-            {optionsStyle === "checkbox" && (
+            {props.optionsStyle === "checkbox" && (
                 <input
                     type={"checkbox"}
-                    checked={option.isSelected}
-                    disabled={!option.isSelectable}
+                    aria-label={props.option.ariaLiveText}
+                    checked={props.option.isSelected}
+                    disabled={!props.option.isSelectable}
                     tabIndex={-1}
                 ></input>
             )}
-            {optionsStyle === "radio" && (
-                <input type={"radio"} checked={option.isSelected} disabled={!option.isSelectable} tabIndex={-1} />
+            {props.optionsStyle === "radio" && (
+                <input
+                    type={"radio"}
+                    aria-label={props.option.ariaLiveText}
+                    checked={props.option.isSelected}
+                    disabled={!props.option.isSelectable}
+                    tabIndex={-1}
+                />
             )}
-            {option.content}
+            {props.option.content}
         </div>
     );
 };

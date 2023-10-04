@@ -217,7 +217,7 @@
                         <enumerationValue key="commas">Text</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="isCompact" type="boolean" defaultValue="false">
+                <property key="isCompact" type="boolean" defaultValue="true">
                     <caption>Compact?</caption>
                     <description>Displays the badges and comma's in-line with the search input</description>
                 </property>

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode, createElement, useCallback, useMemo } from "react";
+import React, { createElement } from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains, startsWith, or } from "mendix/filters/builders";
@@ -61,15 +61,15 @@ export default function SearchableReferenceSelector({
     onEnter,
     ariaLabel
 }: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
-    const defaultPageSize = useMemo(
+    const defaultPageSize = React.useMemo(
         () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
-        [maxItems, selectionType]
+        [maxItems]
     );
     const [mxFilter, setMxFilter] = React.useState<string>("");
     const [itemsLimit, setItemsLimit] = React.useState<number | undefined>(defaultPageSize);
     const [options, setOptions] = React.useState<IOption[]>([]);
     const srsRef = React.useRef<HTMLDivElement>(null);
-    const serverSideSearching: boolean = useMemo(() => {
+    const serverSideSearching: boolean = React.useMemo(() => {
         if (selectionType === "enumeration") {
             return false;
         }
@@ -81,7 +81,7 @@ export default function SearchableReferenceSelector({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const isReadOnly = useMemo(
+    const isReadOnly = React.useMemo(
         (): boolean =>
             (selectionType === "reference" && reference.readOnly) ||
             (selectionType === "referenceSet" && referenceSet.readOnly) ||
@@ -89,16 +89,28 @@ export default function SearchableReferenceSelector({
         [reference, referenceSet, enumAttribute, selectionType]
     );
 
-    const hasMoreItems = useMemo(
+    const hasMoreItems = React.useMemo(
         () =>
             (hasMoreResultsManual && hasMoreResultsManual.value) ||
             (((selectableObjects && selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
         [hasMoreResultsManual, selectableObjects, serverSideSearching]
     );
 
-    if (serverSideSearching && filterType === "auto" && Number(maxItems.value) > 1) {
-        selectableObjects.setLimit(itemsLimit);
-    }
+    React.useEffect(() => {
+        // Apply Max Items changes to itemsLimit
+        setItemsLimit(selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined);
+    }, [maxItems]);
+
+    React.useEffect(() => {
+        // Apply items limit to data source
+        if (serverSideSearching && filterType === "auto") {
+            if (itemsLimit && Number(itemsLimit) > 1) {
+                selectableObjects.setLimit(itemsLimit);
+            } else {
+                selectableObjects.setLimit(Infinity);
+            }
+        }
+    }, [itemsLimit]);
 
     const handleSelect = React.useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
@@ -123,10 +135,10 @@ export default function SearchableReferenceSelector({
         [isReadOnly, enumAttribute, reference, referenceSet, onChange, selectionType]
     );
 
-    const displayTextContent = useCallback((text: string): ReactNode => <span>{text}</span>, []);
+    const displayTextContent = React.useCallback((text: string): React.ReactNode => <span>{text}</span>, []);
 
-    const displayReferenceContent = useCallback(
-        (displayObj: ObjectItem): ReactNode =>
+    const displayReferenceContent = React.useCallback(
+        (displayObj: ObjectItem): React.ReactNode =>
             optionTextType === "text" ? (
                 <span>{displayAttribute.get(displayObj).displayValue}</span>
             ) : optionTextType === "html" ? (
@@ -199,7 +211,7 @@ export default function SearchableReferenceSelector({
         }
     };
 
-    const currentValue: IOption | IOption[] | undefined = useMemo(() => {
+    const currentValue: IOption | IOption[] | undefined = React.useMemo(() => {
         switch (selectionType) {
             case "enumeration":
                 return enumAttribute.status === ValueStatus.Available && enumAttribute.value !== undefined
@@ -437,7 +449,7 @@ export default function SearchableReferenceSelector({
     }
 
     return (
-        <Fragment>
+        <React.Fragment>
             <div id={id} className="srs" ref={srsRef}>
                 <Selector
                     id={id}
@@ -490,9 +502,10 @@ export default function SearchableReferenceSelector({
                     onEnter={() => callMxAction(onEnter, true)}
                 />
             </div>
+            <p>{serverSideSearching ? "server side" : "client side"}</p>
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}
             {referenceSet && referenceSet.validation && <Alert>{referenceSet.validation}</Alert>}
-        </Fragment>
+        </React.Fragment>
     );
 }

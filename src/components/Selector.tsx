@@ -138,7 +138,7 @@ const Selector = ({
     const onLeaveHandler = useCallback((): void => {
         if (showMenu) {
             setShowMenu(false);
-            if (mxFilter.trim() !== "") {
+            if (mxFilter !== "") {
                 setMxFilter("");
             }
             if (focusedObjIndex !== -1) {

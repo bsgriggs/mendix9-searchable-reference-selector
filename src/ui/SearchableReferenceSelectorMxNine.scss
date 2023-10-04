@@ -36,6 +36,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                     grid-column: 1;
                     grid-row: 1;
                     cursor: pointer;
+                    min-width: 1px;
                 }
                 &.srs-multi {
                     display: flex;
@@ -134,7 +135,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                     color: #6f6f6f;
                     cursor: not-allowed;
                 }
-                &.focused:not(.disabled) {
+                &.focused {
                     background-color: #d7d7d7;
                 }
                 &.selected {
