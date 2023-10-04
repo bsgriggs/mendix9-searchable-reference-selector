@@ -16,7 +16,7 @@ export type FilterTypeEnum = "auto" | "manual";
 export type FilterFunctionEnum = "contains" | "startsWith";
 
 export interface SearchAttributesType {
-    searchAttribute: ListAttributeValue<string | Big>;
+    searchAttribute: ListAttributeValue<Big | string>;
 }
 
 export type SelectStyleEnum = "dropdown" | "list";
@@ -47,7 +47,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
     optionTextType: OptionTextTypeEnum;
-    displayAttribute: ListAttributeValue<string | Big>;
+    displayAttribute: ListAttributeValue<Big | string>;
     optionExpression: ListExpressionValue<string>;
     optionCustomContent: ListWidgetValue;
     isSearchable: boolean;
@@ -65,9 +65,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     allowLoadingSelect: boolean;
     maxMenuHeight?: DynamicValue<string>;
     dropdownIcon?: DynamicValue<WebIcon>;
+    isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
-    isCompact: boolean;
     referenceSetValue: ReferenceSetValueEnum;
     badgeColor: BadgeColorEnum;
     referenceSetValueContent: ListWidgetValue;
@@ -118,9 +118,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
     dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
-    isCompact: boolean;
     referenceSetValue: ReferenceSetValueEnum;
     badgeColor: BadgeColorEnum;
     referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };

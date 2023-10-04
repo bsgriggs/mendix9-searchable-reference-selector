@@ -124,6 +124,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 cursor: pointer;
                 padding: $padding-md;
                 display: flex;
+                align-items: center;
                 input {
                     max-width: 16px;
                 }

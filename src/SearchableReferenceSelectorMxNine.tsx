@@ -74,9 +74,12 @@ export default function SearchableReferenceSelector({
             return false;
         }
         return optionTextType === "text" || optionTextType === "html"
-            ? displayAttribute.type !== "Enum" && displayAttribute.filterable
+            ? displayAttribute.type !== "Enum" && displayAttribute.type !== "AutoNumber" && displayAttribute.filterable
             : searchAttributes.every(
-                  value => value.searchAttribute.type !== "Enum" && value.searchAttribute.filterable
+                  value =>
+                      value.searchAttribute.type !== "Enum" &&
+                      value.searchAttribute.type !== "AutoNumber" &&
+                      value.searchAttribute.filterable
               );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
