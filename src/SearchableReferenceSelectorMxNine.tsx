@@ -505,7 +505,6 @@ export default function SearchableReferenceSelector({
                     onEnter={() => callMxAction(onEnter, true)}
                 />
             </div>
-            <p>{serverSideSearching ? "server side" : "client side"}</p>
             {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
             {reference && reference.validation && <Alert>{reference.validation}</Alert>}
             {referenceSet && referenceSet.validation && <Alert>{referenceSet.validation}</Alert>}
