@@ -25,6 +25,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
         if (searchInput !== null && searchInput.current !== null) {
             props.setRef(searchInput.current);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput, props.setRef]);
 
     return (

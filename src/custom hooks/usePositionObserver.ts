@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, RefObject } from "react";
 
-export function usePositionObserver(target: HTMLElement | null, active: boolean): DOMRect | undefined {
+export function usePositionObserver<T extends HTMLElement = HTMLElement>(
+    ref: RefObject<T> | undefined,
+    active: boolean
+): DOMRect | undefined {
     const [position, setPosition] = useState<DOMRect>();
 
     const onAnimationFrameHandler = useCallback(() => {
-        const newPosition: DOMRect | undefined = target?.getBoundingClientRect();
+        const newPosition: DOMRect | undefined = ref?.current?.getBoundingClientRect();
 
         if (shouldUpdatePosition(newPosition, position)) {
             setPosition(newPosition);
         }
-    }, [position, target]);
+    }, [position, ref]);
 
     useAnimationFrameEffect(active ? onAnimationFrameHandler : undefined);
 

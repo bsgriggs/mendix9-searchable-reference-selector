@@ -54,6 +54,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     filterDelay: number;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
+    forceClientSide: boolean;
     searchAttributes: SearchAttributesType[];
     searchText: EditableValue<string>;
     hasMoreResultsManual: DynamicValue<boolean>;
@@ -107,6 +108,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     filterDelay: number | null;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
+    forceClientSide: boolean;
     searchAttributes: SearchAttributesPreviewType[];
     searchText: string;
     hasMoreResultsManual: string;

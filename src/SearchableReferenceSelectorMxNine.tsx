@@ -1,4 +1,14 @@
-import React, { createElement } from "react";
+import {
+    createElement,
+    ReactElement,
+    useMemo,
+    useState,
+    useEffect,
+    useCallback,
+    ReactNode,
+    useRef,
+    Fragment
+} from "react";
 import { SearchableReferenceSelectorMxNineContainerProps } from "../typings/SearchableReferenceSelectorMxNineProps";
 import { ObjectItem, ValueStatus, ActionValue } from "mendix";
 import { attribute, literal, contains, startsWith, or } from "mendix/filters/builders";
@@ -7,75 +17,27 @@ import { IOption } from "../typings/option";
 import "./ui/SearchableReferenceSelectorMxNine.scss";
 import { Alert } from "./components/Alert";
 
-export default function SearchableReferenceSelector({
-    id,
-    name,
-    tabIndex,
-    isSearchable,
-    isClearable,
-    showSelectAll,
-    maxItems,
-    allowLoadingSelect,
-    clearSearchOnSelect,
-    placeholder,
-    moreResultsText,
-    noResultsText,
-    loadingText,
-    selectStyle,
-    optionsStyleSingle,
-    optionsStyleSet,
-    optionCustomContent,
-    referenceSetStyle,
-    referenceSetValue,
-    referenceSetValueContent,
-    maxReferenceDisplay,
-    maxMenuHeight,
-    clearIcon,
-    clearIconTitle,
-    dropdownIcon,
-    selectAllIcon,
-    selectAllIconTitle,
-    selectionType,
-    selectableObjects,
-    reference,
-    referenceSet,
-    searchAttributes,
-    selectableCondition,
-    enumAttribute,
-    onChange,
-    onLeave,
-    onBadgeClick,
-    onExtraClick,
-    filterDelay,
-    filterType,
-    filterFunction,
-    searchText,
-    hasMoreResultsManual,
-    onClickMoreResultsText,
-    ariaLiveText,
-    displayAttribute,
-    optionExpression,
-    optionTextType,
-    isCompact,
-    badgeColor,
-    onEnter,
-    ariaLabel
-}: SearchableReferenceSelectorMxNineContainerProps): React.ReactElement {
-    const defaultPageSize = React.useMemo(
-        () => (selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined),
-        [maxItems]
+export default function SearchableReferenceSelector(
+    props: SearchableReferenceSelectorMxNineContainerProps
+): ReactElement {
+    const defaultPageSize = useMemo(
+        () => (props.selectionType !== "enumeration" && props.maxItems ? Number(props.maxItems.value) : undefined),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.maxItems]
     );
-    const [mxFilter, setMxFilter] = React.useState<string>("");
-    const [itemsLimit, setItemsLimit] = React.useState<number | undefined>(defaultPageSize);
-    const [options, setOptions] = React.useState<IOption[]>([]);
-    const srsRef = React.useRef<HTMLDivElement>(null);
-    const serverSideSearching: boolean = React.useMemo(() => {
-        if (selectionType === "enumeration") {
+    const [mxFilter, setMxFilter] = useState<string>("");
+    const [itemsLimit, setItemsLimit] = useState<number | undefined>(defaultPageSize);
+    const [options, setOptions] = useState<IOption[]>([]);
+    const srsRef = useRef<HTMLDivElement>(null);
+    const serverSideSearching: boolean = useMemo(() => {
+        if (props.selectionType === "enumeration" || props.forceClientSide) {
             return false;
         }
-        return optionTextType === "text" || optionTextType === "html"
-            ? displayAttribute.type !== "Enum" && displayAttribute.type !== "AutoNumber" && displayAttribute.filterable
-            : searchAttributes.every(
+        return props.optionTextType === "text" || props.optionTextType === "html"
+            ? props.displayAttribute.type !== "Enum" &&
+                  props.displayAttribute.type !== "AutoNumber" &&
+                  props.displayAttribute.filterable
+            : props.searchAttributes.every(
                   value =>
                       value.searchAttribute.type !== "Enum" &&
                       value.searchAttribute.type !== "AutoNumber" &&
@@ -84,46 +46,46 @@ export default function SearchableReferenceSelector({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const isReadOnly = React.useMemo(
+    const isReadOnly = useMemo(
         (): boolean =>
-            (selectionType === "reference" && reference.readOnly) ||
-            (selectionType === "referenceSet" && referenceSet.readOnly) ||
-            (selectionType === "enumeration" && enumAttribute.readOnly),
-        [reference, referenceSet, enumAttribute, selectionType]
+            (props.selectionType === "reference" && props.reference.readOnly) ||
+            (props.selectionType === "referenceSet" && props.referenceSet.readOnly) ||
+            (props.selectionType === "enumeration" && props.enumAttribute.readOnly),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.reference, props.referenceSet, props.enumAttribute]
     );
 
-    const hasMoreItems = React.useMemo(
+    const hasMoreItems = useMemo(
         () =>
-            (hasMoreResultsManual && hasMoreResultsManual.value) ||
-            (((selectableObjects && selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
-        [hasMoreResultsManual, selectableObjects, serverSideSearching]
+            (props.hasMoreResultsManual && props.hasMoreResultsManual.value) ||
+            (((props.selectableObjects && props.selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.hasMoreResultsManual, props.selectableObjects]
     );
 
-    React.useEffect(() => {
-        // Apply Max Items changes to itemsLimit
-        setItemsLimit(selectionType !== "enumeration" && maxItems ? Number(maxItems.value) : undefined);
-    }, [maxItems]);
+    // Apply Max Items changes to itemsLimit
+    useEffect(() => {
+        setItemsLimit(serverSideSearching && props.maxItems ? Number(props.maxItems.value) : undefined);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.maxItems]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // Apply items limit to data source
-        if (serverSideSearching && filterType === "auto") {
-            if (itemsLimit && Number(itemsLimit) > 1) {
-                selectableObjects.setLimit(itemsLimit);
-            } else {
-                selectableObjects.setLimit(Infinity);
-            }
+        if (serverSideSearching && props.filterType === "auto") {
+            props.selectableObjects.setLimit(itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [itemsLimit]);
 
-    const handleSelect = React.useCallback(
+    const handleSelect = useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
             if (!isReadOnly) {
                 const attribute =
-                    selectionType === "enumeration"
-                        ? enumAttribute
-                        : selectionType === "reference"
-                        ? reference
-                        : referenceSet;
+                    props.selectionType === "enumeration"
+                        ? props.enumAttribute
+                        : props.selectionType === "reference"
+                        ? props.reference
+                        : props.referenceSet;
                 if (Array.isArray(selectedOption)) {
                     attribute.setValue(selectedOption.map(option => option.id) as string & ObjectItem & ObjectItem[]);
                 } else if (selectedOption && selectedOption.isSelectable) {
@@ -131,77 +93,79 @@ export default function SearchableReferenceSelector({
                 } else {
                     attribute.setValue(undefined);
                 }
-                callMxAction(onChange, false);
+                callMxAction(props.onChange, false);
             }
         },
-
-        [isReadOnly, enumAttribute, reference, referenceSet, onChange, selectionType]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [isReadOnly, props.enumAttribute, props.reference, props.referenceSet, props.onChange]
     );
 
-    const displayTextContent = React.useCallback((text: string): React.ReactNode => <span>{text}</span>, []);
+    const displayTextContent = useCallback((text: string): ReactNode => <span>{text}</span>, []);
 
-    const displayReferenceContent = React.useCallback(
-        (displayObj: ObjectItem): React.ReactNode =>
-            optionTextType === "text" ? (
-                <span>{displayAttribute.get(displayObj).displayValue}</span>
-            ) : optionTextType === "html" ? (
+    const displayReferenceContent = useCallback(
+        (displayObj: ObjectItem): ReactNode =>
+            props.optionTextType === "text" ? (
+                <span>{props.displayAttribute.get(displayObj).displayValue}</span>
+            ) : props.optionTextType === "html" ? (
                 <span
                     dangerouslySetInnerHTML={{
-                        __html: `${displayAttribute.get(displayObj).displayValue?.toString()}`
+                        __html: `${props.displayAttribute.get(displayObj).displayValue?.toString()}`
                     }}
                 ></span>
-            ) : optionTextType === "textTemplate" ? (
-                <span>{optionExpression.get(displayObj).value}</span>
+            ) : props.optionTextType === "textTemplate" ? (
+                <span>{props.optionExpression.get(displayObj).value}</span>
             ) : (
-                <span>{optionCustomContent.get(displayObj)}</span>
+                <span>{props.optionCustomContent.get(displayObj)}</span>
             ),
-        [optionTextType, optionCustomContent, displayAttribute, optionExpression]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.optionTextType, props.optionCustomContent, props.displayAttribute, props.optionExpression]
     );
 
-    const mapEnum = React.useCallback(
+    const mapEnum = useCallback(
         (enumArray: string[]): IOption[] =>
             enumArray.map(value => ({
-                content: displayTextContent(enumAttribute.formatter.format(value)),
+                content: displayTextContent(props.enumAttribute.formatter.format(value)),
                 isSelectable: true,
-                isSelected: value === (enumAttribute.value as string),
+                isSelected: value === (props.enumAttribute.value as string),
                 selectionType: "ENUMERATION",
                 id: value,
-                ariaLiveText: enumAttribute.formatter.format(value)
+                ariaLiveText: props.enumAttribute.formatter.format(value)
             })),
-        [enumAttribute, displayTextContent]
+        [props.enumAttribute, displayTextContent]
     );
 
-    const mapAriaLiveText = React.useCallback(
+    const mapAriaLiveText = useCallback(
         (objectItem: ObjectItem): string =>
-            ariaLiveText
-                ? (ariaLiveText.get(objectItem).value as string)
-                : displayAttribute
-                ? (displayAttribute.get(objectItem).displayValue as string)
-                : optionExpression
-                ? (optionExpression.get(objectItem).value as string)
+            props.ariaLiveText
+                ? (props.ariaLiveText.get(objectItem).value as string)
+                : props.displayAttribute
+                ? (props.displayAttribute.get(objectItem).displayValue as string)
+                : props.optionExpression
+                ? (props.optionExpression.get(objectItem).value as string)
                 : "",
-        [ariaLiveText, displayAttribute, optionExpression]
+        [props.ariaLiveText, props.displayAttribute, props.optionExpression]
     );
 
-    const mapObjectItems = React.useCallback(
+    const mapObjectItems = useCallback(
         (objectItems: ObjectItem[]): IOption[] =>
             objectItems.map(objItem => ({
                 content: displayReferenceContent(objItem),
-                isSelectable: selectableCondition.get(objItem).value as boolean,
+                isSelectable: props.selectableCondition.get(objItem).value as boolean,
                 isSelected:
-                    selectionType === "referenceSet"
-                        ? referenceSet.value?.find(option => option.id === objItem.id) !== undefined
-                        : reference.value?.id === objItem.id,
+                    props.selectionType === "referenceSet"
+                        ? props.referenceSet.value?.find(option => option.id === objItem.id) !== undefined
+                        : props.reference.value?.id === objItem.id,
 
                 selectionType: "REFERENCE",
                 id: objItem,
                 ariaLiveText: mapAriaLiveText(objItem)
             })),
-        [reference, referenceSet, selectableCondition, displayReferenceContent, mapAriaLiveText, selectionType]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.reference, props.referenceSet, props.selectableCondition, displayReferenceContent, mapAriaLiveText]
     );
 
     const onShowMore = (newLimit: number | undefined, onClickMoreResultsText: ActionValue | undefined): void => {
-        if (filterType === "auto" && newLimit) {
+        if (props.filterType === "auto" && newLimit) {
             setItemsLimit(newLimit);
         } else if (onClickMoreResultsText) {
             callMxAction(onClickMoreResultsText, true);
@@ -214,37 +178,39 @@ export default function SearchableReferenceSelector({
         }
     };
 
-    const currentValue: IOption | IOption[] | undefined = React.useMemo(() => {
-        switch (selectionType) {
+    const currentValue: IOption | IOption[] | undefined = useMemo(() => {
+        switch (props.selectionType) {
             case "enumeration":
-                return enumAttribute.status === ValueStatus.Available && enumAttribute.value !== undefined
+                return props.enumAttribute.status === ValueStatus.Available && props.enumAttribute.value !== undefined
                     ? {
-                          content: displayTextContent(enumAttribute.displayValue),
+                          content: displayTextContent(props.enumAttribute.displayValue),
                           isSelectable: true,
                           isSelected: true,
                           selectionType: "ENUMERATION",
-                          id: enumAttribute.value,
-                          ariaLiveText: enumAttribute.displayValue
+                          id: props.enumAttribute.value,
+                          ariaLiveText: props.enumAttribute.displayValue
                       }
                     : undefined;
             case "reference":
-                return reference.value !== undefined && reference.status === ValueStatus.Available
+                return props.reference.value !== undefined && props.reference.status === ValueStatus.Available
                     ? {
-                          content: displayReferenceContent(reference.value),
-                          isSelectable: selectableCondition.get(reference.value).value as boolean,
+                          content: displayReferenceContent(props.reference.value),
+                          isSelectable: props.selectableCondition.get(props.reference.value).value as boolean,
                           isSelected: true,
                           selectionType: "REFERENCE",
-                          id: reference.value,
-                          ariaLiveText: mapAriaLiveText(reference.value)
+                          id: props.reference.value,
+                          ariaLiveText: mapAriaLiveText(props.reference.value)
                       }
                     : undefined;
             case "referenceSet":
-                return referenceSet.value !== undefined && referenceSet.status === ValueStatus.Available
-                    ? referenceSet.value.map(reference => ({
+                return props.referenceSet.value !== undefined && props.referenceSet.status === ValueStatus.Available
+                    ? props.referenceSet.value.map(reference => ({
                           content: displayReferenceContent(reference),
                           badgeContent:
-                              referenceSetValue === "CUSTOM" ? referenceSetValueContent.get(reference) : undefined,
-                          isSelectable: selectableCondition.get(reference).value as boolean,
+                              props.referenceSetValue === "CUSTOM"
+                                  ? props.referenceSetValueContent.get(reference)
+                                  : undefined,
+                          isSelectable: props.selectableCondition.get(reference).value as boolean,
                           isSelected: true,
                           selectionType: "REFERENCE",
                           id: reference,
@@ -252,104 +218,88 @@ export default function SearchableReferenceSelector({
                       }))
                     : undefined;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        enumAttribute,
-        reference,
-        referenceSet,
-        selectableCondition,
-        referenceSetValueContent,
+        props.enumAttribute,
+        props.reference,
+        props.referenceSet,
+        props.selectableCondition,
+        props.referenceSetValueContent,
         displayReferenceContent,
         displayTextContent,
         mapAriaLiveText,
-        referenceSetValue,
-        selectionType
+        props.referenceSetValue
     ]);
 
     // load Options ~ handle if the selected value changed outside the widget
-    if (selectionType !== "enumeration") {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        React.useEffect(() => {
-            // selectableObjects.items will automatically change when the Mendix data source is re-ran.
-            if (
-                !isReadOnly &&
-                selectableObjects.status === ValueStatus.Available &&
-                (selectionType !== "reference" || reference.status === ValueStatus.Available) &&
-                (selectionType !== "referenceSet" || referenceSet.status === ValueStatus.Available)
+    useEffect(() => {
+        if (!isReadOnly) {
+            if (props.selectionType === "enumeration") {
+                if (props.enumAttribute.status === ValueStatus.Available) {
+                    setOptions(mapEnum(props.enumAttribute.universe || []));
+                }
+            } else if (
+                props.selectableObjects.status === ValueStatus.Available &&
+                (props.selectionType !== "reference" || props.reference.status === ValueStatus.Available) &&
+                (props.selectionType !== "referenceSet" || props.referenceSet.status === ValueStatus.Available)
             ) {
-                setOptions(mapObjectItems(selectableObjects.items || []));
+                setOptions(mapObjectItems(props.selectableObjects.items || []));
             }
-        }, [selectableObjects, reference, referenceSet, isReadOnly, mapObjectItems, selectionType]);
-    } else {
-        React.useEffect(() => {
-            if (!isReadOnly && enumAttribute.status === ValueStatus.Available && enumAttribute.universe) {
-                setOptions(mapEnum(enumAttribute.universe));
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [enumAttribute, isReadOnly]);
-    }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.selectableObjects, props.reference, props.referenceSet, props.enumAttribute, isReadOnly]);
 
-    // Determine the Filtering handling useEffect
-    if (selectionType === "enumeration") {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        React.useEffect(() => {
-            if (!isReadOnly) {
-                const delayDebounceFn = setTimeout(() => {
-                    if (enumAttribute.universe) {
-                        if (mxFilter.trim().length > 0 && isSearchable) {
-                            const searchText = mxFilter.trim().toLowerCase();
-                            setOptions(
-                                mapEnum(
-                                    filterFunction === "contains"
-                                        ? enumAttribute.universe.filter(option =>
-                                              enumAttribute.formatter.format(option).toLowerCase().includes(searchText)
-                                          )
-                                        : enumAttribute.universe.filter(option =>
-                                              enumAttribute.formatter
-                                                  .format(option)
-                                                  .toLowerCase()
-                                                  .startsWith(searchText)
-                                          )
-                                )
-                            );
-                        } else {
-                            setOptions(mapEnum(enumAttribute.universe));
+    // Apply the Filtering useEffect
+    useEffect(() => {
+        if (!isReadOnly) {
+            if (props.filterType === "auto") {
+                if (props.selectionType === "enumeration") {
+                    const enumFilterDebounce = setTimeout(() => {
+                        if (props.enumAttribute.universe) {
+                            if (mxFilter.trim().length > 0 && props.isSearchable) {
+                                const searchText = mxFilter.trim().toLowerCase();
+                                setOptions(
+                                    mapEnum(
+                                        props.filterFunction === "contains"
+                                            ? props.enumAttribute.universe.filter(option =>
+                                                  props.enumAttribute.formatter
+                                                      .format(option)
+                                                      .toLowerCase()
+                                                      .includes(searchText)
+                                              )
+                                            : props.enumAttribute.universe.filter(option =>
+                                                  props.enumAttribute.formatter
+                                                      .format(option)
+                                                      .toLowerCase()
+                                                      .startsWith(searchText)
+                                              )
+                                    )
+                                );
+                            } else {
+                                setOptions(mapEnum(props.enumAttribute.universe));
+                            }
                         }
-                    }
-                }, filterDelay);
+                    }, props.filterDelay);
 
-                return () => clearTimeout(delayDebounceFn);
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [mxFilter, isReadOnly]);
-    } else if (filterType === "auto") {
-        if (optionTextType === "text" || optionTextType === "html") {
-            // text/HTML option text types ~ use displayAttribute
-            if (serverSideSearching) {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                React.useEffect(() => {
-                    if (!isReadOnly) {
-                        const debounce = setTimeout(() => {
-                            selectableObjects.setFilter(
-                                filterFunction === "contains"
-                                    ? contains(attribute(displayAttribute.id), literal(mxFilter.trim()))
-                                    : startsWith(attribute(displayAttribute.id), literal(mxFilter.trim()))
+                    return () => clearTimeout(enumFilterDebounce);
+                } else if (props.optionTextType === "text" || props.optionTextType === "html") {
+                    if (serverSideSearching) {
+                        const singleServerSideDebounce = setTimeout(() => {
+                            props.selectableObjects.setFilter(
+                                props.filterFunction === "contains"
+                                    ? contains(attribute(props.displayAttribute.id), literal(mxFilter.trim()))
+                                    : startsWith(attribute(props.displayAttribute.id), literal(mxFilter.trim()))
                             );
-                        }, filterDelay);
-                        return () => clearTimeout(debounce);
-                    }
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, isReadOnly]);
-            } else {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                React.useEffect(() => {
-                    if (!isReadOnly) {
-                        const debounce = setTimeout(() => {
-                            if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                        }, props.filterDelay);
+                        return () => clearTimeout(singleServerSideDebounce);
+                    } else {
+                        const singleClientSideDebounce = setTimeout(() => {
+                            if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
-                                        selectableObjects.items.filter(item => {
-                                            const text = displayAttribute.get(item).displayValue as string;
-                                            return filterFunction === "contains"
+                                        props.selectableObjects.items.filter(item => {
+                                            const text = props.displayAttribute.get(item).displayValue as string;
+                                            return props.filterFunction === "contains"
                                                 ? text.toLocaleLowerCase().includes(mxFilter.trim().toLocaleLowerCase())
                                                 : text
                                                       .toLocaleLowerCase()
@@ -358,49 +308,36 @@ export default function SearchableReferenceSelector({
                                     )
                                 );
                             } else {
-                                setOptions(mapObjectItems(selectableObjects.items || []));
+                                setOptions(mapObjectItems(props.selectableObjects.items || []));
                             }
-                        }, filterDelay);
-                        return () => clearTimeout(debounce);
+                        }, props.filterDelay);
+                        return () => clearTimeout(singleClientSideDebounce);
                     }
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, selectableObjects, isReadOnly]);
-            }
-        } else {
-            // custom option text types ~ multiple search attributes
-            if (serverSideSearching) {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                React.useEffect(() => {
-                    if (!isReadOnly) {
-                        const debounce = setTimeout(() => {
-                            const filter = searchAttributes.map(item =>
-                                filterFunction === "contains"
+                } else {
+                    if (serverSideSearching) {
+                        const multiServerSideDebounce = setTimeout(() => {
+                            const filter = props.searchAttributes.map(item =>
+                                props.filterFunction === "contains"
                                     ? contains(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
                                     : startsWith(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
                             );
                             if (filter !== undefined) {
-                                selectableObjects.setFilter(filter.length > 1 ? or(...filter) : filter[0]);
+                                props.selectableObjects.setFilter(filter.length > 1 ? or(...filter) : filter[0]);
                             }
-                        }, filterDelay);
-                        return () => clearTimeout(debounce);
-                    }
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, isReadOnly]);
-            } else {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                React.useEffect(() => {
-                    if (!isReadOnly) {
-                        const debounce = setTimeout(() => {
-                            if (mxFilter.trim().length > 0 && selectableObjects.items) {
+                        }, props.filterDelay);
+                        return () => clearTimeout(multiServerSideDebounce);
+                    } else {
+                        const multiClientSideDebounce = setTimeout(() => {
+                            if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
-                                        selectableObjects.items.filter(item => {
+                                        props.selectableObjects.items.filter(item => {
                                             let match = false;
-                                            for (const searchItem of searchAttributes) {
+                                            for (const searchItem of props.searchAttributes) {
                                                 const text = searchItem.searchAttribute.get(item)
                                                     .displayValue as string;
                                                 match =
-                                                    filterFunction === "contains"
+                                                    props.filterFunction === "contains"
                                                         ? text
                                                               .toLocaleLowerCase()
                                                               .includes(mxFilter.trim().toLocaleLowerCase())
@@ -416,98 +353,87 @@ export default function SearchableReferenceSelector({
                                     )
                                 );
                             } else {
-                                setOptions(mapObjectItems(selectableObjects.items || []));
+                                setOptions(mapObjectItems(props.selectableObjects.items || []));
                             }
-                        }, filterDelay);
-                        return () => clearTimeout(debounce);
+                        }, props.filterDelay);
+                        return () => clearTimeout(multiClientSideDebounce);
                     }
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [mxFilter, selectableObjects, isReadOnly]);
+                }
+            } else {
+                // Manual mode -> update searchText attribute
+                if (props.searchText.status === ValueStatus.Available && !isReadOnly) {
+                    const manualFilterDebounce = setTimeout(() => {
+                        if (props.isSearchable) {
+                            props.searchText.setValue(mxFilter);
+                            props.selectableObjects.reload();
+                        }
+                    }, props.filterDelay);
+
+                    return () => clearTimeout(manualFilterDebounce);
+                }
             }
         }
-    } else {
-        // filter type manual, dev is expected to make filter logic inside their data source Microflow
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mxFilter, isReadOnly]);
+
+    // filter type manual, dev is expected to make filter logic inside their data source Microflow using the search text
+    if (props.filterType === "manual") {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        React.useEffect(() => {
-            if (searchText.status === ValueStatus.Available && searchText.displayValue !== mxFilter) {
-                setMxFilter(searchText.displayValue);
+        useEffect(() => {
+            if (props.searchText.status === ValueStatus.Available && props.searchText.displayValue !== mxFilter) {
+                setMxFilter(props.searchText.displayValue);
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [searchText]);
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        React.useEffect(() => {
-            if (searchText.status === ValueStatus.Available && !isReadOnly) {
-                const delayDebounceFn = setTimeout(() => {
-                    if (isSearchable) {
-                        searchText.setValue(mxFilter);
-                        selectableObjects.reload();
-                    }
-                }, filterDelay);
-
-                return () => clearTimeout(delayDebounceFn);
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [mxFilter, isReadOnly]);
+        }, [props.searchText]);
     }
 
     return (
-        <React.Fragment>
-            <div id={id} className="srs" ref={srsRef}>
+        <Fragment>
+            <div id={props.id} className="srs" ref={srsRef}>
                 <Selector
-                    id={id}
-                    name={name}
-                    ariaLabel={ariaLabel?.value}
-                    isLoading={selectableObjects && selectableObjects.status === ValueStatus.Loading}
-                    loadingText={loadingText.value as string}
-                    clearIcon={clearIcon?.value}
-                    clearIconTitle={clearIconTitle.value as string}
-                    dropdownIcon={dropdownIcon?.value}
-                    isClearable={isClearable}
-                    selectionType={selectionType}
-                    selectStyle={selectStyle}
-                    tabIndex={tabIndex}
-                    selectAllIcon={selectAllIcon?.value}
+                    {...props}
+                    ariaLabel={props.ariaLabel?.value}
+                    isLoading={props.selectableObjects && props.selectableObjects.status === ValueStatus.Loading}
+                    loadingText={props.loadingText.value as string}
+                    clearIcon={props.clearIcon?.value}
+                    clearIconTitle={props.clearIconTitle.value as string}
+                    dropdownIcon={props.dropdownIcon?.value}
+                    selectAllIcon={props.selectAllIcon?.value}
                     onBadgeClick={
-                        onBadgeClick
-                            ? selectedOption => callMxAction(onBadgeClick.get(selectedOption.id as ObjectItem), false)
+                        props.onBadgeClick
+                            ? selectedOption =>
+                                  callMxAction(props.onBadgeClick?.get(selectedOption.id as ObjectItem), false)
                             : undefined
                     }
-                    onExtraClick={onExtraClick ? () => callMxAction(onExtraClick, true) : undefined}
-                    placeholder={placeholder.value as string}
-                    isSearchable={isSearchable}
-                    maxMenuHeight={maxMenuHeight?.value}
-                    noResultsText={noResultsText.value as string}
-                    referenceSetStyle={referenceSetStyle}
-                    maxReferenceDisplay={maxReferenceDisplay}
-                    showSelectAll={showSelectAll}
-                    selectAllIconTitle={selectAllIconTitle.value as string}
+                    onExtraClick={props.onExtraClick ? () => callMxAction(props.onExtraClick, true) : undefined}
+                    placeholder={props.placeholder.value as string}
+                    maxMenuHeight={props.maxMenuHeight?.value}
+                    noResultsText={props.noResultsText.value as string}
+                    selectAllIconTitle={props.selectAllIconTitle.value as string}
                     hasMoreOptions={hasMoreItems}
-                    moreResultsText={hasMoreItems ? moreResultsText.value : undefined}
+                    moreResultsText={hasMoreItems ? props.moreResultsText.value : undefined}
                     onSelectMoreOptions={
                         itemsLimit && hasMoreItems
-                            ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), onClickMoreResultsText)
+                            ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), props.onClickMoreResultsText)
                             : undefined
                     }
                     currentValue={currentValue}
                     isReadOnly={isReadOnly}
                     options={options}
-                    optionsStyle={selectionType === "referenceSet" ? optionsStyleSet : optionsStyleSingle}
+                    optionsStyle={
+                        props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle
+                    }
                     mxFilter={mxFilter}
                     setMxFilter={setMxFilter}
                     onSelect={handleSelect}
-                    onLeave={() => callMxAction(onLeave, false)}
+                    onLeave={() => callMxAction(props.onLeave, false)}
                     srsRef={srsRef}
-                    allowLoadingSelect={allowLoadingSelect}
-                    clearSearchOnSelect={clearSearchOnSelect}
-                    isCompact={isCompact}
-                    badgeColor={badgeColor}
-                    onEnter={() => callMxAction(onEnter, true)}
+                    onEnter={() => callMxAction(props.onEnter, true)}
                 />
             </div>
-            {enumAttribute && enumAttribute.validation && <Alert>{enumAttribute.validation}</Alert>}
-            {reference && reference.validation && <Alert>{reference.validation}</Alert>}
-            {referenceSet && referenceSet.validation && <Alert>{referenceSet.validation}</Alert>}
-        </React.Fragment>
+            {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}
+            {props.reference && props.reference.validation && <Alert>{props.reference.validation}</Alert>}
+            {props.referenceSet && props.referenceSet.validation && <Alert>{props.referenceSet.validation}</Alert>}
+        </Fragment>
     );
 }

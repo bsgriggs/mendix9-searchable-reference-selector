@@ -165,7 +165,8 @@ export function getProperties(
                 "optionTextType",
                 "displayAttribute",
                 "optionExpression",
-                "isCompact"
+                "isCompact",
+                "forceClientSide"
             ]);
             break;
         case "reference":
@@ -199,7 +200,12 @@ export function getProperties(
             ]);
             break;
         case "manual":
-            hidePropertiesIn(defaultProperties, _values, ["filterFunction", "maxItems", "searchAttributes"]);
+            hidePropertiesIn(defaultProperties, _values, [
+                "filterFunction",
+                "maxItems",
+                "searchAttributes",
+                "forceClientSide"
+            ]);
             break;
     }
 
@@ -233,10 +239,6 @@ export function getProperties(
     if (parseInt(_values.maxItems) === 0) {
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
     }
-
-    // if (_values.referenceSetStyle === "commas") {
-    //     hidePropertiesIn(defaultProperties, _values, ["onBadgeClick"]);
-    // }
 
     if (!(_values.selectionType === "referenceSet" && _values.referenceSetStyle === "badges")) {
         hidePropertyIn(defaultProperties, _values, "badgeColor");
@@ -280,6 +282,10 @@ export function getProperties(
         hidePropertyIn(defaultProperties, _values, "onExtraClick");
     }
 
+    if (_values.forceClientSide) {
+        hidePropertiesIn(defaultProperties, _values, ["searchAttributes", "maxItems", "moreResultsText"]);
+    }
+
     return defaultProperties;
 }
 
@@ -291,6 +297,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         _values.selectionType !== "enumeration" &&
         _values.filterType === "auto" &&
         _values.searchAttributes.length === 0 &&
+        !_values.forceClientSide &&
         (_values.optionTextType === "custom" || _values.optionTextType === "textTemplate")
     ) {
         errors.push({

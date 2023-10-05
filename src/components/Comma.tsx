@@ -8,29 +8,27 @@ interface CommaProps {
     tabIndex?: number;
 }
 
-const Comma = ({ showComma, option, onBadgeClick, tabIndex }: CommaProps): ReactElement => (
+const Comma = (props: CommaProps): ReactElement => (
     <div
         className="srs-comma"
-        tabIndex={onBadgeClick ? tabIndex || 0 : undefined}
-        onClick={
-            onBadgeClick
-                ? event => {
-                      event.stopPropagation();
-                      onBadgeClick(option);
-                  }
-                : undefined
-        }
-        onKeyDown={event => {
-            if (event.key === "Enter" && onBadgeClick) {
+        tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
+        onClick={event => {
+            if (props.onBadgeClick) {
                 event.stopPropagation();
-                onBadgeClick(option);
+                props.onBadgeClick(props.option);
             }
         }}
-        aria-label={option.ariaLiveText}
-        role={onBadgeClick ? "button" : undefined}
+        onKeyDown={event => {
+            if (event.key === "Enter" && props.onBadgeClick) {
+                event.stopPropagation();
+                props.onBadgeClick(props.option);
+            }
+        }}
+        aria-label={props.option.ariaLiveText}
+        role={props.onBadgeClick ? "button" : undefined}
     >
-        {option.badgeContent ? option.badgeContent : option.content}
-        {showComma && <span>,</span>}
+        {props.option.badgeContent ? props.option.badgeContent : props.option.content}
+        {props.showComma && <span>,</span>}
     </div>
 );
 

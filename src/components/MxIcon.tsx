@@ -1,4 +1,4 @@
-import { createElement, ReactElement, MouseEvent, KeyboardEvent } from "react";
+import { createElement, ReactElement, MouseEvent, KeyboardEvent, useCallback } from "react";
 import { WebIcon } from "mendix";
 import { Icon } from "mendix/components/web/Icon";
 import classNames from "classnames";
@@ -11,32 +11,40 @@ interface IconProps {
     title?: string;
 }
 
-const MxIcon = ({ defaultClassName, mxIconOverride, title, onClick, tabIndex }: IconProps): ReactElement => {
-    const onClickHandler = (event: MouseEvent<any>): void => {
-        if (onClick) {
-            event.stopPropagation();
-            onClick(false);
-        }
-    };
+const MxIcon = (props: IconProps): ReactElement => {
+    const onClickHandler = useCallback(
+        (event: MouseEvent<any>): void => {
+            if (props.onClick) {
+                event.stopPropagation();
+                props.onClick(false);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.onClick]
+    );
 
-    const onEnterHandler = (event: KeyboardEvent<any>): void => {
-        if ((event.key === "Enter" || event.key === " ") && onClick) {
-            event.stopPropagation();
-            event.preventDefault();
-            onClick(true);
-        }
-    };
+    const onEnterHandler = useCallback(
+        (event: KeyboardEvent<any>): void => {
+            if ((event.key === "Enter" || event.key === " ") && props.onClick) {
+                event.stopPropagation();
+                event.preventDefault();
+                props.onClick(true);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.onClick]
+    );
 
     return (
         <div
             onClick={onClickHandler}
             onKeyDown={onEnterHandler}
-            title={title}
-            tabIndex={tabIndex}
-            className={classNames(defaultClassName, { "srs-icon-focusable": tabIndex !== undefined })}
-            role={onClick ? "button" : undefined}
+            title={props.title}
+            tabIndex={props.tabIndex}
+            className={classNames(props.defaultClassName, { "srs-icon-focusable": props.tabIndex !== undefined })}
+            role={props.onClick ? "button" : undefined}
         >
-            <Icon icon={mxIconOverride || { type: "glyph", iconClass: `glyphicon-${defaultClassName}` }} />
+            <Icon icon={props.mxIconOverride || { type: "glyph", iconClass: `glyphicon-${props.defaultClassName}` }} />
         </div>
     );
 };

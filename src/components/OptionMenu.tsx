@@ -38,45 +38,33 @@ interface OptionMenuProps {
     loadingText: string;
 }
 
-const OptionsMenu = ({
-    id,
-    ariaLabel,
-    options,
-    onSelect,
-    optionsStyle,
-    selectStyle,
-    currentFocus,
-    maxMenuHeight,
-    moreResultsText,
-    noResultsText,
-    position,
-    onSelectMoreOptions,
-    hasMoreOptions,
-    isLoading,
-    loadingText,
-    allowLoadingSelect
-}: OptionMenuProps): ReactElement => {
+const OptionsMenu = (props: OptionMenuProps): ReactElement => {
     const selectedObjRef = useRef<HTMLLIElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
-        currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
+        props.currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
     );
 
-    const OptionMenuStyle = useMemo((): CSSProperties => {
-        if (selectStyle === "dropdown" && position !== undefined) {
-            const contentCloseToBottom = position.y > window.innerHeight * 0.7;
-            return {
-                maxHeight: maxMenuHeight ? maxMenuHeight : undefined,
-                top: contentCloseToBottom ? "unset" : position.height + position.y,
-                bottom: contentCloseToBottom ? window.innerHeight - position.y : "unset",
-                width: position.width,
-                left: position.x
-            };
-        } else {
-            return {
-                maxHeight: maxMenuHeight ? maxMenuHeight : undefined
-            };
-        }
-    }, [position, maxMenuHeight, selectStyle]);
+    const contentCloseToBottom = useMemo(
+        () => (props.position ? props.position.y > window.innerHeight * 0.7 : 0),
+        [props.position]
+    );
+
+    const OptionMenuStyle = useMemo(
+        (): CSSProperties =>
+            props.selectStyle === "dropdown" && props.position !== undefined
+                ? {
+                      maxHeight: props.maxMenuHeight ? props.maxMenuHeight : undefined,
+                      top: contentCloseToBottom ? "unset" : props.position.height + props.position.y,
+                      bottom: contentCloseToBottom ? window.innerHeight - props.position.y : "unset",
+                      width: props.position.width,
+                      left: props.position.x
+                  }
+                : {
+                      maxHeight: props.maxMenuHeight ? props.maxMenuHeight : undefined
+                  },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.position, props.maxMenuHeight]
+    );
 
     // keep the selected item in view when using arrow keys
     useEffect(() => {
@@ -84,76 +72,87 @@ const OptionsMenu = ({
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [currentFocus]);
+    }, [props.currentFocus]);
 
     return (
         <ul
             className={classNames(
                 "srs-menu",
-                { "srs-dropdown": selectStyle === "dropdown" },
-                { "srs-list": selectStyle === "list" },
-                { wait: isLoading && !allowLoadingSelect }
+                { "srs-dropdown": props.selectStyle === "dropdown" },
+                { "srs-list": props.selectStyle === "list" },
+                { wait: props.isLoading && !props.allowLoadingSelect }
             )}
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
             role="listbox"
-            aria-labelledby={ariaLabel === undefined || ariaLabel.trim() === "" ? id + "-label" : undefined} // for screen readers
-            aria-label={ariaLabel} // for screen readers
+            aria-labelledby={
+                props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
+            } // for screen readers
+            aria-label={props.ariaLabel} // for screen readers
         >
-            {options.length > 0 ? (
+            {props.options.length > 0 ? (
                 <Fragment>
-                    {isLoading && (
+                    {props.isLoading && (
                         <li className="mx-text srs-infooption disabled" role="option">
-                            {loadingText}
+                            {props.loadingText}
                         </li>
                     )}
-                    {options.map((option, key) => (
+                    {props.options.map((option, key) => (
                         <li
                             key={key}
-                            ref={key === currentFocus ? selectedObjRef : undefined}
+                            ref={key === props.currentFocus ? selectedObjRef : undefined}
                             role="option"
                             aria-selected={option.isSelected ? "true" : "false"}
                             aria-disabled={!option.isSelectable}
                         >
                             <Option
-                                isFocused={key === currentFocus}
+                                isFocused={key === props.currentFocus}
                                 onSelect={selectedOption => {
-                                    if (allowLoadingSelect || !isLoading) {
-                                        onSelect(selectedOption);
+                                    if (props.allowLoadingSelect || !props.isLoading) {
+                                        props.onSelect(selectedOption);
                                     }
                                 }}
                                 focusMode={focusMode}
-                                optionsStyle={optionsStyle}
+                                optionsStyle={props.optionsStyle}
                                 option={option}
                             />
                         </li>
                     ))}
-                    {hasMoreOptions && (
+                    {props.hasMoreOptions && (
                         <li
-                            key={options.length}
-                            ref={currentFocus === options.length ? selectedObjRef : undefined}
+                            key={props.options.length}
+                            ref={props.currentFocus === props.options.length ? selectedObjRef : undefined}
                             role="option"
                         >
                             <div
                                 className={
-                                    currentFocus === options.length ? "srs-option focused" : "mx-text srs-infooption"
+                                    props.currentFocus === props.options.length
+                                        ? "srs-option focused"
+                                        : "mx-text srs-infooption"
                                 }
-                                style={{ cursor: onSelectMoreOptions ? "pointer" : "default" }}
+                                style={{ cursor: props.onSelectMoreOptions ? "pointer" : "default" }}
                                 onClick={(event: MouseEvent<HTMLDivElement>) => {
-                                    if ((allowLoadingSelect || !isLoading) && onSelectMoreOptions !== undefined) {
+                                    if (
+                                        (props.allowLoadingSelect || !props.isLoading) &&
+                                        props.onSelectMoreOptions !== undefined
+                                    ) {
                                         event.stopPropagation();
-                                        onSelectMoreOptions();
+                                        props.onSelectMoreOptions();
                                     }
                                 }}
                             >
-                                {isLoading ? loadingText : moreResultsText}
+                                {props.isLoading ? props.loadingText : props.moreResultsText}
                             </div>
                         </li>
                     )}
                 </Fragment>
             ) : (
                 <li className="mx-text srs-infooption disabled" role="option">
-                    {isLoading ? loadingText : noResultsText ? noResultsText : "No results found"}
+                    {props.isLoading
+                        ? props.loadingText
+                        : props.noResultsText
+                        ? props.noResultsText
+                        : "No results found"}
                 </li>
             )}
         </ul>

@@ -1,4 +1,4 @@
-import { createElement, Fragment, ReactElement, useMemo } from "react";
+import { createElement, Fragment, ReactElement } from "react";
 import { BadgeColorEnum, ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import { WebIcon } from "mendix";
 import Badge from "./Badge";
@@ -20,137 +20,102 @@ type CurrentValueDisplayProps = {
     badgeColor: BadgeColorEnum;
 };
 
-export default function CurrentValueDisplay({
-    referenceSetStyle,
-    maxReferenceDisplay,
-    currentValue,
-    onRemove,
-    clearIcon,
-    clearIconTitle,
-    onBadgeClick,
-    onExtraClick,
-    isClearable,
-    isReadOnly,
-    tabIndex,
-    badgeColor
-}: CurrentValueDisplayProps): ReactElement {
-    const currentValueDisplay = useMemo(() => {
-        if (currentValue) {
-            if (Array.isArray(currentValue)) {
-                if (currentValue.length > 0) {
-                    const refSetCurrentValue = (
-                        <Fragment>
-                            {referenceSetStyle === "badges" && currentValue.length > 0 && (
-                                <Fragment>
-                                    {maxReferenceDisplay > 0 &&
-                                        currentValue
-                                            .slice(0, maxReferenceDisplay)
-                                            .map((option, key) => (
-                                                <Badge
-                                                    key={key}
-                                                    isClearable={isClearable}
-                                                    isReadOnly={isReadOnly}
-                                                    onRemoveAssociation={byKeyboard => onRemove(option, byKeyboard)}
-                                                    clearIcon={clearIcon}
-                                                    clearIconTitle={clearIconTitle}
-                                                    onBadgeClick={onBadgeClick}
-                                                    option={option}
-                                                    tabIndex={tabIndex}
-                                                    badgeColor={badgeColor}
-                                                />
-                                            ))}
-                                    {maxReferenceDisplay <= 0 &&
-                                        currentValue.map((option, key) => (
-                                            <Badge
-                                                key={key}
-                                                isClearable={isClearable}
-                                                isReadOnly={isReadOnly}
-                                                onRemoveAssociation={byKeyboard => onRemove(option, byKeyboard)}
-                                                clearIcon={clearIcon}
-                                                clearIconTitle={clearIconTitle}
-                                                onBadgeClick={onBadgeClick}
-                                                option={option}
-                                                tabIndex={tabIndex}
-                                                badgeColor={badgeColor}
-                                            />
-                                        ))}
-                                </Fragment>
-                            )}
-                            {referenceSetStyle === "commas" && currentValue.length > 0 && (
-                                <Fragment>
-                                    {maxReferenceDisplay > 0 &&
-                                        currentValue
-                                            .slice(0, maxReferenceDisplay)
-                                            .map((option, index) => (
-                                                <Comma
-                                                    key={index}
-                                                    option={option}
-                                                    showComma={
-                                                        index < currentValue.length - 1 &&
-                                                        index !== maxReferenceDisplay - 1
-                                                    }
-                                                    onBadgeClick={onBadgeClick}
-                                                    tabIndex={tabIndex}
-                                                />
-                                            ))}
-                                    {maxReferenceDisplay <= 0 &&
-                                        currentValue.map((option, index) => (
-                                            <Comma
-                                                key={index}
-                                                option={option}
-                                                showComma={
-                                                    index < currentValue.length - 1 && index !== maxReferenceDisplay - 1
-                                                }
-                                                onBadgeClick={onBadgeClick}
-                                                tabIndex={tabIndex}
-                                            />
-                                        ))}
-                                </Fragment>
-                            )}
-                            {currentValue.length > maxReferenceDisplay && maxReferenceDisplay > 0 && (
-                                <span
-                                    className="srs-comma"
-                                    tabIndex={onExtraClick ? tabIndex || 0 : undefined}
-                                    onClick={
-                                        onExtraClick
-                                            ? event => {
-                                                  event.stopPropagation();
-                                                  onExtraClick();
-                                              }
-                                            : undefined
+const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
+    if (props.currentValue) {
+        if (Array.isArray(props.currentValue)) {
+            const length = props.currentValue.length;
+            if (length > 0) {
+                return (
+                    <Fragment>
+                        {props.referenceSetStyle === "badges" && length > 0 && (
+                            <Fragment>
+                                {props.maxReferenceDisplay > 0
+                                    ? props.currentValue
+                                          .slice(0, props.maxReferenceDisplay)
+                                          .map((option, key) => (
+                                              <Badge
+                                                  key={key}
+                                                  isClearable={props.isClearable}
+                                                  isReadOnly={props.isReadOnly}
+                                                  onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
+                                                  clearIcon={props.clearIcon}
+                                                  clearIconTitle={props.clearIconTitle}
+                                                  onBadgeClick={props.onBadgeClick}
+                                                  option={option}
+                                                  tabIndex={props.tabIndex}
+                                                  badgeColor={props.badgeColor}
+                                              />
+                                          ))
+                                    : props.currentValue.map((option, key) => (
+                                          <Badge
+                                              key={key}
+                                              isClearable={props.isClearable}
+                                              isReadOnly={props.isReadOnly}
+                                              onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
+                                              clearIcon={props.clearIcon}
+                                              clearIconTitle={props.clearIconTitle}
+                                              onBadgeClick={props.onBadgeClick}
+                                              option={option}
+                                              tabIndex={props.tabIndex}
+                                              badgeColor={props.badgeColor}
+                                          />
+                                      ))}
+                            </Fragment>
+                        )}
+                        {props.referenceSetStyle === "commas" && length > 0 && (
+                            <Fragment>
+                                {props.maxReferenceDisplay > 0
+                                    ? props.currentValue
+                                          .slice(0, props.maxReferenceDisplay)
+                                          .map((option, index) => (
+                                              <Comma
+                                                  key={index}
+                                                  option={option}
+                                                  showComma={
+                                                      index < length - 1 && index !== props.maxReferenceDisplay - 1
+                                                  }
+                                                  onBadgeClick={props.onBadgeClick}
+                                                  tabIndex={props.tabIndex}
+                                              />
+                                          ))
+                                    : props.currentValue.map((option, index) => (
+                                          <Comma
+                                              key={index}
+                                              option={option}
+                                              showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
+                                              onBadgeClick={props.onBadgeClick}
+                                              tabIndex={props.tabIndex}
+                                          />
+                                      ))}
+                            </Fragment>
+                        )}
+                        {length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (
+                            <span
+                                className="srs-comma"
+                                tabIndex={props.onExtraClick ? props.tabIndex || 0 : undefined}
+                                onClick={event => {
+                                    if (props.onExtraClick) {
+                                        event.stopPropagation();
+                                        props.onExtraClick();
                                     }
-                                    onKeyDown={event => {
-                                        if (event.key === "Enter" && onExtraClick) {
-                                            event.stopPropagation();
-                                            onExtraClick();
-                                        }
-                                    }}
-                                    role={onExtraClick ? "button" : undefined}
-                                >{`(+ ${currentValue.length - maxReferenceDisplay})`}</span>
-                            )}
-                        </Fragment>
-                    );
-                    return refSetCurrentValue;
-                }
-            } else {
-                return <div className="srs-current-value">{currentValue.content}</div>;
+                                }}
+                                onKeyDown={event => {
+                                    if (event.key === "Enter" && props.onExtraClick) {
+                                        event.stopPropagation();
+                                        props.onExtraClick();
+                                    }
+                                }}
+                                role={props.onExtraClick ? "button" : undefined}
+                            >{`(+ ${length - props.maxReferenceDisplay})`}</span>
+                        )}
+                    </Fragment>
+                );
             }
+        } else {
+            return <div className="srs-current-value">{props.currentValue.content}</div>;
         }
-        return <Fragment />;
-    }, [
-        currentValue,
-        clearIconTitle,
-        isReadOnly,
-        badgeColor,
-        clearIcon,
-        isClearable,
-        maxReferenceDisplay,
-        onBadgeClick,
-        onRemove,
-        referenceSetStyle,
-        tabIndex,
-        onExtraClick
-    ]);
+    }
+    return <Fragment />;
+};
 
-    return currentValueDisplay;
-}
+export default CurrentValueDisplay;

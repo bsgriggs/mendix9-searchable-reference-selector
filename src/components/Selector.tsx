@@ -72,61 +72,22 @@ interface SelectorProps {
     clearSearchOnSelect: boolean;
 }
 
-const Selector = ({
-    clearIcon,
-    clearIconTitle,
-    currentValue,
-    dropdownIcon,
-    hasMoreOptions,
-    isClearable,
-    isReadOnly,
-    isSearchable,
-    maxMenuHeight,
-    maxReferenceDisplay,
-    moreResultsText,
-    id,
-    name,
-    noResultsText,
-    onBadgeClick,
-    onExtraClick,
-    onSelect,
-    onSelectMoreOptions,
-    options,
-    optionsStyle,
-    placeholder,
-    referenceSetStyle,
-    isCompact,
-    selectAllIcon,
-    selectAllIconTitle,
-    mxFilter,
-    setMxFilter,
-    showSelectAll,
-    tabIndex,
-    selectStyle,
-    selectionType,
-    srsRef,
-    onLeave,
-    isLoading,
-    loadingText,
-    allowLoadingSelect,
-    clearSearchOnSelect,
-    badgeColor,
-    onEnter,
-    ariaLabel
-}: SelectorProps): ReactElement => {
+const Selector = (props: SelectorProps): ReactElement => {
     const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const position = srsRef && usePositionObserver(srsRef.current, selectStyle === "dropdown" && showMenu);
+    const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && showMenu);
 
     const hasCurrentValue = useMemo(
         (): boolean =>
-            selectionType !== "referenceSet"
-                ? currentValue !== undefined
-                : currentValue !== undefined && Array.isArray(currentValue) && currentValue.length > 0,
-        [currentValue, selectionType]
+            props.selectionType !== "referenceSet"
+                ? props.currentValue !== undefined
+                : props.currentValue !== undefined &&
+                  Array.isArray(props.currentValue) &&
+                  props.currentValue.length > 0,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.currentValue]
     );
 
     const focusSearchInput = useCallback((): void => {
@@ -138,33 +99,34 @@ const Selector = ({
     const onLeaveHandler = useCallback((): void => {
         if (showMenu) {
             setShowMenu(false);
-            if (mxFilter !== "") {
-                setMxFilter("");
+            if (props.mxFilter !== "") {
+                props.setMxFilter("");
             }
             if (focusedObjIndex !== -1) {
                 setFocusedObjIndex(-1);
             }
-            onLeave();
+            props.onLeave();
         }
-    }, [showMenu, mxFilter, focusedObjIndex, onLeave, setMxFilter]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showMenu, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
 
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
             if (selectedOption) {
-                if (Array.isArray(currentValue)) {
+                if (Array.isArray(props.currentValue)) {
                     // reference set
                     if (hasCurrentValue) {
                         const selectedObjectItem = selectedOption.id as ObjectItem;
                         if (
-                            currentValue.find(option => {
+                            props.currentValue.find(option => {
                                 const iteratorObjectItem = option.id as ObjectItem;
                                 return iteratorObjectItem.id === selectedObjectItem.id;
                             }) !== undefined
                         ) {
-                            if (isClearable || currentValue.length > 1) {
+                            if (props.isClearable || props.currentValue.length > 1) {
                                 // option already selected, deselect
-                                onSelect(
-                                    currentValue.filter(option => {
+                                props.onSelect(
+                                    props.currentValue.filter(option => {
                                         const iteratorObjectItem = option.id as ObjectItem;
                                         return iteratorObjectItem.id !== selectedObjectItem.id;
                                     })
@@ -172,39 +134,38 @@ const Selector = ({
                             }
                         } else {
                             // list already exists, add to list
-                            onSelect([...currentValue, selectedOption]);
+                            props.onSelect([...props.currentValue, selectedOption]);
                         }
                     } else {
                         // list is empty, start list
-                        onSelect([selectedOption]);
+                        props.onSelect([selectedOption]);
                     }
                     // for reference sets, do not close the menu on select
-                    if (clearSearchOnSelect) {
-                        setMxFilter("");
+                    if (props.clearSearchOnSelect) {
+                        props.setMxFilter("");
                     }
                     return;
                 } else {
                     // reference or enum
-                    onSelect(selectedOption);
+                    props.onSelect(selectedOption);
                 }
             } else {
                 // clear the selection
-                onSelect(undefined);
+                props.onSelect(undefined);
             }
-            if (selectionType !== "referenceSet") {
+            if (props.selectionType !== "referenceSet") {
                 setShowMenu(false);
             }
             onLeaveHandler();
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [
-            onSelect,
-            currentValue,
+            props.onSelect,
+            props.currentValue,
             hasCurrentValue,
-            clearSearchOnSelect,
-            isClearable,
+            props.clearSearchOnSelect,
             onLeaveHandler,
-            selectionType,
-            setMxFilter
+            props.setMxFilter
         ]
     );
 
@@ -212,14 +173,15 @@ const Selector = ({
         if (focusedObjIndex !== -1) {
             setFocusedObjIndex(-1);
         }
-        if (mxFilter.trim() !== "") {
-            setMxFilter("");
+        if (props.mxFilter !== "") {
+            props.setMxFilter("");
         } else {
             onSelectHandler(undefined);
         }
         setTimeout(() => setShowMenu(true), FOCUS_DELAY);
         focusSearchInput();
-    }, [focusedObjIndex, mxFilter, onSelectHandler, focusSearchInput, setMxFilter]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [focusedObjIndex, props.mxFilter, onSelectHandler, focusSearchInput, props.setMxFilter]);
 
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLDivElement>): void => {
@@ -229,18 +191,18 @@ const Selector = ({
                     setFocusedObjIndex(0);
                 } else if (focusedObjIndex > 0) {
                     setFocusedObjIndex(focusedObjIndex - 1);
-                } else if (hasMoreOptions) {
-                    setFocusedObjIndex(options.length);
+                } else if (props.hasMoreOptions) {
+                    setFocusedObjIndex(props.options.length);
                 } else {
-                    setFocusedObjIndex(options.length - 1);
+                    setFocusedObjIndex(props.options.length - 1);
                 }
                 setShowMenu(true);
             } else if (keyPressed === "ArrowDown") {
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
                 } else if (
-                    focusedObjIndex < options.length - 1 ||
-                    (focusedObjIndex === options.length - 1 && hasMoreOptions)
+                    focusedObjIndex < props.options.length - 1 ||
+                    (focusedObjIndex === props.options.length - 1 && props.hasMoreOptions)
                 ) {
                     setFocusedObjIndex(focusedObjIndex + 1);
                 } else {
@@ -248,11 +210,11 @@ const Selector = ({
                 }
                 setShowMenu(true);
             } else if (keyPressed === "Enter") {
-                if (focusedObjIndex > -1 && (allowLoadingSelect || !isLoading)) {
-                    if (focusedObjIndex === options.length && onSelectMoreOptions) {
-                        onSelectMoreOptions();
+                if (focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
+                    if (focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
+                        props.onSelectMoreOptions();
                     } else {
-                        const currentFocusedOption = options[focusedObjIndex];
+                        const currentFocusedOption = props.options[focusedObjIndex];
                         if (currentFocusedOption.isSelectable) {
                             onSelectHandler(currentFocusedOption);
                         }
@@ -267,61 +229,80 @@ const Selector = ({
                 setFocusedObjIndex(0);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [
             focusedObjIndex,
-            options,
+            props.options,
             onSelectHandler,
-            onSelectMoreOptions,
+            props.onSelectMoreOptions,
             onLeaveHandler,
-            allowLoadingSelect,
-            hasMoreOptions,
-            isLoading
+            props.hasMoreOptions,
+            props.isLoading,
+            showMenu
         ]
     );
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useOnClickOutside(srsRef, onLeaveHandler);
+    useOnClickOutside(props.srsRef, onLeaveHandler);
 
-    const optionClickHandler = (selectedOption: IOption | undefined): void => {
-        setFocusedObjIndex(-1);
-        onSelectHandler(selectedOption);
-        focusSearchInput(); // re-focus the input so the user can tab away
-    };
+    const optionClickHandler = useCallback(
+        (selectedOption: IOption | undefined): void => {
+            setFocusedObjIndex(-1);
+            onSelectHandler(selectedOption);
+            focusSearchInput(); // re-focus the input so the user can tab away
+        },
+        [onSelectHandler, focusSearchInput]
+    );
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        const value = event.target.value;
-        setMxFilter(value);
-        setFocusedObjIndex(0);
-        // make sure the dropdown is open if the user is typing
-        if (value.trim() !== "" && !showMenu) {
-            setShowMenu(true);
-        }
-    };
+    const handleInputChange = useCallback(
+        (event: ChangeEvent<HTMLInputElement>): void => {
+            const value = event.target.value;
+            props.setMxFilter(value);
+            setFocusedObjIndex(0);
+            // make sure the dropdown is open if the user is typing
+            if (value.trim() !== "" && !showMenu) {
+                setShowMenu(true);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [showMenu, props.setMxFilter]
+    );
+
+    const ariaLiveText: string = useMemo(
+        () =>
+            showMenu
+                ? props.isLoading
+                    ? props.loadingText
+                    : focusedObjIndex === props.options.length
+                    ? props.moreResultsText || ""
+                    : focusedObjIndex > -1
+                    ? props.options[focusedObjIndex].ariaLiveText || ""
+                    : props.currentValue
+                    ? Array.isArray(props.currentValue)
+                        ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
+                        : props.currentValue.ariaLiveText || ""
+                    : ""
+                : "",
+        [
+            showMenu,
+            props.isLoading,
+            props.loadingText,
+            focusedObjIndex,
+            props.options,
+            props.moreResultsText,
+            props.currentValue
+        ]
+    );
 
     return (
         <Fragment>
             {/* Aria Live Text */}
             <div className="srs-aria-live" aria-live="polite">
-                {showMenu
-                    ? isLoading
-                        ? loadingText
-                        : focusedObjIndex === options.length
-                        ? moreResultsText
-                        : focusedObjIndex > -1
-                        ? options[focusedObjIndex].ariaLiveText
-                        : currentValue
-                        ? Array.isArray(currentValue)
-                            ? currentValue.map((value, index) =>
-                                  index < currentValue.length - 1 ? value.ariaLiveText + "&" : value.ariaLiveText
-                              )
-                            : currentValue.ariaLiveText
-                        : ""
-                    : ""}
+                {ariaLiveText}
             </div>
             <div
-                className={classNames("form-control", { active: showMenu }, { "read-only": isReadOnly })}
+                className={classNames("form-control", { active: showMenu }, { "read-only": props.isReadOnly })}
                 onClick={() => {
-                    if (!isReadOnly) {
+                    if (!props.isReadOnly) {
                         setShowMenu(!showMenu);
                         if (showMenu === false) {
                             focusSearchInput();
@@ -329,34 +310,37 @@ const Selector = ({
                     }
                 }}
                 onKeyDown={event => {
-                    if (!isReadOnly) {
+                    if (!props.isReadOnly) {
                         handleKeyNavigation(event);
                     }
                 }}
-                ref={srsRef}
+                ref={props.srsRef}
             >
                 <div className="srs-select">
                     <div
                         className={classNames(
                             "srs-value-container",
-                            { "srs-multi": selectionType === "referenceSet" },
-                            { "srs-compact": isCompact },
-                            { "srs-badges": selectionType === "referenceSet" && referenceSetStyle === "badges" },
-                            { "srs-commas": selectionType === "referenceSet" && referenceSetStyle === "commas" }
+                            { "srs-multi": props.selectionType === "referenceSet" },
+                            { "srs-compact": props.isCompact },
+                            {
+                                "srs-badges":
+                                    props.selectionType === "referenceSet" && props.referenceSetStyle === "badges"
+                            },
+                            {
+                                "srs-commas":
+                                    props.selectionType === "referenceSet" && props.referenceSetStyle === "commas"
+                            }
                         )}
                     >
                         {/* CurrentValueDisplay should be hidden if the user is typing and always be shown for reference sets */}
-                        {(selectionType === "referenceSet" || mxFilter === "") && (
+                        {(props.selectionType === "referenceSet" || props.mxFilter === "") && (
                             <CurrentValueDisplay
-                                currentValue={currentValue}
-                                isClearable={isClearable}
-                                isReadOnly={isReadOnly}
-                                maxReferenceDisplay={maxReferenceDisplay}
+                                {...props}
                                 onRemove={(clickObj, byKeyboard) => {
                                     onSelectHandler(clickObj);
                                     if (byKeyboard && hasCurrentValue) {
                                         // focus the next remove icon for easier clear by keyboard navigation
-                                        const nextIcon = srsRef?.current?.querySelector(
+                                        const nextIcon = props.srsRef?.current?.querySelector(
                                             ".srs-icon-focusable"
                                         ) as HTMLButtonElement;
                                         if (nextIcon) {
@@ -367,94 +351,72 @@ const Selector = ({
                                         focusSearchInput();
                                     }
                                 }}
-                                referenceSetStyle={referenceSetStyle}
-                                clearIcon={clearIcon}
-                                clearIconTitle={clearIconTitle}
-                                onBadgeClick={onBadgeClick}
-                                onExtraClick={onExtraClick}
-                                tabIndex={tabIndex}
-                                badgeColor={badgeColor}
                             />
                         )}
 
                         {/* Hide Search Input if read only and there is already a value */}
-                        {!(isReadOnly && hasCurrentValue) && (
+                        {!(props.isReadOnly && hasCurrentValue) && (
                             <SearchInput
-                                id={id}
-                                name={name}
-                                ariaLabel={ariaLabel}
-                                isReadOnly={isReadOnly}
-                                isSearchable={isSearchable}
+                                {...props}
                                 onChange={handleInputChange}
-                                placeholder={placeholder}
                                 setRef={newRef => setSearchInput(newRef)}
                                 hasCurrentValue={hasCurrentValue}
-                                searchFilter={mxFilter}
+                                searchFilter={props.mxFilter}
                                 showMenu={showMenu}
-                                isReferenceSet={selectionType === "referenceSet"}
-                                tabIndex={tabIndex}
-                                isCompact={isCompact}
-                                onFocus={onEnter}
+                                isReferenceSet={props.selectionType === "referenceSet"}
+                                onFocus={props.onEnter}
                             />
                         )}
                     </div>
-                    {!isReadOnly && (
-                        <div className="srs-icon-row" style={{ gridRow: selectionType === "referenceSet" ? 2 : 1 }}>
-                            {selectionType === "referenceSet" && showSelectAll && (
+                    {!props.isReadOnly && (
+                        <div
+                            className="srs-icon-row"
+                            style={{ gridRow: props.selectionType === "referenceSet" ? 2 : 1 }}
+                        >
+                            {props.selectionType === "referenceSet" && props.showSelectAll && (
                                 <MxIcon
-                                    tabIndex={tabIndex || 0}
+                                    tabIndex={props.tabIndex || 0}
                                     onClick={() => {
-                                        setMxFilter("");
+                                        props.setMxFilter("");
                                         setFocusedObjIndex(-1);
-                                        onSelect(options.filter(option => option.isSelectable));
+                                        props.onSelect(props.options.filter(option => option.isSelectable));
                                     }}
-                                    title={selectAllIconTitle}
-                                    mxIconOverride={selectAllIcon}
+                                    title={props.selectAllIconTitle}
+                                    mxIconOverride={props.selectAllIcon}
                                     defaultClassName="check"
                                 />
                             )}
 
-                            {isClearable && (
+                            {props.isClearable && (
                                 <MxIcon
-                                    tabIndex={tabIndex || 0}
+                                    tabIndex={props.tabIndex || 0}
                                     onClick={handleClearAll}
-                                    title={clearIconTitle}
-                                    mxIconOverride={clearIcon}
+                                    title={props.clearIconTitle}
+                                    mxIconOverride={props.clearIcon}
                                     defaultClassName="remove"
                                 />
                             )}
-                            {selectStyle === "dropdown" && (
-                                <MxIcon mxIconOverride={dropdownIcon} defaultClassName="menu-down" />
+                            {props.selectStyle === "dropdown" && (
+                                <MxIcon mxIconOverride={props.dropdownIcon} defaultClassName="menu-down" />
                             )}
                         </div>
                     )}
                 </div>
             </div>
-            {(showMenu || selectStyle === "list") && !isReadOnly && (
+            {(showMenu || props.selectStyle === "list") && !props.isReadOnly && (
                 <OptionsMenu
-                    id={id}
-                    ariaLabel={ariaLabel}
+                    {...props}
                     onSelect={optionClickHandler}
                     currentFocus={focusedObjIndex}
-                    maxMenuHeight={maxMenuHeight}
-                    noResultsText={noResultsText}
-                    moreResultsText={moreResultsText}
-                    optionsStyle={optionsStyle}
-                    selectStyle={selectStyle}
                     position={position}
                     onSelectMoreOptions={() => {
-                        if (onSelectMoreOptions) {
-                            onSelectMoreOptions();
-                            if (selectStyle === "dropdown") {
+                        if (props.onSelectMoreOptions) {
+                            props.onSelectMoreOptions();
+                            if (props.selectStyle === "dropdown") {
                                 focusSearchInput();
                             }
                         }
                     }}
-                    options={options}
-                    hasMoreOptions={hasMoreOptions}
-                    isLoading={isLoading}
-                    loadingText={loadingText}
-                    allowLoadingSelect={allowLoadingSelect}
                 />
             )}
         </Fragment>

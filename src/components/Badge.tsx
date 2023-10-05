@@ -16,52 +16,38 @@ interface BadgeProps {
     badgeColor: BadgeColorEnum;
 }
 
-const Badge = ({
-    onRemoveAssociation,
-    clearIcon,
-    clearIconTitle,
-    onBadgeClick,
-    option,
-    isClearable,
-    isReadOnly,
-    tabIndex,
-    badgeColor
-}: BadgeProps): ReactElement => {
-    return (
-        <div className={`srs-badge label-${badgeColor}`}>
-            <div
-                tabIndex={onBadgeClick ? tabIndex || 0 : undefined}
-                onClick={
-                    onBadgeClick
-                        ? event => {
-                              event.stopPropagation();
-                              onBadgeClick(option);
-                          }
-                        : undefined
+const Badge = (props: BadgeProps): ReactElement => (
+    <div className={`srs-badge label-${props.badgeColor}`}>
+        <div
+            tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
+            onClick={event => {
+                if (props.onBadgeClick) {
+                    event.stopPropagation();
+                    props.onBadgeClick(props.option);
                 }
-                onKeyDown={event => {
-                    if (event.key === "Enter" && onBadgeClick) {
-                        event.stopPropagation();
-                        onBadgeClick(option);
-                    }
-                }}
-                aria-label={option.ariaLiveText}
-                role={onBadgeClick ? "button" : undefined}
-            >
-                {option.badgeContent ? option.badgeContent : option.content}
-            </div>
-
-            {isClearable && !isReadOnly && (
-                <MxIcon
-                    onClick={onRemoveAssociation}
-                    title={clearIconTitle + " " + option.ariaLiveText}
-                    mxIconOverride={clearIcon}
-                    defaultClassName="remove"
-                    tabIndex={tabIndex || 0}
-                />
-            )}
+            }}
+            onKeyDown={event => {
+                if (event.key === "Enter" && props.onBadgeClick) {
+                    event.stopPropagation();
+                    props.onBadgeClick(props.option);
+                }
+            }}
+            aria-label={props.option.ariaLiveText}
+            role={props.onBadgeClick ? "button" : undefined}
+        >
+            {props.option.badgeContent ? props.option.badgeContent : props.option.content}
         </div>
-    );
-};
+
+        {props.isClearable && !props.isReadOnly && (
+            <MxIcon
+                onClick={props.onRemoveAssociation}
+                title={props.clearIconTitle + " " + props.option.ariaLiveText}
+                mxIconOverride={props.clearIcon}
+                defaultClassName="remove"
+                tabIndex={props.tabIndex || 0}
+            />
+        )}
+    </div>
+);
 
 export default Badge;

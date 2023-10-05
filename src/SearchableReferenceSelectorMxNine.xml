@@ -122,6 +122,10 @@
                         <enumerationValue key="startsWith">Starts With</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="forceClientSide" type="boolean" defaultValue="false">
+                    <caption>Force client side search</caption>
+                    <description></description>
+                </property>
                 <property key="searchAttributes" type="object" isList="true" required="false">
                     <caption>Search attributes</caption>
                     <description></description>
