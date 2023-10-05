@@ -102,6 +102,8 @@ export type PreviewProps =
 export const getDisplayName = (_values: SearchableReferenceSelectorMxNinePreviewProps): string => {
     if (_values.selectionType === "enumeration") {
         return "[" + (_values.enumAttribute.length > 0 ? _values.enumAttribute : "No attribute selected") + "]";
+    } else if (_values.selectionType === "boolean") {
+        return "[" + (_values.booleanAttribute.length > 0 ? _values.booleanAttribute : "No attribute selected") + "]";
     } else {
         const refText = _values.selectionType === "reference" ? _values.reference : _values.referenceSet;
         if (refText.length > 0) {
@@ -166,8 +168,49 @@ export function getProperties(
                 "displayAttribute",
                 "optionExpression",
                 "isCompact",
-                "forceClientSide"
+                "forceClientSide",
+                "booleanAttribute",
+                "trueLabel",
+                "falseLabel"
             ]);
+            break;
+        case "boolean":
+            hidePropertiesIn(defaultProperties, _values, [
+                "reference",
+                "referenceSet",
+                "selectableCondition",
+                "selectableObjects",
+                "showSelectAll",
+                "referenceSetStyle",
+                "maxReferenceDisplay",
+                "selectAllIcon",
+                "selectAllIconTitle",
+                "onBadgeClick",
+                "optionsStyleSet",
+                "filterType",
+                "moreResultsText",
+                "maxItems",
+                "allowLoadingSelect",
+                "loadingText",
+                "referenceSetValue",
+                "referenceSetValueContent",
+                "clearSearchOnSelect",
+                "searchAttributes",
+                "optionCustomContent",
+                "ariaLiveText",
+                "optionTextType",
+                "displayAttribute",
+                "optionExpression",
+                "isCompact",
+                "forceClientSide",
+                "enumAttribute",
+                "isClearable",
+                "clearIcon",
+                "clearIconTitle",
+                "maxMenuHeight",
+                "placeholder"
+            ]);
+
             break;
         case "reference":
             hidePropertiesIn(defaultProperties, _values, [
@@ -183,11 +226,21 @@ export function getProperties(
                 "referenceSetValue",
                 "referenceSetValueContent",
                 "clearSearchOnSelect",
-                "isCompact"
+                "isCompact",
+                "booleanAttribute",
+                "trueLabel",
+                "falseLabel"
             ]);
             break;
         case "referenceSet":
-            hidePropertiesIn(defaultProperties, _values, ["enumAttribute", "reference", "optionsStyleSingle"]);
+            hidePropertiesIn(defaultProperties, _values, [
+                "enumAttribute",
+                "reference",
+                "optionsStyleSingle",
+                "booleanAttribute",
+                "trueLabel",
+                "falseLabel"
+            ]);
             break;
     }
 

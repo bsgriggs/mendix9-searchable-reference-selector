@@ -20,12 +20,13 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
         <div
             className={classNames(
                 "srs-option",
-                { selected: props.optionsStyle === "cell" && props.option.isSelected },
+
                 {
                     focused:
                         (props.focusMode === focusModeEnum.arrow && props.isFocused) ||
                         (props.focusMode === focusModeEnum.hover && props.optionsStyle === "cell" && isHovered)
                 },
+                { selected: props.optionsStyle === "cell" && props.option.isSelected },
                 { disabled: !props.option.isSelectable }
             )}
             onClick={event => {

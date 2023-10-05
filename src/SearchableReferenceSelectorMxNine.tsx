@@ -30,7 +30,7 @@ export default function SearchableReferenceSelector(
     const [options, setOptions] = useState<IOption[]>([]);
     const srsRef = useRef<HTMLDivElement>(null);
     const serverSideSearching: boolean = useMemo(() => {
-        if (props.selectionType === "enumeration" || props.forceClientSide) {
+        if (props.selectionType === "enumeration" || props.selectionType === "boolean" || props.forceClientSide) {
             return false;
         }
         return props.optionTextType === "text" || props.optionTextType === "html"
@@ -50,9 +50,10 @@ export default function SearchableReferenceSelector(
         (): boolean =>
             (props.selectionType === "reference" && props.reference.readOnly) ||
             (props.selectionType === "referenceSet" && props.referenceSet.readOnly) ||
-            (props.selectionType === "enumeration" && props.enumAttribute.readOnly),
+            (props.selectionType === "enumeration" && props.enumAttribute.readOnly) ||
+            (props.selectionType === "boolean" && props.booleanAttribute.readOnly),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.reference, props.referenceSet, props.enumAttribute]
+        [props.reference, props.referenceSet, props.enumAttribute, props.booleanAttribute]
     );
 
     const hasMoreItems = useMemo(
@@ -80,24 +81,20 @@ export default function SearchableReferenceSelector(
     const handleSelect = useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
             if (!isReadOnly) {
-                const attribute =
-                    props.selectionType === "enumeration"
-                        ? props.enumAttribute
-                        : props.selectionType === "reference"
-                        ? props.reference
-                        : props.referenceSet;
                 if (Array.isArray(selectedOption)) {
-                    attribute.setValue(selectedOption.map(option => option.id) as string & ObjectItem & ObjectItem[]);
-                } else if (selectedOption && selectedOption.isSelectable) {
-                    attribute.setValue(selectedOption.id as string & ObjectItem & ObjectItem[]);
+                    props.referenceSet.setValue(selectedOption.map(option => option.id as ObjectItem));
+                } else if (props.selectionType === "enumeration") {
+                    props.enumAttribute.setValue(selectedOption?.id as string);
+                } else if (props.selectionType === "boolean") {
+                    props.booleanAttribute.setValue(selectedOption?.id as boolean);
                 } else {
-                    attribute.setValue(undefined);
+                    props.reference.setValue(selectedOption?.id as ObjectItem);
                 }
                 callMxAction(props.onChange, false);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [isReadOnly, props.enumAttribute, props.reference, props.referenceSet, props.onChange]
+        [isReadOnly, props.enumAttribute, props.reference, props.referenceSet, props.onChange, props.booleanAttribute]
     );
 
     const displayTextContent = useCallback((text: string): ReactNode => <span>{text}</span>, []);
@@ -132,6 +129,31 @@ export default function SearchableReferenceSelector(
                 ariaLiveText: props.enumAttribute.formatter.format(value)
             })),
         [props.enumAttribute, displayTextContent]
+    );
+
+    const boolOptions: IOption[] = useMemo(
+        () =>
+            props.selectionType === "boolean"
+                ? [
+                      {
+                          content: displayTextContent(props.trueLabel.value as string),
+                          isSelectable: true,
+                          isSelected: props.booleanAttribute.value === true,
+                          selectionType: "BOOLEAN",
+                          id: true,
+                          ariaLiveText: props.trueLabel.value as string
+                      },
+                      {
+                          content: displayTextContent(props.falseLabel.value as string),
+                          isSelectable: true,
+                          isSelected: props.booleanAttribute.value === false,
+                          selectionType: "BOOLEAN",
+                          id: false,
+                          ariaLiveText: props.falseLabel.value as string
+                      }
+                  ]
+                : [],
+        [props.trueLabel, props.falseLabel, props.booleanAttribute]
     );
 
     const mapAriaLiveText = useCallback(
@@ -191,6 +213,20 @@ export default function SearchableReferenceSelector(
                           ariaLiveText: props.enumAttribute.displayValue
                       }
                     : undefined;
+            case "boolean":
+                const booleanText = (
+                    props.booleanAttribute.value === true ? props.trueLabel.value : props.falseLabel.value
+                ) as string;
+                return props.booleanAttribute.status === ValueStatus.Available
+                    ? {
+                          content: displayTextContent(booleanText),
+                          isSelectable: true,
+                          isSelected: true,
+                          selectionType: "BOOLEAN",
+                          id: props.booleanAttribute.value as boolean,
+                          ariaLiveText: booleanText
+                      }
+                    : undefined;
             case "reference":
                 return props.reference.value !== undefined && props.reference.status === ValueStatus.Available
                     ? {
@@ -228,7 +264,10 @@ export default function SearchableReferenceSelector(
         displayReferenceContent,
         displayTextContent,
         mapAriaLiveText,
-        props.referenceSetValue
+        props.referenceSetValue,
+        props.booleanAttribute,
+        props.trueLabel,
+        props.falseLabel
     ]);
 
     // load Options ~ handle if the selected value changed outside the widget
@@ -237,6 +276,10 @@ export default function SearchableReferenceSelector(
             if (props.selectionType === "enumeration") {
                 if (props.enumAttribute.status === ValueStatus.Available) {
                     setOptions(mapEnum(props.enumAttribute.universe || []));
+                }
+            } else if (props.selectionType === "boolean") {
+                if (props.booleanAttribute.status === ValueStatus.Available) {
+                    setOptions(boolOptions);
                 }
             } else if (
                 props.selectableObjects.status === ValueStatus.Available &&
@@ -247,7 +290,16 @@ export default function SearchableReferenceSelector(
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.selectableObjects, props.reference, props.referenceSet, props.enumAttribute, isReadOnly]);
+    }, [
+        props.selectableObjects,
+        props.reference,
+        props.referenceSet,
+        props.enumAttribute,
+        isReadOnly,
+        props.booleanAttribute,
+        boolOptions,
+        props.selectableCondition
+    ]);
 
     // Apply the Filtering useEffect
     useEffect(() => {
@@ -282,6 +334,25 @@ export default function SearchableReferenceSelector(
                     }, props.filterDelay);
 
                     return () => clearTimeout(enumFilterDebounce);
+                } else if (props.selectionType === "boolean") {
+                    const booleanFilterDebounce = setTimeout(() => {
+                        if (mxFilter.trim().length > 0 && props.isSearchable) {
+                            const searchText = mxFilter.trim().toLowerCase();
+                            setOptions(
+                                props.filterFunction === "contains"
+                                    ? boolOptions.filter(option =>
+                                          option.ariaLiveText?.toLowerCase().includes(searchText)
+                                      )
+                                    : boolOptions.filter(option =>
+                                          option.ariaLiveText?.toLowerCase().startsWith(searchText)
+                                      )
+                            );
+                        } else {
+                            setOptions(boolOptions);
+                        }
+                    }, props.filterDelay);
+
+                    return () => clearTimeout(booleanFilterDebounce);
                 } else if (props.optionTextType === "text" || props.optionTextType === "html") {
                     if (serverSideSearching) {
                         const singleServerSideDebounce = setTimeout(() => {
@@ -374,7 +445,7 @@ export default function SearchableReferenceSelector(
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mxFilter, isReadOnly]);
+    }, [mxFilter, isReadOnly, boolOptions]);
 
     // filter type manual, dev is expected to make filter logic inside their data source Microflow using the search text
     if (props.filterType === "manual") {
@@ -395,6 +466,7 @@ export default function SearchableReferenceSelector(
                     ariaLabel={props.ariaLabel?.value}
                     isLoading={props.selectableObjects && props.selectableObjects.status === ValueStatus.Loading}
                     loadingText={props.loadingText.value as string}
+                    isClearable={props.selectionType !== "boolean" ? props.isClearable : false}
                     clearIcon={props.clearIcon?.value}
                     clearIconTitle={props.clearIconTitle.value as string}
                     dropdownIcon={props.dropdownIcon?.value}
@@ -432,6 +504,9 @@ export default function SearchableReferenceSelector(
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}
+            {props.booleanAttribute && props.booleanAttribute.validation && (
+                <Alert>{props.booleanAttribute.validation}</Alert>
+            )}
             {props.reference && props.reference.validation && <Alert>{props.reference.validation}</Alert>}
             {props.referenceSet && props.referenceSet.validation && <Alert>{props.referenceSet.validation}</Alert>}
         </Fragment>

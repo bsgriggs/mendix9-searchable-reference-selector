@@ -7,7 +7,7 @@ import { ComponentType } from "react";
 import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
-export type SelectionTypeEnum = "enumeration" | "reference" | "referenceSet";
+export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "referenceSet";
 
 export type OptionTextTypeEnum = "text" | "html" | "textTemplate" | "custom";
 
@@ -46,6 +46,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     referenceSet: ReferenceSetValue;
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
+    booleanAttribute: EditableValue<boolean>;
+    trueLabel: DynamicValue<string>;
+    falseLabel: DynamicValue<string>;
     optionTextType: OptionTextTypeEnum;
     displayAttribute: ListAttributeValue<Big | string>;
     optionExpression: ListExpressionValue<string>;
@@ -100,6 +103,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     referenceSet: string;
     selectableCondition: string;
     enumAttribute: string;
+    booleanAttribute: string;
+    trueLabel: string;
+    falseLabel: string;
     optionTextType: OptionTextTypeEnum;
     displayAttribute: string;
     optionExpression: string;

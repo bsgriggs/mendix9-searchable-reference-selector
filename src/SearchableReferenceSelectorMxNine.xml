@@ -25,6 +25,7 @@
                     <description></description>
                     <enumerationValues>
                         <enumerationValue key="enumeration">Enumeration</enumerationValue>
+                        <enumerationValue key="boolean">Boolean</enumerationValue>
                         <enumerationValue key="reference">Reference</enumerationValue>
                         <enumerationValue key="referenceSet">Reference Set</enumerationValue>
                     </enumerationValues>
@@ -61,6 +62,27 @@
                     <attributeTypes>
                         <attributeType name="Enum" />
                     </attributeTypes>
+                </property>
+                <property key="booleanAttribute" type="attribute" required="true">
+                    <caption>Boolean attribute</caption>
+                    <description></description>
+                    <attributeTypes>
+                        <attributeType name="Boolean" />
+                    </attributeTypes>
+                </property>
+                <property key="trueLabel" type="textTemplate">
+                    <caption>True label</caption>
+                    <description></description>
+                    <translations>
+                        <translation lang="en_US">Yes</translation>
+                    </translations>
+                </property>
+                <property key="falseLabel" type="textTemplate">
+                    <caption>False label</caption>
+                    <description></description>
+                    <translations>
+                        <translation lang="en_US">No</translation>
+                    </translations>
                 </property>
                 <property key="optionTextType" type="enumeration" defaultValue="text">
                     <caption>Option content type</caption>

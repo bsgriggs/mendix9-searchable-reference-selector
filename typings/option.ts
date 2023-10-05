@@ -1,6 +1,11 @@
 import { ReactNode } from "react";
 import { ObjectItem } from "mendix";
 
+type boolOption = {
+    selectionType: "BOOLEAN";
+    id: boolean;
+};
+
 type enumOption = {
     selectionType: "ENUMERATION";
     id: string;
@@ -17,4 +22,4 @@ export type IOption = {
     content: ReactNode;
     badgeContent?: ReactNode;
     ariaLiveText?: string;
-} & (enumOption | refOption);
+} & (enumOption | refOption | boolOption);

@@ -9,78 +9,92 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
     const displayName = getDisplayName(props);
     const displayTextContent = (text: string): ReactNode => <span>{text}</span>;
 
-    const option1: IOption = {
-        id: "1",
-        content:
-            props.optionTextType === "custom" ? (
-                // @ts-ignore
-                <props.optionCustomContent.renderer caption="Place custom content here">
-                    <div style={{ width: "100%" }} />
-                </props.optionCustomContent.renderer>
-            ) : (
-                displayTextContent(displayName)
-            ),
-        isSelectable: true,
-        isSelected: true,
-        selectionType: "ENUMERATION"
-    };
-    const option2: IOption = {
-        id: "2",
-        content:
-            props.optionTextType === "custom" ? (
-                // @ts-ignore
-                <props.optionCustomContent.renderer caption="Place custom content here">
-                    <div style={{ width: "100%" }} />
-                </props.optionCustomContent.renderer>
-            ) : (
-                displayTextContent(displayName)
-            ),
-        isSelectable: true,
-        isSelected: false,
-        selectionType: "ENUMERATION"
-    };
-    const option3: IOption = {
-        id: "3",
-        content:
-            props.optionTextType === "custom" ? (
-                // @ts-ignore
-                <props.optionCustomContent.renderer caption="Place custom content here">
-                    <div style={{ width: "100%" }} />
-                </props.optionCustomContent.renderer>
-            ) : (
-                displayTextContent(displayName)
-            ),
-        isSelectable: false,
-        isSelected: false,
-        selectionType: "ENUMERATION"
-    };
+    const options: IOption[] =
+        props.selectionType === "boolean"
+            ? [
+                  {
+                      id: true,
+                      content: props.trueLabel,
+                      isSelectable: true,
+                      isSelected: true,
+                      selectionType: "BOOLEAN"
+                  },
+                  {
+                      id: false,
+                      content: props.falseLabel,
+                      isSelectable: true,
+                      isSelected: false,
+                      selectionType: "BOOLEAN"
+                  }
+              ]
+            : [
+                  {
+                      id: "1",
+                      content:
+                          props.optionTextType === "custom" ? (
+                              // @ts-ignore
+                              <props.optionCustomContent.renderer caption="Place custom content here">
+                                  <div style={{ width: "100%" }} />
+                              </props.optionCustomContent.renderer>
+                          ) : (
+                              displayTextContent(displayName)
+                          ),
+                      isSelectable: true,
+                      isSelected: true,
+                      selectionType: "ENUMERATION"
+                  },
+                  {
+                      id: "2",
+                      content:
+                          props.optionTextType === "custom" ? (
+                              // @ts-ignore
+                              <props.optionCustomContent.renderer caption="Place custom content here">
+                                  <div style={{ width: "100%" }} />
+                              </props.optionCustomContent.renderer>
+                          ) : (
+                              displayTextContent(displayName)
+                          ),
+                      isSelectable: true,
+                      isSelected: false,
+                      selectionType: "ENUMERATION"
+                  },
+                  {
+                      id: "3",
+                      content:
+                          props.optionTextType === "custom" ? (
+                              // @ts-ignore
+                              <props.optionCustomContent.renderer caption="Place custom content here">
+                                  <div style={{ width: "100%" }} />
+                              </props.optionCustomContent.renderer>
+                          ) : (
+                              displayTextContent(displayName)
+                          ),
+                      isSelectable: false,
+                      isSelected: false,
+                      selectionType: "ENUMERATION"
+                  }
+              ];
 
     return (
         <div className="srs">
             <Selector
+                {...props}
                 id={""}
                 name={""}
                 ariaLabel={""}
+                placeholder={props.selectionType !== "boolean" ? props.placeholder : ""}
                 isLoading={false}
-                loadingText={props.loadingText}
-                allowLoadingSelect={props.allowLoadingSelect}
-                hasMoreOptions={props.moreResultsText !== undefined}
-                isClearable={props.isClearable}
+                hasMoreOptions={
+                    (props.selectionType === "reference" || props.selectionType === "referenceSet") &&
+                    props.moreResultsText !== undefined
+                }
+                isClearable={props.selectionType !== "boolean" ? props.isClearable : false}
                 isReadOnly={props.readOnly}
-                isSearchable={props.isSearchable}
                 maxMenuHeight={""}
                 maxReferenceDisplay={props.maxReferenceDisplay || 0}
-                moreResultsText={props.moreResultsText}
-                noResultsText={props.noResultsText}
-                options={[option1, option2, option3]}
+                options={options}
                 optionsStyle={props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle}
-                badgeColor={props.badgeColor}
-                placeholder={props.placeholder}
-                referenceSetStyle={props.referenceSetStyle}
                 selectStyle={"list"}
-                selectionType={props.selectionType}
-                showSelectAll={props.showSelectAll}
-                isCompact={props.isCompact}
                 clearIcon={
                     props.clearIcon !== null
                         ? props.clearIcon.type === "image"
@@ -104,7 +118,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                         : undefined
                 }
                 selectAllIconTitle=""
-                currentValue={props.selectionType === "referenceSet" ? option1 : undefined}
+                currentValue={props.selectionType === "referenceSet" ? options[0] : undefined}
                 clearSearchOnSelect
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onLeave={() => {}}
