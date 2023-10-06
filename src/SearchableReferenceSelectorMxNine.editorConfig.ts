@@ -122,7 +122,7 @@ export const getDisplayName = (_values: SearchableReferenceSelectorMxNinePreview
                 retString +
                 "/" +
                 (_values.optionTextType !== "custom"
-                    ? _values.optionTextType !== "textTemplate"
+                    ? _values.optionTextType !== "expression"
                         ? _values.displayAttribute
                         : _values.optionExpression
                     : "CustomContent"
@@ -277,7 +277,7 @@ export function getProperties(
                 "optionExpression"
             ]);
             break;
-        case "textTemplate":
+        case "expression":
             hidePropertiesIn(defaultProperties, _values, ["optionCustomContent", "displayAttribute"]);
             break;
         case "custom":
@@ -351,7 +351,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         _values.filterType === "auto" &&
         _values.searchAttributes.length === 0 &&
         !_values.forceClientSide &&
-        (_values.optionTextType === "custom" || _values.optionTextType === "textTemplate")
+        (_values.optionTextType === "custom" || _values.optionTextType === "expression")
     ) {
         errors.push({
             property: `searchAttributes`,

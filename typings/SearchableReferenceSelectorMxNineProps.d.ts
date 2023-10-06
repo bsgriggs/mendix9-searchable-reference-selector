@@ -9,7 +9,7 @@ import { Big } from "big.js";
 
 export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "referenceSet";
 
-export type OptionTextTypeEnum = "text" | "html" | "textTemplate" | "custom";
+export type OptionTextTypeEnum = "text" | "html" | "expression" | "custom";
 
 export type FilterTypeEnum = "auto" | "manual";
 

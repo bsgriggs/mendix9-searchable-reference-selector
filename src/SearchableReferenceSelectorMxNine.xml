@@ -90,7 +90,7 @@
                     <enumerationValues>
                         <enumerationValue key="text">Text</enumerationValue>
                         <enumerationValue key="html">HTML</enumerationValue>
-                        <enumerationValue key="textTemplate">Expression</enumerationValue>
+                        <enumerationValue key="expression">Expression</enumerationValue>
                         <enumerationValue key="custom">Custom</enumerationValue>
                     </enumerationValues>
                 </property>

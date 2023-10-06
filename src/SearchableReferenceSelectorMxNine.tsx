@@ -21,13 +21,17 @@ export default function SearchableReferenceSelector(
     props: SearchableReferenceSelectorMxNineContainerProps
 ): ReactElement {
     const defaultPageSize = useMemo(
-        () => (props.selectionType !== "enumeration" && props.maxItems ? Number(props.maxItems.value) : undefined),
+        () =>
+            props.selectionType !== "enumeration" && props.selectionType !== "boolean" && props.maxItems
+                ? Number(props.maxItems.value)
+                : Infinity,
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.maxItems]
     );
     const [mxFilter, setMxFilter] = useState<string>("");
-    const [itemsLimit, setItemsLimit] = useState<number | undefined>(defaultPageSize);
+    const [itemsLimit, setItemsLimit] = useState<number>(defaultPageSize);
     const [options, setOptions] = useState<IOption[]>([]);
+    const [skipFilter, setSkipFilter] = useState<boolean>(true);
     const srsRef = useRef<HTMLDivElement>(null);
     const serverSideSearching: boolean = useMemo(() => {
         if (props.selectionType === "enumeration" || props.selectionType === "boolean" || props.forceClientSide) {
@@ -66,17 +70,21 @@ export default function SearchableReferenceSelector(
 
     // Apply Max Items changes to itemsLimit
     useEffect(() => {
-        setItemsLimit(serverSideSearching && props.maxItems ? Number(props.maxItems.value) : undefined);
+        setItemsLimit(serverSideSearching && props.maxItems ? Number(props.maxItems.value) : Infinity);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.maxItems]);
 
+    // Apply items limit to data source
     useEffect(() => {
-        // Apply items limit to data source
-        if (serverSideSearching && props.filterType === "auto") {
-            props.selectableObjects.setLimit(itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity);
+        if (props.filterType === "auto" && props.selectableObjects) {
+            if (isReadOnly) {
+                props.selectableObjects.setLimit(0);
+            } else {
+                props.selectableObjects.setLimit(itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemsLimit]);
+    }, [itemsLimit, isReadOnly]);
 
     const handleSelect = useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
@@ -109,7 +117,7 @@ export default function SearchableReferenceSelector(
                         __html: `${props.displayAttribute.get(displayObj).displayValue?.toString()}`
                     }}
                 ></span>
-            ) : props.optionTextType === "textTemplate" ? (
+            ) : props.optionTextType === "expression" ? (
                 <span>{props.optionExpression.get(displayObj).value}</span>
             ) : (
                 <span>{props.optionCustomContent.get(displayObj)}</span>
@@ -303,7 +311,7 @@ export default function SearchableReferenceSelector(
 
     // Apply the Filtering useEffect
     useEffect(() => {
-        if (!isReadOnly) {
+        if (!isReadOnly && !skipFilter) {
             if (props.filterType === "auto") {
                 if (props.selectionType === "enumeration") {
                     const enumFilterDebounce = setTimeout(() => {
@@ -444,6 +452,9 @@ export default function SearchableReferenceSelector(
                 }
             }
         }
+        if (!isReadOnly && skipFilter) {
+            setSkipFilter(false);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mxFilter, isReadOnly, boolOptions]);
 
@@ -485,8 +496,8 @@ export default function SearchableReferenceSelector(
                     hasMoreOptions={hasMoreItems}
                     moreResultsText={hasMoreItems ? props.moreResultsText.value : undefined}
                     onSelectMoreOptions={
-                        itemsLimit && hasMoreItems
-                            ? () => onShowMore((itemsLimit || 0) + (defaultPageSize || 0), props.onClickMoreResultsText)
+                        hasMoreItems
+                            ? () => onShowMore(itemsLimit + defaultPageSize, props.onClickMoreResultsText)
                             : undefined
                     }
                     currentValue={currentValue}
