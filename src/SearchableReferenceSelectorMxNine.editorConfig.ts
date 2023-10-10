@@ -168,7 +168,7 @@ export function getProperties(
                 "displayAttribute",
                 "optionExpression",
                 "isCompact",
-                "forceClientSide",
+                "filterLocation",
                 "booleanAttribute",
                 "trueLabel",
                 "falseLabel"
@@ -202,7 +202,7 @@ export function getProperties(
                 "displayAttribute",
                 "optionExpression",
                 "isCompact",
-                "forceClientSide",
+                "filterLocation",
                 "enumAttribute",
                 "isClearable",
                 "clearIcon",
@@ -253,12 +253,7 @@ export function getProperties(
             ]);
             break;
         case "manual":
-            hidePropertiesIn(defaultProperties, _values, [
-                "filterFunction",
-                "maxItems",
-                "searchAttributes",
-                "forceClientSide"
-            ]);
+            hidePropertiesIn(defaultProperties, _values, ["filterFunction", "maxItems", "searchAttributes"]);
             break;
     }
 
@@ -281,7 +276,11 @@ export function getProperties(
             hidePropertiesIn(defaultProperties, _values, ["optionCustomContent", "displayAttribute"]);
             break;
         case "custom":
-            hidePropertiesIn(defaultProperties, _values, ["displayAttribute", "optionExpression"]);
+            hidePropertyIn(defaultProperties, _values, "displayAttribute");
+            if (_values.filterLocation === "SERVER") {
+                hidePropertyIn(defaultProperties, _values, "optionExpression");
+            }
+
             break;
     }
 
@@ -335,8 +334,8 @@ export function getProperties(
         hidePropertyIn(defaultProperties, _values, "onExtraClick");
     }
 
-    if (_values.forceClientSide) {
-        hidePropertiesIn(defaultProperties, _values, ["searchAttributes", "maxItems", "moreResultsText"]);
+    if (_values.filterLocation === "CLIENT") {
+        hidePropertiesIn(defaultProperties, _values, ["searchAttributes", "filterType"]);
     }
 
     return defaultProperties;
@@ -348,14 +347,31 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     if (
         _values.isSearchable &&
         _values.selectionType !== "enumeration" &&
+        _values.selectionType !== "boolean" &&
         _values.filterType === "auto" &&
         _values.searchAttributes.length === 0 &&
-        !_values.forceClientSide &&
+        _values.filterLocation === "SERVER" &&
         (_values.optionTextType === "custom" || _values.optionTextType === "expression")
     ) {
         errors.push({
             property: `searchAttributes`,
-            message: `At least 1 search attribute is required`,
+            message: `At least 1 search attribute is required for server-side searching`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
+    if (
+        _values.isSearchable &&
+        _values.selectionType !== "enumeration" &&
+        _values.selectionType !== "boolean" &&
+        _values.filterType === "auto" &&
+        _values.filterLocation === "CLIENT" &&
+        (_values.optionTextType === "custom" || _values.optionTextType === "expression") &&
+        _values.optionExpression.trim() === ""
+    ) {
+        errors.push({
+            property: `optionExpression`,
+            message: `Option content is required for client-side searching. It determines the string that is searched.`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
     }

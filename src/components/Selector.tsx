@@ -364,7 +364,12 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 searchFilter={props.mxFilter}
                                 showMenu={showMenu}
                                 isReferenceSet={props.selectionType === "referenceSet"}
-                                onFocus={props.onEnter}
+                                onFocus={() => {
+                                    props.onEnter();
+                                    if (props.selectStyle === "list") {
+                                        setShowMenu(true);
+                                    }
+                                }}
                             />
                         )}
                     </div>

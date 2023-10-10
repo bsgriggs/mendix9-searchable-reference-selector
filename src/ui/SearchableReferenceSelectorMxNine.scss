@@ -90,7 +90,8 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 }
             }
         }
-        &.active {
+        &.active,
+        &:focus-within {
             border-color: #264ae5;
         }
         &.read-only {

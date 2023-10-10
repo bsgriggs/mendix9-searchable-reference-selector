@@ -11,6 +11,8 @@ export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "refer
 
 export type OptionTextTypeEnum = "text" | "html" | "expression" | "custom";
 
+export type FilterLocationEnum = "SERVER" | "CLIENT";
+
 export type FilterTypeEnum = "auto" | "manual";
 
 export type FilterFunctionEnum = "contains" | "startsWith";
@@ -55,9 +57,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     optionCustomContent: ListWidgetValue;
     isSearchable: boolean;
     filterDelay: number;
+    filterLocation: FilterLocationEnum;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
-    forceClientSide: boolean;
     searchAttributes: SearchAttributesType[];
     searchText: EditableValue<string>;
     hasMoreResultsManual: DynamicValue<boolean>;
@@ -112,9 +114,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     isSearchable: boolean;
     filterDelay: number | null;
+    filterLocation: FilterLocationEnum;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
-    forceClientSide: boolean;
     searchAttributes: SearchAttributesPreviewType[];
     searchText: string;
     hasMoreResultsManual: string;

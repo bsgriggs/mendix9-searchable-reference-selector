@@ -97,20 +97,19 @@
                 <property key="displayAttribute" type="attribute" required="true"
                     dataSource="selectableObjects">
                     <caption>Option content</caption>
-                    <description>The attribute displayed for each option</description>
+                    <description></description>
                     <attributeTypes>
                         <attributeType name="AutoNumber" />
                         <attributeType name="String" />
                         <attributeType name="Integer" />
                         <attributeType name="Long" />
                         <attributeType name="Decimal" />
-                        <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
                 <property key="optionExpression" type="expression" required="true"
                     dataSource="selectableObjects">
                     <caption>Option content</caption>
-                    <description>The text displayed for each option</description>
+                    <description></description>
                     <returnType type="String" />
                 </property>
                 <property key="optionCustomContent" type="widgets" required="true"
@@ -128,6 +127,14 @@
                     <caption>Search delay (ms)</caption>
                     <description></description>
                 </property>
+                <property key="filterLocation" type="enumeration" defaultValue="SERVER">
+                    <caption>Search location</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="SERVER">Server side</enumerationValue>
+                        <enumerationValue key="CLIENT">Client side</enumerationValue>
+                    </enumerationValues>
+                </property>
                 <property key="filterType" type="enumeration" defaultValue="auto">
                     <caption>Search type</caption>
                     <description></description>
@@ -144,10 +151,7 @@
                         <enumerationValue key="startsWith">Starts With</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="forceClientSide" type="boolean" defaultValue="false">
-                    <caption>Force client side search</caption>
-                    <description></description>
-                </property>
+
                 <property key="searchAttributes" type="object" isList="true" required="false">
                     <caption>Search attributes</caption>
                     <description></description>
@@ -163,7 +167,6 @@
                                     <attributeType name="Integer" />
                                     <attributeType name="Long" />
                                     <attributeType name="Decimal" />
-                                    <attributeType name="Enum" />
                                 </attributeTypes>
                             </property>
                         </propertyGroup>

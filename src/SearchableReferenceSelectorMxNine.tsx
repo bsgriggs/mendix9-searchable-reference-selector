@@ -34,19 +34,16 @@ export default function SearchableReferenceSelector(
     const [skipFilter, setSkipFilter] = useState<boolean>(true);
     const srsRef = useRef<HTMLDivElement>(null);
     const serverSideSearching: boolean = useMemo(() => {
-        if (props.selectionType === "enumeration" || props.selectionType === "boolean" || props.forceClientSide) {
+        if (
+            props.selectionType === "enumeration" ||
+            props.selectionType === "boolean" ||
+            props.filterLocation === "CLIENT"
+        ) {
             return false;
         }
         return props.optionTextType === "text" || props.optionTextType === "html"
-            ? props.displayAttribute.type !== "Enum" &&
-                  props.displayAttribute.type !== "AutoNumber" &&
-                  props.displayAttribute.filterable
-            : props.searchAttributes.every(
-                  value =>
-                      value.searchAttribute.type !== "Enum" &&
-                      value.searchAttribute.type !== "AutoNumber" &&
-                      value.searchAttribute.filterable
-              );
+            ? props.displayAttribute.filterable
+            : props.searchAttributes.every(value => value.searchAttribute.filterable);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -63,14 +60,20 @@ export default function SearchableReferenceSelector(
     const hasMoreItems = useMemo(
         () =>
             (props.hasMoreResultsManual && props.hasMoreResultsManual.value) ||
-            (((props.selectableObjects && props.selectableObjects.hasMoreItems) as boolean) && serverSideSearching),
+            (((props.selectableObjects && props.selectableObjects.hasMoreItems) as boolean) && serverSideSearching) ||
+            (props.filterLocation === "CLIENT" && options.length > itemsLimit),
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.hasMoreResultsManual, props.selectableObjects]
+        [props.hasMoreResultsManual, props.selectableObjects, options.length, itemsLimit]
     );
 
     // Apply Max Items changes to itemsLimit
     useEffect(() => {
-        setItemsLimit(serverSideSearching && props.maxItems ? Number(props.maxItems.value) : Infinity);
+        setItemsLimit(
+            (props.selectionType === "reference" || props.selectionType === "referenceSet") && props.maxItems
+                ? Number(props.maxItems.value)
+                : Infinity
+        );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.maxItems]);
 
@@ -80,7 +83,9 @@ export default function SearchableReferenceSelector(
             if (isReadOnly) {
                 props.selectableObjects.setLimit(0);
             } else {
-                props.selectableObjects.setLimit(itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity);
+                props.selectableObjects.setLimit(
+                    props.filterLocation === "SERVER" && itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity
+                );
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,16 +94,32 @@ export default function SearchableReferenceSelector(
     const handleSelect = useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
             if (!isReadOnly) {
-                if (Array.isArray(selectedOption)) {
-                    props.referenceSet.setValue(selectedOption.map(option => option.id as ObjectItem));
-                } else if (props.selectionType === "enumeration") {
-                    props.enumAttribute.setValue(selectedOption?.id as string);
-                } else if (props.selectionType === "boolean") {
-                    props.booleanAttribute.setValue(selectedOption?.id as boolean);
-                } else {
-                    props.reference.setValue(selectedOption?.id as ObjectItem);
+                if (props.selectionType === "referenceSet") {
+                    if (Array.isArray(selectedOption)) {
+                        props.referenceSet.setValue(selectedOption.map(option => option.id as ObjectItem));
+                    } else {
+                        props.referenceSet.setValue(undefined);
+                    }
+                    callMxAction(props.onChange, false);
                 }
-                callMxAction(props.onChange, false);
+                if (!Array.isArray(selectedOption)) {
+                    if (props.selectionType === "enumeration") {
+                        if (props.enumAttribute.value !== selectedOption?.id) {
+                            props.enumAttribute.setValue(selectedOption?.id as string);
+                            callMxAction(props.onChange, false);
+                        }
+                    } else if (props.selectionType === "boolean") {
+                        if (props.booleanAttribute.value !== selectedOption?.id) {
+                            props.booleanAttribute.setValue(selectedOption?.id as boolean);
+                            callMxAction(props.onChange, false);
+                        }
+                    } else {
+                        if (props.reference.value !== selectedOption?.id) {
+                            props.reference.setValue(selectedOption?.id as ObjectItem);
+                            callMxAction(props.onChange, false);
+                        }
+                    }
+                }
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,13 +215,16 @@ export default function SearchableReferenceSelector(
         [props.reference, props.referenceSet, props.selectableCondition, displayReferenceContent, mapAriaLiveText]
     );
 
-    const onShowMore = (newLimit: number | undefined, onClickMoreResultsText: ActionValue | undefined): void => {
-        if (props.filterType === "auto" && newLimit) {
-            setItemsLimit(newLimit);
-        } else if (onClickMoreResultsText) {
-            callMxAction(onClickMoreResultsText, true);
-        }
-    };
+    const onShowMore = useCallback(
+        (newLimit: number | undefined): void => {
+            if (props.filterType === "auto" && newLimit) {
+                setItemsLimit(newLimit);
+            } else if (props.onClickMoreResultsText) {
+                callMxAction(props.onClickMoreResultsText, true);
+            }
+        },
+        [props.onClickMoreResultsText]
+    );
 
     const callMxAction = (action: ActionValue | undefined, preventConcurrent: boolean): void => {
         if (action !== undefined && action.canExecute && (!preventConcurrent || !action.isExecuting)) {
@@ -410,25 +434,36 @@ export default function SearchableReferenceSelector(
                             if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
-                                        props.selectableObjects.items.filter(item => {
-                                            let match = false;
-                                            for (const searchItem of props.searchAttributes) {
-                                                const text = searchItem.searchAttribute.get(item)
-                                                    .displayValue as string;
-                                                match =
-                                                    props.filterFunction === "contains"
-                                                        ? text
-                                                              .toLocaleLowerCase()
-                                                              .includes(mxFilter.trim().toLocaleLowerCase())
-                                                        : text
-                                                              .toLocaleLowerCase()
-                                                              .startsWith(mxFilter.trim().toLocaleLowerCase());
-                                                if (match) {
-                                                    break;
-                                                }
-                                            }
-                                            return match;
-                                        })
+                                        props.filterLocation === "CLIENT"
+                                            ? props.selectableObjects.items.filter(item => {
+                                                  const text = props.optionExpression.get(item).value as string;
+                                                  return props.filterFunction === "contains"
+                                                      ? text
+                                                            .toLocaleLowerCase()
+                                                            .includes(mxFilter.trim().toLocaleLowerCase())
+                                                      : text
+                                                            .toLocaleLowerCase()
+                                                            .startsWith(mxFilter.trim().toLocaleLowerCase());
+                                              })
+                                            : props.selectableObjects.items.filter(item => {
+                                                  let match = false;
+                                                  for (const searchItem of props.searchAttributes) {
+                                                      const text = searchItem.searchAttribute.get(item)
+                                                          .displayValue as string;
+                                                      match =
+                                                          props.filterFunction === "contains"
+                                                              ? text
+                                                                    .toLocaleLowerCase()
+                                                                    .includes(mxFilter.trim().toLocaleLowerCase())
+                                                              : text
+                                                                    .toLocaleLowerCase()
+                                                                    .startsWith(mxFilter.trim().toLocaleLowerCase());
+                                                      if (match) {
+                                                          break;
+                                                      }
+                                                  }
+                                                  return match;
+                                              })
                                     )
                                 );
                             } else {
@@ -495,14 +530,10 @@ export default function SearchableReferenceSelector(
                     selectAllIconTitle={props.selectAllIconTitle.value as string}
                     hasMoreOptions={hasMoreItems}
                     moreResultsText={hasMoreItems ? props.moreResultsText.value : undefined}
-                    onSelectMoreOptions={
-                        hasMoreItems
-                            ? () => onShowMore(itemsLimit + defaultPageSize, props.onClickMoreResultsText)
-                            : undefined
-                    }
+                    onSelectMoreOptions={hasMoreItems ? () => onShowMore(itemsLimit + defaultPageSize) : undefined}
                     currentValue={currentValue}
                     isReadOnly={isReadOnly}
-                    options={options}
+                    options={hasMoreItems ? options.slice(0, itemsLimit) : options}
                     optionsStyle={
                         props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle
                     }
