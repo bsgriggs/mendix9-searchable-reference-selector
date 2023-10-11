@@ -41,7 +41,10 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                           props.searchFilter.length === 0
                         ? "1px" // cannot use display: none, because the input is needed for screen readers, focusing, and keyboard controls
                         : undefined,
-                height: !props.isSearchable && props.hasCurrentValue ? "0px" : undefined
+                position:
+                    props.isReferenceSet && (props.isCompact || !props.isSearchable) && props.searchFilter.length === 0
+                        ? "absolute"
+                        : undefined
             }}
             placeholder={
                 !props.hasCurrentValue || (props.isReferenceSet && !props.isReadOnly && !props.isCompact)

@@ -82,6 +82,11 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 id={""}
                 name={""}
                 ariaLabel={""}
+                isSearchable={
+                    props.selectionType === "boolean" || props.selectionType === "enumeration"
+                        ? props.isSearchable
+                        : props.filterMode !== "OFF"
+                }
                 placeholder={props.selectionType !== "boolean" ? props.placeholder : ""}
                 isLoading={false}
                 hasMoreOptions={
@@ -118,7 +123,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                         : undefined
                 }
                 selectAllIconTitle=""
-                currentValue={props.selectionType === "referenceSet" ? options[0] : undefined}
+                currentValue={undefined}
                 clearSearchOnSelect
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onLeave={() => {}}
@@ -135,6 +140,9 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 mxFilter=""
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 setMxFilter={() => {}}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                setShowMenu={() => {}}
+                showMenu={true}
             />
             {props.referenceSetValue === "CUSTOM" && (
                 <div className="srs-badge">

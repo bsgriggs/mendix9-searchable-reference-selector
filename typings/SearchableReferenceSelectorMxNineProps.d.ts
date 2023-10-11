@@ -11,7 +11,7 @@ export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "refer
 
 export type OptionTextTypeEnum = "text" | "html" | "expression" | "custom";
 
-export type FilterLocationEnum = "SERVER" | "CLIENT";
+export type FilterModeEnum = "SERVER" | "CLIENT" | "OFF";
 
 export type FilterTypeEnum = "auto" | "manual";
 
@@ -22,6 +22,8 @@ export interface SearchAttributesType {
 }
 
 export type SelectStyleEnum = "dropdown" | "list";
+
+export type LoadDataModeEnum = "INITIAL" | "OPEN";
 
 export type OptionsStyleSingleEnum = "cell" | "radio";
 
@@ -56,8 +58,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     optionExpression: ListExpressionValue<string>;
     optionCustomContent: ListWidgetValue;
     isSearchable: boolean;
+    filterMode: FilterModeEnum;
     filterDelay: number;
-    filterLocation: FilterLocationEnum;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
     searchAttributes: SearchAttributesType[];
@@ -65,6 +67,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     hasMoreResultsManual: DynamicValue<boolean>;
     onClickMoreResultsText?: ActionValue;
     selectStyle: SelectStyleEnum;
+    loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
     maxItems: DynamicValue<Big>;
@@ -113,8 +116,8 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     optionExpression: string;
     optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
     isSearchable: boolean;
+    filterMode: FilterModeEnum;
     filterDelay: number | null;
-    filterLocation: FilterLocationEnum;
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
     searchAttributes: SearchAttributesPreviewType[];
@@ -122,6 +125,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     hasMoreResultsManual: string;
     onClickMoreResultsText: {} | null;
     selectStyle: SelectStyleEnum;
+    loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
     maxItems: string;

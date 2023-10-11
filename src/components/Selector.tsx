@@ -70,14 +70,15 @@ interface SelectorProps {
     loadingText: string;
     allowLoadingSelect: boolean;
     clearSearchOnSelect: boolean;
+    showMenu: boolean;
+    setShowMenu: (newShowMenu: boolean) => void;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
-    const [showMenu, setShowMenu] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
-    const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && showMenu);
+    const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && props.showMenu);
 
     const hasCurrentValue = useMemo(
         (): boolean =>
@@ -97,8 +98,8 @@ const Selector = (props: SelectorProps): ReactElement => {
     }, [searchInput]);
 
     const onLeaveHandler = useCallback((): void => {
-        if (showMenu) {
-            setShowMenu(false);
+        if (props.showMenu) {
+            props.setShowMenu(false);
             if (props.mxFilter !== "") {
                 props.setMxFilter("");
             }
@@ -108,7 +109,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.onLeave();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showMenu, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
+    }, [props.showMenu, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
 
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
@@ -154,7 +155,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                 props.onSelect(undefined);
             }
             if (props.selectionType !== "referenceSet") {
-                setShowMenu(false);
+                props.setShowMenu(false);
             }
             onLeaveHandler();
         },
@@ -178,7 +179,7 @@ const Selector = (props: SelectorProps): ReactElement => {
         } else {
             onSelectHandler(undefined);
         }
-        setTimeout(() => setShowMenu(true), FOCUS_DELAY);
+        setTimeout(() => props.setShowMenu(true), FOCUS_DELAY);
         focusSearchInput();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [focusedObjIndex, props.mxFilter, onSelectHandler, focusSearchInput, props.setMxFilter]);
@@ -196,7 +197,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                 } else {
                     setFocusedObjIndex(props.options.length - 1);
                 }
-                setShowMenu(true);
+                props.setShowMenu(true);
             } else if (keyPressed === "ArrowDown") {
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
@@ -208,7 +209,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                 } else {
                     setFocusedObjIndex(0);
                 }
-                setShowMenu(true);
+                props.setShowMenu(true);
             } else if (keyPressed === "Enter") {
                 if (focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
                     if (focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
@@ -222,10 +223,10 @@ const Selector = (props: SelectorProps): ReactElement => {
                 }
             } else if (keyPressed === "Escape" || keyPressed === "Tab") {
                 onLeaveHandler();
-            } else if (keyPressed === " " && !showMenu) {
+            } else if (keyPressed === " " && !props.showMenu) {
                 event.preventDefault();
                 // event.stopPropagation();
-                setShowMenu(true);
+                props.setShowMenu(true);
                 setFocusedObjIndex(0);
             }
         },
@@ -238,7 +239,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             onLeaveHandler,
             props.hasMoreOptions,
             props.isLoading,
-            showMenu
+            props.showMenu
         ]
     );
 
@@ -259,17 +260,17 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.setMxFilter(value);
             setFocusedObjIndex(0);
             // make sure the dropdown is open if the user is typing
-            if (value.trim() !== "" && !showMenu) {
-                setShowMenu(true);
+            if (value.trim() !== "" && !props.showMenu) {
+                props.setShowMenu(true);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [showMenu, props.setMxFilter]
+        [props.showMenu, props.setMxFilter]
     );
 
     const ariaLiveText: string = useMemo(
         () =>
-            showMenu
+            props.showMenu
                 ? props.isLoading
                     ? props.loadingText
                     : focusedObjIndex === props.options.length
@@ -283,7 +284,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                     : ""
                 : "",
         [
-            showMenu,
+            props.showMenu,
             props.isLoading,
             props.loadingText,
             focusedObjIndex,
@@ -300,11 +301,11 @@ const Selector = (props: SelectorProps): ReactElement => {
                 {ariaLiveText}
             </div>
             <div
-                className={classNames("form-control", { active: showMenu }, { "read-only": props.isReadOnly })}
+                className={classNames("form-control", { active: props.showMenu }, { "read-only": props.isReadOnly })}
                 onClick={() => {
                     if (!props.isReadOnly) {
-                        setShowMenu(!showMenu);
-                        if (showMenu === false) {
+                        props.setShowMenu(!props.showMenu);
+                        if (props.showMenu === false) {
                             focusSearchInput();
                         }
                     }
@@ -362,14 +363,9 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 setRef={newRef => setSearchInput(newRef)}
                                 hasCurrentValue={hasCurrentValue}
                                 searchFilter={props.mxFilter}
-                                showMenu={showMenu}
+                                showMenu={props.showMenu}
                                 isReferenceSet={props.selectionType === "referenceSet"}
-                                onFocus={() => {
-                                    props.onEnter();
-                                    if (props.selectStyle === "list") {
-                                        setShowMenu(true);
-                                    }
-                                }}
+                                onFocus={props.onEnter}
                             />
                         )}
                     </div>
@@ -408,7 +404,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                     )}
                 </div>
             </div>
-            {(showMenu || props.selectStyle === "list") && !props.isReadOnly && (
+            {(props.showMenu || props.selectStyle === "list") && !props.isReadOnly && (
                 <OptionsMenu
                     {...props}
                     onSelect={optionClickHandler}

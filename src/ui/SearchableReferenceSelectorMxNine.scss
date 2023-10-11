@@ -20,6 +20,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 display: grid;
                 flex: 1 1 0%;
                 align-items: center;
+                position: relative;
                 // for enum and ref
                 .srs-current-value {
                     grid-column: 1;

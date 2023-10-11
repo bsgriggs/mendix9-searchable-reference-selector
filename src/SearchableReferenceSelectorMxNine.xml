@@ -84,6 +84,7 @@
                         <translation lang="en_US">No</translation>
                     </translations>
                 </property>
+
                 <property key="optionTextType" type="enumeration" defaultValue="text">
                     <caption>Option content type</caption>
                     <description></description>
@@ -123,18 +124,20 @@
                     <caption>Searchable?</caption>
                     <description></description>
                 </property>
-                <property key="filterDelay" type="integer" defaultValue="500" required="true">
-                    <caption>Search delay (ms)</caption>
-                    <description></description>
-                </property>
-                <property key="filterLocation" type="enumeration" defaultValue="SERVER">
-                    <caption>Search location</caption>
+                <property key="filterMode" type="enumeration" defaultValue="SERVER">
+                    <caption>Search mode</caption>
                     <description></description>
                     <enumerationValues>
                         <enumerationValue key="SERVER">Server side</enumerationValue>
                         <enumerationValue key="CLIENT">Client side</enumerationValue>
+                        <enumerationValue key="OFF">Off</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="filterDelay" type="integer" defaultValue="500" required="true">
+                    <caption>Search delay (ms)</caption>
+                    <description></description>
+                </property>
+
                 <property key="filterType" type="enumeration" defaultValue="auto">
                     <caption>Search type</caption>
                     <description></description>
@@ -198,6 +201,14 @@
                     <enumerationValues>
                         <enumerationValue key="dropdown">Dropdown</enumerationValue>
                         <enumerationValue key="list">List on Page</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="loadDataMode" type="enumeration" defaultValue="INITIAL">
+                    <caption>Load data on</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="INITIAL">Page load</enumerationValue>
+                        <enumerationValue key="OPEN">Open dropdown</enumerationValue>
                     </enumerationValues>
                 </property>
                 <property key="optionsStyleSingle" type="enumeration" defaultValue="cell">

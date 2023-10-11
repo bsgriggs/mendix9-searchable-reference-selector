@@ -32,12 +32,13 @@ export default function SearchableReferenceSelector(
     const [itemsLimit, setItemsLimit] = useState<number>(defaultPageSize);
     const [options, setOptions] = useState<IOption[]>([]);
     const [skipFilter, setSkipFilter] = useState<boolean>(true);
+    const [showMenu, setShowMenu] = useState(props.selectStyle === "list");
     const srsRef = useRef<HTMLDivElement>(null);
     const serverSideSearching: boolean = useMemo(() => {
         if (
             props.selectionType === "enumeration" ||
             props.selectionType === "boolean" ||
-            props.filterLocation === "CLIENT"
+            props.filterMode === "CLIENT"
         ) {
             return false;
         }
@@ -46,6 +47,14 @@ export default function SearchableReferenceSelector(
             : props.searchAttributes.every(value => value.searchAttribute.filterable);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    const searchable: boolean = useMemo(
+        () =>
+            props.selectionType === "boolean" || props.selectionType === "enumeration"
+                ? props.isSearchable
+                : props.filterMode !== "OFF",
+
+        []
+    );
 
     const isReadOnly = useMemo(
         (): boolean =>
@@ -61,7 +70,7 @@ export default function SearchableReferenceSelector(
         () =>
             (props.hasMoreResultsManual && props.hasMoreResultsManual.value) ||
             (((props.selectableObjects && props.selectableObjects.hasMoreItems) as boolean) && serverSideSearching) ||
-            (props.filterLocation === "CLIENT" && options.length > itemsLimit),
+            (props.filterMode === "CLIENT" && options.length > itemsLimit),
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.hasMoreResultsManual, props.selectableObjects, options.length, itemsLimit]
@@ -79,17 +88,17 @@ export default function SearchableReferenceSelector(
 
     // Apply items limit to data source
     useEffect(() => {
-        if (props.filterType === "auto" && props.selectableObjects) {
-            if (isReadOnly) {
+        if (props.selectableObjects) {
+            if (isReadOnly || (props.loadDataMode === "OPEN" && !showMenu)) {
                 props.selectableObjects.setLimit(0);
             } else {
                 props.selectableObjects.setLimit(
-                    props.filterLocation === "SERVER" && itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity
+                    props.filterMode === "SERVER" && itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity
                 );
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemsLimit, isReadOnly]);
+    }, [itemsLimit, isReadOnly, showMenu]);
 
     const handleSelect = useCallback(
         (selectedOption: IOption | IOption[] | undefined): void => {
@@ -101,8 +110,7 @@ export default function SearchableReferenceSelector(
                         props.referenceSet.setValue(undefined);
                     }
                     callMxAction(props.onChange, false);
-                }
-                if (!Array.isArray(selectedOption)) {
+                } else if (!Array.isArray(selectedOption)) {
                     if (props.selectionType === "enumeration") {
                         if (props.enumAttribute.value !== selectedOption?.id) {
                             props.enumAttribute.setValue(selectedOption?.id as string);
@@ -340,7 +348,7 @@ export default function SearchableReferenceSelector(
                 if (props.selectionType === "enumeration") {
                     const enumFilterDebounce = setTimeout(() => {
                         if (props.enumAttribute.universe) {
-                            if (mxFilter.trim().length > 0 && props.isSearchable) {
+                            if (mxFilter.trim().length > 0 && searchable) {
                                 const searchText = mxFilter.trim().toLowerCase();
                                 setOptions(
                                     mapEnum(
@@ -368,7 +376,7 @@ export default function SearchableReferenceSelector(
                     return () => clearTimeout(enumFilterDebounce);
                 } else if (props.selectionType === "boolean") {
                     const booleanFilterDebounce = setTimeout(() => {
-                        if (mxFilter.trim().length > 0 && props.isSearchable) {
+                        if (mxFilter.trim().length > 0 && searchable) {
                             const searchText = mxFilter.trim().toLowerCase();
                             setOptions(
                                 props.filterFunction === "contains"
@@ -434,7 +442,7 @@ export default function SearchableReferenceSelector(
                             if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
-                                        props.filterLocation === "CLIENT"
+                                        props.filterMode === "CLIENT"
                                             ? props.selectableObjects.items.filter(item => {
                                                   const text = props.optionExpression.get(item).value as string;
                                                   return props.filterFunction === "contains"
@@ -477,7 +485,7 @@ export default function SearchableReferenceSelector(
                 // Manual mode -> update searchText attribute
                 if (props.searchText.status === ValueStatus.Available && !isReadOnly) {
                     const manualFilterDebounce = setTimeout(() => {
-                        if (props.isSearchable) {
+                        if (searchable) {
                             props.searchText.setValue(mxFilter);
                             props.selectableObjects.reload();
                         }
@@ -504,6 +512,12 @@ export default function SearchableReferenceSelector(
         }, [props.searchText]);
     }
 
+    useEffect(() => {
+        if (props.loadDataMode === "OPEN") {
+            props.selectableObjects.setLimit;
+        }
+    }, []);
+
     return (
         <Fragment>
             <div id={props.id} className="srs" ref={srsRef}>
@@ -511,6 +525,7 @@ export default function SearchableReferenceSelector(
                     {...props}
                     ariaLabel={props.ariaLabel?.value}
                     isLoading={props.selectableObjects && props.selectableObjects.status === ValueStatus.Loading}
+                    isSearchable={searchable}
                     loadingText={props.loadingText.value as string}
                     isClearable={props.selectionType !== "boolean" ? props.isClearable : false}
                     clearIcon={props.clearIcon?.value}
@@ -543,6 +558,8 @@ export default function SearchableReferenceSelector(
                     onLeave={() => callMxAction(props.onLeave, false)}
                     srsRef={srsRef}
                     onEnter={() => callMxAction(props.onEnter, true)}
+                    showMenu={showMenu}
+                    setShowMenu={setShowMenu}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}

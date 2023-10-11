@@ -168,10 +168,11 @@ export function getProperties(
                 "displayAttribute",
                 "optionExpression",
                 "isCompact",
-                "filterLocation",
+                "filterMode",
                 "booleanAttribute",
                 "trueLabel",
-                "falseLabel"
+                "falseLabel",
+                "loadDataMode"
             ]);
             break;
         case "boolean":
@@ -202,13 +203,14 @@ export function getProperties(
                 "displayAttribute",
                 "optionExpression",
                 "isCompact",
-                "filterLocation",
+                "filterMode",
                 "enumAttribute",
                 "isClearable",
                 "clearIcon",
                 "clearIconTitle",
                 "maxMenuHeight",
-                "placeholder"
+                "placeholder",
+                "loadDataMode"
             ]);
 
             break;
@@ -229,7 +231,8 @@ export function getProperties(
                 "isCompact",
                 "booleanAttribute",
                 "trueLabel",
-                "falseLabel"
+                "falseLabel",
+                "isSearchable"
             ]);
             break;
         case "referenceSet":
@@ -239,7 +242,8 @@ export function getProperties(
                 "optionsStyleSingle",
                 "booleanAttribute",
                 "trueLabel",
-                "falseLabel"
+                "falseLabel",
+                "isSearchable"
             ]);
             break;
     }
@@ -277,15 +281,11 @@ export function getProperties(
             break;
         case "custom":
             hidePropertyIn(defaultProperties, _values, "displayAttribute");
-            if (_values.filterLocation === "SERVER") {
+            if (_values.filterMode === "SERVER") {
                 hidePropertyIn(defaultProperties, _values, "optionExpression");
             }
 
             break;
-    }
-
-    if (_values.isSearchable === false) {
-        hidePropertiesIn(defaultProperties, _values, ["searchAttributes"]);
     }
 
     if (parseInt(_values.maxItems) === 0) {
@@ -297,7 +297,7 @@ export function getProperties(
     }
 
     if (_values.selectStyle === "list") {
-        hidePropertyIn(defaultProperties, _values, "dropdownIcon");
+        hidePropertiesIn(defaultProperties, _values, ["dropdownIcon", "loadDataMode"]);
     }
 
     if (_values.referenceSetValue === "SAME") {
@@ -312,7 +312,7 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["selectAllIcon", "selectAllIconTitle"]);
     }
 
-    if (_values.isSearchable === false) {
+    if (_values.isSearchable === false || _values.filterMode === "OFF") {
         hidePropertiesIn(defaultProperties, _values, [
             "maxItems",
             "filterDelay",
@@ -322,19 +322,16 @@ export function getProperties(
             "filterFunction",
             "searchText",
             "hasMoreResultsManual",
-            "clearSearchOnSelect"
+            "clearSearchOnSelect",
+            "searchAttributes"
         ]);
-    }
-
-    if (_values.isSearchable === false && _values.selectStyle === "list") {
-        hidePropertiesIn(defaultProperties, _values, ["placeholder"]);
     }
 
     if (_values.maxReferenceDisplay !== null && _values.maxReferenceDisplay === 0) {
         hidePropertyIn(defaultProperties, _values, "onExtraClick");
     }
 
-    if (_values.filterLocation === "CLIENT") {
+    if (_values.filterMode === "CLIENT") {
         hidePropertiesIn(defaultProperties, _values, ["searchAttributes", "filterType"]);
     }
 
@@ -345,12 +342,10 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     const errors: Problem[] = [];
 
     if (
-        _values.isSearchable &&
-        _values.selectionType !== "enumeration" &&
-        _values.selectionType !== "boolean" &&
+        (_values.selectionType === "reference" || _values.selectionType === "referenceSet") &&
         _values.filterType === "auto" &&
         _values.searchAttributes.length === 0 &&
-        _values.filterLocation === "SERVER" &&
+        _values.filterMode === "SERVER" &&
         (_values.optionTextType === "custom" || _values.optionTextType === "expression")
     ) {
         errors.push({
@@ -361,11 +356,9 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     }
 
     if (
-        _values.isSearchable &&
-        _values.selectionType !== "enumeration" &&
-        _values.selectionType !== "boolean" &&
+        (_values.selectionType === "reference" || _values.selectionType === "referenceSet") &&
         _values.filterType === "auto" &&
-        _values.filterLocation === "CLIENT" &&
+        _values.filterMode === "CLIENT" &&
         (_values.optionTextType === "custom" || _values.optionTextType === "expression") &&
         _values.optionExpression.trim() === ""
     ) {
