@@ -1,4 +1,4 @@
-import { ChangeEvent, createElement, ReactElement, useEffect, useRef } from "react";
+import { ChangeEvent, createElement, ReactElement, useEffect, useRef, useMemo } from "react";
 
 interface SearchInputProps {
     id: string;
@@ -28,6 +28,15 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput, props.setRef]);
 
+    const hideInput: boolean = useMemo(
+        () =>
+            props.hasCurrentValue &&
+            props.isReferenceSet &&
+            (props.isCompact || !props.isSearchable) &&
+            props.searchFilter.length === 0,
+        [props.searchFilter, props.hasCurrentValue]
+    );
+
     return (
         <input
             name={props.name} // required for screen readers
@@ -39,12 +48,10 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                         : (props.isCompact || (!props.isSearchable && props.hasCurrentValue)) && // For compact or non-searchable modes, make the input take the least amount of space possible until a search text is typed.
                           props.hasCurrentValue &&
                           props.searchFilter.length === 0
-                        ? "1px" // cannot use display: none, because the input is needed for screen readers, focusing, and keyboard controls
+                        ? "4px" // cannot use display: none, because the input is needed for screen readers, focusing, and keyboard controls
                         : undefined,
-                position:
-                    props.isReferenceSet && (props.isCompact || !props.isSearchable) && props.searchFilter.length === 0
-                        ? "absolute"
-                        : undefined
+                position: hideInput ? "absolute" : undefined,
+                right: hideInput ? "1em" : undefined
             }}
             placeholder={
                 !props.hasCurrentValue || (props.isReferenceSet && !props.isReadOnly && !props.isCompact)
@@ -62,8 +69,9 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
             } // for screen readers
             aria-label={props.ariaLabel} // for screen readers
-            aria-haspopup // for screen readers
+            aria-haspopup={props.showMenu ? "true" : "false"} // for screen readers
             aria-expanded={props.showMenu} // for screen readers
+            aria-controls={props.id + "-listbox"}
             role="combobox" // for screen readers
             onClick={event => {
                 if (props.showMenu) {

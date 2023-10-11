@@ -3,6 +3,7 @@ import { WebIcon } from "mendix";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
 import { BadgeColorEnum } from "typings/SearchableReferenceSelectorMxNineProps";
+import classNames from "classnames";
 
 interface BadgeProps {
     option: IOption;
@@ -19,6 +20,7 @@ interface BadgeProps {
 const Badge = (props: BadgeProps): ReactElement => (
     <div className={`srs-badge label-${props.badgeColor}`}>
         <div
+            className={classNames({ "srs-focusable": props.onBadgeClick })}
             tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
             onClick={event => {
                 if (props.onBadgeClick) {
@@ -27,8 +29,9 @@ const Badge = (props: BadgeProps): ReactElement => (
                 }
             }}
             onKeyDown={event => {
-                if (event.key === "Enter" && props.onBadgeClick) {
+                if ((event.key === "Enter" || event.key === " ") && props.onBadgeClick) {
                     event.stopPropagation();
+                    event.preventDefault();
                     props.onBadgeClick(props.option);
                 }
             }}

@@ -52,7 +52,6 @@ export default function SearchableReferenceSelector(
             props.selectionType === "boolean" || props.selectionType === "enumeration"
                 ? props.isSearchable
                 : props.filterMode !== "OFF",
-
         []
     );
 
@@ -70,8 +69,7 @@ export default function SearchableReferenceSelector(
         () =>
             (props.hasMoreResultsManual && props.hasMoreResultsManual.value) ||
             (((props.selectableObjects && props.selectableObjects.hasMoreItems) as boolean) && serverSideSearching) ||
-            (props.filterMode === "CLIENT" && options.length > itemsLimit),
-
+            (props.filterMode === "CLIENT" && itemsLimit !== 0 && options.length > itemsLimit),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.hasMoreResultsManual, props.selectableObjects, options.length, itemsLimit]
     );
@@ -91,6 +89,7 @@ export default function SearchableReferenceSelector(
         if (props.selectableObjects) {
             if (isReadOnly || (props.loadDataMode === "OPEN" && !showMenu)) {
                 props.selectableObjects.setLimit(0);
+                setOptions([]);
             } else {
                 props.selectableObjects.setLimit(
                     props.filterMode === "SERVER" && itemsLimit && Number(itemsLimit) > 1 ? itemsLimit : Infinity
@@ -338,7 +337,9 @@ export default function SearchableReferenceSelector(
         isReadOnly,
         props.booleanAttribute,
         boolOptions,
-        props.selectableCondition
+        props.selectableCondition,
+        mapEnum,
+        mapObjectItems
     ]);
 
     // Apply the Filtering useEffect

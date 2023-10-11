@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { createElement, ReactElement } from "react";
 import { IOption } from "typings/option";
 
@@ -10,7 +11,7 @@ interface CommaProps {
 
 const Comma = (props: CommaProps): ReactElement => (
     <div
-        className="srs-comma"
+        className={classNames("srs-comma", { "srs-focusable": props.onBadgeClick })}
         tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
         onClick={event => {
             if (props.onBadgeClick) {
@@ -19,8 +20,9 @@ const Comma = (props: CommaProps): ReactElement => (
             }
         }}
         onKeyDown={event => {
-            if (event.key === "Enter" && props.onBadgeClick) {
+            if ((event.key === "Enter" || event.key === " ") && props.onBadgeClick) {
                 event.stopPropagation();
+                event.preventDefault();
                 props.onBadgeClick(props.option);
             }
         }}

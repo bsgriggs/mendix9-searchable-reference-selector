@@ -268,6 +268,16 @@ const Selector = (props: SelectorProps): ReactElement => {
         [props.showMenu, props.setMxFilter]
     );
 
+    const currentValueAriaLabel: string = useMemo(
+        () =>
+            props.currentValue
+                ? Array.isArray(props.currentValue)
+                    ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
+                    : props.currentValue.ariaLiveText || ""
+                : "",
+        [props.currentValue]
+    );
+
     const ariaLiveText: string = useMemo(
         () =>
             props.showMenu
@@ -277,11 +287,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                     ? props.moreResultsText || ""
                     : focusedObjIndex > -1
                     ? props.options[focusedObjIndex].ariaLiveText || ""
-                    : props.currentValue
-                    ? Array.isArray(props.currentValue)
-                        ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
-                        : props.currentValue.ariaLiveText || ""
-                    : ""
+                    : currentValueAriaLabel
                 : "",
         [
             props.showMenu,
@@ -290,7 +296,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             focusedObjIndex,
             props.options,
             props.moreResultsText,
-            props.currentValue
+            currentValueAriaLabel
         ]
     );
 
@@ -339,16 +345,19 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 {...props}
                                 onRemove={(clickObj, byKeyboard) => {
                                     onSelectHandler(clickObj);
-                                    if (byKeyboard && hasCurrentValue) {
+                                    if (byKeyboard && hasCurrentValue && (props.currentValue as []).length > 1) {
                                         // focus the next remove icon for easier clear by keyboard navigation
-                                        const nextIcon = props.srsRef?.current?.querySelector(
-                                            ".srs-icon-focusable"
-                                        ) as HTMLButtonElement;
-                                        if (nextIcon) {
-                                            nextIcon.focus();
+                                        const nextIcons =
+                                            props.srsRef?.current?.getElementsByClassName("srs-focusable");
+
+                                        if (nextIcons && nextIcons.length > 0) {
+                                            (nextIcons[0] as HTMLButtonElement).focus();
+                                        } else {
+                                            focusSearchInput();
                                         }
                                     } else {
                                         // re-focus the search input for easier muli-select
+
                                         focusSearchInput();
                                     }
                                 }}
@@ -363,7 +372,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 setRef={newRef => setSearchInput(newRef)}
                                 hasCurrentValue={hasCurrentValue}
                                 searchFilter={props.mxFilter}
-                                showMenu={props.showMenu}
+                                showMenu={props.showMenu || props.selectStyle === "list"}
                                 isReferenceSet={props.selectionType === "referenceSet"}
                                 onFocus={props.onEnter}
                             />

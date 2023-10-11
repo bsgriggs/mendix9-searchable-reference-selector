@@ -41,7 +41,7 @@ const MxIcon = (props: IconProps): ReactElement => {
             onKeyDown={onEnterHandler}
             title={props.title}
             tabIndex={props.tabIndex}
-            className={classNames(props.defaultClassName, { "srs-icon-focusable": props.tabIndex !== undefined })}
+            className={classNames(props.defaultClassName, { "srs-focusable": props.tabIndex !== undefined })}
             role={props.onClick ? "button" : undefined}
         >
             <Icon icon={props.mxIconOverride || { type: "glyph", iconClass: `glyphicon-${props.defaultClassName}` }} />

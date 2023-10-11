@@ -76,6 +76,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
 
     return (
         <ul
+            id={props.id + "-listbox"}
             className={classNames(
                 "srs-menu",
                 { "srs-dropdown": props.selectStyle === "dropdown" },
@@ -85,10 +86,6 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
             role="listbox"
-            aria-labelledby={
-                props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
-            } // for screen readers
-            aria-label={props.ariaLabel} // for screen readers
         >
             {props.options.length > 0 ? (
                 <Fragment>

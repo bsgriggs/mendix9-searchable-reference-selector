@@ -40,7 +40,7 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
             {props.optionsStyle === "checkbox" && (
                 <input
                     type={"checkbox"}
-                    aria-label={props.option.ariaLiveText}
+                    aria-hidden
                     checked={props.option.isSelected}
                     disabled={!props.option.isSelectable}
                     tabIndex={-1}
@@ -49,7 +49,7 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
             {props.optionsStyle === "radio" && (
                 <input
                     type={"radio"}
-                    aria-label={props.option.ariaLiveText}
+                    aria-hidden
                     checked={props.option.isSelected}
                     disabled={!props.option.isSelectable}
                     tabIndex={-1}

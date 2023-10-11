@@ -38,6 +38,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                     grid-row: 1;
                     cursor: pointer;
                     min-width: 1px;
+                    flex: 1 0 100%;
                 }
                 &.srs-multi {
                     display: flex;
@@ -63,9 +64,6 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                         p {
                             margin: 0;
                         }
-                        > div:focus-visible {
-                            outline: $focus-outline;
-                        }
                     }
                 }
                 &.srs-commas {
@@ -74,9 +72,6 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                         display: flex;
                         font-size: small;
                         padding: 0px;
-                        &:focus-visible {
-                            outline: $focus-outline;
-                        }
                     }
                 }
             }
@@ -104,7 +99,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         }
     }
 
-    .srs-icon-focusable:focus-visible {
+    .srs-focusable:focus-visible {
         outline: $focus-outline;
     }
 

@@ -100,8 +100,9 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                     }
                                 }}
                                 onKeyDown={event => {
-                                    if (event.key === "Enter" && props.onExtraClick) {
+                                    if ((event.key === "Enter" || event.key === " ") && props.onExtraClick) {
                                         event.stopPropagation();
+                                        event.preventDefault();
                                         props.onExtraClick();
                                     }
                                 }}
