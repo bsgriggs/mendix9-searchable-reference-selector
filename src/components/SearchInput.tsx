@@ -34,6 +34,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
             props.isReferenceSet &&
             (props.isCompact || !props.isSearchable) &&
             props.searchFilter.length === 0,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.searchFilter, props.hasCurrentValue]
     );
 

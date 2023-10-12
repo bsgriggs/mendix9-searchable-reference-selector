@@ -46,12 +46,13 @@ export default function SearchableReferenceSelector(
             ? props.displayAttribute.filterable
             : props.searchAttributes.every(value => value.searchAttribute.filterable);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [props.searchAttributes]);
     const searchable: boolean = useMemo(
         () =>
             props.selectionType === "boolean" || props.selectionType === "enumeration"
                 ? props.isSearchable
                 : props.filterMode !== "OFF",
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
@@ -189,6 +190,7 @@ export default function SearchableReferenceSelector(
                       }
                   ]
                 : [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.trueLabel, props.falseLabel, props.booleanAttribute]
     );
 
@@ -230,6 +232,7 @@ export default function SearchableReferenceSelector(
                 callMxAction(props.onClickMoreResultsText, true);
             }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.onClickMoreResultsText]
     );
 
@@ -512,12 +515,6 @@ export default function SearchableReferenceSelector(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [props.searchText]);
     }
-
-    useEffect(() => {
-        if (props.loadDataMode === "OPEN") {
-            props.selectableObjects.setLimit;
-        }
-    }, []);
 
     return (
         <Fragment>
