@@ -25,8 +25,8 @@ settings.
 
 **Selection type** - The attribute or association type that the widget is expected to set.  
 **Boolean attribute** - The attribute that will be set when the user selects an option.  
-**True label** - The text shown for the 'True' option.  
-**False label** - The text shown for the 'False' option.  
+**True label** - The text shown for the 'True' option. Is also the test searched against.  
+**False label** - The text shown for the 'False' option. Is also the test searched against.  
 
 ### Searching
 
