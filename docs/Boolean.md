@@ -1,6 +1,6 @@
 # Boolean Selector
 
-The following documentation is for using Selection Type "Enumeration" with Automatic filtering under the Data Source
+The following documentation is for using Selection Type "Boolean" with Automatic filtering under the Data Source
 tab. If you need another selection type, see the documentation at these links:
 
 -   [Enumeration Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Enumeration.md)
