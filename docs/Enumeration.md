@@ -42,13 +42,19 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 
 ### Clearing
 **Clearable?** - Allows the user to set the value as empty.  
-**Clear icon text** - Tooltip text for the clear icon.  
+**Clear icon text** - Tooltip text for the clear icon and what is read by the screen reader on focus.  
 **Clear icon** - Override the default clear icon with your own glyphicon or images.  
 
 ## Events Settings
 ![eventsNotRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsNotRefSet.png)  
 **On Change** - Perform an MxAction when the user selects an option different from the current value.  
+**On Enter** - Perform an MxAction when the user focuses the search input.  
 **On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
+
+## Accessibility Settings
+
+![accessibilityBool&Enum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/accessibilityBool&Enum.png)  
+**Aria label** - Text read by the screen reader when first focusing on the input. Should describe what the field is and can be used to read the current value.  
 
 ## Common Settings  
 ![styleEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/common.png)  
