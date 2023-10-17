@@ -20,6 +20,7 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 display: grid;
                 flex: 1 1 0%;
                 align-items: center;
+                overflow-x: hidden;
                 // for enum and ref
                 .srs-current-value {
                     grid-column: 1;
@@ -29,25 +30,53 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                         margin: 0;
                     }
                 }
-                > input {
-                    border: none;
-                    padding: 0;
-                    background: transparent;
+                .srs-input-container {
                     grid-column: 1;
                     grid-row: 1;
-                    cursor: pointer;
-                    min-width: 1px;
+                    flex: 1 0 100%;
+                    .srs-input {
+                        width: 100%;
+                        background: transparent;
+                        border: 0px;
+                        margin: 0px;
+                        outline: 0px;
+                        padding: 0px;
+                    }
                 }
+                &.srs-compact {
+                    .srs-input-container {
+                        visibility: visible;
+                        flex: 1 1 auto;
+                        display: inline-grid;
+                        grid-area: 1 / 1 / 2 / 3;
+                        grid-template-columns: 0px min-content;
+                        box-sizing: border-box;
+
+                        .srs-input {
+                            grid-area: 1 / 2 / auto / auto;
+                            font: inherit;
+                            min-width: 2px;
+                        }
+                        &::after {
+                            content: attr(data-value) " ";
+                            visibility: hidden;
+                            white-space: pre;
+                            grid-area: 1 / 2 / auto / auto;
+                            font: inherit;
+                            min-width: 2px;
+                            border: 0px;
+                            margin: 0px;
+                            outline: 0px;
+                            padding: 0px;
+                            overflow-x: hidden;
+                        }
+                    }
+                }
+
                 &.srs-multi {
                     display: flex;
                     flex-wrap: wrap;
                     align-items: center;
-                    .max-input {
-                        flex: 1 0 100%;
-                    }
-                    .min-input {
-                        flex: 1;
-                    }
                 }
                 &.srs-badges {
                     gap: $padding-lg;

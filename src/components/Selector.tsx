@@ -328,7 +328,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                         className={classNames(
                             "srs-value-container",
                             { "srs-multi": props.selectionType === "referenceSet" },
-                            { "srs-compact": props.isCompact },
+                            { "srs-compact": props.isCompact && props.selectionType === "referenceSet" },
                             {
                                 "srs-badges":
                                     props.selectionType === "referenceSet" && props.referenceSetStyle === "badges"
