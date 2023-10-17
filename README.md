@@ -1,7 +1,7 @@
 <!-- prettier-ignore-start -->
 ## Searchable Selector
 
-Mendix reference, reference set, and enumeration selector with a search bar and a clear button.
+Mendix reference, reference set, boolean, and enumeration selector with a search bar and a clear button.
 
 **If you are using Mendix 8.17 - 9.12**, please use the following widget or check the older versions in the marketplace. (The older version does *not* support reference sets or enumerations)  
 https://github.com/bsgriggs/mendix8-searchable-reference-selector  
@@ -20,9 +20,9 @@ https://marketplace.mendix.com/link/component/116917
 
 ## Features
 
--   Dropdown or list selection for enumerations, references or reference sets
+-   Dropdown or list selection for enumerations, booleans, references, or reference sets
 -   Can use "Max Items" setting to limit objects retrieved at once **use if you encounter longer load times**
--   Filtering is done by the Mendix runtime instead of the browser
+-   Filtering is done by the Mendix runtime or the browser
 -   Option to search against multiple attributes at the same time with Option content types 'Expression' and 'Custom'
 -   Button to clear the selection / all selections - can be disabled
 -   Button to select all the options in a reference set - can be disabled
@@ -37,10 +37,12 @@ https://marketplace.mendix.com/link/component/116917
 -   Ability to customize the icons and their tooltips
 -   Support for arrow keys and enter key press
 -   Searching auto-highlights the first record for easier selection with the enter key
+-   Option to wait to run the data source until the dropdown is opened
 
 ## Configuration  
 Please see the following documentation based on the Selection Type you wish to use.
 -   [Enumeration Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Enumeration.md)
+-   [Boolean Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Boolean.md)
 -   [Reference Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/Reference.md)
 -   [Reference Set Selector](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/docs/ReferenceSet.md)
 
