@@ -323,7 +323,8 @@ export function getProperties(
             "searchText",
             "hasMoreResultsManual",
             "clearSearchOnSelect",
-            "searchAttributes"
+            "searchAttributes",
+            "onClickMoreResultsText"
         ]);
     }
 

@@ -4,19 +4,7 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import {
-    ActionValue,
-    DynamicValue,
-    EditableValue,
-    ListValue,
-    ListActionValue,
-    ListAttributeValue,
-    ListExpressionValue,
-    ListWidgetValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    WebIcon
-} from "mendix";
+import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
 export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "referenceSet";
@@ -143,7 +131,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxItems: string;
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
-    dropdownIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
@@ -156,10 +144,10 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     loadingText: string;
     showSelectAll: boolean;
     selectAllIconTitle: string;
-    selectAllIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     isClearable: boolean;
     clearIconTitle: string;
-    clearIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     onChange: {} | null;
     onEnter: {} | null;
     onLeave: {} | null;

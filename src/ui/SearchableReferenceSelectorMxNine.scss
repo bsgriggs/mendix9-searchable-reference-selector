@@ -20,7 +20,6 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 display: grid;
                 flex: 1 1 0%;
                 align-items: center;
-                position: relative;
                 // for enum and ref
                 .srs-current-value {
                     grid-column: 1;
@@ -38,12 +37,17 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                     grid-row: 1;
                     cursor: pointer;
                     min-width: 1px;
-                    flex: 1 0 100%;
                 }
                 &.srs-multi {
                     display: flex;
                     flex-wrap: wrap;
                     align-items: center;
+                    .max-input {
+                        flex: 1 0 100%;
+                    }
+                    .min-input {
+                        flex: 1;
+                    }
                 }
                 &.srs-badges {
                     gap: $padding-lg;

@@ -364,19 +364,16 @@ const Selector = (props: SelectorProps): ReactElement => {
                             />
                         )}
 
-                        {/* Hide Search Input if read only and there is already a value */}
-                        {!(props.isReadOnly && hasCurrentValue) && (
-                            <SearchInput
-                                {...props}
-                                onChange={handleInputChange}
-                                setRef={newRef => setSearchInput(newRef)}
-                                hasCurrentValue={hasCurrentValue}
-                                searchFilter={props.mxFilter}
-                                showMenu={props.showMenu || props.selectStyle === "list"}
-                                isReferenceSet={props.selectionType === "referenceSet"}
-                                onFocus={props.onEnter}
-                            />
-                        )}
+                        <SearchInput
+                            {...props}
+                            onChange={handleInputChange}
+                            setRef={newRef => setSearchInput(newRef)}
+                            hasCurrentValue={hasCurrentValue}
+                            searchFilter={props.mxFilter}
+                            showMenu={props.showMenu || props.selectStyle === "list"}
+                            isReferenceSet={props.selectionType === "referenceSet"}
+                            onFocus={props.onEnter}
+                        />
                     </div>
                     {!props.isReadOnly && (
                         <div
