@@ -28,7 +28,7 @@ https://marketplace.mendix.com/link/component/116917
 -   Button to select all the options in a reference set - can be disabled
 -   Option to make the content un-searchable - **allows you to show a dynamic list of checkboxes / radio buttons**
 -   Option to use either Contains or StartsWith functions
--   Option to render options as checkboxes, radio buttons, or a cell
+-   Option to render options as checkboxes, radio buttons, or cells
 -   Option to render attribute text, HTML content, a string expression, or custom content from Mendix 
 -   Option to render a reference set's values with either badges or as a comma-separated list
 -   Option to make badges color any of the 7 brand styles (default, info, primary, inverse, success, warning, danger)
