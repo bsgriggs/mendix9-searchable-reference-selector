@@ -14,68 +14,61 @@ features manually in your microflow data source.
 
 ## General Settings
 
-![generalEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalEnum.png)
+![generalBool](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalBoolean.png)
 
 ### Label
 
 **Label** - Mendix label, displayed either horizontally or vertically to the input based on your parent data view's
 settings.  
-**Placeholder** - The text that is shown while no options are selected.
 
 ### Data source
 
 **Selection type** - The attribute or association type that the widget is expected to set.  
-**Enum attribute** - The attribute that will be set when the user selects an option. The widget automatically displays
-all possible options for the selected enumeration.
+**Boolean attribute** - The attribute that will be set when the user selects an option.  
+**True label** - The text shown for the 'True' option.  
+**False label** - The text shown for the 'False' option.  
 
 ### Searching
 
-**Searchable?** - Whether or not the user can search for an enumeration value **Search delay** - The number of
-milliseconds between the user's last typing and applying the search criteria. This is an important performance
+**Searchable?** - Whether or not the user can search for an enumeration value  
+**Search delay** - The number of milliseconds between the user's last typing and applying the search criteria. This is an important performance
 optimization, so be sure not to set the value too low!  
 **Search function** - How the user's text is used to filter the results list. Contains mode will return any options
 where an exact match is found at any point in the option's text. Starts With mode will return options that have an exact
-match at the beginning of the option's text.
+match at the beginning of the option's text.  
 
 _Starts With can help with performance but it can be bad UX depending on the use case. For example, displaying a list of
 user full names would not work, because the user may enter the last name instead of the first name._
 
 ## Style Settings
 
-![generalEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/styleEnum.png)  
+![generalBool](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/styleBool.png)  
 **Select style** - Determines if the options menu displays as a dropdown on-click or is always shown as a list on the
 page.  
 **Option style** - Determines the style of the selected options. Choose between radio buttons or cells with a grey
 background color.  
-| Cell | Radio Buttons |  
-| ------------- | ------------- |  
-| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png) |
-![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png) |
-
-**Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em. (only for Select Style =
-"Dropdown").  
-**Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.
+**Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.  
 
 ## Customization Settings
 
-![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/customizationEnum.png)
+![customizationBool](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/customizationBool.png)
 
 ### Text
 
 **No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user
 enters a search text and nothing is found)
 
-### Clearing
-
-**Clearable?** - Allows the user to set the value as empty.  
-**Clear icon text** - Tooltip text for the clear icon.  
-**Clear icon** - Override the default clear icon with your own glyphicon or images.
-
 ## Events Settings
 
-![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsEnum&Ref.png)  
+![eventsNotRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsNotRefSet.png)  
 **On Change** - Perform an MxAction when the user selects an option different from the current value.  
-**On Leave** - Perform an MxAction when the user clicks or tabs away from the input.
+**On Enter** - Perform an MxAction when the user focuses the search input.  
+**On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
+
+## Accessibility Settings
+
+![accessibilityBool&Enum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/accessibilityBool&Enum.png)  
+**Aria label** - Text read by the screen reader when first focusing on the input. Should describe what the field is and can be used to read the current value.  
 
 ## Common Settings
 
