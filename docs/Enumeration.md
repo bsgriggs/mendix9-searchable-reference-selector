@@ -32,7 +32,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 | ------------- | ------------- |  
 | ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png)   | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png)   |  
 
-**Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em. (only for Select Style = "Dropdown").  
+**Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em.  
 **Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.  
 
 ## Customization Settings  
@@ -46,7 +46,7 @@ Check [here](https://github.com/bsgriggs/mendix9-searchable-reference-selector/b
 **Clear icon** - Override the default clear icon with your own glyphicon or images.  
 
 ## Events Settings
-![customizationEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsEnum&Ref.png)  
+![eventsNotRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/eventsNotRefSet.png)  
 **On Change** - Perform an MxAction when the user selects an option different from the current value.  
 **On Leave** - Perform an MxAction when the user clicks or tabs away from the input.  
 
