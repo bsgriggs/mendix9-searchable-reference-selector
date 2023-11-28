@@ -38,6 +38,7 @@ https://marketplace.mendix.com/link/component/116917
 -   Support for arrow keys and enter key press
 -   Searching auto-highlights the first record for easier selection with the enter key
 -   Option to wait to run the data source until the dropdown is opened
+-   Ability to show only a sub-set of Enum values
 
 ## Configuration  
 Please see the following documentation based on the Selection Type you wish to use.
