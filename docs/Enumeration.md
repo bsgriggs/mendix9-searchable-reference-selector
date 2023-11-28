@@ -27,13 +27,13 @@ settings.
 **Selection type** - The attribute or association type that the widget is expected to set.  
 **Enum attribute** - The attribute that will be set when the user selects an option. The widget automatically displays
 all possible options for the selected enumeration.  
-**Enum filter type** - Which mode affects the available enumeration values.
+**Enum filter type** - Allows you to customize which enumeration values are selectable
 
--   Off = no customization
--   Include = Only the specified values are shown
--   Exclude = The specified values are not shown
+-   Off = All options are selectable
+-   Include = Only the specified values are selectable
+-   Exclude = The specified values are not selectable
 
-**Enum filter list** - A comma separated list of the enumeration's keys. They are used according to the Enum Filter
+**Enum filter list** - A comma-separated list of the enumeration's keys. They are used according to the Enum Filter
 Type. The list should not have any spaces.
 
 **Enum filter example**  
