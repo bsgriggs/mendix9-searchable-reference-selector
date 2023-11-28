@@ -4,22 +4,12 @@
  * @author Mendix UI Content Team
  */
 import { ComponentType } from "react";
-import {
-    ActionValue,
-    DynamicValue,
-    EditableValue,
-    ListValue,
-    ListActionValue,
-    ListAttributeValue,
-    ListExpressionValue,
-    ListWidgetValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    WebIcon
-} from "mendix";
+import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
 export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "referenceSet";
+
+export type EnumFilterTypeEnum = "OFF" | "INCLUDE" | "EXCLUDE";
 
 export type OptionTextTypeEnum = "text" | "html" | "expression" | "custom";
 
@@ -62,6 +52,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     referenceSet: ReferenceSetValue;
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
+    enumFilterType: EnumFilterTypeEnum;
+    enumFilterList: DynamicValue<string>;
     booleanAttribute: EditableValue<boolean>;
     trueLabel: DynamicValue<string>;
     falseLabel: DynamicValue<string>;
@@ -120,6 +112,8 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     referenceSet: string;
     selectableCondition: string;
     enumAttribute: string;
+    enumFilterType: EnumFilterTypeEnum;
+    enumFilterList: string;
     booleanAttribute: string;
     trueLabel: string;
     falseLabel: string;
@@ -143,7 +137,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxItems: string;
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
-    dropdownIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
@@ -156,10 +150,10 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     loadingText: string;
     showSelectAll: boolean;
     selectAllIconTitle: string;
-    selectAllIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     isClearable: boolean;
     clearIconTitle: string;
-    clearIcon: { type: "glyph"; iconClass: string } | { type: "image"; imageUrl: string } | null;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     onChange: {} | null;
     onEnter: {} | null;
     onLeave: {} | null;

@@ -210,7 +210,9 @@ export function getProperties(
                 "clearIconTitle",
                 "maxMenuHeight",
                 "placeholder",
-                "loadDataMode"
+                "loadDataMode",
+                "enumFilterType",
+                "enumFilterList"
             ]);
 
             break;
@@ -232,7 +234,9 @@ export function getProperties(
                 "booleanAttribute",
                 "trueLabel",
                 "falseLabel",
-                "isSearchable"
+                "isSearchable",
+                "enumFilterType",
+                "enumFilterList"
             ]);
             break;
         case "referenceSet":
@@ -243,7 +247,9 @@ export function getProperties(
                 "booleanAttribute",
                 "trueLabel",
                 "falseLabel",
-                "isSearchable"
+                "isSearchable",
+                "enumFilterType",
+                "enumFilterList"
             ]);
             break;
     }
@@ -334,6 +340,10 @@ export function getProperties(
 
     if (_values.filterMode === "CLIENT") {
         hidePropertiesIn(defaultProperties, _values, ["searchAttributes", "filterType"]);
+    }
+
+    if (_values.enumFilterType === "OFF") {
+        hidePropertyIn(defaultProperties, _values, "enumFilterList");
     }
 
     return defaultProperties;

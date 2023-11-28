@@ -63,6 +63,20 @@
                         <attributeType name="Enum" />
                     </attributeTypes>
                 </property>
+                <property key="enumFilterType" type="enumeration" defaultValue="OFF">
+                    <caption>Enum filter type</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="OFF">Off</enumerationValue>
+                        <enumerationValue key="INCLUDE">Include</enumerationValue>
+                        <enumerationValue key="EXCLUDE">Exclude</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="enumFilterList" type="expression" required="true">
+                    <caption>Enum filter list</caption>
+                    <description>Comma seperated list of the Enum's keys to include/exclude them</description>
+                    <returnType type="String" />
+                </property>
                 <property key="booleanAttribute" type="attribute" required="true">
                     <caption>Boolean attribute</caption>
                     <description></description>

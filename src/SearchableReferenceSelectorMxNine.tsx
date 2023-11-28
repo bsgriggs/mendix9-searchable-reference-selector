@@ -151,21 +151,43 @@ export default function SearchableReferenceSelector(
             ) : (
                 <span>{props.optionCustomContent.get(displayObj)}</span>
             ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.optionTextType, props.optionCustomContent, props.displayAttribute, props.optionExpression]
     );
 
     const mapEnum = useCallback(
-        (enumArray: string[]): IOption[] =>
-            enumArray.map(value => ({
-                content: displayTextContent(props.enumAttribute.formatter.format(value)),
-                isSelectable: true,
-                isSelected: value === (props.enumAttribute.value as string),
-                selectionType: "ENUMERATION",
-                id: value,
-                ariaLiveText: props.enumAttribute.formatter.format(value)
-            })),
-        [props.enumAttribute, displayTextContent]
+        (enumArray: string[]): IOption[] => {
+            if (
+                props.enumFilterType === "OFF" ||
+                props.enumFilterList.value === undefined ||
+                props.enumFilterList.value.length === 0
+            ) {
+                return enumArray.map(value => ({
+                    content: displayTextContent(props.enumAttribute.formatter.format(value)),
+                    isSelectable: true,
+                    isSelected: value === (props.enumAttribute.value as string),
+                    selectionType: "ENUMERATION",
+                    id: value,
+                    ariaLiveText: props.enumAttribute.formatter.format(value)
+                }));
+            } else {
+                const filterList = props.enumFilterList.value.split(",");
+
+                return enumArray
+                    .filter(value =>
+                        props.enumFilterType === "EXCLUDE" ? !filterList.includes(value) : filterList.includes(value)
+                    )
+                    .map(value => ({
+                        content: displayTextContent(props.enumAttribute.formatter.format(value)),
+                        isSelectable: true,
+                        isSelected: value === (props.enumAttribute.value as string),
+                        selectionType: "ENUMERATION",
+                        id: value,
+                        ariaLiveText: props.enumAttribute.formatter.format(value)
+                    }));
+            }
+        },
+
+        [props.enumAttribute, displayTextContent, props.enumFilterList, props.enumFilterType]
     );
 
     const boolOptions: IOption[] = useMemo(
