@@ -34,7 +34,8 @@ all possible options for the selected enumeration.
 -   Exclude = The specified values are not selectable
 
 **Enum filter list** - A comma-separated list of the enumeration's keys. They are used according to the Enum Filter
-Type. The list should not have any spaces.
+Type. The list should not have any spaces. _Note: The values must be the enumeration's KEY values. For example, an
+enumeration value with the caption "In Progress" and the key "IN_PROGRESS", you would use "IN_PROGRESS"._
 
 **Enum filter example**  
 Imagine you had an enumeration with the possible values Red, Orange, Yellow, Green, Blue, and Violet in the following
