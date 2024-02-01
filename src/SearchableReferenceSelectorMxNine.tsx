@@ -580,6 +580,7 @@ export default function SearchableReferenceSelector(
                     onEnter={() => callMxAction(props.onEnter, true)}
                     showMenu={showMenu}
                     setShowMenu={setShowMenu}
+                    ariaRequired={props.ariaRequired.value === true}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}

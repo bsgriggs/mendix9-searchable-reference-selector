@@ -101,7 +101,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 optionsStyle={props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle}
                 selectStyle={"list"}
                 clearIcon={
-                    props.clearIcon !== null
+                    props.clearIcon !== null && props.clearIcon
                         ? props.clearIcon.type === "image"
                             ? { type: "image", iconUrl: props.clearIcon.imageUrl }
                             : { type: "glyph", iconClass: props.clearIcon.iconClass }
@@ -109,14 +109,14 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 }
                 clearIconTitle={""}
                 dropdownIcon={
-                    props.dropdownIcon !== null
+                    props.dropdownIcon !== null && props.dropdownIcon
                         ? props.dropdownIcon.type === "image"
                             ? { type: "image", iconUrl: props.dropdownIcon.imageUrl }
                             : { type: "glyph", iconClass: props.dropdownIcon.iconClass }
                         : undefined
                 }
                 selectAllIcon={
-                    props.selectAllIcon !== null
+                    props.selectAllIcon !== null && props.selectAllIcon
                         ? props.selectAllIcon.type === "image"
                             ? { type: "image", iconUrl: props.selectAllIcon.imageUrl }
                             : { type: "glyph", iconClass: props.selectAllIcon.iconClass }
@@ -143,6 +143,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 setShowMenu={() => {}}
                 showMenu={true}
+                ariaRequired={false}
             />
             {props.referenceSetValue === "CUSTOM" && (
                 <div className="srs-badge">

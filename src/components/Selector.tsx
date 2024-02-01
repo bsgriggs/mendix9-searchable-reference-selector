@@ -72,6 +72,7 @@ interface SelectorProps {
     clearSearchOnSelect: boolean;
     showMenu: boolean;
     setShowMenu: (newShowMenu: boolean) => void;
+    ariaRequired: boolean;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
@@ -328,7 +329,10 @@ const Selector = (props: SelectorProps): ReactElement => {
                         className={classNames(
                             "srs-value-container",
                             { "srs-multi": props.selectionType === "referenceSet" },
-                            { "srs-compact": props.isCompact && props.selectionType === "referenceSet" },
+                            {
+                                "srs-compact":
+                                    props.isCompact && props.selectionType === "referenceSet" && hasCurrentValue
+                            },
                             {
                                 "srs-badges":
                                     props.selectionType === "referenceSet" && props.referenceSetStyle === "badges"

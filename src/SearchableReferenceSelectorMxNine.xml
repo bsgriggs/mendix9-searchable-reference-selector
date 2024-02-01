@@ -405,6 +405,11 @@
                     <caption>Aria live text</caption>
                     <description>The text read aloud by a screen reader while focused on an option</description>
                 </property>
+                <property key="ariaRequired" type="expression" required="true" defaultValue="false">
+                    <caption>Aria required</caption>
+                    <description>The screen reader will announce this field is required</description>
+                    <returnType type="Boolean" />
+                </property>
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Common">

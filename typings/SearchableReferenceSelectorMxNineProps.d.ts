@@ -101,6 +101,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     onExtraClick?: ActionValue;
     ariaLabel?: DynamicValue<string>;
     ariaLiveText?: ListExpressionValue<string>;
+    ariaRequired: DynamicValue<boolean>;
 }
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
@@ -161,4 +162,5 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     onExtraClick: {} | null;
     ariaLabel: string;
     ariaLiveText: string;
+    ariaRequired: string;
 }

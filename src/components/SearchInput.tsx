@@ -16,6 +16,7 @@ interface SearchInputProps {
     tabIndex?: number;
     isCompact: boolean;
     onFocus: () => void;
+    ariaRequired: boolean;
 }
 
 export default function SearchInput(props: SearchInputProps): ReactElement {
@@ -52,6 +53,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-haspopup={props.showMenu ? "true" : "false"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
                 aria-controls={props.id + "-listbox"}
+                aria-required={props.ariaRequired ? "true" : "false"}
                 role="combobox" // for screen readers
                 onClick={event => {
                     if (props.showMenu) {
