@@ -42,7 +42,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 type="text"
                 onChange={props.onChange}
                 readOnly={props.isReadOnly || !props.isSearchable}
-                disabled={props.isReadOnly}
+                // disabled={props.isReadOnly}
                 value={props.searchFilter}
                 ref={searchInput} // for focus controls
                 autoComplete="off"
@@ -52,9 +52,11 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-label={props.ariaLabel} // for screen readers
                 aria-haspopup={props.showMenu ? "true" : "false"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
-                aria-controls={props.id + "-listbox"}
+                aria-controls={`${props.id}-listbox ${props.id}-region`}
                 aria-required={props.ariaRequired ? "true" : "false"}
+                aria-disabled={props.isReadOnly}
                 role="combobox" // for screen readers
+                aria-activedescendant=""
                 onClick={event => {
                     if (props.showMenu) {
                         event.stopPropagation(); // prevent the click from closing the menu

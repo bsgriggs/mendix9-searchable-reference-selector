@@ -410,6 +410,14 @@
                     <description>The screen reader will announce this field is required</description>
                     <returnType type="Boolean" />
                 </property>
+                <property key="ariaSelectedText" type="textTemplate"
+                    required="true">
+                    <caption>Aria selected text</caption>
+                    <description>The text read aloud by a screen reader while focusing a selected option</description>
+                    <translations>
+                        <translation lang="en_US">Selected</translation>
+                    </translations>
+                </property>
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Common">

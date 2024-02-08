@@ -73,11 +73,15 @@ interface SelectorProps {
     showMenu: boolean;
     setShowMenu: (newShowMenu: boolean) => void;
     ariaRequired: boolean;
+    ariaSelectedText: string;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
+    const [hasFocus, setHasFocus] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
+
+    const currentFocus = useMemo(() => props.options[focusedObjIndex], [props.options, focusedObjIndex]);
 
     const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && props.showMenu);
 
@@ -216,9 +220,8 @@ const Selector = (props: SelectorProps): ReactElement => {
                     if (focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
                         props.onSelectMoreOptions();
                     } else {
-                        const currentFocusedOption = props.options[focusedObjIndex];
-                        if (currentFocusedOption.isSelectable) {
-                            onSelectHandler(currentFocusedOption);
+                        if (currentFocus.isSelectable) {
+                            onSelectHandler(currentFocus);
                         }
                     }
                 }
@@ -281,14 +284,18 @@ const Selector = (props: SelectorProps): ReactElement => {
 
     const ariaLiveText: string = useMemo(
         () =>
-            props.showMenu
+            props.showMenu || hasFocus
                 ? props.isLoading
                     ? props.loadingText
+                    : props.options.length === 0
+                    ? props.noResultsText
                     : focusedObjIndex === props.options.length
                     ? props.moreResultsText || ""
                     : focusedObjIndex > -1
-                    ? props.options[focusedObjIndex].ariaLiveText || ""
-                    : currentValueAriaLabel
+                    ? currentFocus.isSelected
+                        ? (currentFocus.ariaLiveText || "") + " " + props.ariaSelectedText
+                        : currentFocus.ariaLiveText || ""
+                    : currentValueAriaLabel + " " + props.ariaSelectedText
                 : "",
         [
             props.showMenu,
@@ -297,16 +304,14 @@ const Selector = (props: SelectorProps): ReactElement => {
             focusedObjIndex,
             props.options,
             props.moreResultsText,
-            currentValueAriaLabel
+            currentValueAriaLabel,
+            hasFocus,
+            currentFocus
         ]
     );
 
     return (
         <Fragment>
-            {/* Aria Live Text */}
-            <div className="srs-aria-live" aria-live="polite">
-                {ariaLiveText}
-            </div>
             <div
                 className={classNames("form-control", { active: props.showMenu }, { "read-only": props.isReadOnly })}
                 onClick={() => {
@@ -323,6 +328,8 @@ const Selector = (props: SelectorProps): ReactElement => {
                     }
                 }}
                 ref={props.srsRef}
+                onFocus={() => setHasFocus(true)}
+                onBlur={() => setHasFocus(false)}
             >
                 <div className="srs-select">
                     <div
@@ -413,6 +420,10 @@ const Selector = (props: SelectorProps): ReactElement => {
                         </div>
                     )}
                 </div>
+            </div>
+            {/* Aria Live Text */}
+            <div role="region" id={props.id + "-region"} className="srs-aria-live" aria-live="polite">
+                {ariaLiveText}
             </div>
             {(props.showMenu || props.selectStyle === "list") && !props.isReadOnly && (
                 <OptionsMenu

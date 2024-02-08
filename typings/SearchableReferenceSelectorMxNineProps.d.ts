@@ -102,6 +102,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     ariaLabel?: DynamicValue<string>;
     ariaLiveText?: ListExpressionValue<string>;
     ariaRequired: DynamicValue<boolean>;
+    ariaSelectedText: DynamicValue<string>;
 }
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
@@ -163,4 +164,5 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     ariaLabel: string;
     ariaLiveText: string;
     ariaRequired: string;
+    ariaSelectedText: string;
 }

@@ -86,6 +86,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             style={OptionMenuStyle}
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
             role="listbox"
+            aria-labelledby={props.id + "-label"}
         >
             {props.options.length > 0 ? (
                 <Fragment>
