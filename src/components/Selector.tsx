@@ -1,6 +1,7 @@
 import {
     createElement,
     useState,
+    useEffect,
     ReactElement,
     ChangeEvent,
     Fragment,
@@ -74,6 +75,7 @@ interface SelectorProps {
     setShowMenu: (newShowMenu: boolean) => void;
     ariaRequired: boolean;
     ariaSelectedText: string;
+    autoFocus: boolean;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
@@ -96,6 +98,20 @@ const Selector = (props: SelectorProps): ReactElement => {
         [props.currentValue]
     );
 
+    useEffect(() => {
+        if (props.autoFocus && focusedObjIndex === -1 && hasCurrentValue) {
+            //set focus to the first selected option
+            const index = props.options.findIndex(option => option.isSelected);
+            console.info("auto select", {
+                newindex: index,
+                focusedObjIndex,
+                hasCurrentValue,
+                currentValue: props.currentValue
+            });
+            setFocusedObjIndex(index);
+        }
+    }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus]);
+
     const focusSearchInput = useCallback((): void => {
         if (searchInput !== null) {
             setTimeout(() => searchInput.focus(), FOCUS_DELAY);
@@ -114,7 +130,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.onLeave();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.showMenu, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
+    }, [props.showMenu, props.autoFocus, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
 
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
@@ -422,7 +438,13 @@ const Selector = (props: SelectorProps): ReactElement => {
                 </div>
             </div>
             {/* Aria Live Text */}
-            <div role="region" id={props.id + "-region"} className="srs-aria-live" aria-live="polite">
+            <div
+                role="region"
+                id={props.id + "-region"}
+                className="srs-aria-live"
+                aria-live="assertive"
+                aria-atomic="true"
+            >
                 {ariaLiveText}
             </div>
             {(props.showMenu || props.selectStyle === "list") && !props.isReadOnly && (

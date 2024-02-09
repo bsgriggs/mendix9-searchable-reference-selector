@@ -74,6 +74,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
+    autoFocus: boolean;
     maxItems: DynamicValue<Big>;
     allowLoadingSelect: boolean;
     maxMenuHeight?: DynamicValue<string>;
@@ -136,6 +137,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
+    autoFocus: boolean;
     maxItems: string;
     allowLoadingSelect: boolean;
     maxMenuHeight: string;

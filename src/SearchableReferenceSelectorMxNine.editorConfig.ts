@@ -212,7 +212,8 @@ export function getProperties(
                 "placeholder",
                 "loadDataMode",
                 "enumFilterType",
-                "enumFilterList"
+                "enumFilterList",
+                "autoFocus"
             ]);
 
             break;

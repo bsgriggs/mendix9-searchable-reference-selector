@@ -241,6 +241,10 @@
                         <enumerationValue key="checkbox">Checkbox</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="autoFocus" type="boolean" defaultValue="false">
+                    <caption>Auto focus selected</caption>
+                    <description></description>
+                </property>
                 <property key="maxItems" type="expression" defaultValue="20">
                     <caption>Max items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>
