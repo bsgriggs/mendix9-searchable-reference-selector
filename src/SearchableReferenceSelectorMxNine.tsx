@@ -540,7 +540,7 @@ export default function SearchableReferenceSelector(
 
     return (
         <Fragment>
-            <div id={props.id} className="srs" ref={srsRef}>
+            <div className="srs" ref={srsRef}>
                 <Selector
                     {...props}
                     ariaLabel={props.ariaLabel?.value}

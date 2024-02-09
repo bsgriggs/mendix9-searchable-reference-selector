@@ -1,4 +1,5 @@
 import { ChangeEvent, createElement, ReactElement, useEffect, useRef } from "react";
+import { SelectStyleEnum } from "../../typings/SearchableReferenceSelectorMxNineProps";
 
 interface SearchInputProps {
     id: string;
@@ -17,6 +18,11 @@ interface SearchInputProps {
     isCompact: boolean;
     onFocus: () => void;
     ariaRequired: boolean;
+    selectStyle: SelectStyleEnum;
+    currentFocus: number;
+    currentValueAriaText: string;
+    focusedObjIndex: number;
+    // noResultsFound: boolean;
 }
 
 export default function SearchInput(props: SearchInputProps): ReactElement {
@@ -35,6 +41,8 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
             className="srs-input-container"
         >
             <input
+                id={props.id}
+                key={props.id}
                 name={props.name} // required for screen readers
                 tabIndex={!props.isReadOnly ? props.tabIndex || 0 : undefined}
                 className="srs-input"
@@ -46,17 +54,26 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 value={props.searchFilter}
                 ref={searchInput} // for focus controls
                 autoComplete="off"
-                aria-labelledby={
-                    props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
-                } // for screen readers
-                aria-label={props.ariaLabel} // for screen readers
-                aria-haspopup={props.showMenu ? "true" : "false"} // for screen readers
+                aria-description={
+                    !props.showMenu || props.focusedObjIndex === -1 ? props.currentValueAriaText : undefined
+                }
+                // aria-describedby={props.showMenu ? props.id + "-region" : undefined}
+                // aria-labelledby={
+                //     // props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
+                //     props.id + "-region"
+                // } // for screen readers
+                aria-label={props.ariaLabel} // for screen readers in case there is no actual label
+                aria-haspopup={props.selectStyle === "dropdown" ? "true" : "listbox"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
                 aria-controls={`${props.id}-listbox ${props.id}-region`}
                 aria-required={props.ariaRequired ? "true" : "false"}
                 aria-disabled={props.isReadOnly}
+                aria-activedescendant={
+                    props.selectStyle === "list" || props.showMenu //&& !props.noResultsFound
+                        ? `${props.id}-${props.currentFocus === -1 ? 0 : props.currentFocus}`
+                        : ""
+                }
                 role="combobox" // for screen readers
-                aria-activedescendant=""
                 onClick={event => {
                     if (props.showMenu) {
                         event.stopPropagation(); // prevent the click from closing the menu

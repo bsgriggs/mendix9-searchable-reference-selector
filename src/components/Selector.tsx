@@ -79,11 +79,12 @@ interface SelectorProps {
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
-    const [hasFocus, setHasFocus] = useState(false);
+    // const [hasFocus, setHasFocus] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
     const currentFocus = useMemo(() => props.options[focusedObjIndex], [props.options, focusedObjIndex]);
+    const optionsLength = useMemo(() => props.options.length, [props.options]);
 
     const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && props.showMenu);
 
@@ -102,12 +103,6 @@ const Selector = (props: SelectorProps): ReactElement => {
         if (props.autoFocus && focusedObjIndex === -1 && hasCurrentValue) {
             //set focus to the first selected option
             const index = props.options.findIndex(option => option.isSelected);
-            console.info("auto select", {
-                newindex: index,
-                focusedObjIndex,
-                hasCurrentValue,
-                currentValue: props.currentValue
-            });
             setFocusedObjIndex(index);
         }
     }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus]);
@@ -209,31 +204,37 @@ const Selector = (props: SelectorProps): ReactElement => {
         (event: KeyboardEvent<HTMLDivElement>): void => {
             const keyPressed = event.key;
             if (keyPressed === "ArrowUp") {
+                event.preventDefault();
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
                 } else if (focusedObjIndex > 0) {
                     setFocusedObjIndex(focusedObjIndex - 1);
                 } else if (props.hasMoreOptions) {
-                    setFocusedObjIndex(props.options.length);
+                    setFocusedObjIndex(optionsLength);
                 } else {
-                    setFocusedObjIndex(props.options.length - 1);
+                    setFocusedObjIndex(optionsLength - 1);
                 }
-                props.setShowMenu(true);
+                if (!props.showMenu) {
+                    props.setShowMenu(true);
+                }
             } else if (keyPressed === "ArrowDown") {
+                event.preventDefault();
                 if (focusedObjIndex === -1) {
                     setFocusedObjIndex(0);
                 } else if (
-                    focusedObjIndex < props.options.length - 1 ||
-                    (focusedObjIndex === props.options.length - 1 && props.hasMoreOptions)
+                    focusedObjIndex < optionsLength - 1 ||
+                    (focusedObjIndex === optionsLength - 1 && props.hasMoreOptions)
                 ) {
                     setFocusedObjIndex(focusedObjIndex + 1);
                 } else {
                     setFocusedObjIndex(0);
                 }
-                props.setShowMenu(true);
+                if (!props.showMenu) {
+                    props.setShowMenu(true);
+                }
             } else if (keyPressed === "Enter") {
                 if (focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
-                    if (focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
+                    if (focusedObjIndex === optionsLength && props.onSelectMoreOptions) {
                         props.onSelectMoreOptions();
                     } else {
                         if (currentFocus.isSelectable) {
@@ -245,15 +246,16 @@ const Selector = (props: SelectorProps): ReactElement => {
                 onLeaveHandler();
             } else if (keyPressed === " " && !props.showMenu) {
                 event.preventDefault();
-                // event.stopPropagation();
-                props.setShowMenu(true);
+                if (!props.showMenu) {
+                    props.setShowMenu(true);
+                }
                 setFocusedObjIndex(0);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [
             focusedObjIndex,
-            props.options,
+            optionsLength,
             onSelectHandler,
             props.onSelectMoreOptions,
             onLeaveHandler,
@@ -288,46 +290,69 @@ const Selector = (props: SelectorProps): ReactElement => {
         [props.showMenu, props.setMxFilter]
     );
 
-    const currentValueAriaLabel: string = useMemo(
+    // const ariaLiveText: string = useMemo(
+    //     () =>
+    //         props.isLoading
+    //             ? props.loadingText
+    //             : optionsLength === 0
+    //             ? props.noResultsText
+    //             : focusedObjIndex === optionsLength
+    //             ? props.moreResultsText || ""
+    //             : focusedObjIndex > -1
+    //             ? currentFocus.isSelected
+    //                 ? `${currentFocus.ariaLiveText || ""} ${props.ariaSelectedText}  ${
+    //                       focusedObjIndex + 1
+    //                   } of ${optionsLength}`
+    //                 : currentFocus.isSelectable
+    //                 ? `${currentFocus.ariaLiveText || ""} not ${props.ariaSelectedText}  ${
+    //                       focusedObjIndex + 1
+    //                   } of ${optionsLength}`
+    //                 : `${currentFocus.ariaLiveText || ""} unavailable ${focusedObjIndex + 1} of ${optionsLength}`
+    //             : (props.currentValue
+    //                   ? Array.isArray(props.currentValue)
+    //                       ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
+    //                       : props.currentValue.ariaLiveText || ""
+    //                   : "") +
+    //               " " +
+    //               props.ariaSelectedText,
+    //     [
+    //         props.isLoading,
+    //         props.loadingText,
+    //         focusedObjIndex,
+    //         optionsLength,
+    //         props.moreResultsText,
+    //         // hasFocus,
+    //         currentFocus,
+    //         props.currentValue,
+    //         props.ariaSelectedText
+    //     ]
+    // );
+
+    // const noResultsFoundRegion = useMemo(
+    //     () => (optionsLength === 0 ? `${props.noResultsText}: ${props.mxFilter}` : ""),
+    //     [optionsLength, props.noResultsText]
+    // );
+    const currentValueAriaText = useMemo(
         () =>
             props.currentValue
-                ? Array.isArray(props.currentValue)
-                    ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
-                    : props.currentValue.ariaLiveText || ""
-                : "",
-        [props.currentValue]
+                ? `, ${props.ariaSelectedText}: ${
+                      Array.isArray(props.currentValue)
+                          ? props.currentValue.map(value => value.ariaLiveText).join("; ")
+                          : props.currentValue.ariaLiveText
+                  }, search: `
+                : "search: ",
+        [props.currentValue, props.ariaSelectedText]
     );
 
-    const ariaLiveText: string = useMemo(
-        () =>
-            props.showMenu || hasFocus
-                ? props.isLoading
-                    ? props.loadingText
-                    : props.options.length === 0
-                    ? props.noResultsText
-                    : focusedObjIndex === props.options.length
-                    ? props.moreResultsText || ""
-                    : focusedObjIndex > -1
-                    ? currentFocus.isSelected
-                        ? (currentFocus.ariaLiveText || "") + " " + props.ariaSelectedText
-                        : currentFocus.ariaLiveText || ""
-                    : currentValueAriaLabel + " " + props.ariaSelectedText
-                : "",
-        [
-            props.showMenu,
-            props.isLoading,
-            props.loadingText,
-            focusedObjIndex,
-            props.options,
-            props.moreResultsText,
-            currentValueAriaLabel,
-            hasFocus,
-            currentFocus
-        ]
-    );
+    // console.info({
+    //     ariaLiveText
+    // });
 
     return (
         <Fragment>
+            {/* <div id={props.id + "-region"} role="region" className="srs-aria-live" aria-live="polite">
+                {currentValueAriaText}
+            </div> */}
             <div
                 className={classNames("form-control", { active: props.showMenu }, { "read-only": props.isReadOnly })}
                 onClick={() => {
@@ -344,8 +369,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                     }
                 }}
                 ref={props.srsRef}
-                onFocus={() => setHasFocus(true)}
-                onBlur={() => setHasFocus(false)}
+                // onFocus={() => setHasFocus(true)}
             >
                 <div className="srs-select">
                     <div
@@ -400,6 +424,10 @@ const Selector = (props: SelectorProps): ReactElement => {
                             showMenu={props.showMenu || props.selectStyle === "list"}
                             isReferenceSet={props.selectionType === "referenceSet"}
                             onFocus={props.onEnter}
+                            currentFocus={focusedObjIndex}
+                            currentValueAriaText={currentValueAriaText}
+                            focusedObjIndex={focusedObjIndex}
+                            // noResultsFound={!props.isLoading && optionsLength === 0}
                         />
                     </div>
                     {!props.isReadOnly && (
@@ -437,19 +465,11 @@ const Selector = (props: SelectorProps): ReactElement => {
                     )}
                 </div>
             </div>
-            {/* Aria Live Text */}
-            <div
-                role="region"
-                id={props.id + "-region"}
-                className="srs-aria-live"
-                aria-live="assertive"
-                aria-atomic="true"
-            >
-                {ariaLiveText}
-            </div>
+
             {(props.showMenu || props.selectStyle === "list") && !props.isReadOnly && (
                 <OptionsMenu
                     {...props}
+                    multiSelect={props.selectionType === "referenceSet"}
                     onSelect={optionClickHandler}
                     currentFocus={focusedObjIndex}
                     position={position}

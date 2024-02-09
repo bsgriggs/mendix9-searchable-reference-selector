@@ -21,7 +21,6 @@ import classNames from "classnames";
 
 interface OptionMenuProps {
     id: string;
-    ariaLabel: string | undefined;
     options: IOption[];
     currentFocus: number;
     onSelect: (selectedOption: IOption) => void;
@@ -36,6 +35,8 @@ interface OptionMenuProps {
     isLoading: boolean;
     allowLoadingSelect: boolean;
     loadingText: string;
+    multiSelect: boolean;
+    mxFilter: string;
 }
 
 const OptionsMenu = (props: OptionMenuProps): ReactElement => {
@@ -75,85 +76,97 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
     }, [props.currentFocus]);
 
     return (
-        <ul
-            id={props.id + "-listbox"}
-            className={classNames(
-                "srs-menu",
-                { "srs-dropdown": props.selectStyle === "dropdown" },
-                { "srs-list": props.selectStyle === "list" },
-                { wait: props.isLoading && !props.allowLoadingSelect }
-            )}
-            style={OptionMenuStyle}
-            onMouseMove={() => setFocusMode(focusModeEnum.hover)}
-            role="listbox"
-            aria-labelledby={props.id + "-label"}
-        >
-            {props.options.length > 0 ? (
-                <Fragment>
-                    {props.isLoading && (
-                        <li className="mx-text srs-infooption disabled" role="option">
-                            {props.loadingText}
-                        </li>
-                    )}
-                    {props.options.map((option, key) => (
-                        <li
-                            key={key}
-                            ref={key === props.currentFocus ? selectedObjRef : undefined}
-                            role="option"
-                            aria-selected={option.isSelected ? "true" : "false"}
-                            aria-disabled={!option.isSelectable}
-                        >
-                            <Option
-                                isFocused={key === props.currentFocus}
-                                onSelect={selectedOption => {
-                                    if (props.allowLoadingSelect || !props.isLoading) {
-                                        props.onSelect(selectedOption);
-                                    }
-                                }}
-                                focusMode={focusMode}
-                                optionsStyle={props.optionsStyle}
-                                option={option}
-                            />
-                        </li>
-                    ))}
-                    {props.hasMoreOptions && (
-                        <li
-                            key={props.options.length}
-                            ref={props.currentFocus === props.options.length ? selectedObjRef : undefined}
-                            role="option"
-                        >
-                            <div
-                                className={
-                                    props.currentFocus === props.options.length
-                                        ? "srs-option focused"
-                                        : "mx-text srs-infooption"
+        <Fragment>
+            <ul
+                id={props.id + "-listbox"}
+                className={classNames(
+                    "srs-menu",
+                    { "srs-dropdown": props.selectStyle === "dropdown" },
+                    { "srs-list": props.selectStyle === "list" },
+                    { wait: props.isLoading && !props.allowLoadingSelect }
+                )}
+                style={OptionMenuStyle}
+                onMouseMove={() => setFocusMode(focusModeEnum.hover)}
+                role="listbox"
+                aria-labelledby={props.id + "-label"}
+                aria-activedescendant={`${props.id}-${props.currentFocus === -1 ? 0 : props.currentFocus}`}
+                aria-multiselectable={props.multiSelect ? "true" : "false"}
+                aria-busy={props.isLoading ? "true" : "false"}
+            >
+                {props.options.length > 0 ? (
+                    <Fragment>
+                        {props.isLoading && (
+                            <li className="mx-text srs-infooption disabled" role="option">
+                                {props.loadingText}
+                            </li>
+                        )}
+                        {props.options.map((option, key) => (
+                            <li
+                                id={`${props.id}-${key}`}
+                                key={key}
+                                ref={key === props.currentFocus ? selectedObjRef : undefined}
+                                role="option"
+                                aria-selected={option.isSelectable ? (option.isSelected ? "true" : "false") : undefined}
+                                aria-description={
+                                    option.isSelected ? "selected" : !option.isSelectable ? "not selectable" : undefined
                                 }
-                                style={{ cursor: props.onSelectMoreOptions ? "pointer" : "default" }}
-                                onClick={(event: MouseEvent<HTMLDivElement>) => {
-                                    if (
-                                        (props.allowLoadingSelect || !props.isLoading) &&
-                                        props.onSelectMoreOptions !== undefined
-                                    ) {
-                                        event.stopPropagation();
-                                        props.onSelectMoreOptions();
-                                    }
-                                }}
                             >
-                                {props.isLoading ? props.loadingText : props.moreResultsText}
-                            </div>
-                        </li>
-                    )}
-                </Fragment>
-            ) : (
-                <li className="mx-text srs-infooption disabled" role="option">
-                    {props.isLoading
-                        ? props.loadingText
-                        : props.noResultsText
-                        ? props.noResultsText
-                        : "No results found"}
-                </li>
-            )}
-        </ul>
+                                <Option
+                                    isFocused={key === props.currentFocus}
+                                    onSelect={selectedOption => {
+                                        if (props.allowLoadingSelect || !props.isLoading) {
+                                            props.onSelect(selectedOption);
+                                        }
+                                    }}
+                                    focusMode={focusMode}
+                                    optionsStyle={props.optionsStyle}
+                                    option={option}
+                                />
+                            </li>
+                        ))}
+                        {props.hasMoreOptions && (
+                            <li
+                                id={`${props.id}-${props.options.length}`}
+                                key={props.options.length}
+                                ref={props.currentFocus === props.options.length ? selectedObjRef : undefined}
+                                role="option"
+                                aria-selected={props.isLoading ? undefined : "true"}
+                            >
+                                <div
+                                    className={
+                                        props.currentFocus === props.options.length
+                                            ? "srs-option focused"
+                                            : "mx-text srs-infooption"
+                                    }
+                                    style={{ cursor: props.onSelectMoreOptions ? "pointer" : "default" }}
+                                    onClick={(event: MouseEvent<HTMLDivElement>) => {
+                                        if (
+                                            (props.allowLoadingSelect || !props.isLoading) &&
+                                            props.onSelectMoreOptions !== undefined
+                                        ) {
+                                            event.stopPropagation();
+                                            props.onSelectMoreOptions();
+                                        }
+                                    }}
+                                >
+                                    {props.isLoading ? props.loadingText : props.moreResultsText}
+                                </div>
+                            </li>
+                        )}
+                    </Fragment>
+                ) : (
+                    <li id={`${props.id}-0`} role="option" aria-description="not selectable">
+                        <div className="mx-text srs-infooption">
+                            {props.isLoading
+                                ? props.loadingText
+                                : props.mxFilter !== ""
+                                ? `${props.noResultsText} by search: ${props.mxFilter}`
+                                : props.noResultsText}
+                        </div>
+                    </li>
+                )}
+            </ul>
+        </Fragment>
     );
 };
 
