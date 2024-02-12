@@ -399,27 +399,46 @@
         </propertyGroup>
         <propertyGroup caption="Accessibility">
             <propertyGroup caption="Accessibility">
-                <property key="ariaLabel" type="textTemplate"
-                    required="false">
-                    <caption>Aria label</caption>
-                    <description>The text read aloud by a screen reader when first focusing on the input</description>
-                </property>
-                <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
-                    required="false">
-                    <caption>Aria live text</caption>
-                    <description>The text read aloud by a screen reader while focused on an option</description>
-                </property>
                 <property key="ariaRequired" type="expression" required="true" defaultValue="false">
                     <caption>Aria required</caption>
                     <description>The screen reader will announce this field is required</description>
                     <returnType type="Boolean" />
                 </property>
+                <property key="ariaLabel" type="textTemplate"
+                    required="false">
+                    <caption>Aria label</caption>
+                    <description>The text read by a screen reader in place of a label on the screen</description>
+                </property>
+                <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
+                    required="false">
+                    <caption>Aria live text</caption>
+                    <description>The text read by a screen reader while focused on an option</description>
+                </property>
                 <property key="ariaSelectedText" type="textTemplate"
-                    required="true">
-                    <caption>Aria selected text</caption>
-                    <description>The text read aloud by a screen reader while focusing a selected option</description>
+                    required="false">
+                    <caption>Selected text</caption>
+                    <description>The text read by a screen reader when annoucing the selected value(s)</description>
                     <translations>
                         <translation lang="en_US">Selected</translation>
+                    </translations>
+                </property>
+                <property key="ariaSearchText" type="textTemplate"
+                    required="false">
+                    <caption>Search text</caption>
+                    <description>The text read by a screen reader when announcing the search text</description>
+                    <translations>
+                        <translation lang="en_US">search</translation>
+                    </translations>
+                </property>
+
+            </propertyGroup>
+            <propertyGroup caption="Instructions">
+                <property key="ariaArrowKeyInstructions" type="textTemplate"
+                    required="false">
+                    <caption>Arrow key</caption>
+                    <description>The text read aloud by a screen reader when there is already a value selected</description>
+                    <translations>
+                        <translation lang="en_US">navigate the list of selected values using the left and right arrow keys</translation>
                     </translations>
                 </property>
             </propertyGroup>

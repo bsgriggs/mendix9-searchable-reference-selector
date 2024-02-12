@@ -3,16 +3,18 @@ import { createElement, ReactElement } from "react";
 import { IOption } from "typings/option";
 
 interface CommaProps {
+    index: number;
     showComma: boolean;
     option: IOption;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
-    tabIndex?: number;
+    // tabIndex?: number;
 }
 
 const Comma = (props: CommaProps): ReactElement => (
     <div
+        id={`badge-content-${props.index}`}
         className={classNames("srs-comma", { "srs-focusable": props.onBadgeClick })}
-        tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
+        tabIndex={-1}
         onClick={event => {
             if (props.onBadgeClick) {
                 event.stopPropagation();

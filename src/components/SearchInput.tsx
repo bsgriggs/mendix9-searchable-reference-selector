@@ -50,7 +50,6 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 type="text"
                 onChange={props.onChange}
                 readOnly={props.isReadOnly || !props.isSearchable}
-                // disabled={props.isReadOnly}
                 value={props.searchFilter}
                 ref={searchInput} // for focus controls
                 autoComplete="off"
@@ -58,18 +57,14 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                     !props.showMenu || props.focusedObjIndex === -1 ? props.currentValueAriaText : undefined
                 }
                 aria-describedby={props.showMenu ? props.id + "-no-results-region" : undefined}
-                // aria-labelledby={
-                //     // props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
-                //     props.id + "-region"
-                // } // for screen readers
                 aria-label={props.ariaLabel} // for screen readers in case there is no actual label
-                aria-haspopup={props.selectStyle === "dropdown" ? "true" : "listbox"} // for screen readers
+                aria-haspopup={!props.isReadOnly ? (props.selectStyle === "dropdown" ? "true" : "listbox") : "false"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
                 aria-controls={`${props.id}-listbox ${props.id}-no-results-region`}
                 aria-required={props.ariaRequired ? "true" : "false"}
                 aria-disabled={props.isReadOnly}
                 aria-activedescendant={
-                    (props.selectStyle === "list" || props.showMenu) && !props.noResultsFound
+                    (props.selectStyle === "list" || props.showMenu) && !props.noResultsFound && !props.isReadOnly
                         ? `${props.id}-${props.currentFocus === -1 ? 0 : props.currentFocus}`
                         : ""
                 }

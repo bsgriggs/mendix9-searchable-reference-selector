@@ -4,6 +4,7 @@ import { Icon } from "mendix/components/web/Icon";
 import classNames from "classnames";
 
 interface IconProps {
+    id?: string;
     defaultClassName: string;
     mxIconOverride: WebIcon | undefined;
     tabIndex?: number;
@@ -37,6 +38,7 @@ const MxIcon = (props: IconProps): ReactElement => {
 
     return (
         <div
+            id={props.id}
             onClick={onClickHandler}
             onKeyDown={onEnterHandler}
             title={props.title}

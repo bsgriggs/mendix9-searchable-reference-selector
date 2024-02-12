@@ -41,6 +41,7 @@ interface OptionMenuProps {
     multiSelect: boolean;
     mxFilter: string;
     tabIndex: number;
+    ariaSearchText: string | undefined;
 }
 
 const OptionsMenu = (props: OptionMenuProps): ReactElement => {
@@ -105,7 +106,8 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                 } else {
                     props.setFocusedObjIndex(0);
                 }
-            } else if (keyPressed === "Enter") {
+            } else if (keyPressed === "Enter" || " ") {
+                event.preventDefault();
                 if (props.focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
                     if (props.focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
                         props.onSelectMoreOptions();
@@ -134,7 +136,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             onMouseMove={() => setFocusMode(focusModeEnum.hover)}
         >
             {props.isLoading && (
-                <span className="mx-text srs-infooption disabled" role="option">
+                <span className="mx-text srs-infooption" role="option">
                     {props.loadingText}
                 </span>
             )}
@@ -160,11 +162,9 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                                 key={key}
                                 ref={key === props.focusedObjIndex ? selectedObjRef : undefined}
                                 role="option"
-                                aria-selected={option.isSelectable ? (option.isSelected ? "true" : "false") : undefined}
+                                aria-selected={option.isSelected ? "true" : "false"}
                                 aria-label={`${option.ariaLiveText}`}
-                                aria-description={
-                                    option.isSelected ? "selected" : !option.isSelectable ? "not selectable" : undefined
-                                }
+                                aria-disabled={!option.isSelectable}
                             >
                                 <Option
                                     isFocused={key === props.focusedObjIndex}
@@ -219,7 +219,9 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                     role="region"
                 >
                     {props.noResultsText}
-                    {props.mxFilter.trim() !== "" && <span className="srs-aria-live">{`, Search:`}</span>}
+                    {props.mxFilter.trim() !== "" && (
+                        <span className="srs-aria-live">{`, ${props.ariaSearchText}:`}</span>
+                    )}
                 </span>
             )}
         </div>

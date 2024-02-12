@@ -74,13 +74,17 @@ interface SelectorProps {
     showMenu: boolean;
     setShowMenu: (newShowMenu: boolean) => void;
     ariaRequired: boolean;
-    ariaSelectedText: string;
+    ariaSelectedText: string | undefined;
     autoFocus: boolean;
+    ariaArrowKeyInstructions: string | undefined;
+    ariaSearchText: string | undefined;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
     // const [hasFocus, setHasFocus] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
+    const [focusedBadgeIndex, setFocusedBadgeIndex] = useState(-1);
+    const [focusedBadgeRemove, setFocusedBadgeRemove] = useState(true);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
     const currentFocus = useMemo(() => props.options[focusedObjIndex], [props.options, focusedObjIndex]);
@@ -107,15 +111,23 @@ const Selector = (props: SelectorProps): ReactElement => {
         }
     }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus]);
 
-    const focusSearchInput = useCallback((): void => {
-        if (searchInput !== null) {
-            setTimeout(() => searchInput.focus(), FOCUS_DELAY);
-        }
-    }, [searchInput]);
+    const focusSearchInput = useCallback(
+        (delay: boolean): void => {
+            if (searchInput !== null) {
+                if (delay) {
+                    setTimeout(() => searchInput.focus(), FOCUS_DELAY);
+                } else {
+                    searchInput.focus();
+                }
+            }
+        },
+        [searchInput]
+    );
 
     const onLeaveHandler = useCallback((): void => {
         if (props.showMenu) {
             props.setShowMenu(false);
+            setFocusedBadgeIndex(-1);
             if (props.mxFilter !== "") {
                 props.setMxFilter("");
             }
@@ -196,74 +208,192 @@ const Selector = (props: SelectorProps): ReactElement => {
             onSelectHandler(undefined);
         }
         setTimeout(() => props.setShowMenu(true), FOCUS_DELAY);
-        focusSearchInput();
+        focusSearchInput(true);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [focusedObjIndex, props.mxFilter, onSelectHandler, focusSearchInput, props.setMxFilter]);
 
-    const handleKeyNavigation = useCallback(
-        (event: KeyboardEvent<HTMLDivElement>): void => {
-            const keyPressed = event.key;
-            if (keyPressed === "ArrowUp") {
-                event.preventDefault();
-                if (focusedObjIndex === -1) {
-                    setFocusedObjIndex(0);
-                } else if (focusedObjIndex > 0) {
-                    setFocusedObjIndex(focusedObjIndex - 1);
-                } else if (props.hasMoreOptions) {
-                    setFocusedObjIndex(optionsLength);
-                } else {
-                    setFocusedObjIndex(optionsLength - 1);
-                }
-                if (!props.showMenu) {
-                    props.setShowMenu(true);
-                }
-            } else if (keyPressed === "ArrowDown") {
-                event.preventDefault();
-                if (focusedObjIndex === -1) {
-                    setFocusedObjIndex(0);
-                } else if (
-                    focusedObjIndex < optionsLength - 1 ||
-                    (focusedObjIndex === optionsLength - 1 && props.hasMoreOptions)
-                ) {
-                    setFocusedObjIndex(focusedObjIndex + 1);
-                } else {
-                    setFocusedObjIndex(0);
-                }
-                if (!props.showMenu) {
-                    props.setShowMenu(true);
-                }
-            } else if (keyPressed === "Enter") {
-                if (focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
-                    if (focusedObjIndex === optionsLength && props.onSelectMoreOptions) {
-                        props.onSelectMoreOptions();
-                    } else {
-                        if (currentFocus.isSelectable) {
-                            onSelectHandler(currentFocus);
-                        }
-                    }
-                }
-            } else if (keyPressed === "Escape" || keyPressed === "Tab") {
-                onLeaveHandler();
-            } else if (keyPressed === " " && !props.showMenu) {
-                event.preventDefault();
-                if (!props.showMenu) {
-                    props.setShowMenu(true);
-                }
-                setFocusedObjIndex(0);
+    const focusBadge = useCallback(
+        (id: string) => {
+            const focusElement = props.srsRef?.current?.querySelector(`#${id}`);
+            if (focusElement) {
+                (focusElement as HTMLButtonElement).focus();
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [
-            focusedObjIndex,
-            optionsLength,
-            onSelectHandler,
-            props.onSelectMoreOptions,
-            onLeaveHandler,
-            props.hasMoreOptions,
-            props.isLoading,
-            props.showMenu
-        ]
+        [props.srsRef]
     );
+
+    const handleKeyNavigation = (event: KeyboardEvent<HTMLDivElement>): void => {
+        const keyPressed = event.key;
+        if (keyPressed === "ArrowUp") {
+            event.preventDefault();
+
+            if (focusedObjIndex === -1) {
+                setFocusedObjIndex(0);
+            } else if (focusedObjIndex > 0) {
+                setFocusedObjIndex(focusedObjIndex - 1);
+            } else if (props.hasMoreOptions) {
+                setFocusedObjIndex(optionsLength);
+            } else {
+                setFocusedObjIndex(optionsLength - 1);
+            }
+            if (!props.showMenu) {
+                props.setShowMenu(true);
+            }
+            if (focusedBadgeIndex !== -1) {
+                setFocusedBadgeIndex(-1);
+                focusSearchInput(false);
+            }
+        } else if (keyPressed === "ArrowDown") {
+            event.preventDefault();
+            if (focusedObjIndex === -1) {
+                setFocusedObjIndex(0);
+            } else if (
+                focusedObjIndex < optionsLength - 1 ||
+                (focusedObjIndex === optionsLength - 1 && props.hasMoreOptions)
+            ) {
+                setFocusedObjIndex(focusedObjIndex + 1);
+            } else {
+                setFocusedObjIndex(0);
+            }
+            if (!props.showMenu) {
+                props.setShowMenu(true);
+            }
+            if (focusedBadgeIndex !== -1) {
+                setFocusedBadgeIndex(-1);
+                focusSearchInput(false);
+            }
+        } else if (keyPressed === "Enter") {
+            if (focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
+                if (focusedObjIndex === optionsLength && props.onSelectMoreOptions) {
+                    props.onSelectMoreOptions();
+                } else {
+                    if (currentFocus.isSelectable) {
+                        onSelectHandler(currentFocus);
+                    }
+                }
+            }
+        } else if (keyPressed === "Escape") {
+            onLeaveHandler();
+        } else if (keyPressed === "Tab") {
+            setFocusedBadgeIndex(-1);
+            onLeaveHandler();
+        } else if (keyPressed === " " && !props.showMenu) {
+            event.preventDefault();
+            if (!props.showMenu) {
+                props.setShowMenu(true);
+            }
+            setFocusedObjIndex(0);
+        } else if (
+            props.selectionType === "referenceSet" &&
+            Array.isArray(props.currentValue) &&
+            hasCurrentValue &&
+            props.mxFilter.trim() === ""
+        ) {
+            const valuesShown =
+                props.currentValue.length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0
+                    ? props.maxReferenceDisplay
+                    : props.currentValue.length;
+            const badgeBodyFocusable = props.onBadgeClick;
+            const removeIconsShowing = props.isClearable && props.referenceSetStyle === "badges";
+            const extraFocusable = props.currentValue.length > valuesShown && props.onExtraClick;
+            if (keyPressed === "ArrowLeft") {
+                event.preventDefault();
+                if (focusedBadgeIndex === -1) {
+                    if (extraFocusable) {
+                        // There is an Extra click
+                        focusBadge("extra");
+                        setFocusedBadgeIndex(valuesShown);
+                        setFocusedBadgeRemove(false);
+                    } else if (removeIconsShowing) {
+                        //Focus last badge's remove button
+                        focusBadge(`badge-remove-${valuesShown - 1}`);
+                        setFocusedBadgeIndex(valuesShown - 1);
+                        setFocusedBadgeRemove(true);
+                    } else if (badgeBodyFocusable) {
+                        //focus last badge's content area
+                        focusBadge(`badge-content-${valuesShown - 1}`);
+                        setFocusedBadgeIndex(valuesShown - 1);
+                        setFocusedBadgeRemove(false);
+                    }
+                } else {
+                    if (badgeBodyFocusable && focusedBadgeRemove) {
+                        //Move from remove icon to badge content
+                        focusBadge(`badge-content-${focusedBadgeIndex}`);
+                        setFocusedBadgeRemove(false);
+                    } else if (badgeBodyFocusable && !removeIconsShowing && focusedBadgeIndex !== 0) {
+                        //No remove icons, only badge content
+                        focusBadge(`badge-content-${focusedBadgeIndex - 1}`);
+                        setFocusedBadgeIndex(focusedBadgeIndex - 1);
+                        setFocusedBadgeRemove(false);
+                    } else if (removeIconsShowing && focusedBadgeIndex !== 0) {
+                        // Move to next remove icon
+                        focusBadge(`badge-remove-${focusedBadgeIndex - 1}`);
+                        setFocusedBadgeIndex(focusedBadgeIndex - 1);
+                        setFocusedBadgeRemove(true);
+                    } else if (focusedBadgeIndex === 0) {
+                        //Wrap around
+                        focusSearchInput(false);
+                        setFocusedBadgeIndex(-1);
+                    }
+                }
+            } else if (keyPressed === "ArrowRight") {
+                event.preventDefault();
+                if (focusedBadgeIndex !== -1) {
+                    //Badges are focused
+                    if (
+                        focusedBadgeIndex === valuesShown ||
+                        (!extraFocusable &&
+                            focusedBadgeIndex === valuesShown - 1 &&
+                            (focusedBadgeRemove || !removeIconsShowing))
+                    ) {
+                        //Last badge or extra is focused
+                        focusSearchInput(false);
+                        setFocusedBadgeIndex(-1);
+                    } else if (!focusedBadgeRemove && removeIconsShowing) {
+                        // Move from badge content to remove icon
+                        focusBadge(`badge-remove-${focusedBadgeIndex}`);
+                        setFocusedBadgeRemove(true);
+                    } else if (badgeBodyFocusable && focusedBadgeRemove && focusedBadgeIndex !== valuesShown - 1) {
+                        //Move from remove icon to badge content
+                        focusBadge(`badge-content-${focusedBadgeIndex + 1}`);
+                        setFocusedBadgeIndex(focusedBadgeIndex + 1);
+                        setFocusedBadgeRemove(false);
+                    } else if (!removeIconsShowing && focusedBadgeIndex !== valuesShown - 1) {
+                        // No remove icon, move between badge content
+                        focusBadge(`badge-content-${focusedBadgeIndex + 1}`);
+                        setFocusedBadgeIndex(focusedBadgeIndex + 1);
+                        setFocusedBadgeRemove(false);
+                    } else if (removeIconsShowing && focusedBadgeIndex !== valuesShown - 1) {
+                        // Move to next remove icon
+                        focusBadge(`badge-remove-${focusedBadgeIndex + 1}`);
+                        setFocusedBadgeIndex(focusedBadgeIndex + 1);
+                        setFocusedBadgeRemove(true);
+                    } else if (focusedBadgeIndex === valuesShown - 1) {
+                        // focus extra
+                        if (extraFocusable) {
+                            focusBadge("extra");
+                            setFocusedBadgeIndex(valuesShown);
+                        } else {
+                            //Last badge or extra is focused
+                            focusSearchInput(false);
+                            setFocusedBadgeIndex(-1);
+                        }
+                    }
+                } else {
+                    //Focused on input, wrap around
+                    if (props.onBadgeClick) {
+                        focusBadge("badge-content-0");
+                        setFocusedBadgeIndex(0);
+                        setFocusedBadgeRemove(false);
+                    } else if (removeIconsShowing) {
+                        focusBadge("badge-remove-0");
+                        setFocusedBadgeIndex(0);
+                        setFocusedBadgeRemove(true);
+                    }
+                }
+            }
+        }
+    };
 
     useOnClickOutside(props.srsRef, onLeaveHandler);
 
@@ -271,7 +401,7 @@ const Selector = (props: SelectorProps): ReactElement => {
         (selectedOption: IOption | undefined): void => {
             setFocusedObjIndex(-1);
             onSelectHandler(selectedOption);
-            focusSearchInput(); // re-focus the input so the user can tab away
+            focusSearchInput(true); // re-focus the input so the user can tab away
         },
         [onSelectHandler, focusSearchInput]
     );
@@ -294,11 +424,25 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.currentValue
                 ? `, ${props.ariaSelectedText}: ${
                       Array.isArray(props.currentValue)
-                          ? props.currentValue.map(value => value.ariaLiveText).join("; ")
+                          ? props.currentValue.map(value => value.ariaLiveText).join("; ") +
+                            `${
+                                (props.isClearable || props.onBadgeClick) &&
+                                hasCurrentValue &&
+                                props.ariaArrowKeyInstructions &&
+                                !props.isReadOnly
+                                    ? `, ${props.ariaArrowKeyInstructions}`
+                                    : ""
+                            }`
                           : props.currentValue.ariaLiveText
-                  }, search: `
-                : "search: ",
-        [props.currentValue, props.ariaSelectedText]
+                  }${props.isSearchable ? `, ${props.ariaSearchText}:` : ""} `
+                : "",
+        [
+            props.currentValue,
+            props.ariaSelectedText,
+            props.ariaArrowKeyInstructions,
+            hasCurrentValue,
+            props.onBadgeClick
+        ]
     );
 
     return (
@@ -309,7 +453,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                     if (!props.isReadOnly) {
                         props.setShowMenu(!props.showMenu);
                         if (props.showMenu === false) {
-                            focusSearchInput();
+                            focusSearchInput(true);
                         }
                     }
                 }}
@@ -323,6 +467,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             >
                 <div className="srs-select">
                     <div
+                        role="application"
                         className={classNames(
                             "srs-value-container",
                             { "srs-multi": props.selectionType === "referenceSet" },
@@ -348,18 +493,11 @@ const Selector = (props: SelectorProps): ReactElement => {
                                     onSelectHandler(clickObj);
                                     if (byKeyboard && hasCurrentValue && (props.currentValue as []).length > 1) {
                                         // focus the next remove icon for easier clear by keyboard navigation
-                                        const nextIcons =
-                                            props.srsRef?.current?.getElementsByClassName("srs-focusable");
-
-                                        if (nextIcons && nextIcons.length > 0) {
-                                            (nextIcons[0] as HTMLButtonElement).focus();
-                                        } else {
-                                            focusSearchInput();
-                                        }
+                                        focusBadge(`badge-remove-${focusedBadgeIndex - 1}`);
+                                        setFocusedBadgeIndex(focusedBadgeIndex - 1);
                                     } else {
                                         // re-focus the search input for easier muli-select
-
-                                        focusSearchInput();
+                                        focusSearchInput(true);
                                     }
                                 }}
                             />
@@ -428,7 +566,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                         if (props.onSelectMoreOptions) {
                             props.onSelectMoreOptions();
                             if (props.selectStyle === "dropdown") {
-                                focusSearchInput();
+                                focusSearchInput(true);
                             }
                         }
                     }}

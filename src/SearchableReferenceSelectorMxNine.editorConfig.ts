@@ -172,7 +172,8 @@ export function getProperties(
                 "booleanAttribute",
                 "trueLabel",
                 "falseLabel",
-                "loadDataMode"
+                "loadDataMode",
+                "ariaArrowKeyInstructions"
             ]);
             break;
         case "boolean":
@@ -213,7 +214,8 @@ export function getProperties(
                 "loadDataMode",
                 "enumFilterType",
                 "enumFilterList",
-                "autoFocus"
+                "autoFocus",
+                "ariaArrowKeyInstructions"
             ]);
 
             break;
@@ -237,7 +239,8 @@ export function getProperties(
                 "falseLabel",
                 "isSearchable",
                 "enumFilterType",
-                "enumFilterList"
+                "enumFilterList",
+                "ariaArrowKeyInstructions"
             ]);
             break;
         case "referenceSet":
@@ -250,7 +253,8 @@ export function getProperties(
                 "falseLabel",
                 "isSearchable",
                 "enumFilterType",
-                "enumFilterList"
+                "enumFilterList",
+                "ariaArrowKeyInstructions"
             ]);
             break;
     }
@@ -331,7 +335,8 @@ export function getProperties(
             "hasMoreResultsManual",
             "clearSearchOnSelect",
             "searchAttributes",
-            "onClickMoreResultsText"
+            "onClickMoreResultsText",
+            "ariaSearchText"
         ]);
     }
 

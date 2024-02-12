@@ -100,10 +100,12 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     onLeave?: ActionValue;
     onBadgeClick?: ListActionValue;
     onExtraClick?: ActionValue;
+    ariaRequired: DynamicValue<boolean>;
     ariaLabel?: DynamicValue<string>;
     ariaLiveText?: ListExpressionValue<string>;
-    ariaRequired: DynamicValue<boolean>;
-    ariaSelectedText: DynamicValue<string>;
+    ariaSelectedText?: DynamicValue<string>;
+    ariaSearchText?: DynamicValue<string>;
+    ariaArrowKeyInstructions?: DynamicValue<string>;
 }
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
@@ -163,8 +165,10 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     onLeave: {} | null;
     onBadgeClick: {} | null;
     onExtraClick: {} | null;
+    ariaRequired: string;
     ariaLabel: string;
     ariaLiveText: string;
-    ariaRequired: string;
     ariaSelectedText: string;
+    ariaSearchText: string;
+    ariaArrowKeyInstructions: string;
 }

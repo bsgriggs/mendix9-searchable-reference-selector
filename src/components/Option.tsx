@@ -20,13 +20,14 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
         <div
             className={classNames(
                 "srs-option",
-
+                { "srs-checkbox": props.optionsStyle === "checkbox" },
+                { "srs-radio": props.optionsStyle === "radio" },
+                { selected: props.option.isSelected },
                 {
                     focused:
                         (props.focusMode === focusModeEnum.arrow && props.isFocused) ||
                         (props.focusMode === focusModeEnum.hover && props.optionsStyle === "cell" && isHovered)
                 },
-                { selected: props.optionsStyle === "cell" && props.option.isSelected },
                 { disabled: !props.option.isSelectable }
             )}
             onClick={event => {
@@ -37,7 +38,7 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
             }}
             ref={hoverRef}
         >
-            {props.optionsStyle === "checkbox" && (
+            {/* {props.optionsStyle === "checkbox" && (
                 <input
                     type={"checkbox"}
                     aria-hidden
@@ -54,7 +55,7 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
                     disabled={!props.option.isSelectable}
                     tabIndex={-1}
                 />
-            )}
+            )} */}
             {props.option.content}
         </div>
     );

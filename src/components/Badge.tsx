@@ -6,6 +6,7 @@ import { BadgeColorEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import classNames from "classnames";
 
 interface BadgeProps {
+    index: number;
     option: IOption;
     onRemoveAssociation: (byKeyboard: boolean) => void;
     clearIcon: WebIcon | undefined;
@@ -13,15 +14,16 @@ interface BadgeProps {
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     isClearable: boolean;
     isReadOnly: boolean;
-    tabIndex?: number;
+    // tabIndex?: number;
     badgeColor: BadgeColorEnum;
 }
 
 const Badge = (props: BadgeProps): ReactElement => (
     <div className={`srs-badge label-${props.badgeColor}`}>
         <div
+            id={`badge-content-${props.index}`}
+            tabIndex={-1}
             className={classNames({ "srs-focusable": props.onBadgeClick })}
-            tabIndex={props.onBadgeClick ? props.tabIndex || 0 : undefined}
             onClick={event => {
                 if (props.onBadgeClick) {
                     event.stopPropagation();
@@ -43,11 +45,12 @@ const Badge = (props: BadgeProps): ReactElement => (
 
         {props.isClearable && !props.isReadOnly && (
             <MxIcon
+                id={`badge-remove-${props.index}`}
                 onClick={props.onRemoveAssociation}
                 title={props.clearIconTitle + " " + props.option.ariaLiveText}
                 mxIconOverride={props.clearIcon}
                 defaultClassName="remove"
-                tabIndex={props.tabIndex || 0}
+                tabIndex={-1}
             />
         )}
     </div>

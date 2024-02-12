@@ -582,7 +582,9 @@ export default function SearchableReferenceSelector(
                     showMenu={showMenu}
                     setShowMenu={setShowMenu}
                     ariaRequired={props.ariaRequired.value === true}
-                    ariaSelectedText={props.ariaSelectedText.value as string}
+                    ariaSelectedText={props.ariaSelectedText?.value as string}
+                    ariaSearchText={props.ariaSearchText?.value as string}
+                    ariaArrowKeyInstructions={props.ariaArrowKeyInstructions?.value as string}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}
