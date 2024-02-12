@@ -543,6 +543,7 @@ export default function SearchableReferenceSelector(
             <div className="srs" ref={srsRef}>
                 <Selector
                     {...props}
+                    tabIndex={props.tabIndex || 0}
                     ariaLabel={props.ariaLabel?.value}
                     isLoading={props.selectableObjects && props.selectableObjects.status === ValueStatus.Loading}
                     isSearchable={searchable}

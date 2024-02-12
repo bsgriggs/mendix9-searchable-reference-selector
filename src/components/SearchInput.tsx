@@ -22,7 +22,7 @@ interface SearchInputProps {
     currentFocus: number;
     currentValueAriaText: string;
     focusedObjIndex: number;
-    // noResultsFound: boolean;
+    noResultsFound: boolean;
 }
 
 export default function SearchInput(props: SearchInputProps): ReactElement {
@@ -57,7 +57,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-description={
                     !props.showMenu || props.focusedObjIndex === -1 ? props.currentValueAriaText : undefined
                 }
-                // aria-describedby={props.showMenu ? props.id + "-region" : undefined}
+                aria-describedby={props.showMenu ? props.id + "-no-results-region" : undefined}
                 // aria-labelledby={
                 //     // props.ariaLabel === undefined || props.ariaLabel.trim() === "" ? props.id + "-label" : undefined
                 //     props.id + "-region"
@@ -65,11 +65,11 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-label={props.ariaLabel} // for screen readers in case there is no actual label
                 aria-haspopup={props.selectStyle === "dropdown" ? "true" : "listbox"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
-                aria-controls={`${props.id}-listbox ${props.id}-region`}
+                aria-controls={`${props.id}-listbox ${props.id}-no-results-region`}
                 aria-required={props.ariaRequired ? "true" : "false"}
                 aria-disabled={props.isReadOnly}
                 aria-activedescendant={
-                    props.selectStyle === "list" || props.showMenu //&& !props.noResultsFound
+                    (props.selectStyle === "list" || props.showMenu) && !props.noResultsFound
                         ? `${props.id}-${props.currentFocus === -1 ? 0 : props.currentFocus}`
                         : ""
                 }

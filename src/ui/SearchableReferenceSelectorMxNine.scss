@@ -146,40 +146,45 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         border-radius: $padding-xs;
         background-color: #fff;
         overflow-y: auto;
-        padding: 0;
-        margin-bottom: 0;
-        li {
-            list-style: none;
-            .srs-option {
-                cursor: pointer;
-                padding: $padding-md;
-                display: flex;
-                align-items: center;
-                input {
-                    max-width: 16px;
-                }
-                p {
-                    width: fit-content;
-                    margin: 0;
-                }
-                &.disabled {
-                    color: #6f6f6f;
-                    cursor: not-allowed;
-                }
-                &.selected {
-                    background-color: #e7e7e7;
-                }
-                &.focused {
-                    background-color: #d7d7d7;
-                }
+        display: flex;
+        flex-direction: column;
+        ul {
+            padding: 0;
+            margin-bottom: 0;
+            li {
+                list-style: none;
+                .srs-option {
+                    cursor: pointer;
+                    padding: $padding-md;
+                    display: flex;
+                    align-items: center;
+                    input {
+                        max-width: 16px;
+                    }
+                    p {
+                        width: fit-content;
+                        margin: 0;
+                    }
+                    &.disabled {
+                        color: #6f6f6f;
+                        cursor: not-allowed;
+                    }
+                    &.selected {
+                        background-color: #e7e7e7;
+                    }
+                    &.focused {
+                        background-color: #d7d7d7;
+                    }
 
-                input[type="checkbox"],
-                input[type="radio"] {
-                    margin-right: $padding-md !important;
-                    flex-shrink: 0 !important;
+                    input[type="checkbox"],
+                    input[type="radio"] {
+                        margin-right: $padding-md !important;
+                        flex-shrink: 0 !important;
+                    }
                 }
             }
         }
+
         .srs-infooption {
             // used for moreResultsText, loadingText, and noResultsFound
             padding: $padding-md;
@@ -203,6 +208,10 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         position: absolute;
         overflow: hidden;
         white-space: nowrap;
+    }
+    .link-button {
+        border: 0;
+        padding: 0;
     }
 }
 

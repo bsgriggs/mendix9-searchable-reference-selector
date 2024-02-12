@@ -33,7 +33,7 @@ const FOCUS_DELAY = 300;
 interface SelectorProps {
     id: string;
     name: string;
-    tabIndex?: number;
+    tabIndex: number;
     ariaLabel: string | undefined;
     placeholder: string | undefined;
     noResultsText: string;
@@ -289,49 +289,6 @@ const Selector = (props: SelectorProps): ReactElement => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.showMenu, props.setMxFilter]
     );
-
-    // const ariaLiveText: string = useMemo(
-    //     () =>
-    //         props.isLoading
-    //             ? props.loadingText
-    //             : optionsLength === 0
-    //             ? props.noResultsText
-    //             : focusedObjIndex === optionsLength
-    //             ? props.moreResultsText || ""
-    //             : focusedObjIndex > -1
-    //             ? currentFocus.isSelected
-    //                 ? `${currentFocus.ariaLiveText || ""} ${props.ariaSelectedText}  ${
-    //                       focusedObjIndex + 1
-    //                   } of ${optionsLength}`
-    //                 : currentFocus.isSelectable
-    //                 ? `${currentFocus.ariaLiveText || ""} not ${props.ariaSelectedText}  ${
-    //                       focusedObjIndex + 1
-    //                   } of ${optionsLength}`
-    //                 : `${currentFocus.ariaLiveText || ""} unavailable ${focusedObjIndex + 1} of ${optionsLength}`
-    //             : (props.currentValue
-    //                   ? Array.isArray(props.currentValue)
-    //                       ? props.currentValue.map(value => value.ariaLiveText).join(" & ")
-    //                       : props.currentValue.ariaLiveText || ""
-    //                   : "") +
-    //               " " +
-    //               props.ariaSelectedText,
-    //     [
-    //         props.isLoading,
-    //         props.loadingText,
-    //         focusedObjIndex,
-    //         optionsLength,
-    //         props.moreResultsText,
-    //         // hasFocus,
-    //         currentFocus,
-    //         props.currentValue,
-    //         props.ariaSelectedText
-    //     ]
-    // );
-
-    // const noResultsFoundRegion = useMemo(
-    //     () => (optionsLength === 0 ? `${props.noResultsText}: ${props.mxFilter}` : ""),
-    //     [optionsLength, props.noResultsText]
-    // );
     const currentValueAriaText = useMemo(
         () =>
             props.currentValue
@@ -344,15 +301,8 @@ const Selector = (props: SelectorProps): ReactElement => {
         [props.currentValue, props.ariaSelectedText]
     );
 
-    // console.info({
-    //     ariaLiveText
-    // });
-
     return (
         <Fragment>
-            {/* <div id={props.id + "-region"} role="region" className="srs-aria-live" aria-live="polite">
-                {currentValueAriaText}
-            </div> */}
             <div
                 className={classNames("form-control", { active: props.showMenu }, { "read-only": props.isReadOnly })}
                 onClick={() => {
@@ -427,7 +377,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                             currentFocus={focusedObjIndex}
                             currentValueAriaText={currentValueAriaText}
                             focusedObjIndex={focusedObjIndex}
-                            // noResultsFound={!props.isLoading && optionsLength === 0}
+                            noResultsFound={!props.isLoading && optionsLength === 0}
                         />
                     </div>
                     {!props.isReadOnly && (
@@ -471,7 +421,8 @@ const Selector = (props: SelectorProps): ReactElement => {
                     {...props}
                     multiSelect={props.selectionType === "referenceSet"}
                     onSelect={optionClickHandler}
-                    currentFocus={focusedObjIndex}
+                    focusedObjIndex={focusedObjIndex}
+                    setFocusedObjIndex={setFocusedObjIndex}
                     position={position}
                     onSelectMoreOptions={() => {
                         if (props.onSelectMoreOptions) {

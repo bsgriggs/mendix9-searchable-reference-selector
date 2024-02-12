@@ -81,6 +81,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 {...props}
                 id={""}
                 name={""}
+                tabIndex={0}
                 ariaLabel={""}
                 isSearchable={
                     props.selectionType === "boolean" || props.selectionType === "enumeration"

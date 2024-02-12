@@ -7,7 +7,9 @@ import {
     useRef,
     useState,
     MouseEvent,
-    useMemo
+    useMemo,
+    useCallback,
+    KeyboardEvent
 } from "react";
 import Option from "./Option";
 import { focusModeEnum } from "typings/general";
@@ -22,7 +24,8 @@ import classNames from "classnames";
 interface OptionMenuProps {
     id: string;
     options: IOption[];
-    currentFocus: number;
+    focusedObjIndex: number;
+    setFocusedObjIndex: (newFocus: number) => void;
     onSelect: (selectedOption: IOption) => void;
     onSelectMoreOptions: (() => void) | undefined;
     noResultsText: string;
@@ -37,12 +40,13 @@ interface OptionMenuProps {
     loadingText: string;
     multiSelect: boolean;
     mxFilter: string;
+    tabIndex: number;
 }
 
 const OptionsMenu = (props: OptionMenuProps): ReactElement => {
     const selectedObjRef = useRef<HTMLLIElement>(null);
     const [focusMode, setFocusMode] = useState<focusModeEnum>(
-        props.currentFocus !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
+        props.focusedObjIndex !== undefined ? focusModeEnum.arrow : focusModeEnum.hover
     );
 
     const contentCloseToBottom = useMemo(
@@ -73,46 +77,97 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [props.currentFocus]);
+    }, [props.focusedObjIndex]);
+
+    const handleKeyNavigation = useCallback(
+        (event: KeyboardEvent<HTMLUListElement>): void => {
+            const keyPressed = event.key;
+            if (keyPressed === "ArrowUp") {
+                event.preventDefault();
+                if (props.focusedObjIndex === -1) {
+                    props.setFocusedObjIndex(0);
+                } else if (props.focusedObjIndex > 0) {
+                    props.setFocusedObjIndex(props.focusedObjIndex - 1);
+                } else if (props.hasMoreOptions) {
+                    props.setFocusedObjIndex(props.options.length);
+                } else {
+                    props.setFocusedObjIndex(props.options.length - 1);
+                }
+            } else if (keyPressed === "ArrowDown") {
+                event.preventDefault();
+                if (props.focusedObjIndex === -1) {
+                    props.setFocusedObjIndex(0);
+                } else if (
+                    props.focusedObjIndex < props.options.length - 1 ||
+                    (props.focusedObjIndex === props.options.length - 1 && props.hasMoreOptions)
+                ) {
+                    props.setFocusedObjIndex(props.focusedObjIndex + 1);
+                } else {
+                    props.setFocusedObjIndex(0);
+                }
+            } else if (keyPressed === "Enter") {
+                if (props.focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
+                    if (props.focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
+                        props.onSelectMoreOptions();
+                    } else {
+                        const selectOption = props.options[props.focusedObjIndex];
+                        if (selectOption.isSelectable) {
+                            props.onSelect(selectOption);
+                        }
+                    }
+                }
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [props.focusedObjIndex, props.onSelect, props.onSelectMoreOptions, props.hasMoreOptions, props.isLoading]
+    );
 
     return (
-        <Fragment>
+        <div
+            className={classNames(
+                "srs-menu",
+                { "srs-dropdown": props.selectStyle === "dropdown" },
+                { "srs-list": props.selectStyle === "list" },
+                { wait: props.isLoading && !props.allowLoadingSelect }
+            )}
+            style={OptionMenuStyle}
+            onMouseMove={() => setFocusMode(focusModeEnum.hover)}
+        >
+            {props.isLoading && (
+                <span className="mx-text srs-infooption disabled" role="option">
+                    {props.loadingText}
+                </span>
+            )}
             <ul
                 id={props.id + "-listbox"}
-                className={classNames(
-                    "srs-menu",
-                    { "srs-dropdown": props.selectStyle === "dropdown" },
-                    { "srs-list": props.selectStyle === "list" },
-                    { wait: props.isLoading && !props.allowLoadingSelect }
-                )}
-                style={OptionMenuStyle}
-                onMouseMove={() => setFocusMode(focusModeEnum.hover)}
+                tabIndex={props.tabIndex}
                 role="listbox"
                 aria-labelledby={props.id + "-label"}
-                aria-activedescendant={`${props.id}-${props.currentFocus === -1 ? 0 : props.currentFocus}`}
+                aria-activedescendant={
+                    props.options.length > 0
+                        ? `${props.id}-${props.focusedObjIndex === -1 ? 0 : props.focusedObjIndex}`
+                        : ""
+                }
                 aria-multiselectable={props.multiSelect ? "true" : "false"}
                 aria-busy={props.isLoading ? "true" : "false"}
+                onKeyDown={handleKeyNavigation}
             >
-                {props.options.length > 0 ? (
+                {props.options.length > 0 && (
                     <Fragment>
-                        {props.isLoading && (
-                            <li className="mx-text srs-infooption disabled" role="option">
-                                {props.loadingText}
-                            </li>
-                        )}
                         {props.options.map((option, key) => (
                             <li
                                 id={`${props.id}-${key}`}
                                 key={key}
-                                ref={key === props.currentFocus ? selectedObjRef : undefined}
+                                ref={key === props.focusedObjIndex ? selectedObjRef : undefined}
                                 role="option"
                                 aria-selected={option.isSelectable ? (option.isSelected ? "true" : "false") : undefined}
+                                aria-label={`${option.ariaLiveText}`}
                                 aria-description={
                                     option.isSelected ? "selected" : !option.isSelectable ? "not selectable" : undefined
                                 }
                             >
                                 <Option
-                                    isFocused={key === props.currentFocus}
+                                    isFocused={key === props.focusedObjIndex}
                                     onSelect={selectedOption => {
                                         if (props.allowLoadingSelect || !props.isLoading) {
                                             props.onSelect(selectedOption);
@@ -128,13 +183,13 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                             <li
                                 id={`${props.id}-${props.options.length}`}
                                 key={props.options.length}
-                                ref={props.currentFocus === props.options.length ? selectedObjRef : undefined}
+                                ref={props.focusedObjIndex === props.options.length ? selectedObjRef : undefined}
                                 role="option"
                                 aria-selected={props.isLoading ? undefined : "true"}
                             >
                                 <div
                                     className={
-                                        props.currentFocus === props.options.length
+                                        props.focusedObjIndex === props.options.length
                                             ? "srs-option focused"
                                             : "mx-text srs-infooption"
                                     }
@@ -154,19 +209,20 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                             </li>
                         )}
                     </Fragment>
-                ) : (
-                    <li id={`${props.id}-0`} role="option" aria-description="not selectable">
-                        <div className="mx-text srs-infooption">
-                            {props.isLoading
-                                ? props.loadingText
-                                : props.mxFilter !== ""
-                                ? `${props.noResultsText} by search: ${props.mxFilter}`
-                                : props.noResultsText}
-                        </div>
-                    </li>
                 )}
             </ul>
-        </Fragment>
+            {props.options.length === 0 && !props.isLoading && (
+                <span
+                    id={`${props.id}-no-results-region`}
+                    className="mx-text srs-infooption"
+                    aria-live="polite"
+                    role="region"
+                >
+                    {props.noResultsText}
+                    {props.mxFilter.trim() !== "" && <span className="srs-aria-live">{`, Search:`}</span>}
+                </span>
+            )}
+        </div>
     );
 };
 
