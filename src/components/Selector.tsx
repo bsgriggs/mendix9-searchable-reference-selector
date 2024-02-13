@@ -82,9 +82,10 @@ interface SelectorProps {
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
-    // const [hasFocus, setHasFocus] = useState(false);
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const [focusedBadgeIndex, setFocusedBadgeIndex] = useState(-1);
+    const [focusedBadgeIndex, setFocusedBadgeIndex] = useState(
+        props.autoFocus ? props.options.findIndex(option => option.isSelected) : -1
+    );
     const [focusedBadgeRemove, setFocusedBadgeRemove] = useState(true);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
@@ -105,12 +106,14 @@ const Selector = (props: SelectorProps): ReactElement => {
     );
 
     useEffect(() => {
-        if (props.autoFocus && focusedObjIndex === -1 && hasCurrentValue) {
+        if ((props.showMenu, props.autoFocus && focusedObjIndex === -1 && hasCurrentValue)) {
             // set focus to the first selected option
             const index = props.options.findIndex(option => option.isSelected);
-            setFocusedObjIndex(index);
+            if (index !== -1) {
+                setFocusedObjIndex(index);
+            }
         }
-    }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus]);
+    }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus, props.showMenu]);
 
     const focusSearchInput = useCallback(
         (delay: boolean): void => {
@@ -143,6 +146,9 @@ const Selector = (props: SelectorProps): ReactElement => {
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
             if (selectedOption) {
+                if (props.autoFocus) {
+                    setFocusedObjIndex(props.options.findIndex(option => option.id === selectedOption.id));
+                }
                 if (Array.isArray(props.currentValue)) {
                     // reference set
                     if (hasCurrentValue) {
@@ -283,7 +289,9 @@ const Selector = (props: SelectorProps): ReactElement => {
             if (!props.showMenu) {
                 props.setShowMenu(true);
             }
-            setFocusedObjIndex(0);
+            if (!props.autoFocus || focusedObjIndex === -1) {
+                setFocusedObjIndex(0);
+            }
         } else if (
             props.selectionType === "referenceSet" &&
             Array.isArray(props.currentValue) &&
@@ -468,7 +476,6 @@ const Selector = (props: SelectorProps): ReactElement => {
                     }
                 }}
                 ref={props.srsRef}
-                // onFocus={() => setHasFocus(true)}
             >
                 <div className="srs-select">
                     <div

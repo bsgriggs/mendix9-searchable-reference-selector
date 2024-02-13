@@ -156,18 +156,18 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             >
                 {props.options.length > 0 && (
                     <Fragment>
-                        {props.options.map((option, key) => (
+                        {props.options.map((option, index) => (
                             <li
-                                id={`${props.id}-${key}`}
-                                key={key}
-                                ref={key === props.focusedObjIndex ? selectedObjRef : undefined}
+                                id={`${props.id}-${index}`}
+                                key={index}
+                                ref={index === props.focusedObjIndex ? selectedObjRef : undefined}
                                 role="option"
                                 aria-selected={option.isSelected ? "true" : "false"}
                                 aria-label={option.ariaLiveText}
                                 aria-disabled={!option.isSelectable}
                             >
                                 <Option
-                                    isFocused={key === props.focusedObjIndex}
+                                    isFocused={index === props.focusedObjIndex}
                                     onSelect={selectedOption => {
                                         if (props.allowLoadingSelect || !props.isLoading) {
                                             props.onSelect(selectedOption);
