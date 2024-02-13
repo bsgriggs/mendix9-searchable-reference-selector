@@ -106,7 +106,7 @@ const Selector = (props: SelectorProps): ReactElement => {
 
     useEffect(() => {
         if (props.autoFocus && focusedObjIndex === -1 && hasCurrentValue) {
-            //set focus to the first selected option
+            // set focus to the first selected option
             const index = props.options.findIndex(option => option.isSelected);
             setFocusedObjIndex(index);
         }
@@ -306,23 +306,23 @@ const Selector = (props: SelectorProps): ReactElement => {
                         setFocusedBadgeIndex(valuesShown);
                         setFocusedBadgeRemove(false);
                     } else if (removeIconsShowing) {
-                        //Focus last badge's remove button
+                        // Focus last badge's remove button
                         focusBadge(`badge-remove-${valuesShown - 1}`);
                         setFocusedBadgeIndex(valuesShown - 1);
                         setFocusedBadgeRemove(true);
                     } else if (badgeBodyFocusable) {
-                        //focus last badge's content area
+                        // focus last badge's content area
                         focusBadge(`badge-content-${valuesShown - 1}`);
                         setFocusedBadgeIndex(valuesShown - 1);
                         setFocusedBadgeRemove(false);
                     }
                 } else {
                     if (badgeBodyFocusable && focusedBadgeRemove) {
-                        //Move from remove icon to badge content
+                        // Move from remove icon to badge content
                         focusBadge(`badge-content-${focusedBadgeIndex}`);
                         setFocusedBadgeRemove(false);
                     } else if (badgeBodyFocusable && !removeIconsShowing && focusedBadgeIndex !== 0) {
-                        //No remove icons, only badge content
+                        // No remove icons, only badge content
                         focusBadge(`badge-content-${focusedBadgeIndex - 1}`);
                         setFocusedBadgeIndex(focusedBadgeIndex - 1);
                         setFocusedBadgeRemove(false);
@@ -332,7 +332,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                         setFocusedBadgeIndex(focusedBadgeIndex - 1);
                         setFocusedBadgeRemove(true);
                     } else if (focusedBadgeIndex === 0) {
-                        //Wrap around
+                        // Wrap around
                         focusSearchInput(false);
                         setFocusedBadgeIndex(-1);
                     }
@@ -340,14 +340,14 @@ const Selector = (props: SelectorProps): ReactElement => {
             } else if (keyPressed === "ArrowRight") {
                 event.preventDefault();
                 if (focusedBadgeIndex !== -1) {
-                    //Badges are focused
+                    // Badges are focused
                     if (
                         focusedBadgeIndex === valuesShown ||
                         (!extraFocusable &&
                             focusedBadgeIndex === valuesShown - 1 &&
                             (focusedBadgeRemove || !removeIconsShowing))
                     ) {
-                        //Last badge or extra is focused
+                        // Last badge or extra is focused
                         focusSearchInput(false);
                         setFocusedBadgeIndex(-1);
                     } else if (!focusedBadgeRemove && removeIconsShowing) {
@@ -355,7 +355,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                         focusBadge(`badge-remove-${focusedBadgeIndex}`);
                         setFocusedBadgeRemove(true);
                     } else if (badgeBodyFocusable && focusedBadgeRemove && focusedBadgeIndex !== valuesShown - 1) {
-                        //Move from remove icon to badge content
+                        // Move from remove icon to badge content
                         focusBadge(`badge-content-${focusedBadgeIndex + 1}`);
                         setFocusedBadgeIndex(focusedBadgeIndex + 1);
                         setFocusedBadgeRemove(false);
@@ -375,13 +375,13 @@ const Selector = (props: SelectorProps): ReactElement => {
                             focusBadge("extra");
                             setFocusedBadgeIndex(valuesShown);
                         } else {
-                            //Last badge or extra is focused
+                            // Last badge or extra is focused
                             focusSearchInput(false);
                             setFocusedBadgeIndex(-1);
                         }
                     }
                 } else {
-                    //Focused on input, wrap around
+                    // Focused on input, wrap around
                     if (props.onBadgeClick) {
                         focusBadge("badge-content-0");
                         setFocusedBadgeIndex(0);
@@ -442,7 +442,11 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.ariaSelectedText,
             props.ariaArrowKeyInstructions,
             hasCurrentValue,
-            props.onBadgeClick
+            props.onBadgeClick,
+            props.ariaSearchText,
+            props.isClearable,
+            props.isReadOnly,
+            props.isSearchable
         ]
     );
 

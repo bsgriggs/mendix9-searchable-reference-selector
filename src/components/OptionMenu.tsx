@@ -106,7 +106,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                 } else {
                     props.setFocusedObjIndex(0);
                 }
-            } else if (keyPressed === "Enter" || " ") {
+            } else if (keyPressed === "Enter" || keyPressed === " ") {
                 event.preventDefault();
                 if (props.focusedObjIndex > -1 && (props.allowLoadingSelect || !props.isLoading)) {
                     if (props.focusedObjIndex === props.options.length && props.onSelectMoreOptions) {
