@@ -18,6 +18,7 @@ type CurrentValueDisplayProps = {
     onExtraClick: (() => void) | undefined;
     tabIndex?: number;
     badgeColor: BadgeColorEnum;
+    extraAriaLabel: string | undefined;
 };
 
 const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
@@ -92,6 +93,7 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                 id="extra"
                                 className="srs-comma"
                                 tabIndex={props.onExtraClick ? -1 : undefined}
+                                aria-label={props.extraAriaLabel}
                                 onClick={event => {
                                     if (props.onExtraClick) {
                                         event.stopPropagation();

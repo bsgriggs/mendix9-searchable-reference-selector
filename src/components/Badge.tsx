@@ -37,12 +37,11 @@ const Badge = (props: BadgeProps): ReactElement => (
                     props.onBadgeClick(props.option);
                 }
             }}
-            aria-label={props.option.ariaLiveText}
+            aria-label={props.option.valueAriaLabel}
             role={props.onBadgeClick ? "button" : undefined}
         >
             {props.option.badgeContent ? props.option.badgeContent : props.option.content}
         </div>
-
         {props.isClearable && !props.isReadOnly && (
             <MxIcon
                 id={`badge-remove-${props.index}`}

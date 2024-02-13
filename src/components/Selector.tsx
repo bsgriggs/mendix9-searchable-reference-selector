@@ -78,6 +78,7 @@ interface SelectorProps {
     autoFocus: boolean;
     ariaArrowKeyInstructions: string | undefined;
     ariaSearchText: string | undefined;
+    extraAriaLabel: string | undefined;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {

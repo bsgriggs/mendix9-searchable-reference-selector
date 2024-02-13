@@ -314,7 +314,16 @@ export default function SearchableReferenceSelector(
                           isSelected: true,
                           selectionType: "REFERENCE",
                           id: reference,
-                          ariaLiveText: mapAriaLiveText(reference)
+                          ariaLiveText: mapAriaLiveText(reference),
+                          valueAriaLabel: props.valueAriaLabel
+                              ? (props.valueAriaLabel.get(reference).value as string)
+                              : props.ariaLiveText
+                              ? (props.ariaLiveText.get(reference).value as string)
+                              : props.displayAttribute
+                              ? (props.displayAttribute.get(reference).displayValue as string)
+                              : props.optionExpression
+                              ? (props.optionExpression.get(reference).value as string)
+                              : ""
                       }))
                     : undefined;
         }
@@ -331,7 +340,8 @@ export default function SearchableReferenceSelector(
         props.referenceSetValue,
         props.booleanAttribute,
         props.trueLabel,
-        props.falseLabel
+        props.falseLabel,
+        props.valueAriaLabel
     ]);
 
     // load Options ~ handle if the selected value changed outside the widget
@@ -585,6 +595,7 @@ export default function SearchableReferenceSelector(
                     ariaSelectedText={props.ariaSelectedText?.value as string}
                     ariaSearchText={props.ariaSearchText?.value as string}
                     ariaArrowKeyInstructions={props.ariaArrowKeyInstructions?.value as string}
+                    extraAriaLabel={props.extraAriaLabel?.value as string}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}

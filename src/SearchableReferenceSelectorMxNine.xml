@@ -411,7 +411,7 @@
                 </property>
                 <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
                     required="false">
-                    <caption>Aria live text</caption>
+                    <caption>Focused aria label</caption>
                     <description>The text read by a screen reader while focused on an option</description>
                 </property>
                 <property key="ariaSelectedText" type="textTemplate"
@@ -429,6 +429,16 @@
                     <translations>
                         <translation lang="en_US">search</translation>
                     </translations>
+                </property>
+                <property key="valueAriaLabel" type="textTemplate"
+                    required="false" dataSource="selectableObjects">
+                    <caption>Value aria label</caption>
+                    <description>Aria label for the text of the current value(s)</description>
+                </property>
+                <property key="extraAriaLabel" type="textTemplate"
+                    required="false">
+                    <caption>Extra aria label</caption>
+                    <description>Aria label for the extra text </description>
                 </property>
 
             </propertyGroup>

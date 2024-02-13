@@ -28,7 +28,7 @@ const Comma = (props: CommaProps): ReactElement => (
                 props.onBadgeClick(props.option);
             }
         }}
-        aria-label={props.option.ariaLiveText}
+        aria-label={props.option.valueAriaLabel}
         role={props.onBadgeClick ? "button" : undefined}
     >
         {props.option.badgeContent ? props.option.badgeContent : props.option.content}

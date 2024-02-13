@@ -152,6 +152,7 @@ export function getProperties(
                 "selectAllIcon",
                 "selectAllIconTitle",
                 "onBadgeClick",
+                "valueAriaLabel",
                 "optionsStyleSet",
                 "filterType",
                 "moreResultsText",
@@ -188,6 +189,7 @@ export function getProperties(
                 "selectAllIcon",
                 "selectAllIconTitle",
                 "onBadgeClick",
+                "valueAriaLabel",
                 "optionsStyleSet",
                 "filterType",
                 "moreResultsText",
@@ -227,6 +229,7 @@ export function getProperties(
                 "selectAllIcon",
                 "selectAllIconTitle",
                 "onBadgeClick",
+                "valueAriaLabel",
                 "enumAttribute",
                 "referenceSet",
                 "optionsStyleSet",
@@ -341,7 +344,7 @@ export function getProperties(
     }
 
     if (_values.maxReferenceDisplay !== null && _values.maxReferenceDisplay === 0) {
-        hidePropertyIn(defaultProperties, _values, "onExtraClick");
+        hidePropertiesIn(defaultProperties, _values, ["onExtraClick", "extraAriaLabel"]);
     }
 
     if (_values.filterMode === "CLIENT") {
@@ -405,7 +408,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     if (_values.optionTextType === "custom" && _values.filterMode === "SERVER" && _values.ariaLiveText === "") {
         errors.push({
             property: `ariaLiveText`,
-            message: `Accessibility -> Aria live text is required for custom content, so screen readers know the selected value`,
+            message: `Accessibility -> Focused aria text is required for custom content, so screen readers know the selected value`,
             url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
         });
     }

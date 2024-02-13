@@ -163,7 +163,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                                 ref={key === props.focusedObjIndex ? selectedObjRef : undefined}
                                 role="option"
                                 aria-selected={option.isSelected ? "true" : "false"}
-                                aria-label={`${option.ariaLiveText}`}
+                                aria-label={option.ariaLiveText}
                                 aria-disabled={!option.isSelectable}
                             >
                                 <Option
