@@ -38,24 +38,6 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
             }}
             ref={hoverRef}
         >
-            {/* {props.optionsStyle === "checkbox" && (
-                <input
-                    type={"checkbox"}
-                    aria-hidden
-                    checked={props.option.isSelected}
-                    disabled={!props.option.isSelectable}
-                    tabIndex={-1}
-                ></input>
-            )}
-            {props.optionsStyle === "radio" && (
-                <input
-                    type={"radio"}
-                    aria-hidden
-                    checked={props.option.isSelected}
-                    disabled={!props.option.isSelectable}
-                    tabIndex={-1}
-                />
-            )} */}
             {props.option.content}
         </div>
     );

@@ -4,6 +4,7 @@ import { SearchableReferenceSelectorMxNinePreviewProps } from "typings/Searchabl
 import Selector from "./components/Selector";
 import { IOption } from "typings/option";
 import { getDisplayName } from "./SearchableReferenceSelectorMxNine.editorConfig";
+import { DefaultClearIcon, DefaultDropdownIcon, DefaultSelectAllIcon } from "./assets/icons";
 
 export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): ReactElement {
     const displayName = getDisplayName(props);
@@ -101,28 +102,34 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 options={options}
                 optionsStyle={props.selectionType === "referenceSet" ? props.optionsStyleSet : props.optionsStyleSingle}
                 selectStyle={"list"}
-                clearIcon={
-                    props.clearIcon !== null && props.clearIcon
-                        ? props.clearIcon.type === "image"
-                            ? { type: "image", iconUrl: props.clearIcon.imageUrl }
-                            : { type: "glyph", iconClass: props.clearIcon.iconClass }
-                        : undefined
-                }
+                clearIcon={{
+                    webIcon:
+                        props.clearIcon !== null && props.clearIcon
+                            ? props.clearIcon.type === "image"
+                                ? { type: "image", iconUrl: props.clearIcon.imageUrl }
+                                : { type: "glyph", iconClass: props.clearIcon.iconClass }
+                            : undefined,
+                    default: DefaultClearIcon
+                }}
                 clearIconTitle={""}
-                dropdownIcon={
-                    props.dropdownIcon !== null && props.dropdownIcon
-                        ? props.dropdownIcon.type === "image"
-                            ? { type: "image", iconUrl: props.dropdownIcon.imageUrl }
-                            : { type: "glyph", iconClass: props.dropdownIcon.iconClass }
-                        : undefined
-                }
-                selectAllIcon={
-                    props.selectAllIcon !== null && props.selectAllIcon
-                        ? props.selectAllIcon.type === "image"
-                            ? { type: "image", iconUrl: props.selectAllIcon.imageUrl }
-                            : { type: "glyph", iconClass: props.selectAllIcon.iconClass }
-                        : undefined
-                }
+                dropdownIcon={{
+                    webIcon:
+                        props.dropdownIcon !== null && props.dropdownIcon
+                            ? props.dropdownIcon.type === "image"
+                                ? { type: "image", iconUrl: props.dropdownIcon.imageUrl }
+                                : { type: "glyph", iconClass: props.dropdownIcon.iconClass }
+                            : undefined,
+                    default: DefaultDropdownIcon
+                }}
+                selectAllIcon={{
+                    webIcon:
+                        props.selectAllIcon !== null && props.selectAllIcon
+                            ? props.selectAllIcon.type === "image"
+                                ? { type: "image", iconUrl: props.selectAllIcon.imageUrl }
+                                : { type: "glyph", iconClass: props.selectAllIcon.iconClass }
+                            : undefined,
+                    default: DefaultSelectAllIcon
+                }}
                 selectAllIconTitle=""
                 currentValue={undefined}
                 clearSearchOnSelect

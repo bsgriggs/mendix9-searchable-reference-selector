@@ -16,6 +16,7 @@ import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
 import "./ui/SearchableReferenceSelectorMxNine.scss";
 import { Alert } from "./components/Alert";
+import { DefaultClearIcon, DefaultDropdownIcon, DefaultSelectAllIcon } from "./assets/icons";
 
 export default function SearchableReferenceSelector(
     props: SearchableReferenceSelectorMxNineContainerProps
@@ -76,7 +77,7 @@ export default function SearchableReferenceSelector(
     );
 
     // Apply Max Items changes to itemsLimit
-    useEffect(() => {
+    useMemo(() => {
         setItemsLimit(
             (props.selectionType === "reference" || props.selectionType === "referenceSet") && props.maxItems
                 ? Number(props.maxItems.value)
@@ -86,7 +87,7 @@ export default function SearchableReferenceSelector(
     }, [props.maxItems]);
 
     // Apply items limit to data source
-    useEffect(() => {
+    useMemo(() => {
         if (props.selectableObjects) {
             if (isReadOnly || (props.loadDataMode === "OPEN" && !showMenu)) {
                 props.selectableObjects.setLimit(0);
@@ -559,10 +560,20 @@ export default function SearchableReferenceSelector(
                     isSearchable={searchable}
                     loadingText={props.loadingText.value as string}
                     isClearable={props.selectionType !== "boolean" ? props.isClearable : false}
-                    clearIcon={props.clearIcon?.value}
+                    clearIcon={{
+                        webIcon: props.clearIcon?.value,
+                        default: DefaultClearIcon
+                    }}
                     clearIconTitle={props.clearIconTitle.value as string}
-                    dropdownIcon={props.dropdownIcon?.value}
-                    selectAllIcon={props.selectAllIcon?.value}
+                    dropdownIcon={{
+                        webIcon: props.dropdownIcon?.value,
+                        default: DefaultDropdownIcon
+                    }}
+                    selectAllIcon={{
+                        webIcon: props.selectAllIcon?.value,
+                        default: DefaultSelectAllIcon
+                    }}
+                    selectAllIconTitle={props.selectAllIconTitle.value as string}
                     onBadgeClick={
                         props.onBadgeClick
                             ? selectedOption =>
@@ -573,7 +584,6 @@ export default function SearchableReferenceSelector(
                     placeholder={props.placeholder.value as string}
                     maxMenuHeight={props.maxMenuHeight?.value}
                     noResultsText={props.noResultsText.value as string}
-                    selectAllIconTitle={props.selectAllIconTitle.value as string}
                     hasMoreOptions={hasMoreItems}
                     moreResultsText={hasMoreItems ? props.moreResultsText.value : undefined}
                     onSelectMoreOptions={hasMoreItems ? () => onShowMore(itemsLimit + defaultPageSize) : undefined}

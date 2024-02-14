@@ -1,9 +1,9 @@
 import { createElement, Fragment, ReactElement } from "react";
 import { BadgeColorEnum, ReferenceSetStyleEnum } from "typings/SearchableReferenceSelectorMxNineProps";
-import { WebIcon } from "mendix";
 import Badge from "./Badge";
 import Comma from "./Comma";
-import { IOption } from "typings/option";
+import { IOption } from "../../typings/option";
+import { IMxIcon } from "../../typings/general";
 
 type CurrentValueDisplayProps = {
     currentValue: IOption | IOption[] | undefined;
@@ -12,7 +12,7 @@ type CurrentValueDisplayProps = {
     maxReferenceDisplay: number;
     onRemove: (clickObj: IOption, byKeyboard: boolean) => void;
     referenceSetStyle: ReferenceSetStyleEnum;
-    clearIcon: WebIcon | undefined;
+    clearIcon: IMxIcon;
     clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     onExtraClick: (() => void) | undefined;

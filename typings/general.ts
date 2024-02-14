@@ -1,10 +1,9 @@
-import { MouseEvent } from "react";
-import { DynamicValue, WebIcon } from "mendix";
+import { ReactElement } from "react";
+import { WebIcon } from "mendix";
 
-export interface IconProps {
-    onClick?: (event: MouseEvent<HTMLSpanElement>) => void;
-    title?: string;
-    mxIconOverride?: DynamicValue<WebIcon>;
+export interface IMxIcon {
+    webIcon: WebIcon | undefined;
+    default: ReactElement;
 }
 
 export interface EnumOption {

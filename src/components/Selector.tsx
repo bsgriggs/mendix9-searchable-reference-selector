@@ -10,13 +10,13 @@ import {
     useMemo,
     RefObject
 } from "react";
-import { WebIcon, ObjectItem } from "mendix";
+import { ObjectItem } from "mendix";
 import OptionsMenu from "./OptionMenu";
 import useOnClickOutside from "../custom hooks/useOnClickOutside";
 import { usePositionObserver } from "../custom hooks/usePositionObserver";
 import SearchInput from "./SearchInput";
 import MxIcon from "./MxIcon";
-import { IOption } from "typings/option";
+import { IOption } from "../../typings/option";
 import {
     BadgeColorEnum,
     OptionsStyleSetEnum,
@@ -27,6 +27,7 @@ import {
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import CurrentValueDisplay from "./CurrentValueDisplay";
 import classNames from "classnames";
+import { IMxIcon } from "../../typings/general";
 
 const FOCUS_DELAY = 300;
 
@@ -43,16 +44,16 @@ interface SelectorProps {
     mxFilter: string;
     setMxFilter: (newFilter: string) => void;
     isClearable: boolean;
-    clearIcon: WebIcon | undefined;
+    clearIcon: IMxIcon;
     clearIconTitle: string;
     isSearchable: boolean;
     isReadOnly: boolean;
     selectionType: SelectionTypeEnum;
     selectStyle: SelectStyleEnum;
     showSelectAll: boolean; // selectionType = ReferenceSet
-    selectAllIcon: WebIcon | undefined; // selectionType = ReferenceSet
+    selectAllIcon: IMxIcon; // selectionType = ReferenceSet
     selectAllIconTitle: string; // selectionType = ReferenceSet
-    dropdownIcon: WebIcon | undefined; // selectStyle = Dropdown
+    dropdownIcon: IMxIcon; // selectStyle = Dropdown
     maxMenuHeight: string | undefined; // selectStyle = Dropdown
     hasMoreOptions: boolean; // selectionType = Reference or ReferenceSet
     moreResultsText: string | undefined; // selectionType = Reference or ReferenceSet
@@ -544,8 +545,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                                         props.onSelect(props.options.filter(option => option.isSelectable));
                                     }}
                                     title={props.selectAllIconTitle}
-                                    mxIconOverride={props.selectAllIcon}
-                                    defaultClassName="check"
+                                    mxIcon={props.selectAllIcon}
                                 />
                             )}
 
@@ -554,13 +554,10 @@ const Selector = (props: SelectorProps): ReactElement => {
                                     tabIndex={props.tabIndex || 0}
                                     onClick={handleClearAll}
                                     title={props.clearIconTitle}
-                                    mxIconOverride={props.clearIcon}
-                                    defaultClassName="remove"
+                                    mxIcon={props.clearIcon}
                                 />
                             )}
-                            {props.selectStyle === "dropdown" && (
-                                <MxIcon mxIconOverride={props.dropdownIcon} defaultClassName="menu-down" />
-                            )}
+                            {props.selectStyle === "dropdown" && <MxIcon mxIcon={props.dropdownIcon} />}
                         </div>
                     )}
                 </div>

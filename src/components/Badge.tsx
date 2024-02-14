@@ -1,20 +1,19 @@
 import { createElement, ReactElement } from "react";
-import { WebIcon } from "mendix";
 import MxIcon from "./MxIcon";
 import { IOption } from "typings/option";
 import { BadgeColorEnum } from "typings/SearchableReferenceSelectorMxNineProps";
 import classNames from "classnames";
+import { IMxIcon } from "../../typings/general";
 
 interface BadgeProps {
     index: number;
     option: IOption;
     onRemoveAssociation: (byKeyboard: boolean) => void;
-    clearIcon: WebIcon | undefined;
+    clearIcon: IMxIcon;
     clearIconTitle: string;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
     isClearable: boolean;
     isReadOnly: boolean;
-    // tabIndex?: number;
     badgeColor: BadgeColorEnum;
 }
 
@@ -47,8 +46,7 @@ const Badge = (props: BadgeProps): ReactElement => (
                 id={`badge-remove-${props.index}`}
                 onClick={props.onRemoveAssociation}
                 title={props.clearIconTitle + " " + props.option.ariaLiveText}
-                mxIconOverride={props.clearIcon}
-                defaultClassName="remove"
+                mxIcon={props.clearIcon}
                 tabIndex={-1}
             />
         )}

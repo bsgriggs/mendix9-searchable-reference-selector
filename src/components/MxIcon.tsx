@@ -1,12 +1,11 @@
 import { createElement, ReactElement, MouseEvent, KeyboardEvent, useCallback } from "react";
-import { WebIcon } from "mendix";
 import { Icon } from "mendix/components/web/Icon";
 import classNames from "classnames";
+import { IMxIcon } from "../../typings/general";
 
 interface IconProps {
     id?: string;
-    defaultClassName: string;
-    mxIconOverride: WebIcon | undefined;
+    mxIcon: IMxIcon;
     tabIndex?: number;
     onClick?: (byKeyboard: boolean) => void;
     title?: string;
@@ -43,10 +42,10 @@ const MxIcon = (props: IconProps): ReactElement => {
             onKeyDown={onEnterHandler}
             title={props.title}
             tabIndex={props.tabIndex}
-            className={classNames(props.defaultClassName, { "srs-focusable": props.tabIndex !== undefined })}
+            className={classNames("srs-icon", { "srs-focusable": props.tabIndex !== undefined })}
             role={props.onClick ? "button" : undefined}
         >
-            <Icon icon={props.mxIconOverride || { type: "glyph", iconClass: `glyphicon-${props.defaultClassName}` }} />
+            {props.mxIcon.webIcon ? <Icon icon={props.mxIcon.webIcon} /> : props.mxIcon.default}
         </div>
     );
 };
