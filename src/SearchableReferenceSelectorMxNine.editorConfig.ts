@@ -405,13 +405,13 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (_values.optionTextType === "custom" && _values.filterMode === "SERVER" && _values.ariaLiveText === "") {
-        errors.push({
-            property: `ariaLiveText`,
-            message: `Accessibility -> Focused aria text is required for custom content, so screen readers know the selected value`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
-        });
-    }
+    // if (_values.optionTextType === "custom" && _values.filterMode === "SERVER" && _values.ariaLiveText === "") {
+    //     errors.push({
+    //         property: `ariaLiveText`,
+    //         message: `Accessibility -> Focused aria text is required for custom content, so screen readers know the selected value`,
+    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+    //     });
+    // }
 
     return errors;
 }

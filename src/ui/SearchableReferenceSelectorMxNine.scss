@@ -204,6 +204,47 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                         width: 8px;
                     }
                 }
+                .srs-checkbox {
+                    position: relative;
+                    span {
+                        padding-left: 24px;
+                    }
+                    &:before,
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        display: block;
+                    }
+
+                    &:before {
+                        // Checkbox
+                        border: 1px solid #ced0d3; //border-color-default
+                        border-radius: 4px;
+                        background-color: transparent;
+                        height: 16px;
+                        width: 16px;
+                    }
+
+                    &.selected {
+                        &:before {
+                            // Checkbox
+                            border: 1px solid #264ae5; //brand-primary
+                            background-color: #264ae5; //brand-primary
+                        }
+                        &:after {
+                            // Checkmark
+                            border: 2px solid #ffffff;
+                            border-top: 0;
+                            border-right: 0;
+                            height: 5px;
+                            margin: 5px 4px;
+                            pointer-events: none;
+                            top: 8px;
+                            transform: rotate(-45deg);
+                            width: 9px;
+                        }
+                    }
+                }
             }
         }
 
