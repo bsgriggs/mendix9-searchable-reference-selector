@@ -19,7 +19,6 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
                 padding: $padding-md;
                 display: grid;
                 flex: 1 1 0%;
-                align-items: center;
                 overflow-x: hidden;
                 // for enum and ref
                 .srs-current-value {
