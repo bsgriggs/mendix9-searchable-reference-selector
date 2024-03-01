@@ -608,12 +608,16 @@ export default function SearchableReferenceSelector(
                     extraAriaLabel={props.extraAriaLabel?.value as string}
                 />
             </div>
-            {props.enumAttribute && props.enumAttribute.validation && <Alert>{props.enumAttribute.validation}</Alert>}
-            {props.booleanAttribute && props.booleanAttribute.validation && (
-                <Alert>{props.booleanAttribute.validation}</Alert>
+            {props.enumAttribute && props.enumAttribute.validation && (
+                <Alert id={props.id}>{props.enumAttribute.validation}</Alert>
             )}
-            {props.reference && props.reference.validation && <Alert>{props.reference.validation}</Alert>}
-            {props.referenceSet && props.referenceSet.validation && <Alert>{props.referenceSet.validation}</Alert>}
+            {props.booleanAttribute && props.booleanAttribute.validation && (
+                <Alert id={props.id}>{props.booleanAttribute.validation}</Alert>
+            )}
+            {props.reference && props.reference.validation && <Alert id={props.id}>{props.reference.validation}</Alert>}
+            {props.referenceSet && props.referenceSet.validation && (
+                <Alert id={props.id}>{props.referenceSet.validation}</Alert>
+            )}
         </Fragment>
     );
 }

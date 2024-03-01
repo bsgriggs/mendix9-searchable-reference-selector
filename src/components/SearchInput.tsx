@@ -56,7 +56,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-description={
                     !props.showMenu || props.focusedObjIndex === -1 ? props.currentValueAriaText : undefined
                 }
-                aria-describedby={props.showMenu ? props.id + "-no-results-region" : undefined}
+                aria-describedby={`${props.id}-error ${props.showMenu && props.id + "-no-results-region"}`}
                 aria-label={props.ariaLabel} // for screen readers in case there is no actual label
                 aria-haspopup={!props.isReadOnly ? (props.selectStyle === "dropdown" ? "true" : "listbox") : "false"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
