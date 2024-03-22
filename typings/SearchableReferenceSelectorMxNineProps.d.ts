@@ -47,9 +47,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     id: string;
     placeholder: DynamicValue<string>;
     selectionType: SelectionTypeEnum;
-    selectableObjects: ListValue;
     reference: ReferenceValue;
     referenceSet: ReferenceSetValue;
+    selectableObjects: ListValue;
     selectableCondition: ListExpressionValue<boolean>;
     enumAttribute: EditableValue<string>;
     enumFilterType: EnumFilterTypeEnum;
@@ -114,9 +114,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
     placeholder: string;
     selectionType: SelectionTypeEnum;
-    selectableObjects: {} | { type: string } | null;
     reference: string;
     referenceSet: string;
+    selectableObjects: {} | { type: string } | null;
     selectableCondition: string;
     enumAttribute: string;
     enumFilterType: EnumFilterTypeEnum;

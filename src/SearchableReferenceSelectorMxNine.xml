@@ -30,10 +30,6 @@
                         <enumerationValue key="referenceSet">Reference Set</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="selectableObjects" type="datasource" isList="true" required="true">
-                    <caption>Selectable objects</caption>
-                    <description></description>
-                </property>
                 <property key="reference" type="association" selectableObjects="selectableObjects"
                     required="true">
                     <caption>Reference</caption>
@@ -49,6 +45,10 @@
                     <associationTypes>
                         <associationType name="ReferenceSet" />
                     </associationTypes>
+                </property>
+                <property key="selectableObjects" type="datasource" isList="true" required="true">
+                    <caption>Selectable objects</caption>
+                    <description></description>
                 </property>
                 <property key="selectableCondition" type="expression" dataSource="selectableObjects"
                     defaultValue="true">

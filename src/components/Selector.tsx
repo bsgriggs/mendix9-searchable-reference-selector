@@ -1,7 +1,7 @@
 import {
     createElement,
     useState,
-    useEffect,
+    // useEffect,
     ReactElement,
     ChangeEvent,
     Fragment,
@@ -106,15 +106,16 @@ const Selector = (props: SelectorProps): ReactElement => {
         [props.currentValue]
     );
 
-    useEffect(() => {
-        if ((props.showMenu, props.autoFocus && focusedObjIndex === -1 && hasCurrentValue)) {
+    useMemo(() => {
+        if ((props.showMenu, props.autoFocus && hasCurrentValue)) {
             // set focus to the first selected option
             const index = props.options.findIndex(option => option.isSelected);
             if (index !== -1) {
                 setFocusedObjIndex(index);
             }
         }
-    }, [hasCurrentValue, focusedObjIndex, props.options, props.autoFocus, props.showMenu]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasCurrentValue, props.currentValue, props.options, props.autoFocus, props.showMenu]);
 
     const focusSearchInput = useCallback(
         (delay: boolean): void => {
@@ -142,14 +143,11 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.onLeave();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.showMenu, props.autoFocus, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
+    }, [props.showMenu, props.mxFilter, focusedObjIndex, props.onLeave, props.setMxFilter]);
 
     const onSelectHandler = useCallback(
         (selectedOption: IOption | undefined): void => {
             if (selectedOption) {
-                if (props.autoFocus) {
-                    setFocusedObjIndex(props.options.findIndex(option => option.id === selectedOption.id));
-                }
                 if (Array.isArray(props.currentValue)) {
                     // reference set
                     if (hasCurrentValue) {
