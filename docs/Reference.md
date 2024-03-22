@@ -60,6 +60,8 @@ If you use Option Content Type "Expression" or "Custom" with server side filteri
 | ------------- | ------------- |  
 | ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png)   | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png)   |  
 
+**Auto focus selected** - When the dropdown is opened, ensures that the selected value is shown. (Only if the selected value is within the max items limit)  
+
 **Max items** - An integer expression that sets the limit of items shown at a time. 
 - If 0, no limit is set.
 - If there are more options available than the limit, the widget will show the More Results Text. Clicking on the More Results Text will increase the limit and show more of the items.
