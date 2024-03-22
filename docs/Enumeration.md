@@ -67,9 +67,9 @@ page.
 background color.  
 | Cell | Radio Buttons |  
 | ------------- | ------------- |  
-| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png) |
-![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png) |
+| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png) | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png) |
 
+**Auto focus selected** - When the dropdown is opened, ensures that the selected value is shown.  
 **Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em.  
 **Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.
 
