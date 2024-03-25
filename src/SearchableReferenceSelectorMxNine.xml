@@ -375,23 +375,24 @@
         </propertyGroup>
         <propertyGroup caption="Events">
             <propertyGroup caption="Events">
-                <property key="onChange" type="action">
+                <property key="onChange" type="action" required="false">
                     <caption>On change</caption>
                     <description></description>
                 </property>
-                <property key="onEnter" type="action">
+                <property key="onEnter" type="action" required="false">
                     <caption>On enter</caption>
                     <description></description>
                 </property>
-                <property key="onLeave" type="action">
+                <property key="onLeave" type="action" required="false">
                     <caption>On leave</caption>
                     <description></description>
                 </property>
-                <property key="onBadgeClick" type="action" dataSource="selectableObjects">
+                <property key="onBadgeClick" type="action" dataSource="selectableObjects"
+                    required="false">
                     <caption>On value click</caption>
                     <description>Action called when the user clicks on one of the currently selected values</description>
                 </property>
-                <property key="onExtraClick" type="action">
+                <property key="onExtraClick" type="action" required="false">
                     <caption>On extra click</caption>
                     <description>Action called when the user clicks on the (+n) text</description>
                 </property>
