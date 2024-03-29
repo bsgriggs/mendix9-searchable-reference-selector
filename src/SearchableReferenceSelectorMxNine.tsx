@@ -79,7 +79,9 @@ export default function SearchableReferenceSelector(
     // Apply Max Items changes to itemsLimit
     useMemo(() => {
         setItemsLimit(
-            (props.selectionType === "reference" || props.selectionType === "referenceSet") && props.maxItems
+            (props.selectionType === "reference" || props.selectionType === "referenceSet") &&
+                props.maxItems &&
+                props.filterType === "auto"
                 ? Number(props.maxItems.value)
                 : Infinity
         );
