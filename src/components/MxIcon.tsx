@@ -45,7 +45,7 @@ const MxIcon = (props: IconProps): ReactElement => {
             className={classNames("srs-icon", { "srs-focusable": props.tabIndex !== undefined })}
             role={props.onClick ? "button" : undefined}
         >
-            {props.mxIcon.webIcon ? <Icon icon={props.mxIcon.webIcon} /> : props.mxIcon.default}
+            {props.mxIcon.webIcon ? Icon({ icon: props.mxIcon.webIcon, altText: props.title }) : props.mxIcon.default}
         </div>
     );
 };

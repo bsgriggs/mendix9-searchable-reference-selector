@@ -42,6 +42,7 @@ interface OptionMenuProps {
     mxFilter: string;
     tabIndex: number;
     ariaSearchText: string | undefined;
+    autoFocusIndex: number;
 }
 
 const OptionsMenu = (props: OptionMenuProps): ReactElement => {
@@ -86,7 +87,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             if (keyPressed === "ArrowUp") {
                 event.preventDefault();
                 if (props.focusedObjIndex === -1) {
-                    props.setFocusedObjIndex(0);
+                    props.setFocusedObjIndex(props.autoFocusIndex !== -1 ? props.autoFocusIndex : 0);
                 } else if (props.focusedObjIndex > 0) {
                     props.setFocusedObjIndex(props.focusedObjIndex - 1);
                 } else if (props.hasMoreOptions) {
@@ -97,7 +98,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             } else if (keyPressed === "ArrowDown") {
                 event.preventDefault();
                 if (props.focusedObjIndex === -1) {
-                    props.setFocusedObjIndex(0);
+                    props.setFocusedObjIndex(props.autoFocusIndex !== -1 ? props.autoFocusIndex : 0);
                 } else if (
                     props.focusedObjIndex < props.options.length - 1 ||
                     (props.focusedObjIndex === props.options.length - 1 && props.hasMoreOptions)
@@ -118,6 +119,8 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                         }
                     }
                 }
+            } else if (keyPressed === "Escape" || keyPressed === "Tab") {
+                props.setFocusedObjIndex(-1);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps

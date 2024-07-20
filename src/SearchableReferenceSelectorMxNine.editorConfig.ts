@@ -216,7 +216,9 @@ export function getProperties(
                 "loadDataMode",
                 "enumFilterType",
                 "enumFilterList",
-                "autoFocus",
+                "autoFocusMode",
+                "autoFocusOption_Enum",
+                "autoFocusOption_Obj",
                 "ariaArrowKeyInstructions"
             ]);
 
@@ -300,6 +302,31 @@ export function getProperties(
             }
 
             break;
+    }
+
+    switch (_values.autoFocusMode) {
+        case "OFF":
+            hidePropertiesIn(defaultProperties, _values, ["autoFocusOption_Enum", "autoFocusOption_Obj"]);
+            break;
+        case "FOCUS_SELECTED":
+            hidePropertiesIn(defaultProperties, _values, ["autoFocusOption_Enum", "autoFocusOption_Obj"]);
+            break;
+        case "FOCUS_OPTION":
+            switch (_values.selectionType) {
+                case "boolean":
+                    hidePropertiesIn(defaultProperties, _values, [
+                        "autoFocusMode",
+                        "autoFocusOption_Enum",
+                        "autoFocusOption_Obj"
+                    ]);
+                    break;
+                case "enumeration":
+                    hidePropertyIn(defaultProperties, _values, "autoFocusOption_Obj");
+                    break;
+                default: // else
+                    hidePropertyIn(defaultProperties, _values, "autoFocusOption_Enum");
+                    break;
+            }
     }
 
     if (parseInt(_values.maxItems) === 0) {

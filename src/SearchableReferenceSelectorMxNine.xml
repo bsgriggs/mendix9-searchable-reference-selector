@@ -241,10 +241,6 @@
                         <enumerationValue key="checkbox">Checkbox</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="autoFocus" type="boolean" defaultValue="false">
-                    <caption>Auto focus selected</caption>
-                    <description></description>
-                </property>
                 <property key="maxItems" type="expression" defaultValue="20">
                     <caption>Max items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>
@@ -335,6 +331,30 @@
                     <translations>
                         <translation lang="en_US">Loading ...</translation>
                     </translations>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Auto Focus">
+                <property key="autoFocusMode" type="enumeration" defaultValue="OFF">
+                    <caption>Auto focus mode</caption>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="OFF">Off</enumerationValue>
+                        <enumerationValue key="FOCUS_SELECTED">Focus selected</enumerationValue>
+                        <enumerationValue key="FOCUS_OPTION">Focus option</enumerationValue>
+                    </enumerationValues>
+                </property>
+                <property key="autoFocusOption_Enum" type="expression" required="true">
+                    <caption>Auto focus option</caption>
+                    <description>Finds the first Enum key that matches this text and auto focuses it
+                </description>
+                    <returnType type="String" />
+                </property>
+                <property key="autoFocusOption_Obj" type="expression" required="true"
+                    dataSource="selectableObjects">
+                    <caption>Auto focus option</caption>
+                    <description>Auto focus the first option that makes this expression true
+                </description>
+                    <returnType type="Boolean" />
                 </property>
             </propertyGroup>
             <propertyGroup caption="Select all">

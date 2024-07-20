@@ -29,7 +29,7 @@ import CurrentValueDisplay from "./CurrentValueDisplay";
 import classNames from "classnames";
 import { IMxIcon } from "../../typings/general";
 
-const FOCUS_DELAY = 300;
+const FOCUS_DELAY = 100;
 
 interface SelectorProps {
     id: string;
@@ -76,7 +76,7 @@ interface SelectorProps {
     setShowMenu: (newShowMenu: boolean) => void;
     ariaRequired: boolean;
     ariaSelectedText: string | undefined;
-    autoFocus: boolean;
+    autoFocusIndex: number;
     ariaArrowKeyInstructions: string | undefined;
     ariaSearchText: string | undefined;
     extraAriaLabel: string | undefined;
@@ -84,9 +84,7 @@ interface SelectorProps {
 
 const Selector = (props: SelectorProps): ReactElement => {
     const [focusedObjIndex, setFocusedObjIndex] = useState<number>(-1);
-    const [focusedBadgeIndex, setFocusedBadgeIndex] = useState(
-        props.autoFocus ? props.options.findIndex(option => option.isSelected) : -1
-    );
+    const [focusedBadgeIndex, setFocusedBadgeIndex] = useState(-1);
     const [focusedBadgeRemove, setFocusedBadgeRemove] = useState(true);
     const [searchInput, setSearchInput] = useState<HTMLInputElement | null>(null);
 
@@ -94,7 +92,6 @@ const Selector = (props: SelectorProps): ReactElement => {
     const optionsLength = useMemo(() => props.options.length, [props.options]);
 
     const position = usePositionObserver(props.srsRef, props.selectStyle === "dropdown" && props.showMenu);
-
     const hasCurrentValue = useMemo(
         (): boolean =>
             props.selectionType !== "referenceSet"
@@ -105,17 +102,6 @@ const Selector = (props: SelectorProps): ReactElement => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [props.currentValue]
     );
-
-    useMemo(() => {
-        if ((props.showMenu, props.autoFocus && hasCurrentValue)) {
-            // set focus to the first selected option
-            const index = props.options.findIndex(option => option.isSelected);
-            if (index !== -1) {
-                setFocusedObjIndex(index);
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasCurrentValue, props.currentValue, props.options, props.autoFocus, props.showMenu]);
 
     const focusSearchInput = useCallback(
         (delay: boolean): void => {
@@ -234,7 +220,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             event.preventDefault();
 
             if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
+                setFocusedObjIndex(props.autoFocusIndex !== -1 ? props.autoFocusIndex : 0);
             } else if (focusedObjIndex > 0) {
                 setFocusedObjIndex(focusedObjIndex - 1);
             } else if (props.hasMoreOptions) {
@@ -252,7 +238,7 @@ const Selector = (props: SelectorProps): ReactElement => {
         } else if (keyPressed === "ArrowDown") {
             event.preventDefault();
             if (focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
+                setFocusedObjIndex(props.autoFocusIndex !== -1 ? props.autoFocusIndex : 0);
             } else if (
                 focusedObjIndex < optionsLength - 1 ||
                 (focusedObjIndex === optionsLength - 1 && props.hasMoreOptions)
@@ -288,9 +274,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             if (!props.showMenu) {
                 props.setShowMenu(true);
             }
-            if (!props.autoFocus || focusedObjIndex === -1) {
-                setFocusedObjIndex(0);
-            }
+            setFocusedObjIndex(props.autoFocusIndex !== -1 ? props.autoFocusIndex : 0);
         } else if (
             props.selectionType === "referenceSet" &&
             Array.isArray(props.currentValue) &&
@@ -418,7 +402,6 @@ const Selector = (props: SelectorProps): ReactElement => {
         (event: ChangeEvent<HTMLInputElement>): void => {
             const value = event.target.value;
             props.setMxFilter(value);
-            setFocusedObjIndex(0);
             // make sure the dropdown is open if the user is typing
             if (value.trim() !== "" && !props.showMenu) {
                 props.setShowMenu(true);

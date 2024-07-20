@@ -33,7 +33,8 @@ export default function SearchableReferenceSelector(
     const [itemsLimit, setItemsLimit] = useState<number>(defaultPageSize);
     const [options, setOptions] = useState<IOption[]>([]);
     const [skipFilter, setSkipFilter] = useState<boolean>(true);
-    const [showMenu, setShowMenu] = useState(props.selectStyle === "list");
+    const [autoFocusIndex, setAutoFocusIndex] = useState<number>(-1);
+    const [showMenu, setShowMenu] = useState(false);
     const srsRef = useRef<HTMLDivElement>(null);
     const serverSideSearching: boolean = useMemo(() => {
         if (
@@ -159,38 +160,73 @@ export default function SearchableReferenceSelector(
 
     const mapEnum = useCallback(
         (enumArray: string[]): IOption[] => {
+            let newAutoFocusIndex = mxFilter.trim().length > 0 ? 0 : -1;
+            let newOptionArray: IOption[] = [];
             if (
                 props.enumFilterType === "OFF" ||
                 props.enumFilterList.value === undefined ||
                 props.enumFilterList.value.length === 0
             ) {
-                return enumArray.map(value => ({
-                    content: displayTextContent(props.enumAttribute.formatter.format(value)),
-                    isSelectable: true,
-                    isSelected: value === (props.enumAttribute.value as string),
-                    selectionType: "ENUMERATION",
-                    id: value,
-                    ariaLiveText: props.enumAttribute.formatter.format(value)
-                }));
-            } else {
-                const filterList = props.enumFilterList.value.split(",");
-
-                return enumArray
-                    .filter(value =>
-                        props.enumFilterType === "EXCLUDE" ? !filterList.includes(value) : filterList.includes(value)
-                    )
-                    .map(value => ({
+                newOptionArray = enumArray.map((value, index) => {
+                    const isSelected = value === (props.enumAttribute.value as string);
+                    if (props.autoFocusMode === "FOCUS_SELECTED" && newAutoFocusIndex === -1) {
+                        if (isSelected) {
+                            newAutoFocusIndex = index;
+                        }
+                    } else if (props.autoFocusMode === "FOCUS_OPTION" && newAutoFocusIndex === -1) {
+                        if (value === props.autoFocusOption_Enum.value) {
+                            newAutoFocusIndex = index;
+                        }
+                    }
+                    return {
                         content: displayTextContent(props.enumAttribute.formatter.format(value)),
                         isSelectable: true,
-                        isSelected: value === (props.enumAttribute.value as string),
+                        isSelected,
                         selectionType: "ENUMERATION",
                         id: value,
                         ariaLiveText: props.enumAttribute.formatter.format(value)
-                    }));
-            }
-        },
+                    };
+                });
+            } else {
+                const filterList = props.enumFilterList.value.split(",");
 
-        [props.enumAttribute, displayTextContent, props.enumFilterList, props.enumFilterType]
+                newOptionArray = enumArray
+                    .filter(value =>
+                        props.enumFilterType === "EXCLUDE" ? !filterList.includes(value) : filterList.includes(value)
+                    )
+                    .map((value, index) => {
+                        const isSelected = value === (props.enumAttribute.value as string);
+                        if (props.autoFocusMode === "FOCUS_SELECTED" && newAutoFocusIndex === -1) {
+                            if (isSelected) {
+                                newAutoFocusIndex = index;
+                            }
+                        } else if (props.autoFocusMode === "FOCUS_OPTION" && newAutoFocusIndex === -1) {
+                            if (value === props.autoFocusOption_Enum.value) {
+                                newAutoFocusIndex = index;
+                            }
+                        }
+                        return {
+                            content: displayTextContent(props.enumAttribute.formatter.format(value)),
+                            isSelectable: true,
+                            isSelected,
+                            selectionType: "ENUMERATION",
+                            id: value,
+                            ariaLiveText: props.enumAttribute.formatter.format(value)
+                        };
+                    });
+            }
+            setAutoFocusIndex(newAutoFocusIndex);
+            return newOptionArray;
+        },
+        [
+            props.enumAttribute,
+            displayTextContent,
+            props.enumFilterList,
+            props.enumFilterType,
+            props.autoFocusMode,
+            props.autoFocusOption_Enum,
+            mxFilter
+        ]
     );
 
     const boolOptions: IOption[] = useMemo(
@@ -232,21 +268,48 @@ export default function SearchableReferenceSelector(
     );
 
     const mapObjectItems = useCallback(
-        (objectItems: ObjectItem[]): IOption[] =>
-            objectItems.map(objItem => ({
-                content: displayReferenceContent(objItem),
-                isSelectable: props.selectableCondition.get(objItem).value as boolean,
-                isSelected:
+        (objectItems: ObjectItem[]): IOption[] => {
+            let newAutoFocusIndex = mxFilter.trim().length > 0 ? 0 : -1;
+            let newOptionArray: IOption[] = [];
+            newOptionArray = objectItems.map((objItem, index) => {
+                const isSelected =
                     props.selectionType === "referenceSet"
                         ? props.referenceSet.value?.find(option => option.id === objItem.id) !== undefined
-                        : props.reference.value?.id === objItem.id,
+                        : props.reference.value?.id === objItem.id;
+                if (props.autoFocusMode === "FOCUS_SELECTED" && newAutoFocusIndex === -1) {
+                    if (isSelected) {
+                        newAutoFocusIndex = index;
+                    }
+                } else if (props.autoFocusMode === "FOCUS_OPTION" && newAutoFocusIndex === -1) {
+                    console.info(props.autoFocusOption_Obj.get(objItem).value as boolean);
+                    if (props.autoFocusOption_Obj.get(objItem).value as boolean) {
+                        newAutoFocusIndex = index;
+                    }
+                }
+                return {
+                    content: displayReferenceContent(objItem),
+                    isSelectable: props.selectableCondition.get(objItem).value as boolean,
+                    isSelected,
 
-                selectionType: "REFERENCE",
-                id: objItem,
-                ariaLiveText: mapAriaLiveText(objItem)
-            })),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [props.reference, props.referenceSet, props.selectableCondition, displayReferenceContent, mapAriaLiveText]
+                    selectionType: "REFERENCE",
+                    id: objItem,
+                    ariaLiveText: mapAriaLiveText(objItem)
+                };
+            });
+            setAutoFocusIndex(newAutoFocusIndex);
+            return newOptionArray;
+        },
+        [
+            props.selectionType,
+            props.reference,
+            props.referenceSet,
+            props.selectableCondition,
+            displayReferenceContent,
+            mapAriaLiveText,
+            props.autoFocusMode,
+            props.autoFocusOption_Obj,
+            mxFilter
+        ]
     );
 
     const onShowMore = useCallback(
@@ -608,6 +671,7 @@ export default function SearchableReferenceSelector(
                     ariaSearchText={props.ariaSearchText?.value as string}
                     ariaArrowKeyInstructions={props.ariaArrowKeyInstructions?.value as string}
                     extraAriaLabel={props.extraAriaLabel?.value as string}
+                    autoFocusIndex={autoFocusIndex}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && (

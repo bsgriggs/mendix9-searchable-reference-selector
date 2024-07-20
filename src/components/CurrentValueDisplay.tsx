@@ -35,7 +35,7 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                           <Badge
                                               index={index}
                                               key={index}
-                                              isClearable={props.isClearable}
+                                              isClearable={props.isClearable || length > 1}
                                               isReadOnly={props.isReadOnly}
                                               onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
                                               clearIcon={props.clearIcon}
@@ -50,7 +50,7 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                           <Badge
                                               index={index}
                                               key={index}
-                                              isClearable={props.isClearable}
+                                              isClearable={props.isClearable || length > 1}
                                               isReadOnly={props.isReadOnly}
                                               onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
                                               clearIcon={props.clearIcon}

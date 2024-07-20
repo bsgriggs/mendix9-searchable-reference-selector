@@ -152,6 +152,7 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 setShowMenu={() => {}}
                 showMenu={true}
                 ariaRequired={false}
+                autoFocusIndex={-1}
             />
             {props.referenceSetValue === "CUSTOM" && (
                 <div className="srs-badge">

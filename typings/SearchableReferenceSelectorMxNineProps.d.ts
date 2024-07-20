@@ -37,6 +37,8 @@ export type ReferenceSetValueEnum = "SAME" | "CUSTOM";
 
 export type BadgeColorEnum = "default" | "info" | "primary" | "inverse" | "success" | "warning" | "danger";
 
+export type AutoFocusModeEnum = "OFF" | "FOCUS_SELECTED" | "FOCUS_OPTION";
+
 export interface SearchAttributesPreviewType {
     searchAttribute: string;
 }
@@ -74,7 +76,6 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
-    autoFocus: boolean;
     maxItems: DynamicValue<Big>;
     allowLoadingSelect: boolean;
     maxMenuHeight?: DynamicValue<string>;
@@ -89,6 +90,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     moreResultsText: DynamicValue<string>;
     noResultsText: DynamicValue<string>;
     loadingText: DynamicValue<string>;
+    autoFocusMode: AutoFocusModeEnum;
+    autoFocusOption_Enum: DynamicValue<string>;
+    autoFocusOption_Obj: ListExpressionValue<boolean>;
     showSelectAll: boolean;
     selectAllIconTitle: DynamicValue<string>;
     selectAllIcon?: DynamicValue<WebIcon>;
@@ -141,7 +145,6 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     loadDataMode: LoadDataModeEnum;
     optionsStyleSingle: OptionsStyleSingleEnum;
     optionsStyleSet: OptionsStyleSetEnum;
-    autoFocus: boolean;
     maxItems: string;
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
@@ -156,6 +159,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     moreResultsText: string;
     noResultsText: string;
     loadingText: string;
+    autoFocusMode: AutoFocusModeEnum;
+    autoFocusOption_Enum: string;
+    autoFocusOption_Obj: string;
     showSelectAll: boolean;
     selectAllIconTitle: string;
     selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
