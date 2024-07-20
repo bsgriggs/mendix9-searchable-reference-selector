@@ -630,6 +630,11 @@ export default function SearchableReferenceSelector(
                         default: DefaultClearIcon
                     }}
                     clearIconTitle={props.clearIconTitle.value as string}
+                    clearAllIcon={{
+                        webIcon: props.clearAllIcon?.value,
+                        default: DefaultClearIcon
+                    }}
+                    clearAllIconTitle={props.clearAllIconTitle.value as string}
                     dropdownIcon={{
                         webIcon: props.dropdownIcon?.value,
                         default: DefaultDropdownIcon

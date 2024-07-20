@@ -67,9 +67,9 @@ page.
 background color.  
 | Cell | Radio Buttons |  
 | ------------- | ------------- |  
-| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png) | ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png) |
+| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png) |
+![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png) |
 
-**Auto focus selected** - When the dropdown is opened, ensures that the selected value is shown.  
 **Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em.  
 **Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.
 
@@ -81,6 +81,15 @@ background color.
 
 **No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user
 enters a search text and nothing is found)
+
+### Auto Focus
+
+**Auto focus mode** - Determines how auto-focusing is performed
+
+-   Off = No auto-focus is applied
+-   Focus selected = The current selected value is auto-focused and scrolled to when the dropdown is opened
+-   Focus option = A STRING expression called 'Auto focus option' appears. If the string in the expression matches the
+    Enum's key, then that enum value is auto-focused and scrolled to when the dropdown is opened
 
 ### Clearing
 

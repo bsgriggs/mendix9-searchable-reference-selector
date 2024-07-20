@@ -39,6 +39,7 @@ https://marketplace.mendix.com/link/component/116917
 -   Searching auto-highlights the first record for easier selection with the enter key
 -   Option to wait to run the data source until the dropdown is opened
 -   Ability to show only a sub-set of Enum values
+-   Ability to auto-focus either the selected option or specific options 
 
 ## Configuration  
 Please see the following documentation based on the Selection Type you wish to use.

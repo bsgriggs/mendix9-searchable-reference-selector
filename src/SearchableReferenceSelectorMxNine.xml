@@ -386,8 +386,19 @@
                         <translation lang="en_US">Remove</translation>
                     </translations>
                 </property>
+                <property key="clearAllIconTitle" type="textTemplate" required="true">
+                    <caption>Clear all icon title</caption>
+                    <description>Text shown when hovering on the clear all icon</description>
+                    <translations>
+                        <translation lang="en_US">Remove all</translation>
+                    </translations>
+                </property>
                 <property key="clearIcon" type="icon" required="false">
                     <caption>Clear icon</caption>
+                    <description></description>
+                </property>
+                <property key="clearAllIcon" type="icon" required="false">
+                    <caption>Clear all icon</caption>
                     <description></description>
                 </property>
             </propertyGroup>

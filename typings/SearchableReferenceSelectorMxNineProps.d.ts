@@ -98,7 +98,9 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     selectAllIcon?: DynamicValue<WebIcon>;
     isClearable: boolean;
     clearIconTitle: DynamicValue<string>;
+    clearAllIconTitle: DynamicValue<string>;
     clearIcon?: DynamicValue<WebIcon>;
+    clearAllIcon?: DynamicValue<WebIcon>;
     onChange?: ActionValue;
     onEnter?: ActionValue;
     onLeave?: ActionValue;
@@ -167,7 +169,9 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     isClearable: boolean;
     clearIconTitle: string;
+    clearAllIconTitle: string;
     clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    clearAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
     onChange: {} | null;
     onEnter: {} | null;
     onLeave: {} | null;

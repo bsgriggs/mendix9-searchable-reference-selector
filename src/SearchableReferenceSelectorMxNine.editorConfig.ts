@@ -174,7 +174,9 @@ export function getProperties(
                 "trueLabel",
                 "falseLabel",
                 "loadDataMode",
-                "ariaArrowKeyInstructions"
+                "ariaArrowKeyInstructions",
+                "clearAllIcon",
+                "clearAllIconTitle"
             ]);
             break;
         case "boolean":
@@ -211,6 +213,8 @@ export function getProperties(
                 "isClearable",
                 "clearIcon",
                 "clearIconTitle",
+                "clearAllIcon",
+                "clearAllIconTitle",
                 "maxMenuHeight",
                 "placeholder",
                 "loadDataMode",
@@ -245,7 +249,9 @@ export function getProperties(
                 "isSearchable",
                 "enumFilterType",
                 "enumFilterList",
-                "ariaArrowKeyInstructions"
+                "ariaArrowKeyInstructions",
+                "clearAllIcon",
+                "clearAllIconTitle"
             ]);
             break;
         case "referenceSet":
@@ -334,7 +340,7 @@ export function getProperties(
     }
 
     if (!(_values.selectionType === "referenceSet" && _values.referenceSetStyle === "badges")) {
-        hidePropertyIn(defaultProperties, _values, "badgeColor");
+        hidePropertiesIn(defaultProperties, _values, ["badgeColor", "clearIcon", "clearIconTitle"]);
     }
 
     if (_values.selectStyle === "list") {
@@ -346,7 +352,12 @@ export function getProperties(
     }
 
     if (_values.isClearable === false) {
-        hidePropertiesIn(defaultProperties, _values, ["clearIcon", "clearIconTitle"]);
+        if (_values.selectionType !== "referenceSet") {
+            hidePropertiesIn(defaultProperties, _values, ["clearIcon", "clearIconTitle"]);
+        } else {
+            //clear icon and clear icon title are still used for the badges icons
+            hidePropertiesIn(defaultProperties, _values, ["clearAllIcon", "clearAllIconTitle"]);
+        }
     }
 
     if (_values.showSelectAll === false) {

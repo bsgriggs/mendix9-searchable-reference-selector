@@ -112,6 +112,16 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                     default: DefaultClearIcon
                 }}
                 clearIconTitle={""}
+                clearAllIcon={{
+                    webIcon:
+                        props.clearAllIcon !== null && props.clearAllIcon
+                            ? props.clearAllIcon.type === "image"
+                                ? { type: "image", iconUrl: props.clearAllIcon.imageUrl }
+                                : { type: "glyph", iconClass: props.clearAllIcon.iconClass }
+                            : undefined,
+                    default: DefaultClearIcon
+                }}
+                clearAllIconTitle={""}
                 dropdownIcon={{
                     webIcon:
                         props.dropdownIcon !== null && props.dropdownIcon

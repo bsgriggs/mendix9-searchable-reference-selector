@@ -46,6 +46,8 @@ interface SelectorProps {
     isClearable: boolean;
     clearIcon: IMxIcon;
     clearIconTitle: string;
+    clearAllIcon: IMxIcon;
+    clearAllIconTitle: string;
     isSearchable: boolean;
     isReadOnly: boolean;
     selectionType: SelectionTypeEnum;
@@ -534,8 +536,14 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 <MxIcon
                                     tabIndex={props.tabIndex || 0}
                                     onClick={handleClearAll}
-                                    title={props.clearIconTitle}
-                                    mxIcon={props.clearIcon}
+                                    title={
+                                        props.selectionType === "referenceSet"
+                                            ? props.clearAllIconTitle
+                                            : props.clearIconTitle
+                                    }
+                                    mxIcon={
+                                        props.selectionType === "referenceSet" ? props.clearAllIcon : props.clearIcon
+                                    }
                                 />
                             )}
                             {props.selectStyle === "dropdown" && <MxIcon mxIcon={props.dropdownIcon} />}
