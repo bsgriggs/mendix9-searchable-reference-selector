@@ -78,6 +78,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedObjRef.current, props.focusedObjIndex]);
 
     const handleKeyNavigation = useCallback(
