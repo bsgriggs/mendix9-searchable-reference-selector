@@ -281,7 +281,6 @@ export default function SearchableReferenceSelector(
                         newAutoFocusIndex = index;
                     }
                 } else if (props.autoFocusMode === "FOCUS_OPTION" && newAutoFocusIndex === -1) {
-                    console.info(props.autoFocusOption_Obj.get(objItem).value as boolean);
                     if (props.autoFocusOption_Obj.get(objItem).value as boolean) {
                         newAutoFocusIndex = index;
                     }

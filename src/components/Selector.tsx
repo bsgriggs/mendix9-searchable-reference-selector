@@ -1,7 +1,6 @@
 import {
     createElement,
     useState,
-    // useEffect,
     ReactElement,
     ChangeEvent,
     Fragment,
@@ -449,6 +448,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                 onClick={() => {
                     if (!props.isReadOnly) {
                         props.setShowMenu(!props.showMenu);
+                        setFocusedObjIndex(props.autoFocusIndex);
                         if (props.showMenu === false) {
                             focusSearchInput(true);
                         }
@@ -551,7 +551,6 @@ const Selector = (props: SelectorProps): ReactElement => {
                     )}
                 </div>
             </div>
-
             {(props.showMenu || props.selectStyle === "list") && !props.isReadOnly && (
                 <OptionsMenu
                     {...props}

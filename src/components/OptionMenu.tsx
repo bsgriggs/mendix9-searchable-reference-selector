@@ -3,7 +3,6 @@ import {
     CSSProperties,
     Fragment,
     ReactElement,
-    useEffect,
     useRef,
     useState,
     MouseEvent,
@@ -74,12 +73,12 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
     );
 
     // keep the selected item in view when using arrow keys
-    useEffect(() => {
+    useMemo(() => {
         if (selectedObjRef.current) {
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
-    }, [props.focusedObjIndex]);
+    }, [selectedObjRef.current, props.focusedObjIndex]);
 
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLUListElement>): void => {
