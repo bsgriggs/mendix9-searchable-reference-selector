@@ -87,7 +87,9 @@ If you used Option Content Type "Expression" or "Custom" you will a new option c
 search attribute is required.  
 ![generalRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/generalRefExpression.png)  
 **Search attributes** - The list of attributes that are used to filter each option. For example, the user can enter
-"Bob" and it will check if either the Name or EmployeeId attributes contain "bob".
+"Bob" and it will check if either the Name or EmployeeId attributes contain "bob".  
+**Search text** - An optional string attribute. The value the user types into the search bar will be saved into this attribute allowing you to use it in Studio Pro.  
+
 
 ## Style Settings
 
@@ -194,7 +196,11 @@ within the **Max items**)
 **Clear icon text** - Tooltip text for the clear icon for badges and what is read by the screen reader on focus.  
 **Clear icon** - Override the default clear icon for badges with your own glyphicon or images. **Clear all icon text** -
 Tooltip text for the clear all icon and what is read by the screen reader on focus.  
-**Clear all icon** - Override the default clear all icon with your own glyphicon or images.
+**Clear all icon** - Override the default clear all icon with your own glyphicon or images.  
+
+### Footer
+
+**Show Footer** - Enables the footer feature. A footer is a custom container that appears at the end of the options menu that you can put any other components in (i.e. buttons). Most useful in combination with the Search Text attribute allowing you to create an object based on what the user typed (need to use refresh in client).  
 
 ## Events Settings
 
