@@ -56,7 +56,9 @@ where an exact match is found at any point in the option's text. Starts With mod
 match at the beginning of the option's text.
 
 _Starts With can help with performance but it can be bad UX depending on the use case. For example, displaying a list of
-user full names would not work, because the user may enter the last name instead of the first name._
+user full names would not work, because the user may enter the last name instead of the first name._  
+
+**Search text** - An optional string attribute. The value the user types into the search bar will be saved into this attribute allowing you to use it in Studio Pro.  
 
 ## Style Settings
 
@@ -80,7 +82,11 @@ background color.
 ### Text
 
 **No Results Text** - Text displayed if there are no results. (i.e. either the data source returned nothing or the user
-enters a search text and nothing is found)
+enters a search text and nothing is found)  
+
+### Footer
+
+**Show Footer** - Enables the footer feature. A footer is a custom container that appears at the end of the options menu that you can put any other components in (i.e. buttons).  
 
 ### Auto Focus
 
