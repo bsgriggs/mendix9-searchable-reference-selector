@@ -176,7 +176,8 @@ export function getProperties(
                 "loadDataMode",
                 "ariaArrowKeyInstructions",
                 "clearAllIcon",
-                "clearAllIconTitle"
+                "clearAllIconTitle",
+                "badgeColor"
             ]);
             break;
         case "boolean":
@@ -223,7 +224,8 @@ export function getProperties(
                 "autoFocusMode",
                 "autoFocusOption_Enum",
                 "autoFocusOption_Obj",
-                "ariaArrowKeyInstructions"
+                "ariaArrowKeyInstructions",
+                "badgeColor"
             ]);
 
             break;
@@ -251,7 +253,8 @@ export function getProperties(
                 "enumFilterList",
                 "ariaArrowKeyInstructions",
                 "clearAllIcon",
-                "clearAllIconTitle"
+                "clearAllIconTitle",
+                "badgeColor"
             ]);
             break;
         case "referenceSet":
@@ -339,8 +342,8 @@ export function getProperties(
         hidePropertiesIn(defaultProperties, _values, ["moreResultsText"]);
     }
 
-    if (!(_values.selectionType === "referenceSet" && _values.referenceSetStyle === "badges")) {
-        hidePropertiesIn(defaultProperties, _values, ["badgeColor", "clearIcon", "clearIconTitle"]);
+    if (_values.selectionType === "referenceSet" && _values.referenceSetStyle === "commas") {
+        hidePropertiesIn(defaultProperties, _values, ["badgeColor", "clearAllIcon", "clearAllIconTitle"]);
     }
 
     if (_values.selectStyle === "list") {
