@@ -7,7 +7,8 @@ import {
     KeyboardEvent,
     useCallback,
     useMemo,
-    RefObject
+    RefObject,
+    ReactNode
 } from "react";
 import { ObjectItem } from "mendix";
 import OptionsMenu from "./OptionMenu";
@@ -81,6 +82,7 @@ interface SelectorProps {
     ariaArrowKeyInstructions: string | undefined;
     ariaSearchText: string | undefined;
     extraAriaLabel: string | undefined;
+    footerContent?: ReactNode;
 }
 
 const Selector = (props: SelectorProps): ReactElement => {
@@ -268,8 +270,12 @@ const Selector = (props: SelectorProps): ReactElement => {
         } else if (keyPressed === "Escape") {
             onLeaveHandler();
         } else if (keyPressed === "Tab") {
-            setFocusedBadgeIndex(-1);
-            onLeaveHandler();
+            setTimeout(() => {
+                if (props.srsRef?.current?.contains(document.activeElement) === false) {
+                    setFocusedBadgeIndex(-1);
+                    onLeaveHandler();
+                }
+            }, FOCUS_DELAY);
         } else if (keyPressed === " " && !props.showMenu) {
             event.preventDefault();
             if (!props.showMenu) {
@@ -567,6 +573,8 @@ const Selector = (props: SelectorProps): ReactElement => {
                             }
                         }
                     }}
+                    srsRef={props.srsRef}
+                    onLeave={onLeaveHandler}
                 />
             )}
         </Fragment>

@@ -273,7 +273,7 @@ export function getProperties(
     switch (_values.filterType) {
         case "auto":
             hidePropertiesIn(defaultProperties, _values, [
-                "searchText",
+                // "searchText",
                 "hasMoreResultsManual",
                 "onClickMoreResultsText"
             ]);
@@ -393,6 +393,14 @@ export function getProperties(
         hidePropertyIn(defaultProperties, _values, "enumFilterList");
     }
 
+    if (_values.showFooter === false) {
+        hidePropertyIn(defaultProperties, _values, "footerContent");
+    }
+
+    // if (_values.selectionType !== "reference" && _values.selectionType !== "referenceSet") {
+    //     hidePropertyIn(defaultProperties, _values, "optionsSourceDatabaseItemSelection");
+    // }
+
     return defaultProperties;
 }
 
@@ -450,6 +458,17 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
     //     });
     // }
+
+    if (
+        _values.filterType === "manual" &&
+        (_values.searchText === undefined || _values.searchText === null || _values.searchText === "")
+    ) {
+        errors.push({
+            property: `searchText`,
+            message: `Search text attribute is required for search type 'by data source microflow'`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
 
     return errors;
 }
@@ -520,12 +539,26 @@ export const getPreview = (
         ]
     };
 
+    const menuFooterContent: PreviewProps = {
+        type: "RowLayout",
+        columnSize: "fixed",
+        borders: true,
+        children: [
+            {
+                type: "DropZone",
+                property: _values.footerContent,
+                placeholder: "Place your menu footer content here"
+            }
+        ]
+    };
+
     return {
         type: "Container",
         children: [
             mainContent,
             ...(_values.optionTextType === "custom" ? [optionCustomContent] : []),
-            ...(_values.referenceSetValue === "CUSTOM" ? [referenceSetValueContent] : [])
+            ...(_values.referenceSetValue === "CUSTOM" ? [referenceSetValueContent] : []),
+            ...(_values.showFooter ? [menuFooterContent] : [])
         ]
     };
 };

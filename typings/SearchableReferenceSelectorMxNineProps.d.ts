@@ -1,9 +1,9 @@
 /**
  * This file was generated from SearchableReferenceSelectorMxNine.xml
  * WARNING: All changes made to this file will be overwritten
- * @author Mendix UI Content Team
+ * @author Mendix Widgets Framework Team
  */
-import { ComponentType } from "react";
+import { ComponentType, ReactNode } from "react";
 import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
@@ -47,7 +47,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     name: string;
     tabIndex?: number;
     id: string;
-    placeholder: DynamicValue<string>;
+    placeholder?: DynamicValue<string>;
     selectionType: SelectionTypeEnum;
     reference: ReferenceValue;
     referenceSet: ReferenceSetValue;
@@ -69,7 +69,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     filterType: FilterTypeEnum;
     filterFunction: FilterFunctionEnum;
     searchAttributes: SearchAttributesType[];
-    searchText: EditableValue<string>;
+    searchText?: EditableValue<string>;
     hasMoreResultsManual: DynamicValue<boolean>;
     onClickMoreResultsText?: ActionValue;
     selectStyle: SelectStyleEnum;
@@ -101,6 +101,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     clearAllIconTitle: DynamicValue<string>;
     clearIcon?: DynamicValue<WebIcon>;
     clearAllIcon?: DynamicValue<WebIcon>;
+    showFooter: boolean;
+    footerContent?: ReactNode;
     onChange?: ActionValue;
     onEnter?: ActionValue;
     onLeave?: ActionValue;
@@ -122,7 +124,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     selectionType: SelectionTypeEnum;
     reference: string;
     referenceSet: string;
-    selectableObjects: {} | { type: string } | null;
+    selectableObjects: {} | { caption: string } | { type: string } | null;
     selectableCondition: string;
     enumAttribute: string;
     enumFilterType: EnumFilterTypeEnum;
@@ -133,7 +135,7 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     optionTextType: OptionTextTypeEnum;
     displayAttribute: string;
     optionExpression: string;
-    optionCustomContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
+    optionCustomContent: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     isSearchable: boolean;
     filterMode: FilterModeEnum;
     filterDelay: number | null;
@@ -150,13 +152,13 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     maxItems: string;
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
-    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
     isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
     referenceSetValue: ReferenceSetValueEnum;
     badgeColor: BadgeColorEnum;
-    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
+    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     maxReferenceDisplay: number | null;
     moreResultsText: string;
     noResultsText: string;
@@ -166,12 +168,14 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     autoFocusOption_Obj: string;
     showSelectAll: boolean;
     selectAllIconTitle: string;
-    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
     isClearable: boolean;
     clearIconTitle: string;
     clearAllIconTitle: string;
-    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
-    clearAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; } | null;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
+    clearAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
+    showFooter: boolean;
+    footerContent: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     onChange: {} | null;
     onEnter: {} | null;
     onLeave: {} | null;

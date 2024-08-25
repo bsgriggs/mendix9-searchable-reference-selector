@@ -163,6 +163,13 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                 showMenu={true}
                 ariaRequired={false}
                 autoFocusIndex={-1}
+                footerContent={
+                    props.showFooter ? (
+                        <props.footerContent.renderer caption="Place your menu footer content here">
+                            <div style={{ width: "100%" }} />
+                        </props.footerContent.renderer>
+                    ) : undefined
+                }
             />
             {props.referenceSetValue === "CUSTOM" && (
                 <div className="srs-badge">

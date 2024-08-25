@@ -1,12 +1,12 @@
 {
     "name": "searchablereferenceselectormxnine",
     "widgetName": "SearchableReferenceSelectorMxNine",
-    "version": "5.4.1",
+    "version": "6.0.0",
     "description": "Mendix reference, reference set, and enumeration selector with a search bar and a clear button",
     "copyright": "Benjamin Griggs",
     "author": "Benjamin Griggs",
     "engines": {
-        "node": ">=14"
+        "node": ">=18"
     },
     "license": "MIT",
     "config": {
@@ -25,13 +25,28 @@
         "release": "pluggable-widgets-tools release:web"
     },
     "devDependencies": {
-        "@mendix/pluggable-widgets-tools": "~9.13.0",
+        "@mendix/pluggable-widgets-tools": "~9.24.0",
         "@types/big.js": "^6.0.2",
-        "@types/react": "~17.0.1",
-        "@types/react-dom": "~17.0.1"
+        "eslint-plugin-react": "^7.35.0"
     },
     "dependencies": {
         "classnames": "^2.3.2",
         "sass": "^1.64.1"
+    },
+    "overrides": {
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-native": "0.70.7",
+        "@types/react": "18.0.0",
+        "@types/react-dom": "18.0.0",
+        "@types/react-native": "0.70.0"
+    },
+    "resolutions": {
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-native": "0.70.7",
+        "@types/react": "18.0.0",
+        "@types/react-dom": "18.0.0",
+        "@types/react-native": "0.70.0"
     }
 }

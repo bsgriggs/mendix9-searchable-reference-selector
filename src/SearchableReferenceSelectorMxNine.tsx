@@ -15,7 +15,7 @@ import { attribute, literal, contains, startsWith, or } from "mendix/filters/bui
 import Selector from "./components/Selector";
 import { IOption } from "../typings/option";
 import "./ui/SearchableReferenceSelectorMxNine.scss";
-import { Alert } from "./components/Alert";
+import Alert from "./components/Alert";
 import { DefaultClearIcon, DefaultDropdownIcon, DefaultSelectAllIcon } from "./assets/icons";
 
 export default function SearchableReferenceSelector(
@@ -449,6 +449,9 @@ export default function SearchableReferenceSelector(
                 if (props.selectionType === "enumeration") {
                     const enumFilterDebounce = setTimeout(() => {
                         if (props.enumAttribute.universe) {
+                            if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                                props.searchText.setValue(mxFilter);
+                            }
                             if (mxFilter.trim().length > 0 && searchable) {
                                 const searchText = mxFilter.trim().toLowerCase();
                                 setOptions(
@@ -477,6 +480,9 @@ export default function SearchableReferenceSelector(
                     return () => clearTimeout(enumFilterDebounce);
                 } else if (props.selectionType === "boolean") {
                     const booleanFilterDebounce = setTimeout(() => {
+                        if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                            props.searchText.setValue(mxFilter);
+                        }
                         if (mxFilter.trim().length > 0 && searchable) {
                             const searchText = mxFilter.trim().toLowerCase();
                             setOptions(
@@ -497,6 +503,9 @@ export default function SearchableReferenceSelector(
                 } else if (props.optionTextType === "text" || props.optionTextType === "html") {
                     if (serverSideSearching) {
                         const singleServerSideDebounce = setTimeout(() => {
+                            if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                                props.searchText.setValue(mxFilter);
+                            }
                             props.selectableObjects.setFilter(
                                 props.filterFunction === "contains"
                                     ? contains(attribute(props.displayAttribute.id), literal(mxFilter.trim()))
@@ -506,6 +515,9 @@ export default function SearchableReferenceSelector(
                         return () => clearTimeout(singleServerSideDebounce);
                     } else {
                         const singleClientSideDebounce = setTimeout(() => {
+                            if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                                props.searchText.setValue(mxFilter);
+                            }
                             if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
@@ -528,6 +540,9 @@ export default function SearchableReferenceSelector(
                 } else {
                     if (serverSideSearching) {
                         const multiServerSideDebounce = setTimeout(() => {
+                            if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                                props.searchText.setValue(mxFilter);
+                            }
                             const filter = props.searchAttributes.map(item =>
                                 props.filterFunction === "contains"
                                     ? contains(attribute(item.searchAttribute.id), literal(mxFilter.trim()))
@@ -540,6 +555,9 @@ export default function SearchableReferenceSelector(
                         return () => clearTimeout(multiServerSideDebounce);
                     } else {
                         const multiClientSideDebounce = setTimeout(() => {
+                            if (searchable && props.searchText && props.searchText.status === ValueStatus.Available) {
+                                props.searchText.setValue(mxFilter);
+                            }
                             if (mxFilter.trim().length > 0 && props.selectableObjects.items) {
                                 setOptions(
                                     mapObjectItems(
@@ -584,10 +602,10 @@ export default function SearchableReferenceSelector(
                 }
             } else {
                 // Manual mode -> update searchText attribute
-                if (props.searchText.status === ValueStatus.Available && !isReadOnly) {
+                if (props.searchText?.status === ValueStatus.Available && !isReadOnly) {
                     const manualFilterDebounce = setTimeout(() => {
                         if (searchable) {
-                            props.searchText.setValue(mxFilter);
+                            props.searchText?.setValue(mxFilter);
                             props.selectableObjects.reload();
                         }
                     }, props.filterDelay);
@@ -602,16 +620,17 @@ export default function SearchableReferenceSelector(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mxFilter, isReadOnly, boolOptions]);
 
-    // filter type manual, dev is expected to make filter logic inside their data source Microflow using the search text
-    if (props.filterType === "manual") {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-            if (props.searchText.status === ValueStatus.Available && props.searchText.displayValue !== mxFilter) {
-                setMxFilter(props.searchText.displayValue);
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [props.searchText]);
-    }
+    // copy any changes in the searchText attribute to the widget's props
+    useEffect(() => {
+        if (
+            props.searchText &&
+            props.searchText.status === ValueStatus.Available &&
+            props.searchText.displayValue !== mxFilter
+        ) {
+            setMxFilter(props.searchText.displayValue);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.searchText]);
 
     return (
         <Fragment>
@@ -650,7 +669,7 @@ export default function SearchableReferenceSelector(
                             : undefined
                     }
                     onExtraClick={props.onExtraClick ? () => callMxAction(props.onExtraClick, true) : undefined}
-                    placeholder={props.placeholder.value as string}
+                    placeholder={props.placeholder?.value as string}
                     maxMenuHeight={props.maxMenuHeight?.value}
                     noResultsText={props.noResultsText.value as string}
                     hasMoreOptions={hasMoreItems}
@@ -676,6 +695,7 @@ export default function SearchableReferenceSelector(
                     ariaArrowKeyInstructions={props.ariaArrowKeyInstructions?.value as string}
                     extraAriaLabel={props.extraAriaLabel?.value as string}
                     autoFocusIndex={autoFocusIndex}
+                    footerContent={props.footerContent}
                 />
             </div>
             {props.enumAttribute && props.enumAttribute.validation && (

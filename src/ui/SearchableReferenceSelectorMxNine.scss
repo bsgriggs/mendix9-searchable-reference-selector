@@ -285,6 +285,11 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         display: flex;
         align-items: center;
     }
+    .srs-footer {
+        border-top: 1px solid #d7d7d7;
+        margin-top: $padding-sm;
+        padding: $padding-md;
+    }
 }
 
 .has-error .srs .srs-menu {

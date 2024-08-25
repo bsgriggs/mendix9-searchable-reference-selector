@@ -7,8 +7,11 @@ import {
     useState,
     MouseEvent,
     useMemo,
+    useEffect,
     useCallback,
-    KeyboardEvent
+    KeyboardEvent,
+    ReactNode,
+    RefObject
 } from "react";
 import Option from "./Option";
 import { focusModeEnum } from "typings/general";
@@ -19,6 +22,8 @@ import {
 } from "typings/SearchableReferenceSelectorMxNineProps";
 import { IOption } from "typings/option";
 import classNames from "classnames";
+
+const FOCUS_DELAY = 100;
 
 interface OptionMenuProps {
     id: string;
@@ -42,6 +47,9 @@ interface OptionMenuProps {
     tabIndex: number;
     ariaSearchText: string | undefined;
     autoFocusIndex: number;
+    footerContent?: ReactNode;
+    srsRef: RefObject<HTMLDivElement> | undefined;
+    onLeave: () => void;
 }
 
 const OptionsMenu = (props: OptionMenuProps): ReactElement => {
@@ -73,13 +81,22 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
     );
 
     // keep the selected item in view when using arrow keys
-    useMemo(() => {
+    useEffect(() => {
         if (selectedObjRef.current) {
             selectedObjRef.current.scrollIntoView({ block: "center" });
         }
         setFocusMode(focusModeEnum.arrow);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedObjRef.current, props.focusedObjIndex]);
+    }, [selectedObjRef.current]);
+
+    //check for the menu losing focus
+    const handleTabKeyPress = useCallback(() => {
+        setTimeout(() => {
+            if (props.srsRef?.current?.contains(document.activeElement) === false) {
+                props.onLeave();
+            }
+        }, FOCUS_DELAY);
+    }, [props.srsRef, document.activeElement, props.onLeave]);
 
     const handleKeyNavigation = useCallback(
         (event: KeyboardEvent<HTMLUListElement>): void => {
@@ -119,8 +136,10 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                         }
                     }
                 }
-            } else if (keyPressed === "Escape" || keyPressed === "Tab") {
+            } else if (keyPressed === "Escape") {
                 props.setFocusedObjIndex(-1);
+            } else if (keyPressed === "Tab") {
+                handleTabKeyPress();
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,7 +164,7 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
             )}
             <ul
                 id={props.id + "-listbox"}
-                tabIndex={props.tabIndex}
+                tabIndex={props.selectStyle === "list" ? props.tabIndex : -1}
                 role="listbox"
                 aria-labelledby={props.id + "-label"}
                 aria-activedescendant={
@@ -226,6 +245,18 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
                         <span className="srs-aria-live">{`, ${props.ariaSearchText}:`}</span>
                     )}
                 </span>
+            )}
+            {props.footerContent && (
+                <div
+                    className="srs-footer"
+                    onKeyDown={event => {
+                        if (event.key === "Tab") {
+                            handleTabKeyPress();
+                        }
+                    }}
+                >
+                    {props.footerContent}
+                </div>
             )}
         </div>
     );
