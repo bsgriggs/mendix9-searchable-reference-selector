@@ -402,10 +402,10 @@
                     <description></description>
                 </property>
             </propertyGroup>
-            <propertyGroup caption="Footer (NOT accessibility compliant)">
+            <propertyGroup caption="Footer">
                 <property key="showFooter" type="boolean" defaultValue="false">
                     <caption>Show footer</caption>
-                    <description />
+                    <description>When 'Yes', a container will appear below the widget to put footer content</description>
                 </property>
                 <property key="footerContent" type="widgets" required="false">
                     <caption>Footer content</caption>
