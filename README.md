@@ -9,12 +9,12 @@ https://marketplace.mendix.com/link/component/116917
 
 | Dropdown Reference or Enum | Dropdown Reference Set |  
 | ------------- | ------------- |  
-| ![DropdownRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDrop.png)   | ![DropdownRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoDropSet.png)   |  
+| ![DropdownRef](https://raw.githubusercontent.com/bsgriggs/mendix9-searchable-reference-selector/refs/heads/media/v4/demoDrop.png)   | ![DropdownRefSet](https://raw.githubusercontent.com/bsgriggs/mendix9-searchable-reference-selector/refs/heads/media/v4/demoDropSet.png)   |  
 
 
 | List On Page Reference or Enum | List On Page Reference Set |  
 | ------------- | ------------- |  
-| ![ListRef](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoList.png)   | ![ListRefSet](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/demoListSet.png)   |  
+| ![ListRef](https://raw.githubusercontent.com/bsgriggs/mendix9-searchable-reference-selector/refs/heads/media/v4/demoList.png)   | ![ListRefSet](https://raw.githubusercontent.com/bsgriggs/mendix9-searchable-reference-selector/refs/heads/media/v4/demoListSet.png)   |  
 
 *Note: checkboxes, radio buttons, or background color settings are independent. All can be used at any time*
 
