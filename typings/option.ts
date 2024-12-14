@@ -23,4 +23,5 @@ export type IOption = {
     badgeContent?: ReactNode;
     ariaLiveText?: string;
     valueAriaLabel?: string;
+    className?: string;
 } & (enumOption | refOption | boolOption);

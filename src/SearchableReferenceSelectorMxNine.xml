@@ -241,7 +241,7 @@
                         <enumerationValue key="checkbox">Checkbox</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="maxItems" type="expression" defaultValue="20">
+                <property key="maxItems" type="expression" defaultValue="50">
                     <caption>Max items</caption>
                     <description>Limits the items shown. If 0, no limit is set.</description>
                     <returnType type="Integer" />
@@ -253,6 +253,17 @@
                 <property key="maxMenuHeight" type="expression" defaultValue="" required="false">
                     <caption>Max menu height</caption>
                     <description>Custom CSS Height for the select menu (default 15em)</description>
+                    <returnType type="String" />
+                </property>
+                <property 
+                    key="optionClassName"
+                    type="expression"
+                    defaultValue=""
+                    required="false"
+                    dataSource="selectableObjects"
+                >
+                    <caption>Option class name</caption>
+                    <description>Add a custom CSS class based on each option</description>
                     <returnType type="String" />
                 </property>
                 <property key="dropdownIcon" type="icon" required="false">

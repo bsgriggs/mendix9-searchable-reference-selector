@@ -4,6 +4,7 @@ import Badge from "./Badge";
 import Comma from "./Comma";
 import { IOption } from "../../typings/option";
 import { IMxIcon } from "../../typings/general";
+import classNames from "classnames";
 
 type CurrentValueDisplayProps = {
     currentValue: IOption | IOption[] | undefined;
@@ -31,21 +32,22 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                         {props.referenceSetStyle === "badges" && length > 0 && (
                             <Fragment>
                                 {props.maxReferenceDisplay > 0
-                                    ? props.currentValue.slice(0, props.maxReferenceDisplay).map((option, index) => (
-                                          <Badge
-                                              index={index}
-                                              key={index}
-                                              isClearable={props.isClearable || length > 1}
-                                              isReadOnly={props.isReadOnly}
-                                              onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
-                                              clearIcon={props.clearIcon}
-                                              clearIconTitle={props.clearIconTitle}
-                                              onBadgeClick={props.onBadgeClick}
-                                              option={option}
-                                              //   tabIndex={props.tabIndex}
-                                              badgeColor={props.badgeColor}
-                                          />
-                                      ))
+                                    ? props.currentValue
+                                          .slice(0, props.maxReferenceDisplay)
+                                          .map((option, index) => (
+                                              <Badge
+                                                  index={index}
+                                                  key={index}
+                                                  isClearable={props.isClearable || length > 1}
+                                                  isReadOnly={props.isReadOnly}
+                                                  onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
+                                                  clearIcon={props.clearIcon}
+                                                  clearIconTitle={props.clearIconTitle}
+                                                  onBadgeClick={props.onBadgeClick}
+                                                  option={option}
+                                                  badgeColor={props.badgeColor}
+                                              />
+                                          ))
                                     : props.currentValue.map((option, index) => (
                                           <Badge
                                               index={index}
@@ -57,7 +59,6 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                               clearIconTitle={props.clearIconTitle}
                                               onBadgeClick={props.onBadgeClick}
                                               option={option}
-                                              //   tabIndex={props.tabIndex}
                                               badgeColor={props.badgeColor}
                                           />
                                       ))}
@@ -66,16 +67,19 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                         {props.referenceSetStyle === "commas" && length > 0 && (
                             <Fragment>
                                 {props.maxReferenceDisplay > 0
-                                    ? props.currentValue.slice(0, props.maxReferenceDisplay).map((option, index) => (
-                                          <Comma
-                                              index={index}
-                                              key={index}
-                                              option={option}
-                                              showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
-                                              onBadgeClick={props.onBadgeClick}
-                                              //   tabIndex={props.tabIndex}
-                                          />
-                                      ))
+                                    ? props.currentValue
+                                          .slice(0, props.maxReferenceDisplay)
+                                          .map((option, index) => (
+                                              <Comma
+                                                  index={index}
+                                                  key={index}
+                                                  option={option}
+                                                  showComma={
+                                                      index < length - 1 && index !== props.maxReferenceDisplay - 1
+                                                  }
+                                                  onBadgeClick={props.onBadgeClick}
+                                              />
+                                          ))
                                     : props.currentValue.map((option, index) => (
                                           <Comma
                                               index={index}
@@ -83,7 +87,6 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                               option={option}
                                               showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
                                               onBadgeClick={props.onBadgeClick}
-                                              //   tabIndex={props.tabIndex}
                                           />
                                       ))}
                             </Fragment>
@@ -114,7 +117,11 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                 );
             }
         } else {
-            return <div className="srs-current-value">{props.currentValue.content}</div>;
+            return (
+                <div className={classNames("srs-current-value", props.currentValue.className)}>
+                    {props.currentValue.content}
+                </div>
+            );
         }
     }
     return <Fragment />;

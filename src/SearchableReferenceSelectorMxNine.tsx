@@ -289,7 +289,7 @@ export default function SearchableReferenceSelector(
                     content: displayReferenceContent(objItem),
                     isSelectable: props.selectableCondition.get(objItem).value as boolean,
                     isSelected,
-
+                    className: props.optionClassName?.get(objItem).value,
                     selectionType: "REFERENCE",
                     id: objItem,
                     ariaLiveText: mapAriaLiveText(objItem)
@@ -307,7 +307,8 @@ export default function SearchableReferenceSelector(
             mapAriaLiveText,
             props.autoFocusMode,
             props.autoFocusOption_Obj,
-            mxFilter
+            mxFilter,
+            props.optionClassName
         ]
     );
 
@@ -363,6 +364,7 @@ export default function SearchableReferenceSelector(
                           isSelectable: props.selectableCondition.get(props.reference.value).value as boolean,
                           isSelected: true,
                           selectionType: "REFERENCE",
+                          className: props.optionClassName?.get(props.reference.value).value,
                           id: props.reference.value,
                           ariaLiveText: mapAriaLiveText(props.reference.value)
                       }
@@ -379,6 +381,7 @@ export default function SearchableReferenceSelector(
                           isSelected: true,
                           selectionType: "REFERENCE",
                           id: reference,
+                          className: props.optionClassName?.get(reference).value,
                           ariaLiveText: mapAriaLiveText(reference),
                           valueAriaLabel: props.valueAriaLabel
                               ? (props.valueAriaLabel.get(reference).value as string)
@@ -406,7 +409,8 @@ export default function SearchableReferenceSelector(
         props.booleanAttribute,
         props.trueLabel,
         props.falseLabel,
-        props.valueAriaLabel
+        props.valueAriaLabel,
+        props.optionClassName
     ]);
 
     // load Options ~ handle if the selected value changed outside the widget

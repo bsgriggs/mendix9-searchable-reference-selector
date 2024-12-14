@@ -28,7 +28,8 @@ const Option = (props: PropsWithChildren<OptionProps>): ReactElement => {
                         (props.focusMode === focusModeEnum.arrow && props.isFocused) ||
                         (props.focusMode === focusModeEnum.hover && props.optionsStyle === "cell" && isHovered)
                 },
-                { disabled: !props.option.isSelectable }
+                { disabled: !props.option.isSelectable },
+                props.option.className
             )}
             onClick={event => {
                 event.stopPropagation();

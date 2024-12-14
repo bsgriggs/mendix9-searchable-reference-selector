@@ -18,7 +18,7 @@ interface BadgeProps {
 }
 
 const Badge = (props: BadgeProps): ReactElement => (
-    <div className={`srs-badge label-${props.badgeColor}`}>
+    <div className={classNames(`srs-badge label-${props.badgeColor}`, props.option.className)}>
         <div
             id={`badge-content-${props.index}`}
             tabIndex={-1}

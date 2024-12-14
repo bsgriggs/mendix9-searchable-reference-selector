@@ -7,13 +7,12 @@ interface CommaProps {
     showComma: boolean;
     option: IOption;
     onBadgeClick: ((selectedBadge: IOption) => void) | undefined;
-    // tabIndex?: number;
 }
 
 const Comma = (props: CommaProps): ReactElement => (
     <div
         id={`badge-content-${props.index}`}
-        className={classNames("srs-comma", { "srs-focusable": props.onBadgeClick })}
+        className={classNames("srs-comma", { "srs-focusable": props.onBadgeClick }, props.option.className)}
         tabIndex={-1}
         onClick={event => {
             if (props.onBadgeClick) {

@@ -177,7 +177,8 @@ export function getProperties(
                 "ariaArrowKeyInstructions",
                 "clearAllIcon",
                 "clearAllIconTitle",
-                "badgeColor"
+                "badgeColor",
+                "optionClassName"
             ]);
             break;
         case "boolean":
@@ -225,7 +226,8 @@ export function getProperties(
                 "autoFocusOption_Enum",
                 "autoFocusOption_Obj",
                 "ariaArrowKeyInstructions",
-                "badgeColor"
+                "badgeColor",
+                "optionClassName"
             ]);
 
             break;

@@ -89,13 +89,14 @@ const OptionsMenu = (props: OptionMenuProps): ReactElement => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedObjRef.current]);
 
-    //check for the menu losing focus
+    // check for the menu losing focus
     const handleTabKeyPress = useCallback(() => {
         setTimeout(() => {
             if (props.srsRef?.current?.contains(document.activeElement) === false) {
                 props.onLeave();
             }
         }, FOCUS_DELAY);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.srsRef, document.activeElement, props.onLeave]);
 
     const handleKeyNavigation = useCallback(
