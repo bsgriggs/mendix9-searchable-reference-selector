@@ -123,6 +123,7 @@ between typing and the Selectable Objects data source returning the results).
 
 **Max menu height** - A string expression for CSS height for the dropdown. Defaults to 15em. (only for Select Style =
 "Dropdown").  
+**Option class name** - A string expression to add a CSS class based on each option's value. The class gets added to the item in the list and the item in the current value display.  
 **Dropdown icon** - Override the default dropdown icon with your own glyphicon or images.
 
 ## Customization Settings
