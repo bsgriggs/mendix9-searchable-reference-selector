@@ -3,7 +3,7 @@
     "widgetName": "SearchableReferenceSelectorMxNine",
     "version": "6.1.0",
     "description": "Mendix reference, reference set, and enumeration selector with a search bar and a clear button",
-    "copyright": "Benjamin Griggs",
+    "copyright": "Benjamin Griggs 2022",
     "author": "Benjamin Griggs",
     "engines": {
         "node": ">=18"

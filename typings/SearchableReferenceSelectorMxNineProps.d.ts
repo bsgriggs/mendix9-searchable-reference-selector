@@ -4,19 +4,7 @@
  * @author Mendix Widgets Framework Team
  */
 import { ComponentType, ReactNode } from "react";
-import {
-    ActionValue,
-    DynamicValue,
-    EditableValue,
-    ListValue,
-    ListActionValue,
-    ListAttributeValue,
-    ListExpressionValue,
-    ListWidgetValue,
-    ReferenceValue,
-    ReferenceSetValue,
-    WebIcon
-} from "mendix";
+import { ActionValue, DynamicValue, EditableValue, ListValue, ListActionValue, ListAttributeValue, ListExpressionValue, ListWidgetValue, ReferenceValue, ReferenceSetValue, WebIcon } from "mendix";
 import { Big } from "big.js";
 
 export type SelectionTypeEnum = "enumeration" | "boolean" | "reference" | "referenceSet";
@@ -166,20 +154,13 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     allowLoadingSelect: boolean;
     maxMenuHeight: string;
     optionClassName: string;
-    dropdownIcon:
-        | { type: "glyph"; iconClass: string }
-        | { type: "image"; imageUrl: string; iconUrl: string }
-        | { type: "icon"; iconClass: string }
-        | undefined;
+    dropdownIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
     isCompact: boolean;
     clearSearchOnSelect: boolean;
     referenceSetStyle: ReferenceSetStyleEnum;
     referenceSetValue: ReferenceSetValueEnum;
     badgeColor: BadgeColorEnum;
-    referenceSetValueContent: {
-        widgetCount: number;
-        renderer: ComponentType<{ children: ReactNode; caption?: string }>;
-    };
+    referenceSetValueContent: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     maxReferenceDisplay: number | null;
     moreResultsText: string;
     noResultsText: string;
@@ -189,24 +170,12 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     autoFocusOption_Obj: string;
     showSelectAll: boolean;
     selectAllIconTitle: string;
-    selectAllIcon:
-        | { type: "glyph"; iconClass: string }
-        | { type: "image"; imageUrl: string; iconUrl: string }
-        | { type: "icon"; iconClass: string }
-        | undefined;
+    selectAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
     isClearable: boolean;
     clearIconTitle: string;
     clearAllIconTitle: string;
-    clearIcon:
-        | { type: "glyph"; iconClass: string }
-        | { type: "image"; imageUrl: string; iconUrl: string }
-        | { type: "icon"; iconClass: string }
-        | undefined;
-    clearAllIcon:
-        | { type: "glyph"; iconClass: string }
-        | { type: "image"; imageUrl: string; iconUrl: string }
-        | { type: "icon"; iconClass: string }
-        | undefined;
+    clearIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
+    clearAllIcon: { type: "glyph"; iconClass: string; } | { type: "image"; imageUrl: string; iconUrl: string; } | { type: "icon"; iconClass: string; } | undefined;
     showFooter: boolean;
     footerContent: { widgetCount: number; renderer: ComponentType<{ children: ReactNode; caption?: string }> };
     onChange: {} | null;
