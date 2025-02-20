@@ -45,6 +45,6 @@ When using Manual Filtering, your data source **MUST** be either a nanoflow or a
 
 **Search Text** - String attribute that holds the text the user entered. With this example, it should be the SearchText attribute on the SearchHelper entity.  
 **Has More Results** - Boolean expression to show the More Results Text. If you want to limit the results, set as $SearchHelper/hasMoreResults. If you do not want to limit the results, simply set the expression as false.  
-**On Click More Results** - Microflow or nanoflow called when the user clicks on the more results text. *This is only needed if you want to limit the results list*. Should be a microflow similar to the one below that increments the page size by the original page size.  
+**On Click More Results** - MxAction called when the user clicks on the more results text. *This is only needed if you want to limit the results list*. Should be a Nanoflow similar to the one below that increments the page size by the original page size and then runs the refresh object action from [Nanoflow Commons](https://marketplace.mendix.com/link/component/109515).  
 ![onClickShowMore](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/onClickShowMore.png)  
-*Note: If you're limiting the result list, I would recommend setting the On Leave action from the Events tab to use a Microflow that resets the pageSize back to the original value. This prevents the widget from retrieving too many results if the widget is not in use.* 
+*Note: If you're limiting the result list, I would recommend setting the On Leave action from the Events tab to use a Nanoflow that resets the pageSize back to the original value. This prevents the widget from retrieving too many results if the widget is not in use.* 
