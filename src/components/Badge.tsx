@@ -45,7 +45,7 @@ const Badge = (props: BadgeProps): ReactElement => (
             <MxIcon
                 id={`badge-remove-${props.index}`}
                 onClick={props.onRemoveAssociation}
-                title={props.clearIconTitle + " " + props.option.ariaLiveText}
+                title={props.clearIconTitle + " " + props.option.optionAriaLabel}
                 mxIcon={props.clearIcon}
                 tabIndex={-1}
             />

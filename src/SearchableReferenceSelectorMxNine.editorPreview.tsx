@@ -18,14 +18,16 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                       content: props.trueLabel,
                       isSelectable: true,
                       isSelected: true,
-                      selectionType: "BOOLEAN"
+                      selectionType: "BOOLEAN",
+                      optionAriaLabel: ""
                   },
                   {
                       id: false,
                       content: props.falseLabel,
                       isSelectable: true,
                       isSelected: false,
-                      selectionType: "BOOLEAN"
+                      selectionType: "BOOLEAN",
+                      optionAriaLabel: ""
                   }
               ]
             : [
@@ -42,7 +44,8 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                           ),
                       isSelectable: true,
                       isSelected: true,
-                      selectionType: "ENUMERATION"
+                      selectionType: "ENUMERATION",
+                      optionAriaLabel: ""
                   },
                   {
                       id: "2",
@@ -57,7 +60,8 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                           ),
                       isSelectable: true,
                       isSelected: false,
-                      selectionType: "ENUMERATION"
+                      selectionType: "ENUMERATION",
+                      optionAriaLabel: ""
                   },
                   {
                       id: "3",
@@ -72,7 +76,8 @@ export function preview(props: SearchableReferenceSelectorMxNinePreviewProps): R
                           ),
                       isSelectable: false,
                       isSelected: false,
-                      selectionType: "ENUMERATION"
+                      selectionType: "ENUMERATION",
+                      optionAriaLabel: ""
                   }
               ];
 

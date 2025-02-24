@@ -27,68 +27,41 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
         if (Array.isArray(props.currentValue)) {
             const length = props.currentValue.length;
             if (length > 0) {
+                const valuesToDisplay = props.currentValue
+                    .slice(0, props.maxReferenceDisplay > 0 ? props.maxReferenceDisplay : undefined)
+                    .sort((a, b) =>
+                        a.optionAriaLabel < b.optionAriaLabel ? -1 : a.optionAriaLabel > b.optionAriaLabel ? 1 : 0
+                    );
                 return (
                     <Fragment>
-                        {props.referenceSetStyle === "badges" && length > 0 && (
+                        {props.referenceSetStyle === "badges" ? (
                             <Fragment>
-                                {props.maxReferenceDisplay > 0
-                                    ? props.currentValue
-                                          .slice(0, props.maxReferenceDisplay)
-                                          .map((option, index) => (
-                                              <Badge
-                                                  index={index}
-                                                  key={index}
-                                                  isClearable={props.isClearable || length > 1}
-                                                  isReadOnly={props.isReadOnly}
-                                                  onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
-                                                  clearIcon={props.clearIcon}
-                                                  clearIconTitle={props.clearIconTitle}
-                                                  onBadgeClick={props.onBadgeClick}
-                                                  option={option}
-                                                  badgeColor={props.badgeColor}
-                                              />
-                                          ))
-                                    : props.currentValue.map((option, index) => (
-                                          <Badge
-                                              index={index}
-                                              key={index}
-                                              isClearable={props.isClearable || length > 1}
-                                              isReadOnly={props.isReadOnly}
-                                              onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
-                                              clearIcon={props.clearIcon}
-                                              clearIconTitle={props.clearIconTitle}
-                                              onBadgeClick={props.onBadgeClick}
-                                              option={option}
-                                              badgeColor={props.badgeColor}
-                                          />
-                                      ))}
+                                {valuesToDisplay.map((option, index) => (
+                                    <Badge
+                                        index={index}
+                                        key={index}
+                                        isClearable={props.isClearable || length > 1}
+                                        isReadOnly={props.isReadOnly}
+                                        onRemoveAssociation={byKeyboard => props.onRemove(option, byKeyboard)}
+                                        clearIcon={props.clearIcon}
+                                        clearIconTitle={props.clearIconTitle}
+                                        onBadgeClick={props.onBadgeClick}
+                                        option={option}
+                                        badgeColor={props.badgeColor}
+                                    />
+                                ))}
                             </Fragment>
-                        )}
-                        {props.referenceSetStyle === "commas" && length > 0 && (
+                        ) : (
                             <Fragment>
-                                {props.maxReferenceDisplay > 0
-                                    ? props.currentValue
-                                          .slice(0, props.maxReferenceDisplay)
-                                          .map((option, index) => (
-                                              <Comma
-                                                  index={index}
-                                                  key={index}
-                                                  option={option}
-                                                  showComma={
-                                                      index < length - 1 && index !== props.maxReferenceDisplay - 1
-                                                  }
-                                                  onBadgeClick={props.onBadgeClick}
-                                              />
-                                          ))
-                                    : props.currentValue.map((option, index) => (
-                                          <Comma
-                                              index={index}
-                                              key={index}
-                                              option={option}
-                                              showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
-                                              onBadgeClick={props.onBadgeClick}
-                                          />
-                                      ))}
+                                {valuesToDisplay.map((option, index) => (
+                                    <Comma
+                                        index={index}
+                                        key={index}
+                                        option={option}
+                                        showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
+                                        onBadgeClick={props.onBadgeClick}
+                                    />
+                                ))}
                             </Fragment>
                         )}
                         {length > props.maxReferenceDisplay && props.maxReferenceDisplay > 0 && (

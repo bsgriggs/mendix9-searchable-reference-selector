@@ -184,7 +184,7 @@ export default function SearchableReferenceSelector(
                         isSelected,
                         selectionType: "ENUMERATION",
                         id: value,
-                        ariaLiveText: props.enumAttribute.formatter.format(value)
+                        optionAriaLabel: props.enumAttribute.formatter.format(value)
                     };
                 });
             } else {
@@ -211,7 +211,7 @@ export default function SearchableReferenceSelector(
                             isSelected,
                             selectionType: "ENUMERATION",
                             id: value,
-                            ariaLiveText: props.enumAttribute.formatter.format(value)
+                            optionAriaLabel: props.enumAttribute.formatter.format(value)
                         };
                     });
             }
@@ -239,7 +239,7 @@ export default function SearchableReferenceSelector(
                           isSelected: props.booleanAttribute.value === true,
                           selectionType: "BOOLEAN",
                           id: true,
-                          ariaLiveText: props.trueLabel.value as string
+                          optionAriaLabel: props.trueLabel.value as string
                       },
                       {
                           content: displayTextContent(props.falseLabel.value as string),
@@ -247,7 +247,7 @@ export default function SearchableReferenceSelector(
                           isSelected: props.booleanAttribute.value === false,
                           selectionType: "BOOLEAN",
                           id: false,
-                          ariaLiveText: props.falseLabel.value as string
+                          optionAriaLabel: props.falseLabel.value as string
                       }
                   ]
                 : [],
@@ -255,7 +255,7 @@ export default function SearchableReferenceSelector(
         [props.trueLabel, props.falseLabel, props.booleanAttribute]
     );
 
-    const mapAriaLiveText = useCallback(
+    const mapOptionAriaLabel = useCallback(
         (objectItem: ObjectItem): string =>
             props.ariaLiveText
                 ? (props.ariaLiveText.get(objectItem).value as string)
@@ -292,7 +292,7 @@ export default function SearchableReferenceSelector(
                     className: props.optionClassName?.get(objItem).value,
                     selectionType: "REFERENCE",
                     id: objItem,
-                    ariaLiveText: mapAriaLiveText(objItem)
+                    optionAriaLabel: mapOptionAriaLabel(objItem)
                 };
             });
             setAutoFocusIndex(newAutoFocusIndex);
@@ -304,7 +304,7 @@ export default function SearchableReferenceSelector(
             props.referenceSet,
             props.selectableCondition,
             displayReferenceContent,
-            mapAriaLiveText,
+            mapOptionAriaLabel,
             props.autoFocusMode,
             props.autoFocusOption_Obj,
             mxFilter,
@@ -340,7 +340,7 @@ export default function SearchableReferenceSelector(
                           isSelected: true,
                           selectionType: "ENUMERATION",
                           id: props.enumAttribute.value,
-                          ariaLiveText: props.enumAttribute.displayValue
+                          optionAriaLabel: props.enumAttribute.displayValue
                       }
                     : undefined;
             case "boolean":
@@ -354,7 +354,7 @@ export default function SearchableReferenceSelector(
                           isSelected: true,
                           selectionType: "BOOLEAN",
                           id: props.booleanAttribute.value as boolean,
-                          ariaLiveText: booleanText
+                          optionAriaLabel: booleanText
                       }
                     : undefined;
             case "reference":
@@ -366,7 +366,7 @@ export default function SearchableReferenceSelector(
                           selectionType: "REFERENCE",
                           className: props.optionClassName?.get(props.reference.value).value,
                           id: props.reference.value,
-                          ariaLiveText: mapAriaLiveText(props.reference.value)
+                          optionAriaLabel: mapOptionAriaLabel(props.reference.value)
                       }
                     : undefined;
             case "referenceSet":
@@ -382,7 +382,7 @@ export default function SearchableReferenceSelector(
                           selectionType: "REFERENCE",
                           id: reference,
                           className: props.optionClassName?.get(reference).value,
-                          ariaLiveText: mapAriaLiveText(reference),
+                          optionAriaLabel: mapOptionAriaLabel(reference),
                           valueAriaLabel: props.valueAriaLabel
                               ? (props.valueAriaLabel.get(reference).value as string)
                               : props.ariaLiveText
@@ -404,7 +404,7 @@ export default function SearchableReferenceSelector(
         props.referenceSetValueContent,
         displayReferenceContent,
         displayTextContent,
-        mapAriaLiveText,
+        mapOptionAriaLabel,
         props.referenceSetValue,
         props.booleanAttribute,
         props.trueLabel,
@@ -492,10 +492,10 @@ export default function SearchableReferenceSelector(
                             setOptions(
                                 props.filterFunction === "contains"
                                     ? boolOptions.filter(option =>
-                                          option.ariaLiveText?.toLowerCase().includes(searchText)
+                                          option.optionAriaLabel.toLowerCase().includes(searchText)
                                       )
                                     : boolOptions.filter(option =>
-                                          option.ariaLiveText?.toLowerCase().startsWith(searchText)
+                                          option.optionAriaLabel.toLowerCase().startsWith(searchText)
                                       )
                             );
                         } else {

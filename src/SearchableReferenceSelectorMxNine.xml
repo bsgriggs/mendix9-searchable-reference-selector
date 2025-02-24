@@ -255,7 +255,7 @@
                     <description>Custom CSS Height for the select menu (default 15em)</description>
                     <returnType type="String" />
                 </property>
-                <property 
+                <property
                     key="optionClassName"
                     type="expression"
                     defaultValue=""
@@ -463,13 +463,13 @@
                 </property>
                 <property key="ariaLiveText" type="textTemplate" dataSource="selectableObjects"
                     required="false">
-                    <caption>Focused aria label</caption>
-                    <description>The text read by a screen reader while focused on an option</description>
+                    <caption>Option aria label</caption>
+                    <description>The text read by a screen reader for each option</description>
                 </property>
                 <property key="ariaSelectedText" type="textTemplate"
                     required="false">
                     <caption>Selected text</caption>
-                    <description>The text read by a screen reader when annoucing the selected value(s)</description>
+                    <description>The text read by a screen reader when announcing the selected value(s)</description>
                     <translations>
                         <translation lang="en_US">Selected</translation>
                     </translations>

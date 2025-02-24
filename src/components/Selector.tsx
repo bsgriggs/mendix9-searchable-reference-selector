@@ -422,7 +422,7 @@ const Selector = (props: SelectorProps): ReactElement => {
             props.currentValue
                 ? `, ${props.ariaSelectedText}: ${
                       Array.isArray(props.currentValue)
-                          ? props.currentValue.map(value => value.ariaLiveText).join("; ") +
+                          ? props.currentValue.map(value => value.optionAriaLabel).join("; ") +
                             `${
                                 (props.isClearable || props.onBadgeClick) &&
                                 hasCurrentValue &&
@@ -431,7 +431,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                                     ? `, ${props.ariaArrowKeyInstructions}`
                                     : ""
                             }`
-                          : props.currentValue.ariaLiveText
+                          : props.currentValue.optionAriaLabel
                   }${props.isSearchable ? `, ${props.ariaSearchText}:` : ""} `
                 : "",
         [

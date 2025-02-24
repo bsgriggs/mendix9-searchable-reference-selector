@@ -21,7 +21,7 @@ export type IOption = {
     isSelectable: boolean;
     content: ReactNode;
     badgeContent?: ReactNode;
-    ariaLiveText?: string;
+    optionAriaLabel: string;
     valueAriaLabel?: string;
     className?: string;
 } & (enumOption | refOption | boolOption);
