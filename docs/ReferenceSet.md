@@ -48,7 +48,7 @@ allow inactive users to be selected.
 -   "Custom" - Studio Pro will add a new container below the widget where you can add Mendix widgets for each option.
     You could, for example, have employee profile pictures next to each of their names. You will have to select at least
     1 search attribute in the search attributes list below or use client side searching. If you enable client side
-    searching, you will be required to enter a string expression. This expression is used as the search string.
+    searching, you will be required to enter a string expression. This expression is used as the search string and to determine the sort order of the selected values (text ascending).
 
 | "Custom" - Studio Pro                                                                                                                      | "Custom" - Browser                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
