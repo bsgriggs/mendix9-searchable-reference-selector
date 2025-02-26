@@ -308,7 +308,7 @@ export function getProperties(
             break;
         case "custom":
             hidePropertyIn(defaultProperties, _values, "displayAttribute");
-            if (_values.filterMode === "SERVER") {
+            if (_values.filterMode !== "CLIENT" && _values.selectionType !== "referenceSet") {
                 hidePropertyIn(defaultProperties, _values, "optionExpression");
             }
 
@@ -440,6 +440,18 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
+    if (
+        _values.selectionType === "referenceSet" &&
+        _values.optionTextType === "custom" &&
+        _values.optionExpression.trim() === ""
+    ) {
+        errors.push({
+            property: `optionExpression`,
+            message: `Option content is required for reference sets with custom content. It determines the sorting of the selected values (text ascending).`,
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+        });
+    }
+
     if (_values.filterDelay === null || _values.filterDelay < 0) {
         errors.push({
             property: `filterDelay`,
@@ -456,16 +468,24 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         });
     }
 
-    if (_values.optionTextType === "custom" && _values.filterMode === "SERVER" && _values.ariaLiveText === "") {
-        errors.push({
-            property: `ariaLiveText`,
-            message:
-                _values.selectionType === "referenceSet"
-                    ? `Accessibility -> Focused aria text is required for custom content. Used for sorting the selected options and so screen readers know the selected value.`
-                    : `Accessibility -> Focused aria text is required for custom content, so screen readers know the selected value.`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
-        });
-    }
+    // if (_values.optionTextType === "custom" && _values.filterMode === "SERVER" && _values.ariaLiveText === "") {
+    //     errors.push({
+    //         property: `ariaLiveText`,
+    //         message:`Accessibility -> Option aria text is required for custom content, so screen readers know the selected value.`,
+    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+    //     });
+    // }
+    // if (
+    //     _values.optionTextType === "custom" &&
+    //     _values.ariaLiveText === "" &&
+    //     _values.selectionType === "referenceSet"
+    // ) {
+    //     errors.push({
+    //         property: `ariaLiveText`,
+    //         message: `Accessibility -> Option aria text is required for reference sets with custom content. Used for sorting the selected options (by the text ascending) & so screen readers know the selected value.`,
+    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+    //     });
+    // }
 
     if (
         _values.filterType === "manual" &&
