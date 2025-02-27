@@ -82,4 +82,5 @@ enters a search text and nothing is found)
 **Name** - Mendix name for the widget.  
 **Tab index** - The tab order of the widget. This should be left at 0 for most situations.  
 **Visible** - Boolean expression that determines if the widget is rendered at all.  
-**Editable** - Boolean expression that determines if the user is allowed to select a value.
+**Editable** - Boolean expression that determines if the user is allowed to select a value.  
+**Read-only style** - How the widget looks when un-editable. Control makes it look like a greyed input. Text only shows the text.  
