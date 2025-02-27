@@ -22,22 +22,22 @@ const Badge = (props: BadgeProps): ReactElement => (
         <div
             id={`badge-content-${props.index}`}
             tabIndex={-1}
-            className={classNames({ "srs-focusable": props.onBadgeClick })}
+            className={classNames({ "srs-focusable": props.onBadgeClick && !props.isReadOnly })}
             onClick={event => {
-                if (props.onBadgeClick) {
+                if (props.onBadgeClick && !props.isReadOnly) {
                     event.stopPropagation();
                     props.onBadgeClick(props.option);
                 }
             }}
             onKeyDown={event => {
-                if ((event.key === "Enter" || event.key === " ") && props.onBadgeClick) {
+                if ((event.key === "Enter" || event.key === " ") && props.onBadgeClick && !props.isReadOnly) {
                     event.stopPropagation();
                     event.preventDefault();
                     props.onBadgeClick(props.option);
                 }
             }}
             aria-label={props.option.valueAriaLabel}
-            role={props.onBadgeClick ? "button" : undefined}
+            role={props.onBadgeClick && !props.isReadOnly ? "button" : undefined}
         >
             {props.option.badgeContent ? props.option.badgeContent : props.option.content}
         </div>

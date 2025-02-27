@@ -21,10 +21,11 @@ import {
     BadgeColorEnum,
     OptionsStyleSetEnum,
     OptionsStyleSingleEnum,
+    ReadOnlyStyleEnum,
     ReferenceSetStyleEnum,
     SelectionTypeEnum,
     SelectStyleEnum
-} from "typings/SearchableReferenceSelectorMxNineProps";
+} from "../../typings/SearchableReferenceSelectorMxNineProps";
 import CurrentValueDisplay from "./CurrentValueDisplay";
 import classNames from "classnames";
 import { IMxIcon } from "../../typings/general";
@@ -50,6 +51,7 @@ interface SelectorProps {
     clearAllIconTitle: string;
     isSearchable: boolean;
     isReadOnly: boolean;
+    readOnlyStyle: ReadOnlyStyleEnum;
     selectionType: SelectionTypeEnum;
     selectStyle: SelectStyleEnum;
     showSelectAll: boolean; // selectionType = ReferenceSet
@@ -432,7 +434,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                                     : ""
                             }`
                           : props.currentValue.optionAriaLabel
-                  }${props.isSearchable ? `, ${props.ariaSearchText}:` : ""} `
+                  }${props.isSearchable && !props.isReadOnly ? `, ${props.ariaSearchText}:` : ""} `
                 : "",
         [
             props.currentValue,
@@ -450,7 +452,11 @@ const Selector = (props: SelectorProps): ReactElement => {
     return (
         <Fragment>
             <div
-                className={classNames("form-control", { active: props.showMenu }, { "read-only": props.isReadOnly })}
+                className={classNames(
+                    !props.isReadOnly || props.readOnlyStyle === "CONTROL" ? "form-control" : "form-control-static",
+                    { active: props.showMenu },
+                    { "read-only": props.isReadOnly }
+                )}
                 onClick={() => {
                     if (!props.isReadOnly) {
                         props.setShowMenu(!props.showMenu);
@@ -469,7 +475,6 @@ const Selector = (props: SelectorProps): ReactElement => {
             >
                 <div className="srs-select">
                     <div
-                        role="application"
                         className={classNames(
                             "srs-value-container",
                             { "srs-multi": props.selectionType === "referenceSet" },
@@ -504,7 +509,7 @@ const Selector = (props: SelectorProps): ReactElement => {
                                 }}
                             />
                         )}
-
+                        {/* Search Input needs to render even when read-only for screen readers */}
                         <SearchInput
                             {...props}
                             onChange={handleInputChange}

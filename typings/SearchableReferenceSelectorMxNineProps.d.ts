@@ -39,6 +39,8 @@ export type BadgeColorEnum = "default" | "info" | "primary" | "inverse" | "succe
 
 export type AutoFocusModeEnum = "OFF" | "FOCUS_SELECTED" | "FOCUS_OPTION";
 
+export type ReadOnlyStyleEnum = "CONTROL" | "TEXT";
+
 export interface SearchAttributesPreviewType {
     searchAttribute: string;
 }
@@ -117,6 +119,7 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
     valueAriaLabel?: ListExpressionValue<string>;
     extraAriaLabel?: DynamicValue<string>;
     ariaArrowKeyInstructions?: DynamicValue<string>;
+    readOnlyStyle: ReadOnlyStyleEnum;
 }
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
@@ -191,4 +194,5 @@ export interface SearchableReferenceSelectorMxNinePreviewProps {
     valueAriaLabel: string;
     extraAriaLabel: string;
     ariaArrowKeyInstructions: string;
+    readOnlyStyle: ReadOnlyStyleEnum;
 }

@@ -4,6 +4,114 @@ $padding-md: 0.5em;
 $padding-lg: 0.7em;
 $focus-outline: -webkit-focus-ring-color auto 1px;
 
+.srs-select {
+    display: flex;
+    width: 100%;
+    .srs-value-container {
+        padding: $padding-md;
+        display: grid;
+        flex: 1 1 0%;
+        overflow-x: hidden;
+        // for enum and ref
+        .srs-current-value {
+            grid-column: 1;
+            height: min-content;
+            grid-row: 1;
+            p {
+                margin: 0;
+            }
+        }
+        .srs-input-container {
+            grid-column: 1;
+            grid-row: 1;
+            flex: 1 0 100%;
+            .srs-input {
+                width: 100%;
+                background: transparent;
+                border: 0px;
+                margin: 0px;
+                outline: 0px;
+                padding: 0px;
+            }
+        }
+        &.srs-compact {
+            .srs-input-container {
+                visibility: visible;
+                flex: 1 1 auto;
+                display: inline-grid;
+                grid-area: 1 / 1 / 2 / 3;
+                grid-template-columns: 0px min-content;
+                box-sizing: border-box;
+
+                .srs-input {
+                    grid-area: 1 / 2 / auto / auto;
+                    font: inherit;
+                    min-width: 2px;
+                }
+                &::after {
+                    content: attr(data-value) " ";
+                    visibility: hidden;
+                    white-space: pre;
+                    grid-area: 1 / 2 / auto / auto;
+                    font: inherit;
+                    min-width: 2px;
+                    border: 0px;
+                    margin: 0px;
+                    outline: 0px;
+                    padding: 0px;
+                    overflow-x: hidden;
+                }
+            }
+        }
+
+        &.srs-multi {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        &.srs-badges {
+            gap: $padding-lg;
+            .srs-badge {
+                border-radius: $padding-sm;
+                display: flex;
+                padding: $padding-xs $padding-sm;
+                margin: 0-$padding-xs 0 0-$padding-xs 0-$padding-xs;
+                gap: $padding-sm;
+                align-items: center;
+                .glyphicon,
+                img {
+                    padding: $padding-xs;
+                }
+                span {
+                    font-size: small;
+                }
+                p {
+                    margin: 0;
+                }
+            }
+        }
+        &.srs-commas {
+            gap: $padding-sm;
+            .srs-comma {
+                display: flex;
+                font-size: small;
+                padding: 0px;
+            }
+        }
+    }
+    .srs-icon-row {
+        display: flex;
+        align-items: center;
+        padding-right: $padding-md;
+        .glyphicon,
+        img,
+        .srs-icon {
+            padding: $padding-sm;
+            color: #6f6f6f;
+        }
+    }
+}
+
 .srs {
     width: 100%;
     .form-control {
@@ -12,113 +120,6 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         cursor: pointer;
         justify-content: space-between;
         min-height: 38px;
-        .srs-select {
-            display: flex;
-            width: 100%;
-            .srs-value-container {
-                padding: $padding-md;
-                display: grid;
-                flex: 1 1 0%;
-                overflow-x: hidden;
-                // for enum and ref
-                .srs-current-value {
-                    grid-column: 1;
-                    height: min-content;
-                    grid-row: 1;
-                    p {
-                        margin: 0;
-                    }
-                }
-                .srs-input-container {
-                    grid-column: 1;
-                    grid-row: 1;
-                    flex: 1 0 100%;
-                    .srs-input {
-                        width: 100%;
-                        background: transparent;
-                        border: 0px;
-                        margin: 0px;
-                        outline: 0px;
-                        padding: 0px;
-                    }
-                }
-                &.srs-compact {
-                    .srs-input-container {
-                        visibility: visible;
-                        flex: 1 1 auto;
-                        display: inline-grid;
-                        grid-area: 1 / 1 / 2 / 3;
-                        grid-template-columns: 0px min-content;
-                        box-sizing: border-box;
-
-                        .srs-input {
-                            grid-area: 1 / 2 / auto / auto;
-                            font: inherit;
-                            min-width: 2px;
-                        }
-                        &::after {
-                            content: attr(data-value) " ";
-                            visibility: hidden;
-                            white-space: pre;
-                            grid-area: 1 / 2 / auto / auto;
-                            font: inherit;
-                            min-width: 2px;
-                            border: 0px;
-                            margin: 0px;
-                            outline: 0px;
-                            padding: 0px;
-                            overflow-x: hidden;
-                        }
-                    }
-                }
-
-                &.srs-multi {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-items: center;
-                }
-                &.srs-badges {
-                    gap: $padding-lg;
-                    .srs-badge {
-                        border-radius: $padding-sm;
-                        display: flex;
-                        padding: $padding-xs $padding-sm;
-                        margin: 0-$padding-xs 0 0-$padding-xs 0-$padding-xs;
-                        gap: $padding-sm;
-                        align-items: center;
-                        .glyphicon,
-                        img {
-                            padding: $padding-xs;
-                        }
-                        span {
-                            font-size: small;
-                        }
-                        p {
-                            margin: 0;
-                        }
-                    }
-                }
-                &.srs-commas {
-                    gap: $padding-sm;
-                    .srs-comma {
-                        display: flex;
-                        font-size: small;
-                        padding: 0px;
-                    }
-                }
-            }
-            .srs-icon-row {
-                display: flex;
-                align-items: center;
-                padding-right: $padding-md;
-                .glyphicon,
-                img,
-                .srs-icon {
-                    padding: $padding-sm;
-                    color: #6f6f6f;
-                }
-            }
-        }
         &.active,
         &:focus-within {
             border-color: #264ae5;
@@ -126,8 +127,16 @@ $focus-outline: -webkit-focus-ring-color auto 1px;
         &.read-only {
             cursor: not-allowed;
             background-color: #f8f8f8;
-            input {
-                cursor: not-allowed !important;
+        }
+    }
+    .form-control-static {
+        cursor: not-allowed;
+        @extend .srs-select;
+        .srs-value-container {
+            padding: 0;
+            &.srs-badges {
+                padding-left: $padding-xs;
+                overflow: unset;
             }
         }
     }

@@ -513,8 +513,16 @@
             <propertyGroup caption="Visibility">
                 <systemProperty key="Visibility" />
             </propertyGroup>
-            <propertyGroup caption="Editbility">
+            <propertyGroup caption="Editability">
                 <systemProperty key="Editability" />
+                <property key="readOnlyStyle" type="enumeration" defaultValue="TEXT">
+                    <caption>Read-only style</caption>
+                    <description>How the input will appear in read-only mode</description>
+                    <enumerationValues>
+                        <enumerationValue key="CONTROL">Control</enumerationValue>
+                        <enumerationValue key="TEXT">Text</enumerationValue>
+                    </enumerationValues>
+                </property>
             </propertyGroup>
         </propertyGroup>
     </properties>

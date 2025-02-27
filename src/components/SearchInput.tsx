@@ -60,7 +60,7 @@ export default function SearchInput(props: SearchInputProps): ReactElement {
                 aria-label={props.ariaLabel} // for screen readers in case there is no actual label
                 aria-haspopup={!props.isReadOnly ? (props.selectStyle === "dropdown" ? "true" : "listbox") : "false"} // for screen readers
                 aria-expanded={props.showMenu} // for screen readers
-                aria-controls={`${props.id}-listbox ${props.id}-no-results-region`}
+                aria-controls={!props.isReadOnly ? `${props.id}-listbox ${props.id}-no-results-region` : undefined}
                 aria-required={props.ariaRequired ? "true" : "false"}
                 aria-disabled={props.isReadOnly}
                 aria-activedescendant={

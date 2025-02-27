@@ -60,6 +60,7 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                                         option={option}
                                         showComma={index < length - 1 && index !== props.maxReferenceDisplay - 1}
                                         onBadgeClick={props.onBadgeClick}
+                                        isReadOnly={props.isReadOnly}
                                     />
                                 ))}
                             </Fragment>
@@ -68,22 +69,26 @@ const CurrentValueDisplay = (props: CurrentValueDisplayProps): ReactElement => {
                             <span
                                 id="extra"
                                 className="srs-comma"
-                                tabIndex={props.onExtraClick ? -1 : undefined}
+                                tabIndex={props.onExtraClick && !props.isReadOnly ? -1 : undefined}
                                 aria-label={props.extraAriaLabel}
                                 onClick={event => {
-                                    if (props.onExtraClick) {
+                                    if (props.onExtraClick && !props.isReadOnly) {
                                         event.stopPropagation();
                                         props.onExtraClick();
                                     }
                                 }}
                                 onKeyDown={event => {
-                                    if ((event.key === "Enter" || event.key === " ") && props.onExtraClick) {
+                                    if (
+                                        (event.key === "Enter" || event.key === " ") &&
+                                        props.onExtraClick &&
+                                        !props.isReadOnly
+                                    ) {
                                         event.stopPropagation();
                                         event.preventDefault();
                                         props.onExtraClick();
                                     }
                                 }}
-                                role={props.onExtraClick ? "button" : undefined}
+                                role={props.onExtraClick && !props.isReadOnly ? "button" : undefined}
                             >{`(+ ${length - props.maxReferenceDisplay})`}</span>
                         )}
                     </Fragment>
