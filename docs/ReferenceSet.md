@@ -225,8 +225,9 @@ widget will default to the Option Content attribute or the Option Expression. If
 
 ## Common Settings
 
-![common](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/common.png)  
+![styleEnum](https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/media/v4/common.png)  
 **Name** - Mendix name for the widget.  
 **Tab index** - The tab order of the widget. This should be left at 0 for most situations.  
 **Visible** - Boolean expression that determines if the widget is rendered at all.  
-**Editable** - Boolean expression that determines if the user is allowed to select a value.
+**Editable** - Boolean expression that determines if the user is allowed to select a value.  
+**Read-only style** - How the widget looks when un-editable. Control makes it look like a greyed input. Text only shows the text.  
