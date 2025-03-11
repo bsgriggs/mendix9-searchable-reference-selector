@@ -422,7 +422,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `searchAttributes`,
             message: `At least 1 search attribute is required for server-side searching`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
@@ -436,7 +436,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `optionExpression`,
             message: `Option content is required for client-side searching. It determines the string that is searched.`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
@@ -448,7 +448,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `optionExpression`,
             message: `Option content is required for reference sets with custom content. It determines the sorting of the selected values (text ascending).`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
@@ -456,7 +456,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `filterDelay`,
             message: `Filter Delay must be greater than or equal to 0`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
@@ -464,7 +464,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `maxItems`,
             message: `Max Items must be greater than or equal to 0`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
@@ -472,7 +472,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     //     errors.push({
     //         property: `ariaLiveText`,
     //         message:`Accessibility -> Option aria text is required for custom content, so screen readers know the selected value.`,
-    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
     //     });
     // }
     // if (
@@ -483,7 +483,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
     //     errors.push({
     //         property: `ariaLiveText`,
     //         message: `Accessibility -> Option aria text is required for reference sets with custom content. Used for sorting the selected options (by the text ascending) & so screen readers know the selected value.`,
-    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+    //         url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
     //     });
     // }
 
@@ -494,7 +494,7 @@ export function check(_values: SearchableReferenceSelectorMxNinePreviewProps): P
         errors.push({
             property: `searchText`,
             message: `Search text attribute is required for search type 'by data source microflow'`,
-            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector"
+            url: "https://github.com/bsgriggs/mendix9-searchable-reference-selector/blob/master/README.md"
         });
     }
 
