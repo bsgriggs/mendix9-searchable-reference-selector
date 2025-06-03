@@ -8,7 +8,7 @@ export interface AlertProps {
 
 const Alert = ({ id, alertStyle = "danger", children, className }: PropsWithChildren<AlertProps>): ReactElement => {
     return (
-        <div id={id} className={`alert alert-${alertStyle} mx-validation-message ${className}`}>
+        <div id={id} className={`alert alert-${alertStyle} mx-validation-message ${className}`} role="alert">
             {children}
         </div>
     );
