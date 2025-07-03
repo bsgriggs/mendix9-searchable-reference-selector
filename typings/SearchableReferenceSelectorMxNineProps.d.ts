@@ -124,6 +124,8 @@ export interface SearchableReferenceSelectorMxNineContainerProps {
 
 export interface SearchableReferenceSelectorMxNinePreviewProps {
     readOnly: boolean;
+    renderMode: "design" | "xray" | "structure";
+    translate: (text: string) => string;
     placeholder: string;
     selectionType: SelectionTypeEnum;
     reference: string;
